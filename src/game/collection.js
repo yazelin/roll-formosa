@@ -40,12 +40,11 @@
 import * as THREE from 'three';
 import { EVT, PAYLOADS } from '../core/events.js';
 import { LS_COLLECTION_KEY, COLLECT_TOTAL, THUMB_SIZE_PX } from '../config/tuning.js';
-import { ARCHETYPE_ID_BY_CODE, collectibleCodeForId } from '../world/objects.js';
 import { getSharedObjectMaterial } from '../render/instances.js';
-// Namespace import: DISPLAY_NAME_BY_CODE (string[94], frozen) lands with
-// Stream C's catalog.js — the namespace access keeps this module loadable
-// either way (undefined -> empty table -> nameJa '').
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+// P7: album code map is pack-scoped (Taipei collectibles), not the Tokyo globals.
+const ARCHETYPE_ID_BY_CODE = activePack.archetypeIdByCode;
+const collectibleCodeForId = activePack.codeForCollectibleId;
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').AbsorbEvent} AbsorbEvent */

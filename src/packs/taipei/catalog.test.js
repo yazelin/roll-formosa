@@ -86,9 +86,9 @@ describe('taipei catalog surface', () => {
     for (const id of TIERS.flatMap((t) => t.archetypeIds)) {
       expect(CATALOG[id], `chunk id '${id}' missing from CATALOG`).toBeDefined();
     }
-    // A couple of EXTRA ids must still resolve (placeholder Tokyo geometry).
-    expect(CATALOG['gold_maneki_neko']).toBeDefined();
-    expect(CATALOG['stack_chan']).toBeDefined();
+    // P7: Taipei collectibles resolve (codes 70 + 94); remaining Tokyo placeholders too.
+    expect(CATALOG['black_bear']).toBeDefined();
+    expect(CATALOG['mazu']).toBeDefined();
     expect(CATALOG['tokyo_skytree']).toBeDefined();
   });
 

@@ -39,23 +39,26 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(m.collectibleCodeForId(0)).toBe(70);
     expect(m.collectibleCodeForId(11)).toBe(81);
     expect(m.collectibleCodeForId(12)).toBe(94);
-    expect(m.idByCode[94]).toBe('stack_chan');
+    expect(m.idByCode[94]).toBe('mazu');
   });
 
   it('attaches R5 pack-scoped code-map methods', () => {
     expect(Array.isArray(activePack.archetypeIdByCode)).toBe(true);
     expect(activePack.archetypeIdByCode.length).toBe(99);
     expect(activePack.codeByArchetypeId[activePack.archetypeIdByCode[0]]).toBe(0);
-    expect(activePack.codeToArchetypeId(94)).toBe('stack_chan');
+    expect(activePack.codeToArchetypeId(94)).toBe('mazu');
     expect(activePack.codeForCollectibleId(12)).toBe(94);
   });
 
-  it('code map: chunk 0-69 are Taipei ids; EXTRA 70-81 and 90-98 are Tokyo; 82-89 are Taipei landmarks', () => {
+  it('code map: chunk 0-69 Taipei; collectibles 70-81+94 Taipei; landmarks 82-89 Taipei; 90-93/95-98 Tokyo', () => {
     // P4 replaces chunk codes (0-69) with Taipei archetypeIds.
     const taipeiChunkIds = activePack.tiers.flatMap((t) => t.archetypeIds);
     expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(taipeiChunkIds);
-    // Collectible EXTRA codes 70..81 remain Tokyo ids (frozen).
-    expect(activePack.archetypeIdByCode.slice(70, 82)).toEqual(ARCHETYPE_ID_BY_CODE.slice(70, 82));
+    // P7: collectible codes 70..81 are Taipei collectible ids.
+    expect(activePack.archetypeIdByCode.slice(70, 82)).toEqual([
+      'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
+      'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
+    ]);
     // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
     expect(activePack.archetypeIdByCode[82]).toBe('beimen');
     expect(activePack.archetypeIdByCode[83]).toBe('longshan_temple');
@@ -67,8 +70,9 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
     // Codes 90..93 remain Tokyo ids (bridge/tower/shop/skytree, frozen).
     expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual(ARCHETYPE_ID_BY_CODE.slice(90, 94));
-    // v5 codes 94..98 remain Tokyo ids (stack_chan + akiba buildings).
-    expect(activePack.archetypeIdByCode.slice(94)).toEqual(ARCHETYPE_ID_BY_CODE.slice(94));
+    // P7: code 94 is 媽祖 (Taipei collectible); 95..98 remain Tokyo v5 ids.
+    expect(activePack.archetypeIdByCode[94]).toBe('mazu');
+    expect(activePack.archetypeIdByCode.slice(95)).toEqual(ARCHETYPE_ID_BY_CODE.slice(95));
   });
 
   it('exposes full R16 content surface', () => {

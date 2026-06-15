@@ -52,8 +52,9 @@ import { NM_ARENA } from './landmarks/arena.js';
  * Codes 94..98 (v5 indices 0..4): same Tokyo v5 ids.
  */
 const extraIds = [
-  // indices 0..11 — codes 70..81: Tokyo collectibles (frozen)
-  ...EXTRA_ARCHETYPE_IDS.slice(0, 12),
+  // indices 0..11 — codes 70..81: Taipei collectibles (P7)
+  'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
+  'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
   // indices 12..19 — codes 82..89: Taipei landmark ids (P6b)
   NM_BEIMEN.id,        // 82 北門(承恩門)
   NM_LONGSHAN.id,      // 83 龍山寺
@@ -65,8 +66,8 @@ const extraIds = [
   NM_ARENA.id,         // 89 小巨蛋
   // indices 20..23 — codes 90..93: Tokyo bridge/tower/shop/skytree (frozen)
   ...EXTRA_ARCHETYPE_IDS.slice(20, 24),
-  // v5 codes 94..98
-  ...V5_ARCHETYPE_IDS,
+  // v5 codes 94..98 — 94 = 媽祖 collectible (P7); 95..98 Tokyo placeholders
+  'mazu', ...V5_ARCHETYPE_IDS.slice(1),
 ];
 
 // Collectible album id -> index in extraIds (legacy Tokyo rule preserved).

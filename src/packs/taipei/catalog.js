@@ -50,6 +50,21 @@ import { NM_CKS } from './landmarks/cks_memorial.js';
 import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
 import { NM_ARENA } from './landmarks/arena.js';
 
+// P7: 13 Taipei collectible (rare album) geometries (codes 70..81 + 94).
+import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
+import { COL_BOBA } from './collectibles/boba.js';
+import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
+import { COL_GUABAO } from './collectibles/gua_bao.js';
+import { COL_XLB } from './collectibles/xiaolongbao.js';
+import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
+import { COL_SANTAIZI } from './collectibles/santaizi.js';
+import { COL_PUPPET } from './collectibles/budaixi.js';
+import { COL_YOUBIKE } from './collectibles/youbike.js';
+import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
+import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
+import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
+import { COL_MAZU } from './collectibles/mazu.js';
+
 /* ================================================================== */
 /* 70 chunk archetypes, assembled in tier order (code = tier*10 + slot)*/
 /* ================================================================== */
@@ -103,10 +118,12 @@ const _TAIPEI_LANDMARKS = [
   { code: 89, nm: NM_ARENA,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
 ];
 
-/** Set of Tokyo EXTRA ids that are REPLACED by Taipei landmarks (codes 82..89). */
-const _REPLACED_TOKYO_IDS = new Set(
-  EXTRA_ARCHETYPE_IDS.slice(12, 20) // indices 12..19 = codes 82..89
-);
+/** Set of Tokyo EXTRA/v5 ids REPLACED by Taipei content (collectibles + landmarks). */
+const _REPLACED_TOKYO_IDS = new Set([
+  ...EXTRA_ARCHETYPE_IDS.slice(0, 12),  // codes 70..81 — collectibles (P7)
+  ...EXTRA_ARCHETYPE_IDS.slice(12, 20), // codes 82..89 — landmarks (P6b)
+  V5_ARCHETYPE_IDS[0],                  // code 94 — stack_chan -> 媽祖 (P7)
+]);
 
 /**
  * Full id-keyed catalog: 70 Taipei chunk archetypes PLUS the 24 EXTRA
@@ -124,7 +141,7 @@ for (const id of EXTRA_ARCHETYPE_IDS) {
   }
 }
 for (const id of V5_ARCHETYPE_IDS) {
-  if (TOKYO_CATALOG[id] !== undefined) {
+  if (!_REPLACED_TOKYO_IDS.has(id) && TOKYO_CATALOG[id] !== undefined) {
     CATALOG[id] = TOKYO_CATALOG[id];
   }
 }
@@ -178,6 +195,49 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
 }
 
+/* P7: 13 Taipei collectibles at codes 70..81 + 94 (replace Tokyo album items).
+   Grounded like landmarks (yOffset = -1 - minY); curated-only (spawnWeight 0). */
+const _TAIPEI_COLLECTIBLES = [
+  { code: 70, col: COL_BLACK_BEAR },
+  { code: 71, col: COL_BOBA },
+  { code: 72, col: COL_CHICKEN },
+  { code: 73, col: COL_GUABAO },
+  { code: 74, col: COL_XLB },
+  { code: 75, col: COL_PINEAPPLE },
+  { code: 76, col: COL_SANTAIZI },
+  { code: 77, col: COL_PUPPET },
+  { code: 78, col: COL_YOUBIKE },
+  { code: 79, col: COL_PRES_TROPHY },
+  { code: 80, col: COL_GONDOLA },
+  { code: 81, col: COL_BIGCHICKEN },
+  { code: 94, col: COL_MAZU },
+];
+for (const { code, col } of _TAIPEI_COLLECTIBLES) {
+  const _g = col.buildGeometry(() => 0.5);
+  _g.computeBoundingBox();
+  const _yOffset = -1 - _g.boundingBox.min.y;
+  if (_g.dispose) _g.dispose();
+  const entry = {
+    id: col.id,
+    displayName: col.name,
+    tier: 1,
+    naturalBand: 1,
+    radiusNominal: 0.3,
+    radiusJitter: 0,
+    spawnWeight: 0, // curated-only — placed, never random-rolled
+    palette: [col.colorHex],
+    yOffset: _yOffset,
+    upright: true,
+    collisionScale: 1.0,
+    buildGeometry: col.buildGeometry.bind(col),
+    extraCode: code,
+    sizeClass: 'collectible-small',
+  };
+  CATALOG[col.id] = entry;
+  EXTRA_CATALOG[code] = entry;
+  EXTRA_SIZE_CLASS_BY_CODE[code] = 'collectible-small';
+}
+
 /**
  * EXTRA render pool caps. Taipei has 8 landmark singletons:
  *   landmark-mid (codes 82/83/84/86): 4 alive (matches Tokyo floor)
@@ -186,7 +246,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
  * @type {Readonly<Record<string, number>>}
  */
 export const EXTRA_POOL_CAPS = Object.freeze({
-  'collectible-small': TOKYO_EXTRA_POOL_CAPS['collectible-small'],
+  'collectible-small': Math.max(TOKYO_EXTRA_POOL_CAPS['collectible-small'], 13),
   'landmark-mid': Math.max(TOKYO_EXTRA_POOL_CAPS['landmark-mid'], 4),
   'landmark-large': Math.max(TOKYO_EXTRA_POOL_CAPS['landmark-large'], 4),
   'landmark-xl': TOKYO_EXTRA_POOL_CAPS['landmark-xl'],
@@ -220,6 +280,11 @@ export const DISPLAY_NAME_BY_CODE = (() => {
   // Override codes 82..89 with Taipei landmark zh-TW names.
   for (const { code, nm } of _TAIPEI_LANDMARKS) {
     names[code] = nm.name;
+  }
+
+  // Override codes 70..81 + 94 with Taipei collectible zh-TW names (P7).
+  for (const { code, col } of _TAIPEI_COLLECTIBLES) {
+    names[code] = col.name;
   }
 
   return names;
