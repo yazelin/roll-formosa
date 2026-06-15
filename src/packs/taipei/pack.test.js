@@ -50,9 +50,13 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(activePack.codeForCollectibleId(12)).toBe(94);
   });
 
-  it('code map equals objects.js legacy table (P3 stub re-exports same Tokyo data)', () => {
-    expect(activePack.archetypeIdByCode).toEqual(ARCHETYPE_ID_BY_CODE);
-    expect(activePack.codeByArchetypeId).toEqual(ARCHETYPE_CODE_BY_ID);
+  it('code map chunk slots 0-69 are Taipei ids (P4: tiers now Taipei; EXTRA ids 70+ stay Tokyo)', () => {
+    // P4 replaces chunk codes (0-69) with Taipei archetypeIds; EXTRA codes (70+)
+    // remain the Tokyo EXTRA/V5 pool until P5. Legacy check removed (P3-only).
+    const taipeiChunkIds = activePack.tiers.flatMap((t) => t.archetypeIds);
+    expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(taipeiChunkIds);
+    // EXTRA codes still align with Tokyo EXTRA (unchanged in P4)
+    expect(activePack.archetypeIdByCode.slice(70)).toEqual(ARCHETYPE_ID_BY_CODE.slice(70));
   });
 
   it('exposes full R16 content surface', () => {
