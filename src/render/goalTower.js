@@ -1,21 +1,21 @@
 /**
- * @file goalTower.js — GoalMonumentView: the pack-driven goal monument mesh
- * for the v3 finale (docs/DESIGN-V3.md 箱庭東京マップ C / ファイル変更一覧,
- * Stream A).
+ * @file goalTower.js — GoalTowerView: the pack-driven goal monument mesh
+ * for the v3 finale (Stream A).
  *
  * P6a: re-pointed to activePack.goalMonument so the active pack (Taipei)
  * drives the geometry (台北101 eight-segment bamboo tower) and world position.
- * The public API — SkytreeView class name, getPosSim/radiusSim/heightSim/
+ * The public API — GoalTowerView class name, getPosSim/radiusSim/heightSim/
  * silFade01/meshActive/setGlow01/setBeamPulse/update/dispose/onTeleport —
  * is UNCHANGED so game/finale.js and main.js call sites need no edits.
  *
- * Monument height: 台北101 = 508 m real (vs Skytree 634 m). The unit-sphere
- * normalized buildGeometry from the pack maps y∈[0,1] to physical height, so
- * MONUMENT_HEIGHT_M = 508 is used for the sim-space scale and heightSim.
- * baseRadiusM comes from activePack.goalMonument.baseRadiusM (72 m for 101).
+ * Monument height: 台北101 = 508 m real (vs the legacy 634 m monument). The
+ * unit-sphere normalized buildGeometry from the pack maps y∈[0,1] to physical
+ * height, so MONUMENT_HEIGHT_M = 508 is used for the sim-space scale and
+ * heightSim. baseRadiusM comes from activePack.goalMonument.baseRadiusM
+ * (72 m for 101).
  *
  * Everything else (handoff latch, crossfade, glow/beam, EVT subscriptions,
- * floating-origin tracking) is identical to the original Skytree version.
+ * floating-origin tracking) is identical to the original goal-tower version.
  *
  * Exactly 2 draw calls: merged vertex-colored body (self-lit Basic, fog:false)
  * + additive glow/beam (fog:false). Both are sky-element exemptions.
@@ -32,8 +32,6 @@ const _monument = activePack.goalMonument;
 const MONUMENT_POS = _monument.pos;
 /** Goal monument height, REAL meters (台北101 = 508 m). */
 export const MONUMENT_HEIGHT_M = 508;
-/** @deprecated Legacy alias kept so any import of SKYTREE_HEIGHT_M still resolves. */
-export const SKYTREE_HEIGHT_M = MONUMENT_HEIGHT_M;
 /** Monument base radius, REAL meters (from pack; 72 m for 101). */
 const MONUMENT_BASE_R_M = _monument.baseRadiusM;
 
@@ -46,8 +44,8 @@ const _pos = new THREE.Vector3();
 
 /* MONUMENT_POS shape guard: accept {x,z} or [x,z] so the contract cannot
  * silently misread regardless of pack authoring style. */
-const SK_X = MONUMENT_POS.x !== undefined ? MONUMENT_POS.x : MONUMENT_POS[0];
-const SK_Z = MONUMENT_POS.z !== undefined ? MONUMENT_POS.z : MONUMENT_POS[1];
+const MON_X = MONUMENT_POS.x !== undefined ? MONUMENT_POS.x : MONUMENT_POS[0];
+const MON_Z = MONUMENT_POS.z !== undefined ? MONUMENT_POS.z : MONUMENT_POS[1];
 
 /** Mesh-active distance: 0.8 * CAMERA_FAR (render/renderer.js, 4000 sim). */
 const HANDOFF_DIST_SIM = 0.8 * 4000;
@@ -123,7 +121,7 @@ function buildGlowGeometry() {
  * getPosSim/radiusSim/heightSim/silFade01. Subscribes EVT.RESCALE /
  * EVT.REBASE / EVT.GAME_RESET itself (rebase-shift tracking + handoff reset).
  */
-export class SkytreeView {
+export class GoalTowerView {
   /**
    * @param {THREE.Scene} scene Scene to attach the tower group to.
    * @param {import('../world/scaleManager.js').ScaleManager} scaleMgr
@@ -206,7 +204,7 @@ export class SkytreeView {
   }
 
   /* ---------------------------------------------------------------- */
-  /* Frozen public surface (docs/DESIGN-V3.md §インターフェース)         */
+  /* Frozen public surface (the goal-monument interface contract).     */
   /* ---------------------------------------------------------------- */
 
   /**
@@ -229,7 +227,7 @@ export class SkytreeView {
    */
   getPosSim(out) {
     const ws = this._scaleMgr.worldScale;
-    out.set(SK_X / ws - this._shiftX, 0, SK_Z / ws - this._shiftZ);
+    out.set(MON_X / ws - this._shiftX, 0, MON_Z / ws - this._shiftZ);
     return out;
   }
 

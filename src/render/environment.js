@@ -29,14 +29,14 @@
  * setSkyMoonFade/setSkyMoonPulse are kept (inert in v3 play — nothing drives
  * them; the v3 goal beacon lives on render/goalTower.js).
  *
- * v3 SKYTREE SILHOUETTE (BLOCKER 2 — the KEPT v2 sky-element slot,
- * re-textured; uniforms uGoalSil*): while the ball is small the 634 m goal
- * tower at SKYTREE_POS is far outside the fog/load rings, so the sky dome
+ * v3 GOAL-TOWER SILHOUETTE (BLOCKER 2 — the KEPT v2 sky-element slot,
+ * re-textured; uniforms uGoalSil*): while the ball is small the goal
+ * tower at GOAL_POS is far outside the fog/load rings, so the sky dome
  * paints a hazy tapered tower silhouette whose azimuth AND angular size are
- * recomputed per frame from the camera -> SKYTREE_POS real-meter geometry
+ * recomputed per frame from the camera -> GOAL_POS real-meter geometry
  * (cheap CPU math; angle-matched to the goalTower mesh by construction —
  * the proven v2 angular-matched handoff in reverse). The finale forwards
- * setGoalSilFade(SkytreeView.silFade01) every frame: 1 = silhouette owns the
+ * setGoalSilFade(GoalTowerView.silFade01) every frame: 1 = silhouette owns the
  * tower, fading to 0 over 2 s as the mesh takes over at
  * simDist < 0.8*CAMERA_FAR. setTierPaletteImmediate resets the fade to 1.
  *
@@ -85,15 +85,15 @@ import {
   PALETTE_FADE_S,
   MOON_DIR_MIN_ELEV,
   SIM_RADIUS_MIN,
-  SKYTREE_BASE_R_M,
+  MONUMENT_BASE_R_M,
   START_RADIUS_M,
 } from '../config/tuning.js';
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 const TIERS = activePack.tiers; // tier palette table from the active pack
-const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
+const GOAL_POS = activePack.cityMap.GOAL_POS; // goal monument real-meter pose (city content)
 import { bus, EVT } from '../core/events.js';
 import { easeInOutCubic, clamp01, lerp } from '../core/mathUtils.js';
-import { SKYTREE_HEIGHT_M } from './goalTower.js';
+import { MONUMENT_HEIGHT_M } from './goalTower.js';
 
 /** @typedef {import('../types.js').BallState} BallState */
 /** @typedef {import('../types.js').TierUpEvent} TierUpEvent */
@@ -131,19 +131,19 @@ const QUAY_W_M = 6.0;
 /**
  * Pack-driven water definition. Reads activePack.cityMap.water (shape:
  * { color, yM, rects: [{x0,x1,z0,z1},...], name }). Falls back to undefined
- * (no water drawn) if the pack omits it. The old Tokyo Bay hardcoded
+ * (no water drawn) if the pack omits it. The old hardcoded bay
  * constants (BAY_SOUTH / BAY_EAST / WATER_COLOR / WATER_Y_M = 0x2a4a6e /
- * 0.3) are intentionally removed — they lived only in the Tokyo pack era.
+ * 0.3) are intentionally removed — they lived only in the legacy pack era.
  */
 const PACK_WATER = activePack.cityMap.water !== undefined
   ? activePack.cityMap.water
   : null;
-/** Skytree silhouette tint -> fog mix factor, baked into the GLSL below. */
+/** Goal-tower silhouette tint -> fog mix factor, baked into the GLSL below. */
 const SIL_FOG_MIX_GLSL = (0.45).toFixed(2);
 
-/* SKYTREE_POS shape guard (cityMap.js, Stream B): accept {x,z} or [x,z]. */
-const SK_X = SKYTREE_POS.x !== undefined ? SKYTREE_POS.x : SKYTREE_POS[0];
-const SK_Z = SKYTREE_POS.z !== undefined ? SKYTREE_POS.z : SKYTREE_POS[1];
+/* GOAL_POS shape guard (pack cityMap, Stream B): accept {x,z} or [x,z]. */
+const MON_X = GOAL_POS.x !== undefined ? GOAL_POS.x : GOAL_POS[0];
+const MON_Z = GOAL_POS.z !== undefined ? GOAL_POS.z : GOAL_POS[1];
 /**
  * Env-LOCAL night palette source (finale ascension; _palettes[TIERS.length]).
  * Same shape as a tiers.js entry's sky fields. starIntensity 1.0, sun off,
@@ -242,7 +242,7 @@ uniform float uCloudDensity;
 uniform vec3 uCloudColor;
 uniform float uCloudDrift;
 uniform float uTime;
-// v3 Skytree silhouette (uGoalSil* — the kept sky-element slot, re-textured)
+// v3 goal-tower silhouette (uGoalSil* — the kept sky-element slot, re-textured)
 uniform vec3 uGoalSilDir;   // horizontal unit dir camera -> tower
 uniform float uGoalSilTanH; // tan(angular height) = towerHeightSim / dist
 uniform float uGoalSilTanW; // tan(angular half-width at base) = baseRSim / dist
@@ -332,9 +332,9 @@ void main() {
   float halo = exp(-(1.0 - md) / max(uMoonAngSize * uMoonAngSize * 3.0, 1e-6));
   sky += vec3(0.62, 0.68, 0.85) * (halo * 0.35 * uMoonGlow * uMoonFade);
 
-  // (f) v3 SKYTREE SILHOUETTE — hazy tapered tower at the true azimuth +
+  // (f) v3 GOAL-TOWER SILHOUETTE — hazy tapered tower at the true azimuth +
   // angular size (uniforms recomputed per frame on the CPU from the camera ->
-  // SKYTREE_POS geometry, so the goalTower mesh handoff is angle-matched by
+  // GOAL_POS geometry, so the goalTower mesh handoff is angle-matched by
   // construction). Tangent-space math: tanE = dir.y / |dir.xz| vs uGoalSilTanH;
   // azimuthal offset sinAz vs the tapered width profile; two Gaussian bumps
   // for the observation decks. Drawn after sun/moon (the tower silhouettes
@@ -371,12 +371,12 @@ void main() {
  *   ...per frame (step 6, after ScaleManager): env.update(frameDt, ballPhys.state);
  *   ScaleManager hooks: env.rescale(S); env.rebase(offsetX, offsetZ);
  *   ?at=/?r= dev start: env.setTierPaletteImmediate(startTierIndex);
- *   Finale (Stream A, v3): env.setGoalSilFade(skytree.silFade01) every frame
+ *   Finale (Stream A, v3): env.setGoalSilFade(goalTower.silFade01) every frame
  *     (silhouette <-> goalTower mesh handoff);
  *     env.beginNightFade(GOAL_ASCEND_S) on ASCENSION;
  *     v5: env.setSpaceFade01(u) per ASCENSION frame (zenith -> space black);
  *   OsmGround (v5): osmGround.setEnvironment(env) late-wire reads
- *     getGroundColorWorking(target) per frame (謎の溝 ground fade).
+ *     getGroundColorWorking(target) per frame (mystery groove ground fade).
  * Subscribes to 'tierUp' (palette crossfade), 'game:reset' (snap to T0,
  * resets all uniforms + ws/shift trackers) and 'grow' (10 Hz worldScale
  * resync) on the singleton bus.
@@ -460,7 +460,7 @@ export class Environment {
     /** Accumulated floating-origin shift (sim units; sim = real/ws - shift). */
     this._shiftX = 0;
     this._shiftZ = 0;
-    /** v3 Skytree silhouette fade (finale-driven via setGoalSilFade). */
+    /** v3 goal-tower silhouette fade (finale-driven via setGoalSilFade). */
     this._goalSilFade = 1;
     /** v5 space fade (finale-driven via setSpaceFade01; 0 in play). */
     this._spaceFade = 0;
@@ -530,7 +530,7 @@ export class Environment {
       uCloudColor: { value: this._cCloud },
       uCloudDrift: { value: CLOUD_DRIFT },
       uTime: { value: 0 },
-      // v3 Skytree silhouette (live ref + per-frame scalars).
+      // v3 goal-tower silhouette (live ref + per-frame scalars).
       uGoalSilDir: { value: this._vGoalSilDir },
       uGoalSilTanH: { value: 0 },
       uGoalSilTanW: { value: 0 },
@@ -610,7 +610,7 @@ export class Environment {
 
       // Quay wall: one merged box strip along the first rect's inner edge
       // (the edge closest to the play area) and the second rect's inner edge
-      // if it exists. Keeps the draw-call count at +1 (same budget as Tokyo Bay).
+      // if it exists. Keeps the draw-call count at +1 (same budget as the bay water).
       const quayGeos = [];
       for (let i = 0; i < Math.min(rects.length, 2); i++) {
         const r = rects[i];
@@ -763,13 +763,13 @@ export class Environment {
     su.uCloudDensity.value = this._cloudDensity;
     su.uSpaceFade.value = this._spaceFade; // v5 (0 outside the finale)
 
-    // v3 Skytree silhouette: azimuth + angular size recomputed per frame
-    // from the camera -> SKYTREE_POS real-meter geometry (BLOCKER 2). The
+    // v3 goal-tower silhouette: azimuth + angular size recomputed per frame
+    // from the camera -> GOAL_POS real-meter geometry (BLOCKER 2). The
     // dome is camera-centred, so view direction == world direction.
     su.uGoalSilFade.value = this._goalSilFade;
     if (this._goalSilFade > 0) {
-      const tx = SK_X * invWs - this._shiftX;
-      const tz = SK_Z * invWs - this._shiftZ;
+      const tx = MON_X * invWs - this._shiftX;
+      const tz = MON_Z * invWs - this._shiftZ;
       let cx = 0;
       let cz = 0;
       if (this._camera !== null) {
@@ -784,8 +784,8 @@ export class Environment {
       const dist = Math.sqrt(dx * dx + dz * dz);
       if (dist > 1e-3) {
         this._vGoalSilDir.set(dx / dist, 0, dz / dist);
-        su.uGoalSilTanH.value = (SKYTREE_HEIGHT_M * invWs) / dist;
-        su.uGoalSilTanW.value = (SKYTREE_BASE_R_M * invWs) / dist;
+        su.uGoalSilTanH.value = (MONUMENT_HEIGHT_M * invWs) / dist;
+        su.uGoalSilTanW.value = (MONUMENT_BASE_R_M * invWs) / dist;
       } else {
         su.uGoalSilTanH.value = 0; // degenerate: standing on the axis
       }
@@ -810,7 +810,7 @@ export class Environment {
    * v4 (Stream R) — THE shared water material: the OSM river/pond/moat mesh
    * (render/osmGround.js) renders on the SAME MeshLambertMaterial as the
    * pack-authored water quads (one program; fog-on; the water mesh stays owned
-   * by environment.js — OSM water is ADDITIVE, docs/DESIGN-V4.md レンダリング統合).
+   * by environment.js — OSM water is ADDITIVE, docs/DESIGN-V4.md rendering integration).
    * Lifetime: owned and disposed HERE; borrowers must not dispose it.
    * Returns null when the active pack defines no water (osmGround must guard).
    * @returns {THREE.Material|null}
@@ -895,8 +895,8 @@ export class Environment {
   }
 
   /**
-   * v3 Skytree silhouette weight (uGoalSilFade 0..1). The finale forwards
-   * SkytreeView.silFade01 every frame: 1 while the sky silhouette owns the
+   * v3 goal-tower silhouette weight (uGoalSilFade 0..1). The finale forwards
+   * GoalTowerView.silFade01 every frame: 1 while the sky silhouette owns the
    * tower, fading to 0 over 2 s as the goalTower mesh takes over (the kept
    * v2 angular-matched handoff). Default 1; reset by setTierPaletteImmediate.
    * @param {number} k01 0..1.
@@ -909,7 +909,7 @@ export class Environment {
    * v5 (Stream C) — the LIVE terrain ground color (working space, palette-
    * crossfade aware: mid-fade it is the blended value). Copied into `target`
    * — zero allocation, caller owns the destination. Consumed per frame by
-   * render/osmGround.js for the radius-driven ground-layer fade (謎の溝 fix).
+   * render/osmGround.js for the radius-driven ground-layer fade (mystery groove fix).
    * @param {THREE.Color} target Receives the color.
    * @returns {THREE.Color} The same `target`.
    */

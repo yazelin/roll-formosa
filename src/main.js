@@ -16,7 +16,7 @@
  *                      // curated AFTER spawner — BINDING order
  *  4   scaleMgr.maybeTierUp(...); if (!finale.inputLocked) scaleMgr.maybeRebase(...)
  *  4.5 finale.update(frameDt, ballPhys.state)   // approach/contact vs
- *      SkytreeView, cinematic camera (drives cameraRig.cinematicUpdate)
+ *      GoalTowerView, cinematic camera (drives cameraRig.cinematicUpdate)
  *  5   ball.update(...)
  *  6   if (!finale.cameraOwned) cameraRig.update(...)  // interior01 + boom
  *      clamp are INTERNAL to cameraRig (injected at construction);
@@ -106,7 +106,7 @@ import { CityTerrain } from './world/terrain.js'; // Stream B
 import { CuratedSpawner } from './world/curated.js'; // Stream B
 import { Collection } from './game/collection.js'; // Stream D
 import { Donack } from './ui/donack.js'; // Stream E
-import { SkytreeView } from './render/goalTower.js'; // Stream A (replaces MoonView)
+import { GoalTowerView } from './render/goalTower.js'; // Stream A (replaces MoonView)
 import { buildExtraPools, extraClassIndexForCode } from './render/extraPools.js'; // integration (4 shared EXTRA pools)
 import { activePack } from './packs/active.js'; // P2 StagePack seam (active StagePack)
 // P2.5: simulation CONTENT read from the active pack (not config/* directly).
@@ -215,7 +215,7 @@ const env = new Environment(renderer.scene, renderer.camera);
 
 const scaleMgr = new ScaleManager(bus, worldSeed);
 
-/* CityTerrain (Stream B): shop walls/prisms + permanent Skytree base
+/* CityTerrain (Stream B): shop walls/prisms + permanent goal-tower base
  * collider + map-bounds clamp. Injected into BallPhysics (collide after XZ
  * integration) and CameraRig (clampCameraBoom / interiorAt01). The optional
  * 3rd arg adds terrain.mesh to the scene (+1 draw, ledgered). */
@@ -352,9 +352,9 @@ const bgm = new Bgm(bus, initialMuted);
 const hud = new Hud(bus, collection); // collection = collect-popup thumbnails
 const screens = new Screens(bus, worldSeed, collection); // result grid + X text
 
-/* v3 finale chain: SkytreeView (Stream A, replaces v2 MoonView) + backdrop. */
-const skytree = new SkytreeView(renderer.scene, scaleMgr);
-const finale = new Finale(bus, scaleMgr, skytree, env, cameraRig, ball, renderer.camera);
+/* v3 finale chain: GoalTowerView (Stream A, replaces v2 MoonView) + backdrop. */
+const goalTower = new GoalTowerView(renderer.scene, scaleMgr);
+const finale = new Finale(bus, scaleMgr, goalTower, env, cameraRig, ball, renderer.camera);
 finale.setEffects(effects);
 /* v6 Formosa-island ending: flat Taiwan silhouette + city pins + star dome
  * (sky element, fog:false, +3 draws finale-only — ledger worst 71/72).
@@ -562,10 +562,10 @@ function onGameWin() {
 /* v3 dev teleport (?at=name[&r=meters] / window.devTeleport in dev)    */
 /* ------------------------------------------------------------------ */
 
-/* DEV_STARTS imported from config/cityMap.js (frozen spec numbers). */
+/* DEV_STARTS read from the active pack's cityMap (frozen spec numbers). */
 
 /**
- * Dev teleport (docs/DESIGN-V3.md §インターフェース, integrator-owned):
+ * Dev teleport (docs/DESIGN-V3.md interface, integrator-owned):
  * snaps worldScale to (START_RADIUS_M/SIM_RADIUS_MIN) * 5^k with the minimal
  * k that lands r/ws inside the sim band [0.5, 2.5), poses the ball from
  * DEV_STARTS (positions are REAL METERS — origin = ball start), then resyncs
@@ -586,7 +586,7 @@ function devTeleport(name, rOverrideM = 0) {
 /**
  * Arbitrary-coordinate dev teleport (the body of devTeleport; v4 also
  * exposed DEV-only as window.__v4park for the BINDING coverage-boundary
- * park test — DESIGN-V4 ゲームプレイ統合 admission check, 300-frame
+ * park test — DESIGN-V4 gameplay integration admission check, 300-frame
  * alive<4096 assert at r~4/r~40 parked ON the coverage boundary).
  * @param {number} xRealM Real-meter X (origin = ball start).
  * @param {number} zRealM Real-meter Z.
@@ -595,7 +595,7 @@ function devTeleport(name, rOverrideM = 0) {
  */
 function devTeleportTo(xRealM, zRealM, rM) {
   // Finale guard: post-contact the finale owns the run (ball.pos writes,
-  // camera, frozen streaming). Teleporting would re-arm the Skytree base
+  // camera, frozen streaming). Teleporting would re-arm the goal-tower base
   // collider against the MERGE writes and permanently stall streaming
   // (step 3 stays gated on finale.inputLocked). Refuse — GAME_RESET first.
   if (finale.inputLocked) {
@@ -619,7 +619,7 @@ function devTeleportTo(xRealM, zRealM, rM) {
   terrain.reset();
   spawner.onTeleport(); // resyncs the chunk scale exponent (scaleMgr injected)
   curated.forceScan(); // deactivate stale actives + full pass on next update()
-  skytree.onTeleport(); // drop the stale rebase shift (no REBASE event fires here)
+  goalTower.onTeleport(); // drop the stale rebase shift (no REBASE event fires here)
   scaleMgr.maybeTierUp(ballPhys.state, store, hashes, instances, cameraRig, env);
   scaleMgr.maybeRebase(ballPhys.state, store, hashes, instances, cameraRig, env, spawner); // one forced pass
   env.setTierPaletteImmediate(scaleMgr.tierIndex);
@@ -679,7 +679,7 @@ let lastTime = performance.now();
 
 /**
  * Per-frame driver. THE CALL ORDER BELOW IS THE BINDING v2 CONTRACT
- * (docs/DESIGN-V2.md §インターフェース "BINDING frame order") — do not reorder.
+ * (docs/DESIGN-V2.md interface "BINDING frame order") — do not reorder.
  * @param {number} now RAF timestamp (ms).
  */
 function frame(now) {
@@ -751,7 +751,7 @@ function frame(now) {
     scaleMgr.maybeRebase(ballPhys.state, store, hashes, instances, cameraRig, env, spawner);
   }
 
-  /* 4.5) FINALE (game/finale.js): v3 = approach/contact vs SkytreeView     */
+  /* 4.5) FINALE (game/finale.js): v3 = approach/contact vs GoalTowerView   */
   /*      (Stream A re-theme; the v2 moon machinery runs until it lands),   */
   /*      render-frame contact test, MERGE ball.pos writes, cinematic       */
   /*      camera via cameraRig.cinematicUpdate.                             */
@@ -795,7 +795,7 @@ function frame(now) {
 
   /* 7) Flush instance buffers (one needsUpdate per mesh, updateRanges)     */
   /*    then render. HUD is event-driven, not called here. v3: the goal     */
-  /*    lives in finale.js (contact arms at GOAL_RADIUS_M; Skytree finale).  */
+  /*    lives in finale.js (contact arms at GOAL_RADIUS_M; goal finale).     */
   updateAndFlushPools(poolList, frameDt);
   renderer.render();
 }

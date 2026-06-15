@@ -103,7 +103,7 @@ describe('taipei catalog surface', () => {
       expect(n.length, `code ${c} name`).toBeGreaterThan(0);
       expect(kana.test(n), `code ${c} name '${n}' has Japanese kana`).toBe(false);
     }
-    // code 93 is now a Taipei extended landmark (was 東京スカイツリー).
+    // code 93 is now a Taipei extended landmark (was the goal-tower slot).
     expect(DISPLAY_NAME_BY_CODE[93]).toBe('故宮博物院');
   });
 });

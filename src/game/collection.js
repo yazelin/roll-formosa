@@ -1,6 +1,6 @@
 /**
  * @file collection.js — v3 rare-collection album (Stream D, docs/DESIGN-V3.md
- * §フィードバック).
+ * feedback section).
  *
  * Subscribes EVT.ABSORB (BINDING boot order: chunk spawner -> curated -> main
  * attach -> runStats -> THIS -> sfx/effects/hud — main.js constructs this
@@ -8,12 +8,12 @@
  * frozen-id bit into the album mask, persists, and emits EVT.COLLECT
  * {collectibleId, nameJa, isNew, found, total} on the reused payload.
  * DUAL-TAG rule holds for free: curated emits EVT.LANDMARK AFTER the ABSORB
- * chain, so the COLLECT for ハチ公像 always precedes its LANDMARK.
+ * chain, so the COLLECT for the landmark statue always precedes its LANDMARK.
  *
  * PERSISTENCE (LS_COLLECTION_KEY, schema {v:1, mask:int}) — FROZEN-ID RULE
- * (binding, docs/DESIGN-V3.md §フィードバック + Phase-0 appendix):
+ * (binding, docs/DESIGN-V3.md feedback section + Phase-0 appendix):
  *   - bit N of mask == collectible with FROZEN id N (COLLECTIBLE_IDS).
- *   - ids are APPEND-ONLY: v5 added id 12 スタックチャン (code 110 via
+ *   - ids are APPEND-ONLY: v5 added id 12 the robot mascot (code 110 via
  *     objects.js collectibleCodeForId — the 70 + id rule is unextendable);
  *     later builds may add ids 13..30 and bump the displayed total, but ids
  *     are NEVER reused or reordered. Old 12-bit masks load unchanged (bit 12
@@ -42,7 +42,7 @@ import { EVT, PAYLOADS } from '../core/events.js';
 import { LS_COLLECTION_KEY, COLLECT_TOTAL, THUMB_SIZE_PX } from '../config/tuning.js';
 import { getSharedObjectMaterial } from '../render/instances.js';
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
-// P7: album code map is pack-scoped (Taipei collectibles), not the Tokyo globals.
+// P7: album code map is pack-scoped (Taipei collectibles), not the legacy globals.
 const ARCHETYPE_ID_BY_CODE = activePack.archetypeIdByCode;
 const collectibleCodeForId = activePack.codeForCollectibleId;
 
@@ -85,7 +85,7 @@ function nameForId(id) {
 
 /* Boot DEV-assert (v5): every displayed collectible id must resolve through
    collectibleCodeForId to a real archetype with a display name — catches any
-   future reintroduction of the broken 70 + id hand-roll (code 82 = 西郷さん像)
+   future reintroduction of the broken 70 + id hand-roll (code 82 = a landmark statue)
    and any id/total drift between tuning.js and the code tables. */
 if (import.meta.env && import.meta.env.DEV) {
   for (let id = 0; id < COLLECT_TOTAL; id++) {
@@ -107,7 +107,7 @@ if (import.meta.env && import.meta.env.DEV) {
 /**
  * The rare-collection album: persistence, EVT.COLLECT emission, thumbnails.
  *
- * Frozen interface (DESIGN-V3.md §インターフェース):
+ * Frozen interface (DESIGN-V3.md interface section):
  *   constructor(bus); get foundCount(); get foundThisRun();
  *   prerenderThumbnails(renderer, geos); thumbnailUrl(id); resetRun();
  *   static loadMask()

@@ -2,7 +2,7 @@
  * @file rng.js — mulberry32 seeded PRNG + integer hash for deterministic chunk seeding.
  *
  * Same (worldSeed, cx, cz, tier) ALWAYS regenerates the identical chunk —
- * the foundation of the deterministic spawner (DESIGN.md スポーン / カタログ).
+ * the foundation of the deterministic spawner (DESIGN.md spawn / catalog).
  * Chunk coordinates are kept in ORIGIN-UNSHIFTED global coords so determinism
  * survives floating-origin rebases.
  */

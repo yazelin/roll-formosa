@@ -8,7 +8,7 @@
  *   speedCap = SPEED_K * simRadius
  *   friction = vel *= FRICTION_PER_FRAME ^ (dt * 60)
  *
- * v2 DASH (docs/DESIGN-V2.md §ゲームシステム): BallState gains dashGauge01
+ * v2 DASH (docs/DESIGN-V2.md game system): BallState gains dashGauge01
  * (starts 1.0; += dt / DASH_RECHARGE_S, clamped; absorb.js adds
  * DASH_ABSORB_GAIN per absorb) and dashTimer. On intent.dash (edge-latched by
  * input.js) with a full gauge: vel += dir * DASH_IMPULSE_K * radiusSim where
@@ -79,7 +79,7 @@ export class BallPhysics {
    *   DOCUMENTED OVERLAP EXCEPTION #2 (docs/DESIGN-V3.md, like v2's
    *   WIN_RADIUS_M note): the injected CityTerrain (world/terrain.js,
    *   Stream B). When present, terrain.collide(state) runs once per substep
-   *   AFTER XZ integration (shop walls/prisms + permanent Skytree base
+   *   AFTER XZ integration (shop walls/prisms + permanent goal-tower base
    *   circle + map-bounds clamp + soft edge damping). Default null so the
    *   Phase-0 build boots unchanged; reset() is deliberately UNTOUCHED —
    *   the v3 map is authored with ORIGIN = BALL START so (0, r, 0) stays
@@ -222,7 +222,7 @@ export class BallPhysics {
 
     /* --- v3 terrain collision (AFTER XZ integration — binding order) --
        CityTerrain resolves shop walls/prisms (circle-vs-AABB, BOUNCE with
-       cooldown), the permanent Skytree base circle, the map-bounds hard
+       cooldown), the permanent goal-tower base circle, the map-bounds hard
        clamp and the soft edge damping. Mutates pos/vel in place; no-op
        until main.js injects the real terrain (Phase-0 stub is null). */
     if (this._terrain !== null) this._terrain.collide(s);

@@ -10,7 +10,7 @@
  * v5 extension = 0x56355441).
  *
  * Validation: routes through validatePack(pack) (R6). Taipei LANDMARKS carry
- * native `name` and `isGoal` fields — the P3/P5 Tokyo-shim is removed.
+ * native `name` and `isGoal` fields — the legacy shim is removed.
  *
  * Code-map methods (R5): attached on the pack object via buildCodeMap.
  */
@@ -32,9 +32,9 @@ import { goalMonument } from './monument.js';
 import * as narration from './narration.js';
 import { ending } from './ending.js';
 
-// P6b: Taipei replaces EXTRA codes 82..89 (Tokyo landmark ids at indices 12..19)
+// P6b: Taipei replaces EXTRA codes 82..89 (legacy landmark ids at indices 12..19)
 // with Taipei landmark ids. Collectible codes 70..81 (indices 0..11) and codes
-// 90..93 (indices 20..23) remain frozen Tokyo ids.
+// 90..93 (indices 20..23) remain frozen placeholder ids.
 import { NM_BEIMEN } from './landmarks/beimen.js';
 import { NM_LONGSHAN } from './landmarks/longshan.js';
 import { NM_XIMEN } from './landmarks/ximen.js';
@@ -46,10 +46,10 @@ import { NM_ARENA } from './landmarks/arena.js';
 
 /**
  * EXTRA id order for the Taipei pack.
- * Codes 70..81 (indices 0..11): same Tokyo collectible ids (frozen).
+ * Codes 70..81 (indices 0..11): frozen collectible ids.
  * Codes 82..89 (indices 12..19): Taipei landmark ids (P6b).
- * Codes 90..93 (indices 20..23): same Tokyo bridge/tower/shop/skytree ids.
- * Codes 94..98 (v5 indices 0..4): same Tokyo v5 ids.
+ * Codes 90..93 (indices 20..23): frozen bridge/tower/shop/goal-tower ids.
+ * Codes 94..98 (v5 indices 0..4): frozen v5 ids.
  */
 const extraIds = [
   // indices 0..11 — codes 70..81: Taipei collectibles (P7)
@@ -70,7 +70,7 @@ const extraIds = [
   'mazu', 'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
 ];
 
-// Collectible album id -> index in extraIds (legacy Tokyo rule preserved).
+// Collectible album id -> index in extraIds (legacy rule preserved).
 const collectibleExtraIndex = {};
 for (let id = 0; id <= 11; id++) collectibleExtraIndex[id] = id;
 collectibleExtraIndex[12] = EXTRA_ARCHETYPE_IDS.length + 0; // stack_chan (first v5)
@@ -81,19 +81,19 @@ export const activePack = {
   displayName: '台北',
   region: 'TW',
   locale, // zh-TW t()/fmt() (R10: routes HUD/screens strings)
-  tiers: TIERS, // P3 stub: Tokyo tiers; P4 replaces with Taipei ladder
+  tiers: TIERS, // Taipei tier ladder
   rescaleS: RESCALE_S,
   archPerTier: ARCH_PER_TIER,
-  archetypes: CATALOG, // P3 stub: Tokyo recipes; P5 replaces
+  archetypes: CATALOG, // Taipei archetype recipes
   extraCatalog: EXTRA_CATALOG,
   extraSizeClassByCode: EXTRA_SIZE_CLASS_BY_CODE,
   extraPoolCaps: EXTRA_POOL_CAPS,
   displayNameByCode: DISPLAY_NAME_BY_CODE, // P5 replaces with zh-TW names
   extraIds,
   collectibleExtraIndex,
-  cityMap, // P3 stub: Tokyo city map namespace; P6 replaces
+  cityMap, // Taipei city map namespace
   map: { bounds: { x: MAP_BOUNDS.x, z: MAP_BOUNDS.z } },
-  landmarks: cityMap.LANDMARKS, // P3 stub: Tokyo landmarks; P6 replaces
+  landmarks: cityMap.LANDMARKS, // Taipei landmarks
   absorbRatio: ABSORB_RATIO,
   seeds: { primary: 0x54414950, v5: 0x56355441 }, // TAIP / V5TA
   goalMonument, // P6a: 台北101 goal monument (buildGeometry/pos/winToast)
@@ -121,7 +121,7 @@ const _codeMap = buildCodeMap(activePack);
 activePack.archetypeIdByCode = _codeMap.idByCode;
 /** @type {Record<string, number>} archetype id -> code. */
 activePack.codeByArchetypeId = _codeMap.codeById;
-/** @type {string[]} code -> display name (P3: still Tokyo Japanese names; P5 replaces). */
+/** @type {string[]} code -> display name (Taipei zh-TW names). */
 activePack.displayNameByCodeArr = DISPLAY_NAME_BY_CODE;
 /** @param {number} id collectible album id @returns {number} archetype code. */
 activePack.codeForCollectibleId = (id) => _codeMap.collectibleCodeForId(id);

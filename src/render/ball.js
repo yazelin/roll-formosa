@@ -27,7 +27,7 @@
  * tier*ARCH_PER_TIER + slotInTier (order frozen in config/tiers.js
  * archetypeIds; landmark slots 8/9 fold onto proxy families 0/1). v3: EXTRA
  * curated codes 70..93 fold onto proxy families with the SAME
- * (code % ARCH_PER_TIER) & 7 formula (e.g. 80 ハチ公像 -> family 0).
+ * (code % ARCH_PER_TIER) & 7 formula (e.g. 80 landmark statue -> family 0).
  * v5: curated codes 94..98 map through V5_STUCK_FAMILY onto building proxy
  * families only (0 boxy / 4 flat slab / 5 tall pillar).
  *
@@ -163,7 +163,7 @@ const V5_STUCK_FAMILY = Uint8Array.from([
    archetypeIdByCode (pack-scoped code map built by buildCodeMap at boot) for
    all 70 chunk codes; and objects.js must carry all 99 entries (70 chunk +
    24 EXTRA + 5 v5) for the EXTRA lookup paths in curated/collection.
-   NOTE: objects.js ARCHETYPE_ID_BY_CODE[0..69] is Tokyo-tied (can't import
+   NOTE: objects.js ARCHETYPE_ID_BY_CODE[0..69] is legacy-tied (can't import
    activePack there — cycle). We validate chunk codes only against the pack
    code map, and validate the 99-length invariant of objects.js separately. */
 if (import.meta.env && import.meta.env.DEV) {
@@ -180,7 +180,7 @@ if (import.meta.env && import.meta.env.DEV) {
     );
   }
   // Validate chunk codes against the ACTIVE PACK's code map (pack-scoped,
-  // not the Tokyo-tied objects.js table which differs when Taipei is active).
+  // not the legacy-tied objects.js table which differs when Taipei is active).
   const packIdByCode = activePack.archetypeIdByCode;
   for (let c = 0; c < 70; c++) {
     if (ARCHETYPE_IDS[c] !== packIdByCode[c]) {

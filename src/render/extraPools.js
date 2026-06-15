@@ -4,8 +4,8 @@
  *
  * INTEGRATION-OWNED (v3). docs/DESIGN-V3.md spawnArchitecture RENDER POOLS
  * specifies "4 SHARED InstancedPools by size class ... flat +4 draws", but a
- * THREE.InstancedMesh carries exactly ONE geometry — it cannot render 雷門
- * and 西郷さん像 from the same pool. BatchedMesh is the draw-call-identical
+ * THREE.InstancedMesh carries exactly ONE geometry — it cannot render a landmark gate
+ * and a landmark statue from the same pool. BatchedMesh is the draw-call-identical
  * resolution: one mesh (= 1 draw call via WEBGL_multi_draw) holding every
  * class member's geometry, per-instance geometry chosen at alloc(code).
  *
@@ -22,7 +22,7 @@
  * deleteInstance run only on curated activation/deactivation events (the
  * amortized <=64/frame ring path), never per frame.
  *
- * v4 (docs/DESIGN-V4.md レンダリング統合 — Stream R):
+ * v4 (docs/DESIGN-V4.md rendering integration — Stream R):
  * - MEMBER-LIST INJECTION IS GENERAL: BatchedExtraPool is code-agnostic — it
  *   maps any injected {code, geometry} member list to BatchedMesh geometry
  *   ids. render/osmPools.js reuses the class verbatim for the two OSM
@@ -49,7 +49,7 @@ import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT sea
 const EXTRA_SIZE_CLASS_BY_CODE = activePack.extraSizeClassByCode; // EXTRA code -> size class (catalog content)
 const EXTRA_POOL_CAPS = activePack.extraPoolCaps; // size class -> spec floor cap (catalog content)
 // P6b: use the pack-scoped id-by-code table so Taipei landmarks (codes 82..89)
-// resolve to Taipei ids (e.g. 'beimen') rather than frozen Tokyo ids.
+// resolve to Taipei ids (e.g. 'beimen') rather than frozen legacy ids.
 // Falls back to the global frozen table for any code the pack doesn't override.
 const _PACK_ID_BY_CODE = activePack.archetypeIdByCode || _GLOBAL_ARCHETYPE_ID_BY_CODE;
 
@@ -349,7 +349,7 @@ export class BatchedExtraPool {
 
 /**
  * Size-class pool index (0..3, curated's EXTRA_POOL_CLASS order) for an
- * EXTRA code, or -1 (chunk codes / 93 Skytree display slot).
+ * EXTRA code, or -1 (chunk codes / 93 goal-tower display slot).
  * @param {number} code @returns {number}
  */
 export function extraClassIndexForCode(code) {
@@ -411,7 +411,7 @@ export function buildExtraPools(geos, material) {
   const idByCode = _PACK_ID_BY_CODE;
   for (let code = EXTRA_CODE_BASE; code < idByCode.length; code++) {
     const cls = EXTRA_SIZE_CLASS_BY_CODE[code];
-    if (cls === null || cls === undefined) continue; // 93 Skytree display slot / goal
+    if (cls === null || cls === undefined) continue; // 93 goal-tower display slot / goal
     const k = CLASS_INDEX[cls];
     const g = geos[idByCode[code]]; // pack-scoped id lookup (Taipei overrides 82..89)
     if (k === undefined || !g) {

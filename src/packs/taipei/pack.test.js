@@ -90,7 +90,7 @@ describe('taipei pack (P3 skeleton)', () => {
     // cityMap namespace fields
     expect(typeof activePack.cityMap.PLACEMENTS).toBe('object');
     expect(typeof activePack.cityMap.SHOP).toBe('object');
-    expect(typeof activePack.cityMap.SKYTREE_POS).toBe('object');
+    expect(typeof activePack.cityMap.GOAL_POS).toBe('object');
     expect(typeof activePack.cityMap.bandAllowedAt).toBe('function');
   });
 

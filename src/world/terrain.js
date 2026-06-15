@@ -1,6 +1,6 @@
 /**
  * @file terrain.js — CityTerrain: the ONLY authored collision in v3 besides
- * absorb pushback (Stream B; docs/DESIGN-V3.md §箱庭東京マップ A/D).
+ * absorb pushback (Stream B; diorama-city map A/D).
  *
  * Owns, in collide() order (called once per fixed substep by BallPhysics
  * AFTER XZ integration — Phase-0 documented exception #2):
@@ -11,9 +11,9 @@
  *     only AFTER the fade completes (one-shot — the single sanctioned
  *     structural handoff, exemptions ledger #6; world/curated.js mirrors the
  *     same latch for the elevated-item y-drop + shop-shell activation).
- *  2. PERMANENT Skytree base circle (SKYTREE_BASE_R_M * SKYTREE_COLLIDER_K =
+ *  2. PERMANENT goal-tower base circle (MONUMENT_BASE_R_M * MONUMENT_COLLIDER_K =
  *     54 m real) — BOUNCE, never absorbs, never released. The validator
- *     asserts SKYTREE_COLLIDER_K < GOAL_CONTACT_PAD so the finale contact
+ *     asserts MONUMENT_COLLIDER_K < GOAL_CONTACT_PAD so the finale contact
  *     always fires before the ball can reach the collider; after
  *     EVT.GOAL_CONTACT the base test is skipped so the MERGE ball-lerp is
  *     never fought (re-armed by reset()).
@@ -48,11 +48,11 @@ import * as THREE from 'three';
 import { MAP_BOUNDS } from '../config/tuning.js'; // engine constant (world bounds)
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 const SHOP = activePack.cityMap.SHOP; // shop interior/walls geometry (city content)
-const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
+const GOAL_POS = activePack.cityMap.GOAL_POS; // goal monument real-meter pose (city content)
 /** Goal monument base radius (REAL m) — from pack if available, else tuning fallback. */
 const GOAL_BASE_R_M = (activePack.goalMonument && activePack.goalMonument.baseRadiusM)
   ? activePack.goalMonument.baseRadiusM
-  : 90; // fallback: legacy SKYTREE_BASE_R_M
+  : 90; // fallback: legacy MONUMENT_BASE_R_M
 import { EVT, PAYLOADS } from '../core/events.js';
 import {
   BOUNCE_RESTITUTION,
@@ -61,7 +61,7 @@ import {
   EDGE_SOFT_BAND_K,
   FIXED_DT,
   SHOP_TERRAIN_RELEASE_M,
-  SKYTREE_COLLIDER_K,
+  MONUMENT_COLLIDER_K,
   SPEED_K,
 } from '../config/tuning.js';
 
@@ -126,7 +126,7 @@ export class CityTerrain {
     this._released = false;
     /** @type {number} Fade elapsed (s) once released. */
     this._releaseT = 0;
-    /** @type {boolean} True from EVT.GOAL_CONTACT (skip the skytree base so
+    /** @type {boolean} True from EVT.GOAL_CONTACT (skip the goal-tower base so
      *  the finale MERGE ball-lerp is never fought); reset() re-arms. */
     this._goalContacted = false;
 
@@ -236,11 +236,11 @@ export class CityTerrain {
       }
     }
 
-    /* --- 2. permanent Skytree base circle (never absorbs/releases) --- */
+    /* --- 2. permanent goal-tower base circle (never absorbs/releases) --- */
     if (!this._goalContacted) {
-      const bx = SKYTREE_POS.x * invWS - ox;
-      const bz = SKYTREE_POS.z * invWS - oz;
-      const baseR = GOAL_BASE_R_M * SKYTREE_COLLIDER_K * invWS;
+      const bx = GOAL_POS.x * invWS - ox;
+      const bz = GOAL_POS.z * invWS - oz;
+      const baseR = GOAL_BASE_R_M * MONUMENT_COLLIDER_K * invWS;
       const dx = pos.x - bx;
       const dz = pos.z - bz;
       const minD = r + baseR;

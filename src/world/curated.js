@@ -1,6 +1,6 @@
 /**
  * @file curated.js — CuratedSpawner (Stream B; docs/DESIGN-V3.md
- * §スポーンアーキテクチャ). Owns the ~410 authored cityMap placements
+ * §spawn-architecture). Owns the ~410 authored cityMap placements
  * (shop interior, street/gutter/district dressing, 11 landmark singletons,
  * 12 collectibles, shop shell) and allocates them from the SAME ObjectStore /
  * spatial hashes / InstancedPools as the chunk spawner under the frozen
@@ -44,7 +44,7 @@
  *  - LANDMARKS: EVT.LANDMARK is queued in the ABSORB handler and emitted at
  *    the START of the next update() — same render frame (absorb runs in
  *    step 2, curated.update in step 3), strictly AFTER the whole ABSORB
- *    dispatch chain. DUAL-TAG (ハチ公像): EVT.COLLECT is emitted by
+ *    dispatch chain. DUAL-TAG (statue): EVT.COLLECT is emitted by
  *    collection.js DURING the ABSORB dispatch, so COLLECT precedes LANDMARK
  *    in the same frame by construction (binding order).
  *  - TERRAIN RELEASE MIRROR: this class independently latches trueRadius >=
@@ -70,7 +70,7 @@ const CATALOG = activePack.archetypes; // archetype recipes (id -> ArchetypeDef)
 // P5: pack-scoped code->id for chunk codes (0..69); EXTRA codes (70..98) are
 // pack-invariant (frozen EXTRA_ARCHETYPE_IDS order), so objects.js is used there.
 const _PACK_ID_BY_CODE = activePack.archetypeIdByCode;
-import { ARCHETYPE_ID_BY_CODE, FLAG_ALIVE, FLAG_RARE, FLAG_CURATED } from './objects.js';
+import { FLAG_ALIVE, FLAG_RARE, FLAG_CURATED } from './objects.js';
 import { EVT, PAYLOADS } from '../core/events.js';
 import {
   CURATED_PLACEMENT_CAP,
@@ -93,7 +93,7 @@ const DEV = typeof import.meta !== 'undefined' && import.meta.env && import.meta
 /* FLAG_CURATED (16, frozen) now imported from objects.js — unified at
  * integration per the Phase-0 note. */
 
-/** First EXTRA code (70..93; 93 = Skytree display slot, never spawned). */
+/** First EXTRA code (70..93; 93 = goal-tower display slot, never spawned). */
 const EXTRA_BASE = 70;
 /** Chunk-code count (70 = 7 tiers x ARCH_PER_TIER). */
 const CHUNK_CODES = 70;
@@ -103,20 +103,20 @@ const CHUNK_CODES = 70;
  * docs/DESIGN-V3.md spawnArchitecture RENDER POOLS; catalog.js EXTRA_CATALOG
  * carries the same assignment for Stream C's geometry authoring):
  *   0 collectible-small (cap 12): codes 70..79, 81
- *   1 landmark-mid      (cap 4+): 80 ハチ公, 82 西郷, 83 雷門, 84 ラジオ会館,
- *                                 86 スクランブル交差点デカール
- *   2 landmark-large    (cap 4):  85 渋谷109, 87 ドーム, 88 東京駅, 89 議事堂
- *   3 landmark-XL       (cap 4+): 90 橋スパン x3, 91 タワー, 92 shop shell
+ *   1 landmark-mid      (cap 4+): 80 statue, 82 statue, 83 gate, 84 hall,
+ *                                 86 crossing decal
+ *   2 landmark-large    (cap 4):  85 landmark, 87 dome, 88 station, 89 assembly hall
+ *   3 landmark-XL       (cap 4+): 90 bridge span x3, 91 tower, 92 shop shell
  */
 const EXTRA_POOL_CLASS = Int8Array.from([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 70..79 collectibles
-  1, // 80 ハチ公像 (dual)
-  0, // 81 屋形船
-  1, 1, 1, // 82 西郷 83 雷門 84 ラジオ会館
-  2, // 85 渋谷109
-  1, // 86 スクランブル交差点 (decal)
-  2, 2, 2, // 87 ドーム 88 東京駅 89 議事堂
-  3, 3, 3, // 90 橋スパン 91 東京タワー 92 shop shell
+  1, // 80 statue (dual)
+  0, // 81 boat
+  1, 1, 1, // 82 statue 83 gate 84 hall
+  2, // 85 landmark
+  1, // 86 crossing (decal)
+  2, 2, 2, // 87 dome 88 station 89 assembly hall
+  3, 3, 3, // 90 bridge span 91 tower 92 shop shell
 ]);
 
 /** First v5 curated code (objects.js V5_CODE_BASE — codes 110..114 append
@@ -125,9 +125,9 @@ const EXTRA_POOL_CLASS = Int8Array.from([
  *  table below instead). Mirrors catalog.js EXTRA_SIZE_CLASS_BY_CODE. */
 const V5_BASE = 110;
 /** v5 code -> shared size-class pool index (frozen order = V5_ARCHETYPE_IDS):
- *  0 collectible-small: 110 スタックチャン (collectible id 12);
- *  1 landmark-mid: 111 ゲームセンター 112 家電量販店 113 メイドカフェ
- *  114 PCパーツショップビル (6 Akihabara placements — landmark-mid cap 12). */
+ *  0 collectible-small: 110 mascot (collectible id 12);
+ *  1 landmark-mid: 111 arcade 112 electronics store 113 themed cafe
+ *  114 PC parts store building (6 electronics-district placements — landmark-mid cap 12). */
 const V5_POOL_CLASS = Int8Array.from([
   0, // 110 stack_chan
   1, 1, 1, 1, // 111..114 akiba buildings

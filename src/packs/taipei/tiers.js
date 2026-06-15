@@ -1,6 +1,6 @@
 /**
  * @file packs/taipei/tiers.js — Roll Formosa Taipei pack: the 7-tier scale
- * ladder (圖釘 2 cm → 台北 101). Pack-scoped re-theme of the engine's Tokyo
+ * ladder (圖釘 2 cm → 台北 101). Pack-scoped re-theme of the engine's legacy
  * tier table. The engine reads tiers via the active pack (src/packs/active.js),
  * NOT via config/tiers.js — but RESCALE_S / ARCH_PER_TIER stay engine constants
  * there; this pack imports ARCH_PER_TIER only for its self-check.
@@ -243,7 +243,7 @@ export function validateTiersStructure() {
     }
 
     /* Sky/fog authoring guards (relocated from the engine's old config/tiers.js
-       — they now validate the SHIPPING Taipei tier params, not dead Tokyo data).
+       — they now validate the SHIPPING Taipei tier params, not dead legacy data).
        Worst-case worldScale fog/load floor: the fog wall must hide the spawn-in
        edge EVEN WHERE the real-meter floors bind (ws_t = (START_RADIUS_M /
        SIM_RADIUS_MIN) * 5^t at reference simRadius 1). */

@@ -2,20 +2,20 @@
  * @file packs/taipei/monument.js — Taipei 101 goal monument descriptor (P6a).
  *
  * Exposes the goalMonument shape consumed by:
- *   - render/goalTower.js (GoalMonumentView) — buildGeometry + pos
+ *   - render/goalTower.js (GoalTowerView) — buildGeometry + pos
  *   - world/terrain.js   — pos + baseRadiusM (permanent base collider)
  *   - game/finale.js     — pos + winToast
  *   - activePack         — via taipei/index.js goalMonument field
  *
- * TAIPEI101_POS reuses the Skytree world position (749, -252) for P6a —
- * the Taipei city map will author a new anchor in P6b; for now the goal
- * stands at the same map location so all existing finale/terrain math
+ * TAIPEI101_POS reuses the legacy goal-monument world position (749, -252)
+ * for P6a — the Taipei city map will author a new anchor in P6b; for now the
+ * goal stands at the same map location so all existing finale/terrain math
  * continues to work without a city-map rewrite.
  *
- * goal constants retune (101 = 508 m real vs Skytree 634 m):
+ * goal constants retune (101 = 508 m real vs the legacy 634 m monument):
  *   goalRadiusM  = 420 m  (same GOAL_RADIUS_M — dramatic approach unchanged)
  *   baseRadiusM  = 72 m   (101 base ~58 m real, bumped for game feel;
- *                           SKYTREE_BASE_R_M 90 m scaled by 508/634 ≈ 72 m)
+ *                           MONUMENT_BASE_R_M 90 m scaled by 508/634 ≈ 72 m)
  *
  * winToast (spec §5.3 R13 bear-cheer zh-TW string; no 跨年煙火 per R13).
  */
@@ -23,11 +23,11 @@
 import { NM_TAIPEI101 } from './landmarks/taipei101.js';
 
 /** Taipei 101 game-world position (REAL meters, origin = ball start).
- *  P6a: reuses Skytree world anchor; P6b will update to real Xinyi coords. */
+ *  P6a: reuses the legacy goal-monument world anchor; P6b will update to real Xinyi coords. */
 export const TAIPEI101_POS = Object.freeze({ x: 749, z: -252 });
 
-/** 台北101 base radius in REAL meters (game feel; scales from 90 m Skytree
- *  by real-height ratio 508/634 ≈ 0.80 → 72 m).  */
+/** 台北101 base radius in REAL meters (game feel; scales from the legacy 90 m
+ *  monument by real-height ratio 508/634 ≈ 0.80 → 72 m).  */
 export const TAIPEI101_BASE_R_M = 72;
 
 /**

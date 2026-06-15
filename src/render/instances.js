@@ -2,7 +2,7 @@
  * @file instances.js — InstancedPool: one InstancedMesh per (archetype, tier
  * band) for world objects, and per archetype family for ball-stuck pools.
  *
- * Mechanics (DESIGN.md レンダリング):
+ * Mechanics (DESIGN.md rendering):
  * - free-list slots; dead/hidden slots get a ZERO-SCALE matrix; mesh.count
  *   stays at the high-water mark while ANY slot is live (degenerate tris are
  *   pre-raster rejected), and collapses to 0 + mesh.visible=false the moment
@@ -25,7 +25,7 @@
  * Zero-allocation: all state lives in preallocated typed arrays; matrices are
  * composed scalar-wise straight into instanceMatrix.array.
  *
- * v4 (docs/DESIGN-V4.md レンダリング統合): setTransform gains an OPTIONAL
+ * v4 (docs/DESIGN-V4.md rendering integration): setTransform gains an OPTIONAL
  * non-uniform scale overload `setTransform(slot, pos, quat, s, sy = s,
  * sz = s)` — existing 4-arg callers are byte-identical in behavior (uniform).
  * Fade animators store and multiply the full scale TRIPLE; rescaleAll(S)
@@ -67,7 +67,7 @@ export function getSharedObjectMaterial() {
 /**
  * Fixed-capacity instanced pool over one InstancedMesh.
  *
- * Frozen interface (DESIGN.md モジュール間インターフェース):
+ * Frozen interface (DESIGN.md inter-module interface):
  *   new InstancedPool(geometry, material, capacity)
  *   alloc():slot|-1; free(slot); setTransform(slot,pos,quat,scale);
  *   setColor(slot,hex); fadeIn(slot,s); fadeOut(slot,s);

@@ -1,7 +1,7 @@
 /**
  * @file spawner.js — Deterministic chunk streaming (Dev B / world stream).
  *
- * Responsibilities (DESIGN.md スポーン / カタログ):
+ * Responsibilities (DESIGN.md spawn / catalog):
  *  - Deterministic chunk placement: chunk (cx, cz, band) contents are a pure
  *    function of hash(worldSeed, cx, cz, band) + a per-placement sub-seed, so
  *    the same chunk ALWAYS regenerates identically (mulberry32 sequence).
@@ -31,7 +31,7 @@
  *    are tracked in a bounded (storeIdx, slotGen) Int32Array list exposed via
  *    forEachAliveRare() (effects golden twinkles); reinjected knock-offs are
  *    NEVER rare (score credit was granted at absorb — no double count).
- *  - v3 ZONE MASKS (docs/DESIGN-V3.md スポーンアーキテクチャ): AFTER the
+ *  - v3 ZONE MASKS (docs/DESIGN-V3.md spawn architecture): AFTER the
  *    deterministic draws complete, a placement is dropped unless
  *    cityMap.bandAllowedAt(xReal, zReal, band) — a static pure lookup over
  *    the authored district rects in REAL METERS (native coords ARE real
@@ -243,9 +243,10 @@ export class Spawner {
    *   per archetype id (Map or plain record; looked up lazily so pools may be
    *   created after construction).
    * @param {import('../core/events.js').EventBus} bus Shared event bus.
-   * @param {Object<string, Archetype>|null} [catalog] CATALOG from
-   *   config/catalog.js. Optional so this module integrates before Dev E
-   *   lands; missing entries get neutral placeholder stats.
+   * @param {Object<string, Archetype>|null} [catalog] CATALOG from the active
+   *   pack's catalog (packs/taipei/catalog.js). Optional so this module
+   *   integrates before Dev E lands; missing entries get neutral placeholder
+   *   stats.
    * @param {{ worldScale: number, rescaleCount: number }|null} [scaleMgr]
    *   v3 OPTIONAL ScaleManager reference — used ONLY by onTeleport() to
    *   resync the scale exponent after devTeleport's direct worldScale write

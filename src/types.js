@@ -7,12 +7,12 @@
  *   /** @typedef {import('../types.js').BallState} BallState *\/
  *
  * Any change to this file must go through the lead (Phase 0 owner).
- * See docs/DESIGN.md §モジュール間インターフェース for the binding v1 spec,
- * docs/DESIGN-V2.md §インターフェース for the v2 delta (moon update),
- * docs/DESIGN-V3.md §インターフェース for the BINDING v3 delta (Hakoniwa
- * Tokyo: GOAL_* + LANDMARK + COLLECT events, curated spawner shapes, 7 tiers),
- * and docs/DESIGN-V4.md §インターフェース for the BINDING v4 delta (Real
- * Tokyo: OSM_READY event, OSM data shapes, unit-box archetypes, hero pass).
+ * See docs/DESIGN.md (inter-module interface) for the binding v1 spec,
+ * docs/DESIGN-V2.md (interface) for the v2 delta (moon update),
+ * docs/DESIGN-V3.md (interface) for the BINDING v3 delta (diorama
+ * city: GOAL_* + LANDMARK + COLLECT events, curated spawner shapes, 7 tiers),
+ * and docs/DESIGN-V4.md (interface) for the BINDING v4 delta (real-OSM
+ * city: OSM_READY event, OSM data shapes, unit-box archetypes, hero pass).
  *
  * v4 BINDING ABSORB subscription order (extends v3 — frozen):
  *   chunk spawner -> curated -> osmSpawner -> main attach -> runStats ->
@@ -25,25 +25,25 @@
 /* ------------------------------------------------------------------ */
 
 /**
- * One scale tier (config/tiers.js). tierIndex drives ONLY cosmetics and
+ * One scale tier (config/tiers.js — constants; per-pack tier data in the active pack). tierIndex drives ONLY cosmetics and
  * spawn-content selection — never physics/camera/fog math (those are
  * continuous functions of ball radius; see DESIGN.md SEAMLESSNESS LAW).
  *
  * v2: per-tier SKY PARAMS (sun/moon/stars/clouds) ride the existing
  * environment palette crossfade — still cosmetic-only. The env-local NIGHT
  * palette (finale ascension) is NOT a tier.
- * v3 (Hakoniwa Tokyo): SEVEN tiers (パーツ棚 0.02m .. スカイライン 300m);
+ * v3 (diorama city): SEVEN tiers (parts-shelf 0.02m .. skyline 300m);
  * tiers.js keeps exactly 7 entries, NIGHT stays env-local. moonAngSize is a
  * night cosmetic in v3 (non-decreasing, no longer strictly increasing).
  *
  * @typedef {Object} Tier
- * @property {number}   index           0..6 (パーツ棚..スカイライン).
+ * @property {number}   index           0..6 (parts-shelf..skyline).
  * @property {string}   name            Display name for HUD banner.
  * @property {number}   enterTrueRadius Real-meter ball radius at which this tier begins.
  * @property {number}   cellSizeSim     Chunk/spatial-hash cell size in sim units (this tier's native scale, i.e. when it is the CURRENT tier).
  * @property {number}   loadRadiusSim   Chunk load radius in sim units when this tier is the target (N) band.
  * @property {number}   objectsPerChunk Placements per chunk when this tier is the target band.
- * @property {string[]} archetypeIds    Exactly ARCH_PER_TIER (10) catalog ids (frozen — config/catalog.js must implement these). Slots [8],[9] are LANDMARKS (landmark eligibility rule: archRoll over all 10 ONLY at placement j === 0 of a chunk).
+ * @property {string[]} archetypeIds    Exactly ARCH_PER_TIER (10) catalog ids (frozen — the active pack catalog must implement these). Slots [8],[9] are LANDMARKS (landmark eligibility rule: archRoll over all 10 ONLY at placement j === 0 of a chunk).
  * @property {number}   fogColor        Hex color for fog while this tier is current.
  * @property {number}   skyTop          Hex color, sky-dome gradient top.
  * @property {number}   skyBottom       Hex color, sky-dome gradient bottom.
@@ -57,10 +57,10 @@
  */
 
 /**
- * One spawnable object archetype (config/catalog.js).
+ * One spawnable object archetype (the active pack catalog).
  * v3: 70 chunk codes (ARCH_PER_TIER 10 x 7 tiers, slots 8/9 = chunk landmarks)
  * + 24 EXTRA curated codes 70..93 (12 collectibles, 10 landmark singletons,
- * shop shell, Skytree display slot) = DISPLAY_NAME_BY_CODE length 94.
+ * shop shell, goal-tower display slot) = DISPLAY_NAME_BY_CODE length 94.
  * Every entry additionally carries displayNameJa (Stream C, catalog.js).
  *
  * @typedef {Object} Archetype
@@ -270,7 +270,7 @@
 
 /**
  * 'goalCall' — trueRadius crossed GOAL_CALL_RADIUS_M, once (game/finale.js).
- * v3: 「スカイツリーが呼んでいる…！」 toast + skytree beam pulse, bgm swell, sfx pad.
+ * v3: "the goal tower is calling…!" toast + goal-tower beam pulse, bgm swell, sfx pad.
  * @typedef {Object} GoalCallEvent
  * @property {number} trueRadius Ball radius in real meters at the call.
  */
@@ -286,12 +286,12 @@
  * @property {boolean} active   Guide visible; false = hide the arrow.
  * @property {string}  kind     'goal' (finale tower guide, default) | 'parts'
  *   (v5 opening onboarding guide — hud swaps the glyph 🗼->🔩 and suppresses
- *   the 「スカイツリーへ向かえ！」 toast + its once-latch).
+ *   the "head for the goal tower" toast + its once-latch).
  */
 /** @typedef {GoalGuideEvent} MoonGuideEvent @deprecated v3: use GoalGuideEvent (same shape, wire name 'goalGuide'). */
 
 /**
- * 'goalContact' — ball touched the Skytree = CLEAR TIME instant, once
+ * 'goalContact' — ball touched the goal tower = CLEAR TIME instant, once
  * (game/finale.js). -> runStats (freeze + GOAL), bgm duck->stop, sfx grand
  * fanfare, hud hide (#donack-root survives — it lives OUTSIDE #hud), screens
  * flash. From this frame finale.inputLocked and finale.cameraOwned are true.
@@ -304,7 +304,7 @@
  * world/curated.js AFTER the normal ABSORB chain). -> hud center toast,
  * effects gold ring burst, sfx fanfare sting, Donack trivia (P3), runStats
  * LANDMARK_SCORE_BONUS. DUAL-TAG rule: for objects carrying BOTH ids
- * (ハチ公像), EVT.COLLECT is emitted FIRST, then EVT.LANDMARK, same frame.
+ * (the dual-tag statue), EVT.COLLECT is emitted FIRST, then EVT.LANDMARK, same frame.
  * @typedef {Object} LandmarkEvent
  * @property {number} landmarkId Frozen landmark id 0..10 (docs/DESIGN-V3.md Phase-0 appendix).
  * @property {string} nameJa     Display name, e.g. '雷門'.
@@ -318,7 +318,7 @@
  * same frame — dual-tag rule).
  * @typedef {Object} CollectEvent
  * @property {number}  collectibleId Frozen id 0..11 (COLLECTIBLE_IDS — append-only, never reordered).
- * @property {string}  nameJa        Display name, e.g. '金の招き猫'.
+ * @property {string}  nameJa        Display name (pack-localized).
  * @property {boolean} isNew         First time across ALL runs (localStorage mask bit was 0).
  * @property {number}  found         Total found across all runs AFTER this collect.
  * @property {number}  total         COLLECT_TOTAL (12).
@@ -338,7 +338,7 @@
  * @property {number}  seed           World seed (uint32).
  * @property {boolean} newRecordTime  bestTime record was replaced this run.
  * @property {boolean} newRecordScore bestScore record was replaced this run.
- * @property {number}  collectFound   v3: collection.foundCount at GOAL emit (X intent 「レア${found}/12」 + result grid header).
+ * @property {number}  collectFound   v3: collection.foundCount at GOAL emit (X intent "rare ${found}/12" + result grid header).
  */
 
 /**
@@ -354,7 +354,7 @@
  */
 
 /* ------------------------------------------------------------------ */
-/* v3 city-map data shapes (config/cityMap.js — Stream B implements    */
+/* v3 city-map data shapes (the active pack cityMap implements         */
 /* against these FROZEN shapes; Phase-0 contract)                      */
 /* ------------------------------------------------------------------ */
 
@@ -372,7 +372,7 @@
  * @property {number} yaw           Y rotation (rad).
  * @property {number} naturalBand   Tier-table band 0..6; re-stamped live as store.tierOf[slot] = clamp(naturalBand, tierIndex-1, tierIndex+1) on activation + TIER_UP (dynamic re-banding, BINDING).
  * @property {number} landmarkId    Frozen landmark id 0..10, or -1.
- * @property {number} collectibleId Frozen collectible id 0..11, or -1 (ハチ公像 carries BOTH — dual-tag).
+ * @property {number} collectibleId Frozen collectible id 0..11, or -1 (the dual-tag statue carries BOTH — dual-tag).
  */
 
 /**
@@ -401,7 +401,7 @@
  * @property {number} z             Real-meter Z.
  * @property {number} radiusReal    Bounding radius (m).
  * @property {number} archetypeCode EXTRA code = 70 + id (frozen mapping).
- * @property {number} landmarkId    -1 except ハチ公像 (dual-tag: COLLECT before LANDMARK).
+ * @property {number} landmarkId    -1 except the dual-tag statue (dual-tag: COLLECT before LANDMARK).
  */
 
 /**
@@ -432,7 +432,7 @@
  * @property {number} h  Prism height (real m).
  */
 
-/* (The v4 Real-Tokyo OSM data-shape typedefs were removed in P2 along with the
+/* (The v4 real-OSM data-shape typedefs were removed in P2 along with the
  * OSM subsystem; nothing references them.) */
 
 // Make this file an ES module so typedefs are importable via import('./types.js').X

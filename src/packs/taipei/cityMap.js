@@ -1,18 +1,18 @@
 /**
  * @file cityMap.js — Taipei pack cityMap (P6b).
  *
- * P6b: introduces native Taipei LANDMARKS (8 curated singletons + 101 goal)
- * replacing the Tokyo landmark stub. The 8 curated landmarks are wired into
+ * P6b: introduces native Taipei LANDMARKS (8 curated singletons + 101 goal).
+ * The 8 curated landmarks are wired into
  * PLACEMENTS so they spawn in the world and can be absorbed as the ball grows.
  *
  * The curated base layout (SHOP, ZONES, bandAllowedAt, the chunk-dressing +
  * collectible PLACEMENTS, MAP_BOUNDS) is the pack's own baked, city-agnostic
- * data in ./cityData.js — no longer the Tokyo config/cityMap.js (de-Tokyo).
+ * data in ./cityData.js.
  *
  * Override list:
  *   - LANDMARKS   → native Taipei 9 entries (8 curated + 101 goal)
  *   - PLACEMENTS  → cityData base placements + the 8 Taipei landmark placements
- *   - SKYTREE_POS → TAIPEI101_POS (same as P6a)
+ *   - GOAL_POS    → TAIPEI101_POS (same as P6a)
  *   - DEV_STARTS  → Taipei-themed teleport keys (same as P6a)
  */
 
@@ -47,7 +47,7 @@ import { PLACEMENTS as _BASE_PLACEMENTS } from './cityData.js';
 /* ================================================================== */
 /**
  * Hand-authored game-meter positions for the 8 curated Taipei landmarks.
- * Convention (same as Tokyo POS): origin = ball start (迪化街 shop entrance),
+ * Convention (same as the base layout POS): origin = ball start (迪化街 shop entrance),
  * +X east, +Z south. Positions are spread progressively — smaller landmarks
  * closer, larger landmarks farther along the roll, mimicking actual Taipei
  * geography (萬華/西門 west; 圓山 north; 中正紀念堂/自由廣場 south-central;
@@ -220,11 +220,11 @@ export const LANDMARKS = Object.freeze([
 ]);
 
 /* ================================================================== */
-/* PLACEMENTS — Tokyo placements + 8 Taipei landmark singletons        */
+/* PLACEMENTS — cityData base placements + 8 Taipei landmark singletons */
 /* ================================================================== */
 
 /**
- * Curated placements for Taipei: starts with the full Tokyo authored set,
+ * Curated placements for Taipei: starts with the full cityData base set,
  * then appends the 8 Taipei landmark singleton placements. The 101 goal is
  * rendered by goalTower.js (code 93 = display-name-only slot, never spawned
  * from PLACEMENTS).
@@ -248,7 +248,7 @@ const _TAIPEI_LANDMARK_PLACEMENTS = LANDMARKS
   }));
 
 // cityData.PLACEMENTS is already the kept curated base (chunk dressing 0..69 +
-// collectibles 70..81 + 媽祖 94); the former Tokyo landmark/building codes
+// collectibles 70..81 + 媽祖 94); the former legacy landmark/building codes
 // 82..98 were dropped at bake time (they OVERFLOWED the landmark-xl pool →
 // invisible-but-collidable, and the 8 curated landmarks are re-placed natively
 // below). Append the 8 Taipei landmark singletons.
@@ -277,7 +277,7 @@ export const PLACEMENTS = [
  *
  * color: slightly greenish-muddy blue (siltier than open-sea 0x2a4a6e),
  * evoking the river's characteristic turbid look.
- * yM: 0.3 m above ground (same as the old Tokyo Bay — hides the seam).
+ * yM: 0.3 m above ground (same as the old bay water — hides the seam).
  */
 export const water = Object.freeze({
   name: '基隆河',
@@ -294,10 +294,10 @@ export const water = Object.freeze({
 /* ================================================================== */
 
 /**
- * Goal monument real-meter position (same as P6a — Skytree world anchor).
- * Preserves existing engine imports (terrain.js, goalTower.js use SKYTREE_POS).
+ * Goal monument real-meter position (台北101 world anchor).
+ * Preserves existing engine imports (terrain.js, goalTower.js use GOAL_POS).
  */
-export const SKYTREE_POS = TAIPEI101_POS;
+export const GOAL_POS = TAIPEI101_POS;
 
 /**
  * Dev teleport starts (?at=name&r=meters; main.js devTeleport).
@@ -305,7 +305,7 @@ export const SKYTREE_POS = TAIPEI101_POS;
  * wanhua / xinyi / goal.
  */
 export const DEV_STARTS = Object.freeze({
-  /** Ball-start inside the 迪化街 shop — identical to Tokyo 'shop'. */
+  /** Ball-start inside the 迪化街 shop — the base 'shop' start. */
   shop:        Object.freeze({ x: 0,    z: 0,     r: 0.02 }),
   /** 饒河街夜市 night-market strip (east quadrant). */
   'night-market': Object.freeze({ x: 60,   z: -80,   r: 0.5  }),

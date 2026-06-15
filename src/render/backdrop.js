@@ -4,12 +4,12 @@
  * Two jagged-top cylinder-strip layers (96 segments x 4 quad rows each,
  * 1536 tris total), vertex-colored, built ONCE at boot from
  * mulberry32(worldSeed ^ 0x42444b). Two height/color profiles are baked as
- * two vertex-attribute sets blended by uProfile01 — v3 Hakoniwa-Tokyo pair
- * (docs/DESIGN-V3.md §箱庭東京マップ D): 下町屋根並み low shitamachi
- * rooflines with sento-chimney spikes (T0-2) <-> 富士山+湾岸スカイライン
- * one broad Mt. Fuji silhouette on the back layer over a bayside tower
+ * two vertex-attribute sets blended by uProfile01 — v3 diorama-city pair
+ * (docs/DESIGN-V3.md diorama-city map D): low-town
+ * rooflines with sento-chimney spikes (T0-2) <-> a distant peak + bayside skyline
+ * one broad distant-peak silhouette on the back layer over a bayside tower
  * skyline (T3+), crossfaded on EVT.TIER_UP at T3 alongside the env palette
- * fade so the horizon reads 'more Tokyo, then Fuji'. A tiny ShaderMaterial
+ * fade so the horizon reads 'more city, then distant peak'. A tiny ShaderMaterial
  * mixes the silhouette color toward the LIVE fog color (read from scene.fog
  * each update — zero alloc) at BACKDROP_FOG_MIX, so it reads as a hazy
  * distant skyline, never a hard edge — and it fades toward near-black
@@ -41,7 +41,7 @@ import { easeInOutCubic, clamp01, lerp } from '../core/mathUtils.js';
 /** @typedef {import('../types.js').BallState} BallState */
 /** @typedef {import('../types.js').TierUpEvent} TierUpEvent */
 
-/* ---- module-local tuning (DESIGN-V2.md チューニング定数) ---- */
+/* ---- module-local tuning (DESIGN-V2.md tuning constants) ---- */
 /** Ring radius = BACKDROP_DIST_K * ball.radiusSim (between fog near 14r and far 55r). */
 const BACKDROP_DIST_K = 48;
 /** Peak silhouette height = BACKDROP_HEIGHT_K * ball.radiusSim — pokes above the fog band. */
@@ -55,10 +55,10 @@ const BACKDROP_FOG_MIX_BACK = 0.9;
 const SEG = 96;
 /** Vertical quad rows per layer (4 rows x 96 seg x 2 layers = 1536 tris). */
 const ROWS = 4;
-/** First tier whose profile is 富士山+湾岸スカイライン (v3 binding: crossfade
- *  keyed to T3 下町 — T0-2 show the 下町屋根並み rooflines). */
+/** First tier whose profile is distant-peak + bayside skyline (v3 binding: crossfade
+ *  keyed to T3 old town — T0-2 show the low-town rooflines). */
 const SKYLINE_FROM_TIER = 3;
-/** Mt. Fuji silhouette half-width (columns) and peak height fraction (back
+/** Distant-peak silhouette half-width (columns) and peak height fraction (back
  *  layer of profile B only — one broad cone dominating one bearing). */
 const FUJI_HALF_W = 9;
 const FUJI_PEAK_H = 1.0;
@@ -70,12 +70,12 @@ const SEED_SALT = 0x42444b;
 /* ------------------------------------------------------------------ */
 
 const BACKDROP_VERT = /* glsl */ `
-attribute float aHeightA;  // 下町屋根並み profile (0..~1, per column; layer amp baked in)
-attribute float aHeightB;  // 富士山+湾岸スカイライン profile
+attribute float aHeightA;  // low-town rooflines profile (0..~1, per column; layer amp baked in)
+attribute float aHeightB;  // distant-peak + bayside skyline profile
 attribute vec3 aColorA;    // roofline silhouette color (per column)
-attribute vec3 aColorB;    // Fuji/bay silhouette color
+attribute vec3 aColorB;    // peak/bay silhouette color
 attribute float aFog;      // per-layer fog-mix factor
-uniform float uProfile01;  // 0 = 下町屋根並み (T0-2), 1 = 富士山+湾岸 (T3+)
+uniform float uProfile01;  // 0 = low-town rooflines (T0-2), 1 = distant-peak + bay (T3+)
 uniform float uHeight;     // BACKDROP_HEIGHT_K
 varying vec3 vColor;
 varying float vFog;
@@ -103,9 +103,9 @@ void main() {
 /* ------------------------------------------------------------------ */
 
 /**
- * 下町屋根並み profile + colors (v3 profile A): runs of 2-4 columns share one
- * LOW flat roofline (machiya/nagaya blocks, 0.22-0.5) with a tiny per-column
- * ridge jitter (tiled-roof texture); ~4% of runs are 銭湯の煙突 spikes.
+ * low-town rooflines profile + colors (v3 profile A): runs of 2-4 columns share one
+ * LOW flat roofline (low townhouse blocks, 0.22-0.5) with a tiny per-column
+ * ridge jitter (tiled-roof texture); ~4% of runs are bathhouse-chimney spikes.
  * Per-run warm roof-tile color jitter. Wrap seam duplicated; heights scaled
  * by `amp`.
  * @param {() => number} rnd Seeded PRNG (fixed draw order — deterministic).
@@ -119,8 +119,8 @@ function genShitamachi(rnd, amp, r, g, b) {
   let c = 0;
   while (c < SEG) {
     const run = 2 + Math.floor(rnd() * 3); // 2-4 columns per roof block
-    let h = 0.22 + rnd() * 0.28; // low rooflines — the hakoniwa reads close
-    if (rnd() < 0.04) h = 0.65 + rnd() * 0.2; // 銭湯の煙突 spike
+    let h = 0.22 + rnd() * 0.28; // low rooflines — the diorama reads close
+    if (rnd() < 0.04) h = 0.65 + rnd() * 0.2; // bathhouse-chimney spike
     const j = (rnd() - 0.5) * 0.05;
     const cr = Math.max(0, r + j * 1.3); // warm jitter (tile/wood tones)
     const cg = Math.max(0, g + j);
@@ -141,9 +141,9 @@ function genShitamachi(rnd, amp, r, g, b) {
 }
 
 /**
- * 富士山+湾岸スカイライン profile + colors (v3 profile B): bayside tower
+ * distant-peak + bayside skyline profile + colors (v3 profile B): bayside tower
  * skyline — runs of 2-5 columns share one height (0.2-0.7), ~7% of runs are
- * tall tower spires — and, when `withFuji`, ONE broad smooth Mt. Fuji cone
+ * tall tower spires — and, when `withFuji`, ONE broad smooth distant-peak cone
  * (cosine flank, FUJI_HALF_W columns each side) max-composited over the
  * skyline at a seeded bearing, in a lighter blue-grey so it reads as the
  * distant mountain behind the bay. Wrap-safe (modulo columns). Heights
@@ -209,7 +209,7 @@ function genFujiBay(rnd, amp, r, g, b, fujiCol, withFuji) {
  *   backdrop.update(frameDt, ballPhys.state, renderer.camera);
  *   ?r= dev start (optional cosmetic): backdrop.setProfileImmediate(startTierIndex);
  * Subscribes 'tierUp' (profile crossfade at T3) + 'game:reset' (snap to the
- * 下町屋根並み profile) on the singleton bus. dispose() for teardown/tests.
+ * low-town rooflines profile) on the singleton bus. dispose() for teardown/tests.
  */
 export class Backdrop {
   /**
@@ -220,7 +220,7 @@ export class Backdrop {
     /** @type {THREE.Scene} */
     this._scene = scene;
 
-    /* --- profile crossfade state (0 = 下町屋根並み, 1 = 富士山+湾岸) --- */
+    /* --- profile crossfade state (0 = low-town rooflines, 1 = distant-peak + bay) --- */
     /** @type {number} */ this._prof = 0;
     /** @type {number} */ this._profFrom = 0;
     /** @type {number} */ this._profTo = 0;
@@ -323,7 +323,7 @@ export class Backdrop {
 
   /**
    * Begin a PALETTE_FADE_S crossfade toward a profile blend target.
-   * @param {number} to 0 (下町屋根並み) or 1 (富士山+湾岸スカイライン).
+   * @param {number} to 0 (low-town rooflines) or 1 (distant-peak + bayside skyline).
    */
   _startProfileFade(to) {
     if (to === this._profTo && this._fadeDur === 0 && this._prof === to) return; // already there

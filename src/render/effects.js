@@ -13,7 +13,7 @@
  * multiplies live particle state by S (world sim positions); REBASE shifts
  * live particle positions by (sx, sz); GAME_RESET kills everything.
  *
- * v2 (kept) + v3 (Hakoniwa Tokyo) — still exactly 3 draw calls (everything
+ * v2 (kept) + v3 (diorama city) — still exactly 3 draw calls (everything
  * reuses the same three pools):
  *  - EVT.DASH -> 10-speed-line burst along the dash direction (lines pool).
  *  - setRareProvider(fn): fn is spawner.forEachAliveRare (wired by main at
@@ -397,7 +397,7 @@ export class Effects {
       }
 
       // ---- v3: landmark gold ring burst (EVT.LANDMARK center treatment) ----
-      // Bigger, denser and golden vs the tierUp ring — 「雷門」まきこんだ！
+      // Bigger, denser and golden vs the tierUp ring — landmark absorb flourish.
       if (this._landmarkPending) {
         this._landmarkPending = false;
         for (let i = 0; i < LANDMARK_RING_SPARKLES; i++) {

@@ -131,7 +131,7 @@ export function normalizeToUnitRadius(geometry) {
 
 /**
  * v4: bake a cheap vertex-color ambient-occlusion pass into a geometry
- * (docs/DESIGN-V4.md モデル品質パス technique 1 — boot-time only, zero
+ * (docs/DESIGN-V4.md model quality pass technique 1 — boot-time only, zero
  * runtime cost, independent kill switch AO_BAKE_DEFAULT = 0):
  *   - VERTICAL OCCLUSION GRADIENT: every vertex color is multiplied by
  *     (1 - k * e^(-(y - minY) / h)) with h = max(span, eps)/3 — feet/bases

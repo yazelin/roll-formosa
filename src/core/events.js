@@ -16,7 +16,7 @@
  *   'rescale'  {S}
  *   'rebase'   {sx, sz}   (floating-origin shift subtracted from the world)
  *   'frameStats' {ms, drawCalls, tris, alive}                   (dev builds)
- *   ---- v2 (moon update — docs/DESIGN-V2.md §インターフェース) ----
+ *   ---- v2 (moon update — docs/DESIGN-V2.md §interface) ----
  *   'dash'        {gauge01}                       (ballPhysics -> cameraRig kick, effects burst, sfx whoosh, hud zero)
  *   'dashReady'   {}                              (ballPhysics, once per refill -> hud flash, sfx chime)
  *   'score'       {score, delta, combo, rare, archetypeCode} (runStats -> hud, sfx when rare)
@@ -24,8 +24,8 @@
  *   'goal'        {timeS, score, rank, trueRadius, absorbed, raresFound, seed, newRecordTime, newRecordScore, collectFound} (runStats once -> screens cache + X URL build)
  *   'ui:muteRequest' {}                           (hud -> main, the single mute owner)
  *   'muteChanged' {muted}                         (main -> hud icon)
- *   ---- v3 (Hakoniwa Tokyo — docs/DESIGN-V3.md §インターフェース) ----
- *   'goalCall'    {trueRadius}                    (finale once -> hud toast 「スカイツリーが呼んでいる…！」, skytree beam pulse, bgm swell, sfx pad)
+ *   ---- v3 (diorama city — docs/DESIGN-V3.md §interface) ----
+ *   'goalCall'    {trueRadius}                    (finale once -> hud toast "the goal tower is calling…!", goal-tower beam pulse, bgm swell, sfx pad)
  *   'goalGuide'   {x01, y01, onScreen, active, kind} (finale 10Hz during APPROACH, +one active:false on CONTACT -> hud #goal-arrow; v5: onboarding emits kind:'parts' for the opening parts guide — hud swaps 🗼->🔩 and suppresses the tower toast)
  *   'goalContact' {}                              (finale once = run end -> runStats freeze+GOAL, bgm duck, sfx fanfare, hud hide, screens flash; #donack-root survives — outside #hud)
  *   'landmark'    {landmarkId, nameJa, sizeReal}  (curated, AFTER the normal ABSORB chain -> hud toast, effects gold ring, sfx fanfare sting, Donack trivia, runStats bonus)
@@ -43,7 +43,7 @@
  *    curated's ABSORB handler may not read instanceSlot — only its
  *    consumed bitmask (slot-steal convention).
  *  - DUAL-TAG rule: an object carrying BOTH collectibleId and landmarkId
- *    (ハチ公像) emits EVT.COLLECT FIRST, then EVT.LANDMARK, in the same
+ *    (statue) emits EVT.COLLECT FIRST, then EVT.LANDMARK, in the same
  *    frame. sfx plays the landmark fanfare ONLY (one boolean suppresses the
  *    collect gliss when both fire within one frame); Donack shows the single
  *    merged line #42.
@@ -75,7 +75,7 @@ export const EVT = Object.freeze({
   GOAL: 'goal',
   MUTE_REQUEST: 'ui:muteRequest',
   MUTE_CHANGED: 'muteChanged',
-  // ---- v3 (Hakoniwa Tokyo) ----
+  // ---- v3 (diorama city) ----
   GOAL_CALL: 'goalCall',
   GOAL_GUIDE: 'goalGuide',
   GOAL_CONTACT: 'goalContact',
@@ -131,7 +131,7 @@ export const PAYLOADS = {
   score: { score: 0, delta: 0, combo: 0, rare: false, archetypeCode: -1 },
   /** @type {import('../types.js').TimeEvent} */
   time: { timeS: 0 },
-  // ---- v3 (Hakoniwa Tokyo) ----
+  // ---- v3 (diorama city) ----
   /** @type {import('../types.js').GoalCallEvent} */
   goalCall: { trueRadius: 0 },
   /** @type {import('../types.js').GoalGuideEvent} */

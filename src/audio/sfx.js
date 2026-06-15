@@ -15,7 +15,7 @@
  * STING on EVT.LANDMARK and a 5-note collect gliss on EVT.COLLECT.
  *
  * v3 DUAL-TAG RULE (binding, docs/DESIGN-V3.md): an object carrying BOTH
- * collectibleId and landmarkId (ハチ公像) emits COLLECT FIRST then LANDMARK
+ * collectibleId and landmarkId (the dual-tag statue) emits COLLECT FIRST then LANDMARK
  * in the same frame, and sfx must play the landmark fanfare ONLY. Because
  * COLLECT arrives first, the collect gliss is DEFERRED one microtask
  * (_collectPending + the prebound _flushCollectGliss): both emissions are
@@ -186,7 +186,7 @@ export class Sfx {
     // ---- v3 ----
     sub(EVT.LANDMARK, () => {
       // Dual-tag rule: COLLECT (same frame, already dispatched) is silenced —
-      // the landmark fanfare sting is the single sound for ハチ公像.
+      // the landmark fanfare sting is the single sound for the dual-tag statue.
       this._collectPending = false;
       this._landmarkSting();
     });

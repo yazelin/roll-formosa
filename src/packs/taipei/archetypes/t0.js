@@ -10,7 +10,7 @@
  * normalize to a UNIT bounding sphere of radius 1.0). The geometry math is an
  * engine red line — we compose primitives, never touch the math.
  *
- * Conventions inherited from config/catalog.js:
+ * Conventions inherited from the pack catalog:
  *   - Each buildGeometry(rng) returns ONE merged, vertex-colored geometry,
  *     <= 350 triangles (radial segment counts kept ~6-10).
  *   - palette[] is applied per-instance via instanceColor; the "body" part is

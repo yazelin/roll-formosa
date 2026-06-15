@@ -1,5 +1,5 @@
 /**
- * @file finale.js — The v3 東京スカイツリー finale state machine (Stream A
+ * @file finale.js — The v3 goal-tower finale state machine (Stream A
  * re-theme of the v2 production; the goal monument is FIXED in the world, so
  * the v2 descent/landing math is DELETED).
  *
@@ -8,10 +8,10 @@
  *
  *  - IDLE/CALLED: threshold watches on trueRadius (GOAL_CALL_RADIUS_M 380 /
  *    GOAL_RADIUS_M 420). CALLED is pure cosmetics (EVT.GOAL_CALL toast
- *    「スカイツリーが呼んでいる…！」, skytree beam pulse, bgm swell, sfx pad).
+ *    "the goal tower is calling…!", goal-tower beam pulse, bgm swell, sfx pad).
  *  - APPROACH (trueRadius >= GOAL_RADIUS_M): contact is ARMED. Gameplay stays
  *    FULLY live (steer/absorb/bounce — the tower's permanent base collider in
- *    world/terrain.js keeps the ball honest at SKYTREE_COLLIDER_K 0.6 < the
+ *    world/terrain.js keeps the ball honest at MONUMENT_COLLIDER_K 0.6 < the
  *    0.85 contact pad, so rolling in always reaches contact first).
  *    EVT.GOAL_GUIDE at 10 Hz drives the HUD #goal-arrow toward the upper
  *    tower. Render-frame contact test:
@@ -29,27 +29,27 @@
  *    frame u drives env.setSpaceFade01(u) (sky zenith -> space black), the
  *    EarthView fade/parallax-sink (glowing night globe below) and the camera
  *    pullback ramp (CINE_BACK_K 14->30, CINE_UP_K 4->8, look biasing down for
- *    u > 0.5) — leaving Earth instead of merely rising over night Tokyo.
+ *    u > 0.5) — leaving Earth instead of merely rising over the night city.
  *  - AFTERGLOW: tower glow breathing over the twinkling globe (earthView
  *    stays, spaceFade held 1), then state = 'done' — main.js (the SOLE
  *    'game:win' emitter) fires EVT.GAME_WIN.
  *
  * SILHOUETTE -> MESH HANDOFF (BLOCKER 2): finale.update drives
- * skytree.update(dt, cameraPos) every frame and forwards
- * env.setGoalSilFade(skytree.silFade01) — the env sky-dome silhouette and
+ * goalTower.update(dt, cameraPos) every frame and forwards
+ * env.setGoalSilFade(goalTower.silFade01) — the env sky-dome silhouette and
  * the goalTower mesh crossfade with the kept v2 handoff pacing (the two
  * representations are angle-matched by construction: both derive from the
- * same SKYTREE_POS real-meter pose).
+ * same GOAL_POS real-meter pose).
  *
  * RESCALE/REBASE SAFETY (binding): _simCache is THE exhaustive list of
  * rescale/rebase-sensitive finale state — finale subscribes EVT.RESCALE
  * (every field *= S) and EVT.REBASE (every X/Z field -= sx/sz) itself.
- * towerX/towerZ/towerR are additionally REFRESHED from SkytreeView every
- * pre-contact frame (SkytreeView derives them from the live worldScale, so a
+ * towerX/towerZ/towerR are additionally REFRESHED from GoalTowerView every
+ * pre-contact frame (GoalTowerView derives them from the live worldScale, so a
  * mid-APPROACH rescale or teleport-rebase stays pixel-identical either way);
  * post-contact no rescale/rebase can fire (growth frozen, maybeRebase gated)
  * and the cached fields carry the cinematic. ANY new finale state field MUST
- * be added to _simCache or be derived per-frame (DESIGN-V2.md リスク, kept).
+ * be added to _simCache or be derived per-frame (DESIGN-V2.md risk, kept).
  *
  * Camera: from CONTACT the finale derives camPosTarget/lookTarget/fovTarget
  * per frame (pure functions of the anchor pose + frozen ball radius — zero
@@ -114,7 +114,7 @@ const _v3a = new THREE.Vector3();
 const _v3b = new THREE.Vector3();
 
 /**
- * Skytree-ending state machine. Construct once at boot; main.js calls
+ * Goal-tower-ending state machine. Construct once at boot; main.js calls
  * update(frameDt, ballPhys.state) at frame-order step 4.5 and reset() inside
  * resetWorld(). Subscribes EVT.RESCALE / EVT.REBASE itself (for _simCache).
  */
@@ -122,7 +122,7 @@ export class Finale {
   /**
    * @param {import('../core/events.js').EventBus} bus Shared event bus.
    * @param {import('../world/scaleManager.js').ScaleManager} scaleMgr worldScale/tierIndex source.
-   * @param {import('../render/goalTower.js').SkytreeView} goalView The goal
+   * @param {import('../render/goalTower.js').GoalTowerView} goalView The goal
    *   monument (v3: takes the v2 goal-view slot in the frozen 7-arg shape).
    * @param {object} env Environment — setGoalSilFade/beginNightFade
    *   (typeof-guarded for bring-up).
@@ -130,7 +130,7 @@ export class Finale {
    *   (cinematic drive from CONTACT).
    * @param {object} ballView render/ball.js Ball — setVisible(b).
    * @param {THREE.PerspectiveCamera} camera Render camera (NDC projection for
-   *   GOAL_GUIDE + skytree handoff distance; matrixWorldInverse freshness =
+   *   GOAL_GUIDE + goal-tower handoff distance; matrixWorldInverse freshness =
    *   last render, which is fine for a 10Hz guide).
    * @param {object} [effects] render/effects.js Effects — ascensionBurst()
    *   (optional; also injectable later via setEffects).
@@ -156,10 +156,10 @@ export class Finale {
 
     /**
      * THE exhaustive list of rescale/rebase-sensitive finale state
-     * (docs/DESIGN-V3.md ファイル変更一覧 — binding). EVT.RESCALE: every
+     * (docs/DESIGN-V3.md file-change list — binding). EVT.RESCALE: every
      * field *= S. EVT.REBASE: every X/Z field -= sx/sz. Nothing else in the
      * finale caches sim-space numbers; all poses/targets are derived per
-     * frame from here (towerX/Z/R additionally refreshed from SkytreeView
+     * frame from here (towerX/Z/R additionally refreshed from GoalTowerView
      * every pre-contact frame).
      */
     this._simCache = {
@@ -273,7 +273,7 @@ export class Finale {
   /**
    * Per-frame finale drive (main.js frame-order step 4.5, AFTER
    * scaleMgr.maybeTierUp/maybeRebase so _simCache and BallState agree).
-   * Also the per-frame driver of the SkytreeView handoff (every state).
+   * Also the per-frame driver of the GoalTowerView handoff (every state).
    * @param {number} frameDt Render-frame delta (s).
    * @param {BallState} ball Single source of ball truth (pos written
    *   directly during MERGE..AFTERGLOW).
@@ -284,9 +284,9 @@ export class Finale {
     // run at 1x — _timeScale only ever rises after inputLocked latches.
     const cineDt = frameDt * this._timeScale;
 
-    // ---- skytree handoff drive (every frame, every state) -----------------
+    // ---- goal-tower handoff drive (every frame, every state) --------------
     // The mesh<->silhouette crossfade is gameplay-wide (not finale-gated):
-    // SkytreeView owns the latch; we forward its silhouette weight to the
+    // GoalTowerView owns the latch; we forward its silhouette weight to the
     // environment sky shader (mirrors the v2 sky-fade drive).
     this._goalView.update(frameDt, this._camera.position);
     const sil = this._goalView.silFade01;
@@ -344,7 +344,7 @@ export class Finale {
   /**
    * Back to a fresh run (called directly by main.resetWorld — frozen reset
    * ownership; ball visibility is restored by ball.reset(), camera latch by
-   * cameraRig.reset() on GAME_RESET, SkytreeView handoff/shift by its own
+   * cameraRig.reset() on GAME_RESET, GoalTowerView handoff/shift by its own
    * GAME_RESET handler, env uGoalSil/night fade by setTierPaletteImmediate).
    */
   reset() {
@@ -447,7 +447,7 @@ export class Finale {
     const c = this._simCache;
     const r = ball.radiusSim;
 
-    // Refresh the tower cache from the live SkytreeView pose every pre-contact
+    // Refresh the tower cache from the live GoalTowerView pose every pre-contact
     // frame (derived => exactly right on the frame a rescale/rebase or dev
     // teleport rewrote the world; the _simCache handlers cover post-contact).
     this._refreshTowerCache();
@@ -463,7 +463,7 @@ export class Finale {
     this._updateGuide(dt);
 
     // Render-frame contact test (XZ vs the tower AXIS — the tower is a
-    // vertical monument; the terrain base collider at SKYTREE_COLLIDER_K 0.6
+    // vertical monument; the terrain base collider at MONUMENT_COLLIDER_K 0.6
     // < GOAL_CONTACT_PAD 0.85 guarantees contact wins before any bounce):
     //   distXZ <= ballR + towerBaseR * PAD.
     const dx = c.towerX - ball.pos.x;
@@ -582,7 +582,7 @@ export class Finale {
   /* Per-frame derived helpers                                         */
   /* ---------------------------------------------------------------- */
 
-  /** Refresh _simCache.towerX/Z/R from the live SkytreeView pose. */
+  /** Refresh _simCache.towerX/Z/R from the live GoalTowerView pose. */
   _refreshTowerCache() {
     const c = this._simCache;
     this._goalView.getPosSim(_v3a);

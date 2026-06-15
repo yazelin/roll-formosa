@@ -5,7 +5,7 @@
  * Mirrors the exact data shape of src/config/donackLines.js but with
  * zh-TW Taipei content authored for 月牙's voice: warm, friendly, slightly
  * playful; drops Taipei trivia and cheers the player on.  No Japanese, no
- * Tokyo references.
+ * legacy references.
  *
  * Line shape (frozen contract, same as config/donackLines.js):
  *   { text:string, priority:0|1|2|3,
@@ -325,7 +325,7 @@ export const DUAL_LANDMARK_ID = -1;
 
 /**
  * First-absorb-per-category: ScoreEvent.archetypeCode -> line id.
- * Taipei codes: code = tier*10 + slot (same formula as Tokyo).
+ * Taipei codes: code = tier*10 + slot (same formula as the legacy engine).
  *   T0 (0-7): small everyday items — marble triggers 'first_marble'
  *   T1 (10-19): 夜市 consumables — betel_nut (code 12) triggers 'first_betelnut'
  *   T2 (20-29): 騎樓 objects — red_plastic_chair (20), rice_cooker (22)

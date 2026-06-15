@@ -1,6 +1,6 @@
 /**
  * @file objectMaterial.js — v4 shared object material + rim-light term
- * (docs/DESIGN-V4.md モデル品質パス technique 2 — Stream C).
+ * (docs/DESIGN-V4.md model quality pass technique 2 — Stream C).
  *
  * THE binding material law is unchanged: exactly ONE
  * MeshLambertMaterial({vertexColors:true}) renders all world objects

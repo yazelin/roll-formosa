@@ -2,19 +2,19 @@
  * @file catalog.js — Taipei pack catalog (P5/P6b).
  *
  * Assembles the 70 Taipei chunk ArchetypeDefs from the 7 per-tier files,
- * then merges Tokyo EXTRA/v5 placeholders so all 99 codes still resolve.
+ * then merges the EXTRA/v5 placeholders so all 99 codes still resolve.
  *
  * P6b: overrides EXTRA codes 82..89 with the 8 curated Taipei landmark
  * geometries (北門/龍山寺/西門紅樓/圓山大飯店/總統府/中正紀念堂/
  * 自由廣場牌樓/小巨蛋). Codes 70..81 (collectibles), 90..92 (shop/bridge/
- * tower slot), 93 (goal display slot), and v5 94..98 are unchanged from Tokyo.
+ * tower slot), 93 (goal display slot), and v5 94..98 are unchanged placeholders.
  *
  * Exports (P5/P6b shape):
  *   CHUNK_ARCHETYPES  Record<id, ArchetypeDef> — 70 Taipei chunk archetypes
  *   CATALOG           Record<id, ArchetypeDef> — 70 chunk + 29 EXTRA/v5 (99 ids)
  *   DISPLAY_NAME_BY_CODE  string[99] — indices 0..69 zh-TW, 70..98 names
  *   EXTRA_CATALOG, EXTRA_SIZE_CLASS_BY_CODE, EXTRA_POOL_CAPS — Taipei-native
- *     for codes 82..89; remainder from config/catalog.js
+ *     for codes 82..89; remainder from the legacy engine catalog
  */
 
 import { T0_ARCHETYPES } from './archetypes/t0.js';
@@ -25,7 +25,7 @@ import { T4_ARCHETYPES } from './archetypes/t4.js';
 import { T5_ARCHETYPES } from './archetypes/t5.js';
 import { T6_ARCHETYPES } from './archetypes/t6.js';
 
-// DE-TOKYO: config/catalog.js (the Tokyo catalog) is deleted; every EXTRA/v5 code
+// DE-TOKYO: the legacy engine catalog is deleted; every EXTRA/v5 code
 // (70..98) is now Taipei (collectibles + landmarks), registered below.
 import { HERO_TRI_CAP } from '../../config/tuning.js';
 
@@ -56,7 +56,7 @@ import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
 import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
-// DE-TOKYO: 8 Taipei extended landmarks replace the leftover Tokyo EXTRA slots (codes 90-93 + 95-98).
+// DE-TOKYO: 8 Taipei extended landmarks replace the leftover EXTRA slots (codes 90-93 + 95-98).
 import { NM_RAINBOW } from './landmarks/rainbow_bridge_tp.js';
 import { NM_SYSHALL } from './landmarks/syshall.js';
 import { NM_STATION } from './landmarks/main_station.js';
@@ -98,13 +98,13 @@ for (const arch of _allTierArchetypes) {
 }
 
 /* ================================================================== */
-/* CATALOG — 70 chunk + 29 EXTRA/v5 Tokyo placeholders = 99 ids       */
+/* CATALOG — 70 chunk + 29 EXTRA/v5 placeholders = 99 ids             */
 /* ================================================================== */
 
 /**
  * The 8 Taipei curated landmark geometry descriptors (codes 82..89).
- * These REPLACE the Tokyo landmark ids at the same codes — the id field is the
- * Taipei landmark id (e.g. 'beimen') not the Tokyo id ('saigo_statue').
+ * These REPLACE the placeholder landmark ids at the same codes — the id field is
+ * the Taipei landmark id (e.g. 'beimen') not the legacy id.
  * P6b: tier/naturalBand match the EXTRA_POOL_CLASS assignment in curated.js:
  *   82 mid, 83 mid, 84 mid, 85 large, 86 mid, 87 large, 88 large, 89 large.
  */
@@ -122,12 +122,12 @@ const _TAIPEI_LANDMARKS = [
 /**
  * Full id-keyed catalog: 70 Taipei chunk archetypes PLUS the 24 EXTRA
  * (codes 70..93) and 5 v5 (codes 94..98). Codes 82..89 are replaced with
- * Taipei landmark geometries; all others carry Tokyo placeholder archetypes.
+ * Taipei landmark geometries; all others carry placeholder archetypes.
  * Total: exactly 99 ids.
  * @type {Record<string, import('../../../types.js').Archetype>}
  */
 // CATALOG = 70 Taipei chunk archetypes + the Taipei EXTRA/v5 (collectibles +
-// landmarks) registered by the loops below. No Tokyo archetypes (de-Tokyo).
+// landmarks) registered by the loops below. No placeholder archetypes (de-Tokyo).
 export const CATALOG = { ...CHUNK_ARCHETYPES };
 
 /* ================================================================== */
@@ -137,7 +137,7 @@ export const CATALOG = { ...CHUNK_ARCHETYPES };
 /**
  * EXTRA archetypes keyed by frozen code (70..93 + v5 94..98). Every code is a
  * Taipei collectible (70..81+94) or landmark (82..93+95..98), filled by the
- * registration loops below. No Tokyo entries (de-Tokyo).
+ * registration loops below. No placeholder entries (de-Tokyo).
  * @type {Record<number, import('../../../types.js').Archetype & {extraCode:number, sizeClass:string|null}>}
  */
 export const EXTRA_CATALOG = {};
@@ -179,7 +179,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
 }
 
-/* P7: 13 Taipei collectibles at codes 70..81 + 94 (replace Tokyo album items).
+/* P7: 13 Taipei collectibles at codes 70..81 + 94 (replace placeholder album items).
    Grounded like landmarks (yOffset = -1 - minY); curated-only (spawnWeight 0). */
 const _TAIPEI_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
@@ -223,7 +223,7 @@ for (const { code, col } of _TAIPEI_COLLECTIBLES) {
 }
 
 /* DE-TOKYO: 8 Taipei extended landmarks at codes 90-93 + 95-98 (replace the
-   leftover Tokyo EXTRA archetypes). Grounded like landmarks; not placed yet. */
+   leftover EXTRA archetypes). Grounded like landmarks; not placed yet. */
 const _TAIPEI_EXTRA_LANDMARKS = [
   { code: 90, nm: NM_RAINBOW,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
   { code: 91, nm: NM_SYSHALL,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
@@ -263,7 +263,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS
 
 /**
  * EXTRA render pool caps. Taipei has 8 landmark singletons:
- *   landmark-mid (codes 82/83/84/86): 4 alive (matches Tokyo floor)
+ *   landmark-mid (codes 82/83/84/86): 4 alive (matches the original engine floor)
  *   landmark-large (codes 85/87/88/89): 4 alive
  * Caps are capacity only — same 4 batches, zero extra draws.
  * @type {Readonly<Record<string, number>>}
@@ -282,9 +282,9 @@ export const EXTRA_POOL_CAPS = Object.freeze({
 /**
  * Code-indexed display names (99 total):
  *   0..69  — zh-TW names from the Taipei chunk archetypes (displayName field)
- *   70..81 — Tokyo placeholder names (collectibles)
+ *   70..81 — placeholder names (collectibles)
  *   82..89 — Taipei landmark zh-TW names (P6b)
- *   90..98 — Tokyo placeholder names (shop shell, bridge, tower, v5)
+ *   90..98 — placeholder names (shop shell, bridge, tower, v5)
  * @type {string[]}
  */
 export const DISPLAY_NAME_BY_CODE = (() => {

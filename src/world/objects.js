@@ -20,13 +20,13 @@
  *
  * Archetype encoding: store.archetype holds a uint16 CODE
  *   code = tierIndex * ARCH_PER_TIER + indexWithinTier   (0..69, v3 stride 10)
- * derived from the FROZEN Tier.archetypeIds lists in config/tiers.js
+ * derived from the FROZEN Tier.archetypeIds lists in the active pack tiers
  * (slots [8]/[9] of every tier are chunk landmarks), PLUS the 24 EXTRA
  * curated codes 70..93 (frozen by docs/DESIGN-V3.md Phase-0 appendix:
  * 70..81 collectibles where code = 70 + COLLECTIBLE_ID, 82..91 landmark
- * singletons, 92 shop shell, 93 Skytree display-name reservation — code 93
+ * singletons, 92 shop shell, 93 goal-tower display-name reservation — code 93
  * must NEVER be spawned into the store), PLUS the 5 v5 curated codes 94..98
- * (V5_CODE_BASE — stack_chan collectible id 12 + 4 Akihabara buildings,
+ * (V5_CODE_BASE — one extra collectible id 12 + 4 extra building slots,
  * append-only). render/ball.knockOff skips everything >= EXTRA_CODE_BASE (70),
  * so absorbed v5 objects are PERMANENTLY STUCK — no reinject path exists.
  * Use archetypeCode() / ARCHETYPE_ID_BY_CODE / ARCHETYPE_CODE_BY_ID below —
@@ -67,7 +67,7 @@ export const FLAG_RARE = 8;
  * re-enter the chunk path; EXTRA codes >= EXTRA_CODE_BASE never knock off).
  */
 export const FLAG_CURATED = 16;
-/* (Flag bit 32 — the former v4 OSM real-Tokyo building-slot flag — was removed
+/* (Flag bit 32 — the former v4 OSM real-city building-slot flag — was removed
  * in P2 along with the OSM subsystem; no flag uses bit 32 now.) */
 
 /* ================================================================== */
@@ -191,8 +191,8 @@ export function archetypeTierOfCode(code) {
  * seam. Hole-freeness + uniqueness are now GUARANTEED BY CONSTRUCTION in
  * buildCodeMap (src/packs/_engine/codeMap.js, unit-tested) and the per-pack
  * count/ladder invariants run via activePack.validate() (validatePack) at boot
- * (main.js). The Tokyo wrap is additionally covered by
- * src/packs/_tokyo_transient/pack.test.js (chunkCount === 70, hole-free over
+ * (main.js). The pack wrap is additionally covered by
+ * src/packs/taipei/pack.test.js (chunkCount === 70, hole-free over
  * the real pack, legacy collectible codes preserved) and
  * src/world/objects.test.js (99 entries, v5 base 94, round-trip). */
 

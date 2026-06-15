@@ -9,7 +9,7 @@
  * The throttled 'grow' payload additionally carries BallState.dashGauge01
  * for the HUD dash gauge (smooth 10Hz fill).
  *
- * TWO NUMBER SYSTEMS (DESIGN.md スケールシステム): all sim/physics/render
+ * TWO NUMBER SYSTEMS (DESIGN.md scale system): all sim/physics/render
  * math lives in SIM UNITS; REAL METERS exist only as
  * trueRadius = simRadius * worldScale, where worldScale is a plain JS double
  * owned here. worldScale starts at START_RADIUS_M / SIM_RADIUS_MIN (= 0.1)
@@ -187,7 +187,7 @@ export class ScaleManager {
     if (now - this._lastGrowMs >= this._growIntervalMs) {
       this._lastGrowMs = now;
       const enter = TIERS[this.tierIndex].enterTrueRadius;
-      // Last tier's progress target is the goal radius (v3: Skytree contact
+      // Last tier's progress target is the goal radius (v3: goal-tower contact
       // arms at GOAL_RADIUS_M) so the bar hits exactly 100% as it arms.
       const exit =
         this.tierIndex < TIERS.length - 1

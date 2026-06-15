@@ -1,6 +1,6 @@
 /**
- * @file donack.js — Donack (ドナック), the official pixel-art duck commentator
- * (v3, docs/DESIGN-V3.md §ドナック実況).
+ * @file donack.js — Donack, the official pixel-art duck commentator
+ * (v3, docs/DESIGN-V3.md Donack commentary section).
  *
  * DOM (frozen ids, index.html Phase 0): #donack-root (DIRECT CHILD OF body,
  * OUTSIDE #hud — binding: it survives the GOAL_CONTACT hud-hide so the
@@ -22,7 +22,7 @@
  *    The pending line is re-checked on dismiss and on the 1 Hz tick.
  *  - Dedupe: each line id once per RUN, except tips (once:false lines) which
  *    repeat on a per-id DONACK_TIP_COOLDOWN_S (30 s) cooldown.
- *  - DUAL-TAG (MINOR 13): ハチ公像 emits COLLECT (collectibleId 10) FIRST then
+ *  - DUAL-TAG (MINOR 13): the landmark statue emits COLLECT (collectibleId 10) FIRST then
  *    LANDMARK (landmarkId 0) in the same frame; only the merged line
  *    'dual_hachiko' fires — COLLECT id 10 maps to it in the frozen table and
  *    the LANDMARK id 0 emission is skipped here.
@@ -90,7 +90,7 @@ const _dualLandmarkId = () => activePack.narration.DUAL_LANDMARK_ID;
 /** @returns {Record<number,string>} */
 const _firstByCo = () => activePack.narration.FIRST_LINE_BY_CODE;
 
-/* ---- module-local tuning (DESIGN-V3.md §ドナック実況) ---- */
+/* ---- module-local tuning (DESIGN-V3.md Donack commentary section) ---- */
 /** Combo line threshold (ScoreEvent.combo). */
 const COMBO_LINE_AT = 15;
 /** repeat-bonk: this many hard bounces inside BONK_WINDOW_S triggers the line. */
@@ -353,7 +353,7 @@ export class Donack {
   }
 
   /**
-   * 'landmark' (curated, after the ABSORB chain). landmarkId 0 (ハチ公像) is
+   * 'landmark' (curated, after the ABSORB chain). landmarkId 0 (the landmark statue) is
    * DUAL-tagged: its COLLECT (id 10) already fired the merged 'dual_hachiko'
    * line this same frame — skip it here (single-line rule, MINOR 13).
    * @param {import('../types.js').LandmarkEvent} p
@@ -479,7 +479,7 @@ export class Donack {
     if (line === undefined || line.phase !== this._phase) return;
     if (!this._eligible(id, line)) return;
     if (line.priority === 3) {
-      // goal_call deferral: the Tokyo Tower absorb (262->406m) crosses
+      // goal_call deferral: the landmark-tower absorb (262->406m) crosses
       // GOAL_CALL_RADIUS_M in the SAME fixed step that shows the 'lm_tower'
       // trivia (P3, 6s) — letting goal_call interrupt would blank the
       // game's penultimate beat after ~0 frames. goal_call stays perfectly

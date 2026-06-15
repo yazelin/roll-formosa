@@ -7,15 +7,15 @@
  * open-front gate -> gutter/exit-lane carpet — so a 2 cm player is never
  * staring at an empty floor wondering where the parts are (v5 owner
  * requirement 2; pairs with the V5_OPENING_CLUSTERS / V5_TRAIL_CLUSTERS
- * spawn carpet in config/cityMap.js and the new Donack start line
- * 「…光る矢印の先にパーツがあるよ」).
+ * spawn carpet in the pack cityMap/cityData (packs/taipei/) and the new start
+ * line that tells the player the parts are at the tip of the glowing arrow).
  *
  * REUSES the finale GOAL_GUIDE path verbatim (same payload object, same HUD
  * subscriber): projection math is copied from finale._projectAndEmitGuide
  * (module scratch Vector3 — zero per-frame allocation). The payload gains a
  * `kind` field: 'parts' while this guide is live, restored to 'goal' on the
  * final {active:false} emit so the HUD can swap the arrow glyph (🗼 -> 🔩)
- * and suppress the 「スカイツリーへ向かえ！」 toast for parts guides — see
+ * and suppress the "head for the goal tower" toast for parts guides — see
  * hud.js _onGoalGuide (integrator wiring).
  *
  * NO COLLISION with the finale's GOAL_GUIDE by construction: the finale

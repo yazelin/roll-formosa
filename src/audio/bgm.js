@@ -1,6 +1,6 @@
 /**
  * @file bgm.js — Procedural WebAudio BGM: 128 BPM swung-8ths A-major
- * bossa-pop, 4 tier-unlocked layers, zero audio assets (DESIGN-V2.md §オーディオ).
+ * bossa-pop, 4 tier-unlocked layers, zero audio assets (DESIGN-V2.md audio section).
  *
  * ALLOCATION-LAW BOUNDED EXEMPTION (binding, see DESIGN.md v2 chapter):
  * WebAudio node creation in sfx.js + bgm.js is an explicit, BOUNDED exemption
@@ -27,7 +27,7 @@
  *                   rewind to bar 0, restore master gain, start the scheduler.
  *   TIER_UP      -> layer unlock fades (LAYER_FADE_S ramps; cosmetic only —
  *                   v3: re-keyed to the 7-tier table, L1 t>=2 / L2 t>=3 /
- *                   L3 t>=5 so unlocks land on 電気街 / 下町 / 大東京).
+ *                   L3 t>=5 so unlocks land on electronics district / old town / the big city).
  *   GOAL_CALL    -> momentary shimmer swell.
  *   GOAL_CONTACT -> master ducks to DUCK_GAIN over 0.3 s then linear-ramps to
  *                   0 ending 1.5 s later; scheduler stops (run is over).
@@ -44,7 +44,7 @@
 
 import { bus as defaultBus, EVT } from '../core/events.js';
 
-/* ---- module-local tuning (DESIGN-V2.md チューニング定数) ---- */
+/* ---- module-local tuning (DESIGN-V2.md tuning constants) ---- */
 const BPM = 128;
 const LOOKAHEAD_S = 0.12;
 const TICK_MS = 25;
@@ -91,8 +91,8 @@ const MELODY = [
 ];
 
 /** Tier gates for layers L1..L3 (L0 plays from GAME_START).
- *  v3 (7-tier table, docs/DESIGN-V3.md): L1 at T2 電気街 (out of the shop),
- *  L2 at T3 下町, L3 at T5 大東京 — the unlock arc spans the longer run. */
+ *  v3 (7-tier table, docs/DESIGN-V3.md): L1 at T2 electronics district (out of the shop),
+ *  L2 at T3 old town, L3 at T5 the big city — the unlock arc spans the longer run. */
 const L1_TIER = 2;
 const L2_TIER = 3;
 const L3_TIER = 5;

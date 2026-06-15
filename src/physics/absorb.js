@@ -31,7 +31,7 @@
  * DASH_ABSORB_GAIN to ball.dashGauge01 (clamped to 1 — the 'dashReady' edge
  * is emitted by ballPhysics on its next step; single-emitter rule).
  *
- * v3 (docs/DESIGN-V3.md フィードバック): each absorb additionally stamps,
+ * v3 (docs/DESIGN-V3.md feedback): each absorb additionally stamps,
  * BEFORE store.free and next to the rare stamp:
  *   AbsorbEvent.archetypeCode = store.archetype[i]   (0..93; 70..93 = EXTRA)
  *   AbsorbEvent.collectibleId = curated.collectibleIdFor(i)  (frozen id 0..11
@@ -74,8 +74,9 @@ import { activePack } from '../packs/active.js'; // P5: pack-scoped code→id ma
  * Pack-scoped code -> id table (string[99]): built from the active pack's
  * tier ordering so chunk codes 0..69 resolve to Taipei (or whichever pack is
  * active) ids. EXTRA codes 70..98 are pack-invariant (same frozen EXTRA ids
- * in every pack), so objects.js ARCHETYPE_ID_BY_CODE is still used for those
- * slots — but we route EVERYTHING through this table for consistency.
+ * in every pack); regardless, this mapping comes from
+ * activePack.archetypeIdByCode (the pack) — we route EVERYTHING through this
+ * table for consistency.
  */
 const _PACK_ID_BY_CODE = activePack.archetypeIdByCode;
 
@@ -107,7 +108,7 @@ export class Absorb {
    * @param {{ worldScale: number }} [scaleProvider] ScaleManager (read for
    *   trueRadius/sizeReal in event payloads). Falls back to the tier-0
    *   starting worldScale (0.04) when absent — headless tests.
-   * @param {Record<string, Archetype>} [catalog] CATALOG from config/catalog.js
+   * @param {Record<string, Archetype>} [catalog] CATALOG from the active pack
    *   — only collisionScale is read, at construction (covers all 94 codes:
    *   chunk + EXTRA curated entries share the CATALOG). Defaults to 1 for
    *   all archetypes when absent.
@@ -244,7 +245,7 @@ export class Absorb {
     // v3 Phase-3 pacing: growth multiplier tapers with OBJECT REAL RADIUS
     // (continuous — seamlessness-law compliant). Curated landmark/collectible
     // slots are EXEMPT: the authored ladder keeps its designed x1.554 jumps
-    // (incl. the BINDING Tokyo Tower 262->406 finale ramp). The ids are read
+    // (incl. the BINDING landmark-tower 262->406 finale ramp). The ids are read
     // BEFORE store.free and reused for the event payload below.
     const collectibleId = this._curated !== null ? this._curated.collectibleIdFor(i) : -1;
     const landmarkId =

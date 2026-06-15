@@ -25,7 +25,7 @@
  *    update()/updateIdle() early-return so the WIN-state idle orbit cannot
  *    yank the final goal shot from behind the result screen.
  *
- * v3 (Hakoniwa Tokyo — docs/DESIGN-V3.md 箱庭東京マップ A, salvaged camera
+ * v3 (diorama city — docs/DESIGN-V3.md diorama-city map A, salvaged camera
  * blocker layers 2+3; layer 1 is the roofless shop):
  *  - INTERIOR PROFILE: main.js injects {interior01, clampBoom} at
  *    construction (terrain.interiorAt01 / terrain.clampCameraBoom — Phase-0

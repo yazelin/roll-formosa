@@ -1,7 +1,7 @@
 /**
  * @file runStats.js — run clock, score/combo/rare accounting, rank,
  * localStorage best records, and the single 'goal' emission
- * (docs/DESIGN-V2.md §ゲームシステム + docs/DESIGN-V3.md v3 deltas).
+ * (docs/DESIGN-V2.md game system + docs/DESIGN-V3.md v3 deltas).
  *
  * SIM-TIME IS THE OFFICIAL CLOCK: main.js calls addSimTime(steps * FIXED_DT)
  * once per render frame (frame step 6.5) — deterministic, naturally paused in
@@ -327,7 +327,7 @@ export class RunStats {
     g.seed = this._seed;
     g.newRecordTime = newRecordTime;
     g.newRecordScore = newRecordScore;
-    // v3: album count at goal (X intent 「レアn/12」 + result grid header).
+    // v3: album count at goal (X intent "rare n/12" + result grid header).
     g.collectFound =
       this._collection !== null && typeof this._collection.foundCount === 'number'
         ? this._collection.foundCount

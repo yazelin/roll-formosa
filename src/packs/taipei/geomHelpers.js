@@ -2,7 +2,7 @@
  * @file geomHelpers.js — Taipei pack geometry vocabulary.
  *
  * VERBATIM copy of the Fable engine's boot-time geometry helpers
- * (reference src/config/catalog.js lines 77–273): the primitive builders
+ * (the pack's archetype primitive builders): the primitive builders
  * box/cyl/cone/sph/ico/torus/towerBanded, the paint/xf vertex-color bakers,
  * and finish() (merge → recenter → normalize to a UNIT bounding sphere of
  * radius 1.0). The geometry MATH is an engine red line (spec §9) — we only

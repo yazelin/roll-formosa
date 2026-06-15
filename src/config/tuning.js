@@ -17,31 +17,31 @@
 export const SIM_RADIUS_MIN = 0.5;
 /** Upper edge — reaching it triggers the one-frame similarity rescale (S = RESCALE_S). */
 export const SIM_RADIUS_MAX = 2.5;
-/** Starting ball radius in real meters (v3: 2 cm — センゴク電子 parts-bin tier). */
+/** Starting ball radius in real meters (v3: 2 cm — parts-bin tier). */
 export const START_RADIUS_M = 0.02;
 /* v2: WIN_RADIUS_M deleted — replaced by the goal radius (finale owns the goal).
- * v3: GOAL_RADIUS_M arms the Skytree finale contact. */
+ * v3: GOAL_RADIUS_M arms the goal-tower finale contact. */
 /** Tier-index hysteresis (+-10% of enterTrueRadius) — guards float edge cases. */
 export const TIER_HYSTERESIS = 0.10;
 /** Floating-origin rebase when |ball.pos| exceeds this many sim units (integer-snapped shift). */
 export const REBASE_DISTANCE_SIM = 1500;
 
 /* ================================================================== */
-/* v3 Goal — 東京スカイツリー finale (game/finale.js, render/goalTower.js) */
+/* v3 Goal — goal-tower finale (game/finale.js, render/goalTower.js)    */
 /* ================================================================== */
 
-/** Finale CALLED state: emit 'goalCall' (toast + skytree beam pulse) at this true radius (m). */
+/** Finale CALLED state: emit 'goalCall' (toast + goal-tower beam pulse) at this true radius (m). */
 export const GOAL_CALL_RADIUS_M = 380;
-/** Goal: Skytree contact arms at this true radius (m). */
+/** Goal: goal-tower contact arms at this true radius (m). */
 export const GOAL_RADIUS_M = 420;
 /** Contact when dist(ball, towerBase) <= ballR + towerBaseR * GOAL_CONTACT_PAD.
- *  Validator asserts SKYTREE_COLLIDER_K (0.6) < GOAL_CONTACT_PAD so the finale always wins. */
+ *  Validator asserts MONUMENT_COLLIDER_K (0.6) < GOAL_CONTACT_PAD so the finale always wins. */
 export const GOAL_CONTACT_PAD = 0.85;
-/** Skytree base radius (REAL meters) — terrain.js permanent base circle collider. */
-export const SKYTREE_BASE_R_M = 90;
-/** Base collider radius = SKYTREE_BASE_R_M * SKYTREE_COLLIDER_K (54 m real); BOUNCE, never absorbs. */
-export const SKYTREE_COLLIDER_K = 0.6;
-/** While worldScale < this, the Skytree renders as the environment.js sky-dome
+/** Goal-tower base radius (REAL meters) — terrain.js permanent base circle collider. */
+export const MONUMENT_BASE_R_M = 90;
+/** Base collider radius = MONUMENT_BASE_R_M * MONUMENT_COLLIDER_K (54 m real); BOUNCE, never absorbs. */
+export const MONUMENT_COLLIDER_K = 0.6;
+/** While worldScale < this, the goal tower renders as the environment.js sky-dome
  *  silhouette (uGoalSil*); the goalTower.js mesh takes over via the kept v2
  *  moon crossfade at the first frame simDist < 0.8 * CAMERA_FAR. */
 export const SKY_SILHOUETTE_WS_MAX = 0.2;
@@ -98,11 +98,11 @@ export const WALL_TOP_M = 2.2;
 export const INTERIOR_ITEM_Y_MAX = 0.7;
 
 /* ================================================================== */
-/* v3 Map bounds / edge (config/cityMap.js re-exports MAP_BOUNDS)      */
+/* v3 Map bounds / edge (active pack cityMap re-exports MAP_BOUNDS)    */
 /* ================================================================== */
 
 /** Diorama bounds rect (REAL meters); ball center hard-clamped by terrain.js.
- *  Single source of truth — cityMap.js re-exports this object verbatim. */
+ *  Single source of truth — the active pack's cityMap re-exports this object verbatim. */
 export const MAP_BOUNDS = Object.freeze({
   x: Object.freeze([-1800, 1800]),
   z: Object.freeze([-1800, 2000]),
@@ -176,7 +176,7 @@ export const COMBO_SCORE_K = 0.10;
 export const COMBO_SCORE_MAX_MUL = 3.0;
 /** Flat bonus added when AbsorbEvent.rare (after combo multiplication). */
 export const RARE_SCORE_BONUS = 5000;
-/** Flat bonus on 'goalContact' (Skytree finale). */
+/** Flat bonus on 'goalContact' (goal-tower finale). */
 export const GOAL_SCORE_BONUS = 20000;
 /** Flat bonus per landmark singleton absorbed (EVT.LANDMARK, runStats). */
 export const LANDMARK_SCORE_BONUS = 8000;
@@ -185,7 +185,7 @@ export const TIME_BONUS_MAX = 30000;
 export const TIME_BONUS_FULL_S = 290;
 export const TIME_BONUS_ZERO_S = 720;
 /** Rank thresholds (sim seconds): S <= 290, A <= 400, B <= 540, C <= 720, else D.
- *  v3 ONE PACING TRUTH (docs/DESIGN-V3.md ティア表): GROWTH_K=12 (bumped from 10 to close T5/T6 stall); pacing
+ *  v3 ONE PACING TRUTH (docs/DESIGN-V3.md tier table): GROWTH_K=12 (bumped from 10 to close T5/T6 stall); pacing
  *  authored via chunk density (DENSITY_K_BY_BAND) + the growthKForObjR
  *  normalization + finite-map travel legs.
  *  EMPIRICAL (Phase-3 driven-run retune, 2026-06-11): a frame-perfect greedy
@@ -204,7 +204,7 @@ export const RANK_C_S = 720;
 /* ================================================================== */
 
 /** Per-archetype float merge window (s): a repeat absorb of the same code
- *  rewrites the live span to `+${sum} ネジ x3` and restarts its animation. */
+ *  rewrites the live span to `+${sum} screws x3` and restarts its animation. */
 export const FLOAT_MERGE_S = 0.30;
 /** Visible float-span caps (rare/collectible/landmark always allocate, evict oldest). */
 export const MAX_FLOATS_MOBILE = 3;
@@ -212,7 +212,7 @@ export const MAX_FLOATS_DESKTOP = 6;
 /** #collect-popup card auto-out (s). */
 export const COLLECT_POPUP_S = 3.5;
 /** Collection denominator shown in UI (album mask is append-only beyond it).
- *  v5: 12 -> 13 (id 12 スタックチャン, code 110 via collectibleCodeForId —
+ *  v5: 12 -> 13 (id 12 the robot-mascot collectible, code 110 via collectibleCodeForId —
  *  old 12-bit masks load unchanged, bit 12 simply starts unfound). */
 export const COLLECT_TOTAL = 13;
 /** Pre-rendered collectible thumbnail size (px, data-URL canvases). */
@@ -345,7 +345,7 @@ export const GROWTH_K = 12;
  * its authored ~60s budget), easing down to a floor of 2 for objects
  * >= ~3.6 m. Curated LANDMARK/COLLECTIBLE slots are EXEMPT in absorb.js
  * (the authored ladder keeps its designed x1.554 jumps, incl. the BINDING
- * Tokyo Tower 262->406 finale ramp).
+ * landmark-tower 262->406 finale ramp).
  */
 export const GROWTH_K_FLOOR = 2;
 export const GROWTH_NORM_REF_M = 0.1;
@@ -510,7 +510,7 @@ export const GOVERNOR_WINDOW_S = 3;
  *  +  8 stuck-on-ball families
  *  +  6 fixed (sky dome, ground, ball core, effects quads, ... )
  *  +  1 backdrop silhouette ring
- *  +  2 skytree (goalTower mesh + glow, fog:false sky-element exemption)
+ *  +  2 goal tower (goalTower mesh + glow, fog:false sky-element exemption)
  *  +  1 terrainMesh (shop walls/prisms, one merged vertex-colored mesh)
  *  +  2 bay water quad + quay-wall strip
  *  +  4 shared EXTRA InstancedPools (collectible-small / landmark-mid /

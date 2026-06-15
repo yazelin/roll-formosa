@@ -1,15 +1,15 @@
 /**
- * @file hud.js — v3 mobile-first DOM HUD (docs/DESIGN-V3.md §モバイルファーストUI
- * + §フィードバック): size odometer with unit rollover, #absorbed-inline
+ * @file hud.js — v3 mobile-first DOM HUD (docs/DESIGN-V3.md mobile-first UI
+ * + feedback): size odometer with unit rollover, #absorbed-inline
  * counter, tier banner, progress bar, #timer (m:ss mobile / m:ss.t at >=768px,
- * capped 99:59), score panel + ABSORB-NAME floats (`+120 ネジ` with per-code
+ * capped 99:59), score panel + ABSORB-NAME floats (`+120 screws` with per-code
  * FLOAT_MERGE_S burst merging, cap MAX_FLOATS_MOBILE/DESKTOP), dash RING on
  * #dash-button (--gauge 0-360deg AND --gauge01 0-1 written at 10Hz, snap on
  * EVT.DASH, .flash on EVT.DASH_READY — frozen Phase-0 contract), mute button,
  * #goal-arrow screen-edge guide (EVT.GOAL_GUIDE, 🗼, exclusion zone top 64px /
  * bottom 110px + live safe-area insets), #hud-toast (queue-of-1, 3 s; own
  * band row — the popup row sits below it), #collect-popup card (EVT.COLLECT — thumbnail
- * + name + NEW + 「コレクション n/12」, auto-out COLLECT_POPUP_S), landmark
+ * + name + NEW + "collection n/12", auto-out COLLECT_POPUP_S), landmark
  * center toast (EVT.LANDMARK).
  *
  * Purely event-subscribed (no per-frame update call from main.js — "hud is
@@ -416,7 +416,7 @@ export class Hud {
    * 'score' — fires once PER ABSORB (inside the fixed-step loop). The score
    * PANEL write stays 10Hz-gated; the absorb-name FLOAT runs per event with
    * FLOAT_MERGE_S per-code merging (a same-code repeat rewrites the live
-   * span `+${sum} ネジ x${n}` and restarts its animation — no new span).
+   * span `+${sum} screws x${n}` and restarts its animation — no new span).
    * @param {ScoreEvent} p
    */
   _onScore(p) {
@@ -535,7 +535,7 @@ export class Hud {
   }
 
   /**
-   * 'goalCall' — toast (skytree beam pulse / audio handled elsewhere).
+   * 'goalCall' — toast (goal-tower beam pulse / audio handled elsewhere).
    * @param {GoalCallEvent} _p
    */
   _onGoalCall(_p) {
@@ -603,7 +603,7 @@ export class Hud {
   }
 
   /**
-   * 'landmark' — center treatment toast 「「雷門」まきこんだ！」 (gold ring /
+   * 'landmark' — center treatment toast (landmark absorbed) (gold ring /
    * fanfare / Donack trivia are other modules').
    * @param {LandmarkEvent} p
    */
@@ -613,7 +613,7 @@ export class Hud {
 
   /**
    * 'collect' — rare-collection popup card: thumbnail + name (+NEW) +
-   * 「コレクション n/12」, slide-in, auto-out COLLECT_POPUP_S. While visible
+   * "collection n/12", slide-in, auto-out COLLECT_POPUP_S. While visible
    * the toast max-width is capped to 58vw (frozen one-liner).
    * @param {CollectEvent} p
    */

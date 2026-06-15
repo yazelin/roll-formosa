@@ -1,7 +1,7 @@
 /**
  * @file screens.js — Title / win / restart overlays, staged result reveal,
- * X share intent, goal-contact flash, title 自己ベスト line, v3 result
- * collection grid + #donack-toggle (docs/DESIGN-V3.md §フィードバック).
+ * X share intent, goal-contact flash, title personal best line, v3 result
+ * collection grid + #donack-toggle (docs/DESIGN-V3.md feedback).
  *
  * Owns the #title-overlay and #win-overlay DOM (frozen in index.html) and is
  * the ONLY emitter of 'game:start' and 'game:reset'. Overlay visibility is
@@ -12,7 +12,7 @@
  *   #restart-button click -> emit game:reset (then game:start)
  *   #donack-toggle click  -> flip + persist LS_DONACK_KEY, donack.setOff(b)
  *   on game:start -> hide title + win, clear staged result state
- *   on game:reset -> hide win, show title (refresh 自己ベスト line)
+ *   on game:reset -> hide win, show title (refresh personal best line)
  *   on goal       -> cache a field-by-field COPY of the payload (payloads are
  *                    reused!) + prebuild the X intent URL immediately
  *   on goalContact-> #flash-overlay white pop (.flash class)
@@ -71,7 +71,7 @@ const DISPLAY_NAME_BY_CODE = /** @type {string[]} */ (
 /* v5: collectible id -> code goes through objects.js collectibleCodeForId
    (ids 0..11 -> 70..81 frozen v3 rule, id 12+ -> V5_CODE_BASE 110+). The old
    local `70 + id` hand-roll is BANNED — for id 12 it resolves to code 82
-   (西郷さん像). collection.js boot-asserts every displayed id resolves. */
+   (a landmark statue). collection.js boot-asserts every displayed id resolves. */
 
 /** Share target shown in the post + the intent text (live deployment). */
 const SHARE_URL = 'https://fable-katamari.pages.dev';
@@ -270,7 +270,7 @@ export class Screens {
   }
 
   /**
-   * Xでシェア — synchronous inside the click gesture. window.open WITHOUT
+   * share on X — synchronous inside the click gesture. window.open WITHOUT
    * 'noopener' so null reliably means "blocked / webview" -> same-tab
    * fallback via location.href (accepted result-screen abandonment).
    */
@@ -281,7 +281,7 @@ export class Screens {
   }
 
   /**
-   * 🦆 ドナック実況 ON/OFF — flip, persist LS_DONACK_KEY ('1' = off), update
+   * 🦆 Donack commentary ON/OFF — flip, persist LS_DONACK_KEY ('1' = off), update
    * the pill label and tell the controller (drops everything while off).
    */
   _onDonackToggleClick() {
@@ -320,7 +320,7 @@ export class Screens {
     this._xUrl = '';
   }
 
-  /** 'game:reset' — back to the title screen (refresh 自己ベスト). */
+  /** 'game:reset' — back to the title screen (refresh personal best). */
   _onGameReset() {
     this._clearReveal();
     this._winEl.classList.add('hidden');
@@ -555,7 +555,7 @@ export class Screens {
   /* ---------------------------------------------------------------- */
 
   /**
-   * Title 自己ベスト line via RunStats.loadBest() (static — never construct
+   * Title personal best line via RunStats.loadBest() (static — never construct
    * RunStats here). Hidden when no valid best exists (private mode etc.).
    */
   _refreshTitleBest() {
@@ -577,7 +577,7 @@ export class Screens {
   }
 
   /**
-   * Result ベスト line — read AFTER runStats persisted this run (GOAL is
+   * Result best line — read AFTER runStats persisted this run (GOAL is
    * emitted after the atomic best update, so loadBest reflects it).
    * @returns {string}
    */
@@ -603,7 +603,7 @@ export class Screens {
 
   /**
    * Build the X web-intent URL from a goal COPY (v3 text template,
-   * DESIGN-V3.md §フィードバック — ~150/280 weighted chars; the #FableKatamari
+   * DESIGN-V3.md feedback — ~150/280 weighted chars; the #FableKatamari
    * tag rides the existing `hashtags=` param, NOT the text, so it is never
    * doubled).
    * @param {GoalEvent} g
