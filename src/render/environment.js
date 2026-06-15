@@ -40,20 +40,20 @@
  * tower, fading to 0 over 2 s as the mesh takes over at
  * simDist < 0.8*CAMERA_FAR. setTierPaletteImmediate resets the fade to 1.
  *
- * v3 BAY (map-edge cosmetics, +2 draw calls, counted in the 64/72 ledger):
- * one merged two-rect water quad (fog-on Lambert 0x2a4a6e) over Tokyo Bay
- * (south x[-200,1800] z[1500,2000] + east x[1400,1800] z[-400,1500]) plus an
- * L-shaped quay-wall strip along the shoreline. Both are authored in REAL
- * METERS and ride a group whose scale (1/worldScale) and position (rebase
- * shift) are refreshed every update — radius-continuous, rescale/rebase
- * exact. (The water sits at +0.3 m: the v1 ground plane is opaque at y = 0
- * and would occlude a submerged quad; the quay wall hides the seam.)
+ * v3 WATER (map-edge cosmetics, +2 draw calls, counted in the 64/72 ledger):
+ * one merged multi-rect water quad (fog-on Lambert; color/yM/rects from
+ * activePack.cityMap.water) plus a quay-wall strip along the first rect's
+ * leading edge. Both are authored in REAL METERS and ride a group whose
+ * scale (1/worldScale) and position (rebase shift) are refreshed every update
+ * — radius-continuous, rescale/rebase exact. (The water sits at yM m above
+ * ground: the v1 ground plane is opaque at y = 0 and would occlude a
+ * submerged quad; the quay wall hides the seam.) If activePack.cityMap.water
+ * is absent (pack omits water), the group is empty — no draw calls.
  *
- * v4 (Stream R): the bay quads + quay strip are KEPT UNCHANGED (the sea is
- * not derivable from the OSM water fetch — coastline assembly is out of v4
- * scope). Two additive exports for render/osmGround.js: getWaterMaterial()
- * (the OSM river mesh shares the bay Lambert — one program, no freed slot)
- * and the fogFarSim getter (floored sim-space fog far for ground streaming).
+ * v4 (Stream R): two additive exports for render/osmGround.js: getWaterMaterial()
+ * (the OSM river mesh shares the pack-water Lambert — one program, no freed
+ * slot) and the fogFarSim getter (floored sim-space fog far for ground
+ * streaming). Returns null if no pack water is defined (osmGround must guard).
  *
  * v3 FOG FLOOR (FOG_FAR_MIN_M, applied at query time): fog.far =
  * max(FOG_FAR_K * rv, FOG_FAR_MIN_M / worldScale) so the 8 m shop is never
@@ -124,21 +124,20 @@ const GLOW_PULSE_AMP = 0.7;
 /* ---- v3 constants (env-local) ---- */
 /** Boot worldScale — the local tracker's start value (resynced from 'grow'). */
 const BOOT_WORLD_SCALE = START_RADIUS_M / SIM_RADIUS_MIN;
-/** Bay water surface height, REAL meters. SPEC NOTE: DESIGN-V3.md says
- *  y = -0.3, but the v1 ground plane is opaque at y = 0 and would fully
- *  occlude a submerged quad — the surface sits at +0.3 instead and the quay
- *  wall hides the shoreline seam (documented deviation). */
-const WATER_Y_M = 0.3;
-/** Water color (fog-on Lambert — DESIGN-V3.md 箱庭東京マップ D). */
-const WATER_COLOR = 0x2a4a6e;
-/** Quay wall: concrete strip along the shoreline (REAL meters). */
+/** Quay wall: concrete strip along the leading shoreline edge (REAL meters). */
 const QUAY_COLOR = 0x767e8a;
 const QUAY_H_M = 3.0;
 const QUAY_W_M = 6.0;
-/** Bay rects (REAL meters; union = the spec coverage, authored non-overlapping):
- *  south band x[-200,1800] z[1500,2000]; east band x[1400,1800] z[-400,1500]. */
-const BAY_SOUTH = { x0: -200, x1: 1800, z0: 1500, z1: 2000 };
-const BAY_EAST = { x0: 1400, x1: 1800, z0: -400, z1: 1500 };
+/**
+ * Pack-driven water definition. Reads activePack.cityMap.water (shape:
+ * { color, yM, rects: [{x0,x1,z0,z1},...], name }). Falls back to undefined
+ * (no water drawn) if the pack omits it. The old Tokyo Bay hardcoded
+ * constants (BAY_SOUTH / BAY_EAST / WATER_COLOR / WATER_Y_M = 0x2a4a6e /
+ * 0.3) are intentionally removed — they lived only in the Tokyo pack era.
+ */
+const PACK_WATER = activePack.cityMap.water !== undefined
+  ? activePack.cityMap.water
+  : null;
 /** Skytree silhouette tint -> fog mix factor, baked into the GLSL below. */
 const SIL_FOG_MIX_GLSL = (0.45).toFixed(2);
 
@@ -570,57 +569,69 @@ export class Environment {
     this.blobShadow.renderOrder = 1; // over the ground
     scene.add(this.blobShadow);
 
-    /* --- v3 Tokyo Bay: water quad pair (1 draw) + quay-wall strip (1 draw).
-     * Authored in REAL METERS inside this._bay; the group's scale (1/ws) and
-     * position (-shift) are refreshed every update() — radius-continuous,
-     * pixel-exact across rescale/rebase, and self-correcting after a dev
-     * teleport (live ws). Both materials are fog:true (Lambert default):
-     * beyond the fog wall the bay simply melts away like world scenery. --- */
+    /* --- v3 Water body: water quad(s) (1 draw) + quay-wall strip (1 draw).
+     * Geometry is driven by PACK_WATER (activePack.cityMap.water). If the
+     * pack omits water, both _bayWater and _bayQuay are null and the group is
+     * empty — 0 draw calls. Authored in REAL METERS inside this._bay; the
+     * group's scale (1/ws) and position (-shift) are refreshed every
+     * update() — radius-continuous, pixel-exact across rescale/rebase, and
+     * self-correcting after a dev teleport (live ws). Both materials are
+     * fog:true (Lambert default): beyond the fog wall the water simply melts
+     * away like world scenery. --- */
     /** @type {THREE.Group} */
     this._bay = new THREE.Group();
-    {
-      const water = new THREE.BufferGeometry();
-      // Two horizontal rects (4 tris) at WATER_Y_M.
-      const w = new Float32Array([
-        // south band
-        BAY_SOUTH.x0, WATER_Y_M, BAY_SOUTH.z0, BAY_SOUTH.x0, WATER_Y_M, BAY_SOUTH.z1,
-        BAY_SOUTH.x1, WATER_Y_M, BAY_SOUTH.z1, BAY_SOUTH.x0, WATER_Y_M, BAY_SOUTH.z0,
-        BAY_SOUTH.x1, WATER_Y_M, BAY_SOUTH.z1, BAY_SOUTH.x1, WATER_Y_M, BAY_SOUTH.z0,
-        // east band
-        BAY_EAST.x0, WATER_Y_M, BAY_EAST.z0, BAY_EAST.x0, WATER_Y_M, BAY_EAST.z1,
-        BAY_EAST.x1, WATER_Y_M, BAY_EAST.z1, BAY_EAST.x0, WATER_Y_M, BAY_EAST.z0,
-        BAY_EAST.x1, WATER_Y_M, BAY_EAST.z1, BAY_EAST.x1, WATER_Y_M, BAY_EAST.z0,
-      ]);
-      water.setAttribute('position', new THREE.BufferAttribute(w, 3));
-      water.computeVertexNormals();
-      /** @type {THREE.Mesh} */
+    /** @type {THREE.Mesh|null} */
+    this._bayWater = null;
+    /** @type {THREE.Mesh|null} */
+    this._bayQuay = null;
+    if (PACK_WATER !== null && PACK_WATER.rects.length > 0) {
+      const yM = PACK_WATER.yM;
+      const rects = PACK_WATER.rects;
+      // One merged water quad covering all pack rects (2 tris per rect).
+      const waterVerts = new Float32Array(rects.length * 6 * 3);
+      let vi = 0;
+      for (const r of rects) {
+        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+      }
+      const waterGeo = new THREE.BufferGeometry();
+      waterGeo.setAttribute('position', new THREE.BufferAttribute(waterVerts, 3));
+      waterGeo.computeVertexNormals();
       this._bayWater = new THREE.Mesh(
-        water,
-        new THREE.MeshLambertMaterial({ color: WATER_COLOR })
+        waterGeo,
+        new THREE.MeshLambertMaterial({ color: PACK_WATER.color })
       );
       this._bayWater.frustumCulled = false;
       this._bay.add(this._bayWater);
 
-      // Quay wall: L-strip along the two shorelines (2 boxes merged by hand
-      // into one geometry via two BoxGeometries in a single mesh group would
-      // cost a draw each — use one geometry with both boxes baked).
-      const south = new THREE.BoxGeometry(BAY_SOUTH.x1 - BAY_SOUTH.x0, QUAY_H_M, QUAY_W_M);
-      south.translate(
-        (BAY_SOUTH.x0 + BAY_SOUTH.x1) / 2,
-        QUAY_H_M / 2,
-        BAY_SOUTH.z0 - QUAY_W_M / 2
+      // Quay wall: one merged box strip along the first rect's inner edge
+      // (the edge closest to the play area) and the second rect's inner edge
+      // if it exists. Keeps the draw-call count at +1 (same budget as Tokyo Bay).
+      const quayGeos = [];
+      for (let i = 0; i < Math.min(rects.length, 2); i++) {
+        const r = rects[i];
+        // For each rect use the edge with the smaller absolute z (inner edge).
+        const innerZ = Math.abs(r.z0) <= Math.abs(r.z1) ? r.z0 : r.z1;
+        const edgeBox = new THREE.BoxGeometry(r.x1 - r.x0, QUAY_H_M, QUAY_W_M);
+        edgeBox.translate(
+          (r.x0 + r.x1) / 2,
+          QUAY_H_M / 2,
+          innerZ - Math.sign(innerZ - (r.z0 + r.z1) / 2) * QUAY_W_M / 2
+        );
+        quayGeos.push(edgeBox);
+      }
+      const quayGeo = quayGeos.length === 1
+        ? quayGeos[0]
+        : mergeGeometries(quayGeos, false);
+      if (quayGeos.length > 1) quayGeos.forEach((g) => g.dispose());
+      this._bayQuay = new THREE.Mesh(
+        quayGeo,
+        new THREE.MeshLambertMaterial({ color: QUAY_COLOR })
       );
-      const east = new THREE.BoxGeometry(QUAY_W_M, QUAY_H_M, BAY_EAST.z1 - BAY_EAST.z0);
-      east.translate(
-        BAY_EAST.x0 - QUAY_W_M / 2,
-        QUAY_H_M / 2,
-        (BAY_EAST.z0 + BAY_EAST.z1) / 2
-      );
-      const quay = mergeGeometries([south, east], false);
-      south.dispose();
-      east.dispose();
-      /** @type {THREE.Mesh} */
-      this._bayQuay = new THREE.Mesh(quay, new THREE.MeshLambertMaterial({ color: QUAY_COLOR }));
       this._bayQuay.frustumCulled = false;
       this._bay.add(this._bayQuay);
     }
@@ -798,13 +809,16 @@ export class Environment {
   /**
    * v4 (Stream R) — THE shared water material: the OSM river/pond/moat mesh
    * (render/osmGround.js) renders on the SAME MeshLambertMaterial as the
-   * authored Tokyo Bay quads (one program; fog-on; the bay stays owned by
-   * environment.js — OSM water is ADDITIVE, docs/DESIGN-V4.md レンダリング統合).
+   * pack-authored water quads (one program; fog-on; the water mesh stays owned
+   * by environment.js — OSM water is ADDITIVE, docs/DESIGN-V4.md レンダリング統合).
    * Lifetime: owned and disposed HERE; borrowers must not dispose it.
-   * @returns {THREE.Material}
+   * Returns null when the active pack defines no water (osmGround must guard).
+   * @returns {THREE.Material|null}
    */
   getWaterMaterial() {
-    return /** @type {THREE.Material} */ (this._bayWater.material);
+    return this._bayWater !== null
+      ? /** @type {THREE.Material} */ (this._bayWater.material)
+      : null;
   }
 
   /**
@@ -1024,10 +1038,14 @@ export class Environment {
     bus.off(EVT.GAME_RESET, this._onGameReset);
     bus.off(EVT.GROW, this._onGrow);
     this._scene.remove(this.sky, this.ground, this.blobShadow, this.hemiLight, this.dirLight, this.dirLight.target, this._bay);
-    this._bayWater.geometry.dispose();
-    /** @type {THREE.MeshLambertMaterial} */ (this._bayWater.material).dispose();
-    this._bayQuay.geometry.dispose();
-    /** @type {THREE.MeshLambertMaterial} */ (this._bayQuay.material).dispose();
+    if (this._bayWater !== null) {
+      this._bayWater.geometry.dispose();
+      /** @type {THREE.MeshLambertMaterial} */ (this._bayWater.material).dispose();
+    }
+    if (this._bayQuay !== null) {
+      this._bayQuay.geometry.dispose();
+      /** @type {THREE.MeshLambertMaterial} */ (this._bayQuay.material).dispose();
+    }
     this.ground.geometry.dispose();
     /** @type {THREE.ShaderMaterial} */ (this.ground.material).dispose();
     this.sky.geometry.dispose();
