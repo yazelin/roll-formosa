@@ -6,4 +6,8 @@ export default defineConfig({
     target: 'es2022',
     chunkSizeWarningLimit: 1200,
   },
+  test: {
+    include: ['src/**/*.test.js'],
+    environment: 'node',
+  },
 });
