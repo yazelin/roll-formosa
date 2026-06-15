@@ -253,7 +253,17 @@ const _TAIPEI_LANDMARK_PLACEMENTS = LANDMARKS
     rIntent: ld.dioramaR / ABSORB_RATIO,
   }));
 
-export const PLACEMENTS = [..._TOKYO_PLACEMENTS, ..._TAIPEI_LANDMARK_PLACEMENTS];
+// Keep Taipei content from the Tokyo authored set: chunk dressing (codes 0..69)
+// + collectibles (70..81) + 媽祖 (94). DROP the Tokyo curated landmarks/buildings:
+// codes 82..89 are re-placed below at Taipei positions (de-dup, was spawning each
+// landmark twice); codes 90..93 + 95..98 are Tokyo leftovers (レインボーブリッジ /
+// 東京タワー / センゴク電子 / Akiba buildings) that also OVERFLOW the landmark-xl
+// pool (cap 4) → invisible-but-collidable. Removing them fixes the invisible walls.
+const _KEEP = (p) => p.archetypeCode < 82 || p.archetypeCode === 94;
+export const PLACEMENTS = [
+  ..._TOKYO_PLACEMENTS.filter(_KEEP),
+  ..._TAIPEI_LANDMARK_PLACEMENTS,
+];
 
 /* ================================================================== */
 /* Water body (pack-driven — consumed by environment.js)              */
