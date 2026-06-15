@@ -44,10 +44,14 @@
  */
 
 import * as THREE from 'three';
-import { ARCHETYPE_ID_BY_CODE, EXTRA_CODE_BASE } from '../world/objects.js';
+import { ARCHETYPE_ID_BY_CODE as _GLOBAL_ARCHETYPE_ID_BY_CODE, EXTRA_CODE_BASE } from '../world/objects.js';
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 const EXTRA_SIZE_CLASS_BY_CODE = activePack.extraSizeClassByCode; // EXTRA code -> size class (catalog content)
 const EXTRA_POOL_CAPS = activePack.extraPoolCaps; // size class -> spec floor cap (catalog content)
+// P6b: use the pack-scoped id-by-code table so Taipei landmarks (codes 82..89)
+// resolve to Taipei ids (e.g. 'beimen') rather than frozen Tokyo ids.
+// Falls back to the global frozen table for any code the pack doesn't override.
+const _PACK_ID_BY_CODE = activePack.archetypeIdByCode || _GLOBAL_ARCHETYPE_ID_BY_CODE;
 
 const DEV = !!(import.meta.env && import.meta.env.DEV);
 
@@ -403,11 +407,13 @@ if (DEV) {
 export function buildExtraPools(geos, material) {
   /** @type {Array<Array<{code: number, geometry: THREE.BufferGeometry}>>} */
   const members = [[], [], [], []];
-  for (let code = EXTRA_CODE_BASE; code < ARCHETYPE_ID_BY_CODE.length; code++) {
+  // Iterate up to the pack-scoped table length (covers all pack-assigned codes).
+  const idByCode = _PACK_ID_BY_CODE;
+  for (let code = EXTRA_CODE_BASE; code < idByCode.length; code++) {
     const cls = EXTRA_SIZE_CLASS_BY_CODE[code];
-    if (cls === null || cls === undefined) continue; // 93 Skytree display slot
+    if (cls === null || cls === undefined) continue; // 93 Skytree display slot / goal
     const k = CLASS_INDEX[cls];
-    const g = geos[ARCHETYPE_ID_BY_CODE[code]];
+    const g = geos[idByCode[code]]; // pack-scoped id lookup (Taipei overrides 82..89)
     if (k === undefined || !g) {
       if (DEV) console.warn(`[extraPools] no geometry/class for EXTRA code ${code}`);
       continue;

@@ -50,13 +50,25 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(activePack.codeForCollectibleId(12)).toBe(94);
   });
 
-  it('code map chunk slots 0-69 are Taipei ids (P4: tiers now Taipei; EXTRA ids 70+ stay Tokyo)', () => {
-    // P4 replaces chunk codes (0-69) with Taipei archetypeIds; EXTRA codes (70+)
-    // remain the Tokyo EXTRA/V5 pool until P5. Legacy check removed (P3-only).
+  it('code map: chunk 0-69 are Taipei ids; EXTRA 70-81 and 90-98 are Tokyo; 82-89 are Taipei landmarks', () => {
+    // P4 replaces chunk codes (0-69) with Taipei archetypeIds.
     const taipeiChunkIds = activePack.tiers.flatMap((t) => t.archetypeIds);
     expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(taipeiChunkIds);
-    // EXTRA codes still align with Tokyo EXTRA (unchanged in P4)
-    expect(activePack.archetypeIdByCode.slice(70)).toEqual(ARCHETYPE_ID_BY_CODE.slice(70));
+    // Collectible EXTRA codes 70..81 remain Tokyo ids (frozen).
+    expect(activePack.archetypeIdByCode.slice(70, 82)).toEqual(ARCHETYPE_ID_BY_CODE.slice(70, 82));
+    // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
+    expect(activePack.archetypeIdByCode[82]).toBe('beimen');
+    expect(activePack.archetypeIdByCode[83]).toBe('longshan_temple');
+    expect(activePack.archetypeIdByCode[84]).toBe('ximen_redhouse');
+    expect(activePack.archetypeIdByCode[85]).toBe('grand_hotel');
+    expect(activePack.archetypeIdByCode[86]).toBe('presidential_office');
+    expect(activePack.archetypeIdByCode[87]).toBe('cks_memorial');
+    expect(activePack.archetypeIdByCode[88]).toBe('liberty_square_arch');
+    expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
+    // Codes 90..93 remain Tokyo ids (bridge/tower/shop/skytree, frozen).
+    expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual(ARCHETYPE_ID_BY_CODE.slice(90, 94));
+    // v5 codes 94..98 remain Tokyo ids (stack_chan + akiba buildings).
+    expect(activePack.archetypeIdByCode.slice(94)).toEqual(ARCHETYPE_ID_BY_CODE.slice(94));
   });
 
   it('exposes full R16 content surface', () => {
