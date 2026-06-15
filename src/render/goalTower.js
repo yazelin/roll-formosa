@@ -38,7 +38,8 @@
  */
 
 import * as THREE from 'three';
-import { SKYTREE_POS } from '../config/cityMap.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
 import { SKY_SILHOUETTE_WS_MAX, SKYTREE_BASE_R_M } from '../config/tuning.js';
 import { bus, EVT } from '../core/events.js';
 import { clamp01 } from '../core/mathUtils.js';

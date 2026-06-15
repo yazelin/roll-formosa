@@ -45,7 +45,9 @@
 
 import * as THREE from 'three';
 import { ARCHETYPE_ID_BY_CODE, EXTRA_CODE_BASE } from '../world/objects.js';
-import { EXTRA_SIZE_CLASS_BY_CODE, EXTRA_POOL_CAPS } from '../config/catalog.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const EXTRA_SIZE_CLASS_BY_CODE = activePack.extraSizeClassByCode; // EXTRA code -> size class (catalog content)
+const EXTRA_POOL_CAPS = activePack.extraPoolCaps; // size class -> spec floor cap (catalog content)
 
 const DEV = !!(import.meta.env && import.meta.env.DEV);
 

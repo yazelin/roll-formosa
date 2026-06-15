@@ -45,7 +45,10 @@
  */
 
 import * as THREE from 'three';
-import { SHOP, SKYTREE_POS, MAP_BOUNDS } from '../config/cityMap.js';
+import { MAP_BOUNDS } from '../config/cityMap.js'; // engine constant (world bounds, from tuning)
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const SHOP = activePack.cityMap.SHOP; // shop interior/walls geometry (city content)
+const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
 import { EVT, PAYLOADS } from '../core/events.js';
 import {
   BOUNCE_RESTITUTION,
