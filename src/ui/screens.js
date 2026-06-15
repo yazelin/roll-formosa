@@ -568,7 +568,7 @@ export class Screens {
     }
     const scoreFmt = _numFmt !== null ? _numFmt.format(rec.score) : String(rec.score);
     this._titleBestValueEl.textContent =
-      'RANK ' + rec.rank + ' ・ ' + formatTime(rec.timeS) + ' ・ ' + scoreFmt + 'pt';
+      'RANK ' + rec.rank + ' · ' + formatTime(rec.timeS) + ' · ' + scoreFmt + 'pt';
     this._titleBestLineEl.classList.remove('hidden');
   }
 
