@@ -185,7 +185,7 @@ export const TIME_BONUS_MAX = 30000;
 export const TIME_BONUS_FULL_S = 290;
 export const TIME_BONUS_ZERO_S = 720;
 /** Rank thresholds (sim seconds): S <= 290, A <= 400, B <= 540, C <= 720, else D.
- *  v3 ONE PACING TRUTH (docs/DESIGN-V3.md ティア表): GROWTH_K=10 kept; pacing
+ *  v3 ONE PACING TRUTH (docs/DESIGN-V3.md ティア表): GROWTH_K=12 (bumped from 10 to close T5/T6 stall); pacing
  *  authored via chunk density (DENSITY_K_BY_BAND) + the growthKForObjR
  *  normalization + finite-map travel legs.
  *  EMPIRICAL (Phase-3 driven-run retune, 2026-06-11): a frame-perfect greedy
@@ -333,7 +333,7 @@ export const ABSORB_RATIO = 0.65;
  * tier 0 at ~60s / ~170 absorbs (mean gap ~0.35s, so combos actually fire).
  * Retune against a measured tier-0 playthrough, not arithmetic alone.
  */
-export const GROWTH_K = 10;
+export const GROWTH_K = 12;
 /**
  * v3 Phase-3 growth normalization (CRITICAL pacing fix — the 4m->117m/3s
  * cascade): GROWTH_K=10 with ABSORB_RATIO 0.65 makes every near-threshold
