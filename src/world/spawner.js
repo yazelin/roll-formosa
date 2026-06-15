@@ -63,12 +63,14 @@
  */
 
 import * as THREE from 'three';
-import { TIERS, ARCH_PER_TIER } from '../config/tiers.js';
+import { ARCH_PER_TIER } from '../config/tiers.js'; // engine constant (slots per tier)
 import { hash } from '../core/rng.js';
 import { FreeList, IntRing } from '../core/pool.js';
 import { EVT } from '../core/events.js';
 import { FLAG_RARE, FLAG_CURATED } from './objects.js';
-import { bandAllowedAt } from '../config/cityMap.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const TIERS = activePack.tiers; // tier table (spawn bands) from the active pack
+const bandAllowedAt = activePack.cityMap.bandAllowedAt; // pure zone-mask lookup (city content)
 import {
   ALIVE_TOTAL_BUDGET,
   densityKForBand,

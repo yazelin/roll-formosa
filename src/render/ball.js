@@ -61,7 +61,9 @@ import {
   KNOCKOFF_MAX,
   KNOCKOFF_POP_SPEED_K,
 } from '../config/tuning.js';
-import { TIERS, ARCH_PER_TIER } from '../config/tiers.js';
+import { ARCH_PER_TIER } from '../config/tiers.js'; // engine constant (slots per tier)
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const TIERS = activePack.tiers; // tier table (frozen archetypeIds order) from the active pack
 import {
   ARCHETYPE_ID_BY_CODE,
   EXTRA_CODE_BASE,

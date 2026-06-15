@@ -40,7 +40,9 @@
  * spawner just accumulates the shift (spawner.onRebase).
  */
 
-import { TIERS, RESCALE_S } from '../config/tiers.js';
+import { RESCALE_S } from '../config/tiers.js'; // engine constant (rescale factor)
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const TIERS = activePack.tiers; // tier table (palettes + spawn bands) from the active pack
 import { EVT, PAYLOADS } from '../core/events.js';
 import { formatLength } from '../core/mathUtils.js';
 import {

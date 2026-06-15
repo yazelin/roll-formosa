@@ -78,7 +78,6 @@
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { TIERS } from '../config/tiers.js';
 import {
   FOG_NEAR_K,
   FOG_FAR_K,
@@ -89,7 +88,9 @@ import {
   SKYTREE_BASE_R_M,
   START_RADIUS_M,
 } from '../config/tuning.js';
-import { SKYTREE_POS } from '../config/cityMap.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const TIERS = activePack.tiers; // tier palette table from the active pack
+const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
 import { bus, EVT } from '../core/events.js';
 import { easeInOutCubic, clamp01, lerp } from '../core/mathUtils.js';
 import { SKYTREE_HEIGHT_M } from './goalTower.js';

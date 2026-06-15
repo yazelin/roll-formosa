@@ -9,7 +9,13 @@
  * `activePack`/default ONLY; the taipei skeleton must NOT import it.)
  */
 import { TIERS, RESCALE_S, ARCH_PER_TIER } from '../../config/tiers.js';
-import { CATALOG, EXTRA_CATALOG, DISPLAY_NAME_BY_CODE } from '../../config/catalog.js';
+import {
+  CATALOG,
+  EXTRA_CATALOG,
+  DISPLAY_NAME_BY_CODE,
+  EXTRA_SIZE_CLASS_BY_CODE,
+  EXTRA_POOL_CAPS,
+} from '../../config/catalog.js';
 import { EXTRA_ARCHETYPE_IDS, V5_ARCHETYPE_IDS } from '../../world/objects.js';
 import * as cityMap from '../../config/cityMap.js';
 import { ABSORB_RATIO, MAP_BOUNDS } from '../../config/tuning.js';
@@ -39,6 +45,8 @@ export const activePack = {
   archPerTier: ARCH_PER_TIER,
   archetypes: CATALOG, // chunk + EXTRA archetype recipes (id -> ArchetypeDef)
   extraCatalog: EXTRA_CATALOG, // EXTRA curated recipes (by code)
+  extraSizeClassByCode: EXTRA_SIZE_CLASS_BY_CODE, // EXTRA code -> render size class
+  extraPoolCaps: EXTRA_POOL_CAPS, // size class -> spec floor pool cap
   displayNameByCode: DISPLAY_NAME_BY_CODE,
   extraIds,
   collectibleExtraIndex,
