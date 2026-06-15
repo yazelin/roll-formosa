@@ -159,9 +159,13 @@ const V5_STUCK_FAMILY = Uint8Array.from([
   5, // 114 pc_parts_bldg   -> tall pillar
 ]);
 
-/* Boot DEV cross-assert: the chunk table must agree with objects.js
-   ARCHETYPE_ID_BY_CODE entry-for-entry across all 70 chunk codes, and
-   objects.js must carry all 99 entries (70 chunk + 24 EXTRA + 5 v5). */
+/* Boot DEV cross-assert: the chunk table must agree with the ACTIVE PACK's
+   archetypeIdByCode (pack-scoped code map built by buildCodeMap at boot) for
+   all 70 chunk codes; and objects.js must carry all 99 entries (70 chunk +
+   24 EXTRA + 5 v5) for the EXTRA lookup paths in curated/collection.
+   NOTE: objects.js ARCHETYPE_ID_BY_CODE[0..69] is Tokyo-tied (can't import
+   activePack there — cycle). We validate chunk codes only against the pack
+   code map, and validate the 99-length invariant of objects.js separately. */
 if (import.meta.env && import.meta.env.DEV) {
   if (ARCHETYPE_IDS.length !== 70 || EXTRA_CODE_BASE !== 70) {
     throw new Error(
@@ -175,11 +179,14 @@ if (import.meta.env && import.meta.env.DEV) {
         `(70 chunk + 24 EXTRA + 5 v5), found ${ARCHETYPE_ID_BY_CODE.length}`
     );
   }
+  // Validate chunk codes against the ACTIVE PACK's code map (pack-scoped,
+  // not the Tokyo-tied objects.js table which differs when Taipei is active).
+  const packIdByCode = activePack.archetypeIdByCode;
   for (let c = 0; c < 70; c++) {
-    if (ARCHETYPE_IDS[c] !== ARCHETYPE_ID_BY_CODE[c]) {
+    if (ARCHETYPE_IDS[c] !== packIdByCode[c]) {
       throw new Error(
-        `[ball.js invariant] code ${c} mismatch vs objects.js: ` +
-          `'${ARCHETYPE_IDS[c]}' !== '${ARCHETYPE_ID_BY_CODE[c]}'`
+        `[ball.js invariant] code ${c} mismatch vs activePack.archetypeIdByCode: ` +
+          `'${ARCHETYPE_IDS[c]}' !== '${packIdByCode[c]}'`
       );
     }
   }

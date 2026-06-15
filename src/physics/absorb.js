@@ -68,6 +68,16 @@ import {
   ARCHETYPE_ID_BY_CODE,
   ARCHETYPE_CODE_BY_ID,
 } from '../world/objects.js';
+import { activePack } from '../packs/active.js'; // P5: pack-scoped code→id map for chunk codes
+
+/**
+ * Pack-scoped code -> id table (string[99]): built from the active pack's
+ * tier ordering so chunk codes 0..69 resolve to Taipei (or whichever pack is
+ * active) ids. EXTRA codes 70..98 are pack-invariant (same frozen EXTRA ids
+ * in every pack), so objects.js ARCHETYPE_ID_BY_CODE is still used for those
+ * slots — but we route EVERYTHING through this table for consistency.
+ */
+const _PACK_ID_BY_CODE = activePack.archetypeIdByCode;
 
 /** @typedef {import('../types.js').BallState} BallState */
 /** @typedef {import('../types.js').Archetype} Archetype */
@@ -114,11 +124,11 @@ export class Absorb {
     /** @type {{ collectibleIdFor: (storeIdx: number) => number } | null} */
     this._curated = curated || null;
 
-    /** @type {Float32Array} collisionScale per archetype code (sized from ARCHETYPE_ID_BY_CODE). */
-    this._collisionScale = new Float32Array(ARCHETYPE_ID_BY_CODE.length).fill(1);
+    /** @type {Float32Array} collisionScale per archetype code (sized from pack code table). */
+    this._collisionScale = new Float32Array(_PACK_ID_BY_CODE.length).fill(1);
     if (catalog) {
-      for (let code = 0; code < ARCHETYPE_ID_BY_CODE.length; code++) {
-        const arch = catalog[ARCHETYPE_ID_BY_CODE[code]];
+      for (let code = 0; code < _PACK_ID_BY_CODE.length; code++) {
+        const arch = catalog[_PACK_ID_BY_CODE[code]];
         if (arch && typeof arch.collisionScale === 'number') {
           this._collisionScale[code] = arch.collisionScale;
         }
@@ -260,7 +270,7 @@ export class Absorb {
 
     const p = PAYLOADS.absorb;
     p.objIndex = i;
-    p.archetypeId = ARCHETYPE_ID_BY_CODE[store.archetype[i]] || '';
+    p.archetypeId = _PACK_ID_BY_CODE[store.archetype[i]] || '';
     p.sizeReal = 2 * r * ws;
     p.combo = this._combo;
     p.trueRadius = ball.radiusSim * ws;

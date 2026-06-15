@@ -67,14 +67,17 @@ export const activePack = {
     // P4: structural ladder invariants (no catalog dependency).
     validateTiersStructure();
 
-    // P4→P5 seam: archetype resolution deferred until catalog.js (Part 5)
-    // ships the 70 Taipei ArchetypeDefs. pack.archetypes is still Tokyo in P4;
-    // running the resolution check here would false-fail on Taipei ids.
-    // P5 replaces this comment with the resolution loop.
-
-    // P3 landmark shim: Tokyo LANDMARKS carry nameJa/no isGoal; run shared
-    // validatePack with the shimmed view so landmark-ladder check still passes.
-    validateTaipeiP3Stub(this);
+    // P5: all 70 chunk ids now resolve in CATALOG; run the real archetype-
+    // resolution invariant. EXTRA/v5 ids also resolve via Tokyo placeholders.
+    // P3 landmark shim retained for nameJa/isGoal (Tokyo LANDMARKS still used;
+    // P6 authors native name/isGoal and removes this shim).
+    const ladderLandmarks = this.landmarks.filter((ld) => ld.landmarkId !== 5);
+    const largest = ladderLandmarks.reduce((a, b) => (b.dioramaR > a.dioramaR ? b : a));
+    const shimmed = {
+      ...this,
+      landmarks: ladderLandmarks.map((ld) => ({ ...ld, name: ld.nameJa, isGoal: ld === largest })),
+    };
+    validatePack(shimmed);
     return true;
   },
 };
@@ -94,28 +97,5 @@ activePack.displayNameByCodeArr = DISPLAY_NAME_BY_CODE;
 activePack.codeForCollectibleId = (id) => _codeMap.collectibleCodeForId(id);
 /** @param {number} code archetype code @returns {string} archetype id. */
 activePack.codeToArchetypeId = (code) => _codeMap.idByCode[code];
-
-/**
- * P3 validate shim: the stub still uses Tokyo LANDMARKS which carry `nameJa`
- * (not `name`) and no `isGoal`. Shim the shared validatePack view identically
- * to _tokyo_transient. P6 replaces LANDMARKS with native name/isGoal fields.
- * @param {import('../_engine/codeMap.js').StagePack} pack
- */
-function validateTaipeiP3Stub(pack) {
-  // Tokyo LANDMARKS: landmarkId 5 (scramble decal) is off-ladder by design.
-  const ladderLandmarks = pack.landmarks.filter((ld) => ld.landmarkId !== 5);
-  const largest = ladderLandmarks.reduce((a, b) => (b.dioramaR > a.dioramaR ? b : a));
-  // P4 seam: tiers now carry Taipei ids but archetypes is still the Tokyo
-  // catalog stub. Override archetypes with a Proxy that accepts all ids so
-  // validatePack's archetype-resolution check passes; the real resolution
-  // check lands in P5 when the Taipei catalog replaces the stub.
-  const deferredArchetypes = new Proxy({}, { get: () => true, has: () => true });
-  const shimmed = {
-    ...pack,
-    archetypes: deferredArchetypes,
-    landmarks: ladderLandmarks.map((ld) => ({ ...ld, name: ld.nameJa, isGoal: ld === largest })),
-  };
-  validatePack(shimmed);
-}
 
 export default activePack;

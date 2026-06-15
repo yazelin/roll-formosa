@@ -67,6 +67,9 @@ const PLACEMENTS = activePack.cityMap.PLACEMENTS; // curated SoA placements (cit
 const LANDMARKS = activePack.landmarks; // curated landmark singletons (city content)
 const TIERS = activePack.tiers; // tier table (loadRadiusSim) from the active pack
 const CATALOG = activePack.archetypes; // archetype recipes (id -> ArchetypeDef)
+// P5: pack-scoped code->id for chunk codes (0..69); EXTRA codes (70..98) are
+// pack-invariant (frozen EXTRA_ARCHETYPE_IDS order), so objects.js is used there.
+const _PACK_ID_BY_CODE = activePack.archetypeIdByCode;
 import { ARCHETYPE_ID_BY_CODE, FLAG_ALIVE, FLAG_RARE, FLAG_CURATED } from './objects.js';
 import { EVT, PAYLOADS } from '../core/events.js';
 import {
@@ -242,7 +245,7 @@ export class CuratedSpawner {
     this._chunkYOff = new Float32Array(CHUNK_CODES);
     this._chunkPool = new Array(CHUNK_CODES).fill(null);
     for (let c = 0; c < CHUNK_CODES; c++) {
-      const a = CATALOG ? CATALOG[ARCHETYPE_ID_BY_CODE[c]] : undefined;
+      const a = CATALOG ? CATALOG[_PACK_ID_BY_CODE[c]] : undefined;
       this._chunkPalette[c] = a && a.palette && a.palette.length > 0 ? a.palette : FALLBACK_PALETTE;
       this._chunkYOff[c] = a ? a.yOffset || 0 : 0;
     }
@@ -828,7 +831,7 @@ export class CuratedSpawner {
     if (pool === null || pool === undefined) {
       const src = this._instances;
       if (src) {
-        const id = ARCHETYPE_ID_BY_CODE[code];
+        const id = _PACK_ID_BY_CODE[code];
         pool = typeof src.get === 'function' ? src.get(id) : src[id];
         if (pool) this._chunkPool[code] = pool;
         else pool = null;
