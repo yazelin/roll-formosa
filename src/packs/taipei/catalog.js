@@ -25,20 +25,11 @@ import { T4_ARCHETYPES } from './archetypes/t4.js';
 import { T5_ARCHETYPES } from './archetypes/t5.js';
 import { T6_ARCHETYPES } from './archetypes/t6.js';
 
-import {
-  CATALOG as TOKYO_CATALOG,
-  DISPLAY_NAME_BY_CODE as TOKYO_DISPLAY_NAME_BY_CODE,
-  EXTRA_CATALOG as TOKYO_EXTRA_CATALOG,
-  EXTRA_SIZE_CLASS_BY_CODE as TOKYO_EXTRA_SIZE_CLASS_BY_CODE,
-  EXTRA_POOL_CAPS as TOKYO_EXTRA_POOL_CAPS,
-} from '../../config/catalog.js';
+// DE-TOKYO: config/catalog.js (the Tokyo catalog) is deleted; every EXTRA/v5 code
+// (70..98) is now Taipei (collectibles + landmarks), registered below.
 import { HERO_TRI_CAP } from '../../config/tuning.js';
 
-import {
-  EXTRA_ARCHETYPE_IDS,
-  V5_ARCHETYPE_IDS,
-  EXTRA_CODE_BASE,
-} from '../../world/objects.js';
+import { EXTRA_CODE_BASE } from '../../world/objects.js';
 
 // P6b: 8 curated Taipei landmark geometry descriptors (codes 82..89).
 import { NM_BEIMEN } from './landmarks/beimen.js';
@@ -128,14 +119,6 @@ const _TAIPEI_LANDMARKS = [
   { code: 89, nm: NM_ARENA,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
 ];
 
-/** Set of Tokyo EXTRA/v5 ids REPLACED by Taipei content (collectibles + landmarks). */
-const _REPLACED_TOKYO_IDS = new Set([
-  ...EXTRA_ARCHETYPE_IDS.slice(0, 12),  // codes 70..81 — collectibles (P7)
-  ...EXTRA_ARCHETYPE_IDS.slice(12, 20), // codes 82..89 — landmarks (P6b)
-  ...EXTRA_ARCHETYPE_IDS.slice(20, 24), // codes 90..93 — Tokyo bridge/tower/shop/skytree -> Taipei (de-Tokyo)
-  ...V5_ARCHETYPE_IDS,                  // codes 94..98 — stack_chan->媽祖 + Akiba bldgs -> Taipei (de-Tokyo)
-]);
-
 /**
  * Full id-keyed catalog: 70 Taipei chunk archetypes PLUS the 24 EXTRA
  * (codes 70..93) and 5 v5 (codes 94..98). Codes 82..89 are replaced with
@@ -143,37 +126,27 @@ const _REPLACED_TOKYO_IDS = new Set([
  * Total: exactly 99 ids.
  * @type {Record<string, import('../../../types.js').Archetype>}
  */
+// CATALOG = 70 Taipei chunk archetypes + the Taipei EXTRA/v5 (collectibles +
+// landmarks) registered by the loops below. No Tokyo archetypes (de-Tokyo).
 export const CATALOG = { ...CHUNK_ARCHETYPES };
-
-// Copy the Tokyo EXTRA entries by id — but SKIP the 8 ids that Taipei replaces.
-for (const id of EXTRA_ARCHETYPE_IDS) {
-  if (!_REPLACED_TOKYO_IDS.has(id) && TOKYO_CATALOG[id] !== undefined) {
-    CATALOG[id] = TOKYO_CATALOG[id];
-  }
-}
-for (const id of V5_ARCHETYPE_IDS) {
-  if (!_REPLACED_TOKYO_IDS.has(id) && TOKYO_CATALOG[id] !== undefined) {
-    CATALOG[id] = TOKYO_CATALOG[id];
-  }
-}
 
 /* ================================================================== */
 /* EXTRA_CATALOG, EXTRA_SIZE_CLASS_BY_CODE, EXTRA_POOL_CAPS            */
 /* ================================================================== */
 
 /**
- * EXTRA archetypes keyed by frozen code (70..93 + v5 94..98).
- * Codes 82..89 carry Taipei landmark geometries; all others are Tokyo.
+ * EXTRA archetypes keyed by frozen code (70..93 + v5 94..98). Every code is a
+ * Taipei collectible (70..81+94) or landmark (82..93+95..98), filled by the
+ * registration loops below. No Tokyo entries (de-Tokyo).
  * @type {Record<number, import('../../../types.js').Archetype & {extraCode:number, sizeClass:string|null}>}
  */
-export const EXTRA_CATALOG = { ...TOKYO_EXTRA_CATALOG };
+export const EXTRA_CATALOG = {};
 
 /**
- * Size-class pool assignment per EXTRA code.
- * Codes 82..89 use Taipei landmark size classes.
+ * Size-class pool assignment per EXTRA code (filled by the loops below).
  * @type {Record<number, string|null>}
  */
-export const EXTRA_SIZE_CLASS_BY_CODE = { ...TOKYO_EXTRA_SIZE_CLASS_BY_CODE };
+export const EXTRA_SIZE_CLASS_BY_CODE = {};
 
 for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
   // Ground offset: build the finished (unit-sphere-normalized) geometry once and
@@ -296,10 +269,10 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS
  * @type {Readonly<Record<string, number>>}
  */
 export const EXTRA_POOL_CAPS = Object.freeze({
-  'collectible-small': Math.max(TOKYO_EXTRA_POOL_CAPS['collectible-small'], 13),
-  'landmark-mid': Math.max(TOKYO_EXTRA_POOL_CAPS['landmark-mid'], 4),
-  'landmark-large': Math.max(TOKYO_EXTRA_POOL_CAPS['landmark-large'], 4),
-  'landmark-xl': TOKYO_EXTRA_POOL_CAPS['landmark-xl'],
+  'collectible-small': 13,
+  'landmark-mid': 12,
+  'landmark-large': 4,
+  'landmark-xl': 4,
 });
 
 /* ================================================================== */
@@ -322,9 +295,10 @@ export const DISPLAY_NAME_BY_CODE = (() => {
     names[i] = _allTierArchetypes[i].displayName || '';
   }
 
-  // Codes 70..98: start with Tokyo names, then override 82..89 with zh-TW.
+  // Codes 70..98: every code is overridden below with a Taipei zh-TW name
+  // (collectibles 70..81+94, landmarks 82..93+95..98). Init '' (de-Tokyo).
   for (let c = EXTRA_CODE_BASE; c < 99; c++) {
-    names[c] = TOKYO_DISPLAY_NAME_BY_CODE[c] || '';
+    names[c] = '';
   }
 
   // Override codes 82..89 with Taipei landmark zh-TW names.

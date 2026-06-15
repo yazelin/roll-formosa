@@ -7,9 +7,9 @@ import { describe, it, expect } from 'vitest';
  * `import.meta.env.DEV` (stripped from prod builds, so `vite build` cannot
  * catch a violation). No production smoke test imports them either, so a
  * mismatch between the code-table base in `world/objects.js` and the codes
- * registered/validated in `config/catalog.js` + `config/cityMap.js` is a
- * LATENT breakage: the prod build is green and the existing tests are green,
- * but the DEV game throws at boot.
+ * registered/validated in the active pack (`packs/taipei/catalog.js` +
+ * `packs/taipei/index.js`) is a LATENT breakage: the prod build is green and
+ * the existing tests are green, but the DEV game throws at boot.
  *
  * This test reproduces a DEV boot (vitest sets `import.meta.env.DEV === true`)
  * by dynamically importing the three modules that own those invariants, and
@@ -26,8 +26,12 @@ describe('DEV-boot module-load invariants', () => {
     await expect(import('../world/objects.js')).resolves.toBeDefined();
   });
 
-  it('config/catalog.js loads without throwing (EXTRA/v5 catalog cross-asserts)', async () => {
-    await expect(import('../config/catalog.js')).resolves.toBeDefined();
+  it('packs/taipei/catalog.js loads without throwing (EXTRA/v5 registration asserts)', async () => {
+    await expect(import('../packs/taipei/catalog.js')).resolves.toBeDefined();
+  });
+
+  it('packs/taipei/index.js loads without throwing (buildCodeMap + validatePack at load)', async () => {
+    await expect(import('../packs/taipei/index.js')).resolves.toBeDefined();
   });
 
   it('config/cityMap.js loads without throwing (placement + v5 appendix asserts)', async () => {
