@@ -49,6 +49,10 @@ import { MAP_BOUNDS } from '../config/cityMap.js'; // engine constant (world bou
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 const SHOP = activePack.cityMap.SHOP; // shop interior/walls geometry (city content)
 const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
+/** Goal monument base radius (REAL m) — from pack if available, else tuning fallback. */
+const GOAL_BASE_R_M = (activePack.goalMonument && activePack.goalMonument.baseRadiusM)
+  ? activePack.goalMonument.baseRadiusM
+  : 90; // fallback: legacy SKYTREE_BASE_R_M
 import { EVT, PAYLOADS } from '../core/events.js';
 import {
   BOUNCE_RESTITUTION,
@@ -57,7 +61,6 @@ import {
   EDGE_SOFT_BAND_K,
   FIXED_DT,
   SHOP_TERRAIN_RELEASE_M,
-  SKYTREE_BASE_R_M,
   SKYTREE_COLLIDER_K,
   SPEED_K,
 } from '../config/tuning.js';
@@ -237,7 +240,7 @@ export class CityTerrain {
     if (!this._goalContacted) {
       const bx = SKYTREE_POS.x * invWS - ox;
       const bz = SKYTREE_POS.z * invWS - oz;
-      const baseR = SKYTREE_BASE_R_M * SKYTREE_COLLIDER_K * invWS;
+      const baseR = GOAL_BASE_R_M * SKYTREE_COLLIDER_K * invWS;
       const dx = pos.x - bx;
       const dz = pos.z - bz;
       const minD = r + baseR;

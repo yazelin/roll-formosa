@@ -32,6 +32,7 @@ import * as cityMap from './cityMap.js';
 import { ABSORB_RATIO, MAP_BOUNDS } from '../../config/tuning.js';
 import { buildCodeMap, validatePack } from '../_engine/codeMap.js';
 import { locale } from './locale.js';
+import { goalMonument } from './monument.js';
 
 // EXTRA id order (frozen Tokyo order for code compat — P5 retains or renames).
 const extraIds = [...EXTRA_ARCHETYPE_IDS, ...V5_ARCHETYPE_IDS];
@@ -62,7 +63,7 @@ export const activePack = {
   landmarks: cityMap.LANDMARKS, // P3 stub: Tokyo landmarks; P6 replaces
   absorbRatio: ABSORB_RATIO,
   seeds: { primary: 0x54414950, v5: 0x56355441 }, // TAIP / V5TA
-  // P6 will add: goalMonument, ending, narration, mascot
+  goalMonument, // P6a: 台北101 goal monument (buildGeometry/pos/winToast)
   validate() {
     // P4: structural ladder invariants (no catalog dependency).
     validateTiersStructure();

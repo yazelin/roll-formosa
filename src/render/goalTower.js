@@ -1,52 +1,53 @@
 /**
- * @file goalTower.js — SkytreeView: the 東京スカイツリー goal monument mesh
+ * @file goalTower.js — GoalMonumentView: the pack-driven goal monument mesh
  * for the v3 finale (docs/DESIGN-V3.md 箱庭東京マップ C / ファイル変更一覧,
  * Stream A).
  *
- * 634 m tapered lattice + 2 observation decks, <= 1400 tris (documented
- * sky-element exception to the 350-tri archetype cap — same ledger entry as
- * the v2 sky body it replaces). Exactly 2 draw calls: the merged
- * vertex-colored lattice body (self-lit Basic — reads as the lit white tower
- * at dusk/night) + one additive glow/beam mesh (beacon halo + vertical beam
- * for the CALLED pulse). Both materials are fog:false — a DOCUMENTED
- * seamlessness-law exemption: the tower is a SKY ELEMENT (navigation anchor
- * visible across the whole map) like the v2 sky bodies, never world scenery.
+ * P6a: re-pointed to activePack.goalMonument so the active pack (Taipei)
+ * drives the geometry (台北101 eight-segment bamboo tower) and world position.
+ * The public API — SkytreeView class name, getPosSim/radiusSim/heightSim/
+ * silFade01/meshActive/setGlow01/setBeamPulse/update/dispose/onTeleport —
+ * is UNCHANGED so game/finale.js and main.js call sites need no edits.
  *
- * FIXED WORLD POSE: the tower stands at SKYTREE_POS (REAL meters, frozen in
- * config/cityMap.js) at 1:1 height. Sim pose is DERIVED per update as
- *   sim = real / scaleMgr.worldScale - rebaseShift
- * where rebaseShift is the accumulated floating-origin shift, self-tracked
- * via EVT.REBASE (shift += sx/sz), EVT.RESCALE (shift *= S) and
- * EVT.GAME_RESET (shift = 0). Reading worldScale LIVE (instead of caching
- * simX/simZ) makes the pose equally correct after a dev teleport's direct
- * worldScale snap (?at=goal&r=400) — mathematically identical to the
- * cached-_simCache form under RESCALE/REBASE, strictly more robust at boot.
+ * Monument height: 台北101 = 508 m real (vs Skytree 634 m). The unit-sphere
+ * normalized buildGeometry from the pack maps y∈[0,1] to physical height, so
+ * MONUMENT_HEIGHT_M = 508 is used for the sim-space scale and heightSim.
+ * baseRadiusM comes from activePack.goalMonument.baseRadiusM (72 m for 101).
  *
- * SILHOUETTE -> MESH HANDOFF (BLOCKER 2, kept v2 handoff math): below
- * SKY_SILHOUETTE_WS_MAX the tower is represented by environment.js's
- * sky-dome silhouette (uGoalSil*, azimuth/angular size computed from the
- * SAME real-meter pose — so the two representations are angle-matched by
- * construction, exactly like the v2 angular-size-matched sky handoff). The
- * MESH takes over at the first frame
- *   worldScale >= SKY_SILHOUETTE_WS_MAX && simDist < 0.8 * CAMERA_FAR
- * with a 2 s opacity crossfade (mesh 0 -> 1 while the finale drives
- * env.setGoalSilFade(silFade01) 1 -> 0); it releases with 10% distance
- * hysteresis so the boundary can never flicker. update(dt, cameraPos) is
- * driven by game/finale.js every frame (frame-order step 4.5).
+ * Everything else (handoff latch, crossfade, glow/beam, EVT subscriptions,
+ * floating-origin tracking) is identical to the original Skytree version.
+ *
+ * Exactly 2 draw calls: merged vertex-colored body (self-lit Basic, fog:false)
+ * + additive glow/beam (fog:false). Both are sky-element exemptions.
  *
  * Zero per-frame allocation: scratch vectors + uniform/scalar writes only.
  */
 
 import * as THREE from 'three';
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
-const SKYTREE_POS = activePack.cityMap.SKYTREE_POS; // goal monument real-meter pose (city content)
-import { SKY_SILHOUETTE_WS_MAX, SKYTREE_BASE_R_M } from '../config/tuning.js';
+
+/* --- Pack-driven goal monument (P6a seam) -------------------------------- */
+const _monument = activePack.goalMonument;
+/** Goal monument real-meter position (from active pack, not hardcoded). */
+const MONUMENT_POS = _monument.pos;
+/** Goal monument height, REAL meters (台北101 = 508 m). */
+export const MONUMENT_HEIGHT_M = 508;
+/** @deprecated Legacy alias kept so any import of SKYTREE_HEIGHT_M still resolves. */
+export const SKYTREE_HEIGHT_M = MONUMENT_HEIGHT_M;
+/** Monument base radius, REAL meters (from pack; 72 m for 101). */
+const MONUMENT_BASE_R_M = _monument.baseRadiusM;
+
+import { SKY_SILHOUETTE_WS_MAX } from '../config/tuning.js';
 import { bus, EVT } from '../core/events.js';
 import { clamp01 } from '../core/mathUtils.js';
-import { mergeColoredParts } from './geometryFactory.js';
 
-/** Tokyo Skytree height, REAL meters (1:1 — the one un-compressed landmark). */
-export const SKYTREE_HEIGHT_M = 634;
+// Module-level scratch (zero per-frame allocation).
+const _pos = new THREE.Vector3();
+
+/* MONUMENT_POS shape guard: accept {x,z} or [x,z] so the contract cannot
+ * silently misread regardless of pack authoring style. */
+const SK_X = MONUMENT_POS.x !== undefined ? MONUMENT_POS.x : MONUMENT_POS[0];
+const SK_Z = MONUMENT_POS.z !== undefined ? MONUMENT_POS.z : MONUMENT_POS[1];
 
 /** Mesh-active distance: 0.8 * CAMERA_FAR (render/renderer.js, 4000 sim). */
 const HANDOFF_DIST_SIM = 0.8 * 4000;
@@ -58,130 +59,40 @@ const CROSSFADE_S = 2.0;
 const BEAM_PULSE_HZ = 0.5;
 const GLOW_OPACITY_K = 0.5; // glow shell opacity at setGlow01(1)
 const BEAM_OPACITY_MAX = 0.55; // beam opacity at pulse peak
-/** Body palette (スカイツリーホワイト — pale steel blue-white). */
-const BODY_TOP = 0xeef3f8;
-const BODY_BOTTOM = 0x9fb0c2;
-const DECK_COLOR = 0xdfe9f2;
-const ANTENNA_COLOR = 0xcdd8e4;
-const GLOW_COLOR = 0xaee6ff;
-
-// Module-level scratch (zero per-frame allocation).
-const _pos = new THREE.Vector3();
-
-/* SKYTREE_POS shape guard: cityMap.js (Stream B) exports the frozen real-
- * meter position; accept {x,z} or [x,z] so the contract cannot silently
- * misread. */
-const SK_X = SKYTREE_POS.x !== undefined ? SKYTREE_POS.x : SKYTREE_POS[0];
-const SK_Z = SKYTREE_POS.z !== undefined ? SKYTREE_POS.z : SKYTREE_POS[1];
+/** Glow beam color (teal-cyan, reads well on the 101 glass facade). */
+const GLOW_COLOR = 0x68e8c8;
 
 /**
- * Build the unit-height (y in [0,1]) tower body parts. Proportions are real:
- * base half-width = SKYTREE_BASE_R_M / SKYTREE_HEIGHT_M (~0.142), decks at
- * 350 m / 450 m. All thin boxes + 2 low-poly cylinders, well under 1400 tris.
- * @returns {THREE.BufferGeometry} Merged vertex-colored composite.
- */
-function buildTowerGeometry() {
-  /** @type {Array<{geometry: THREE.BufferGeometry, color: number}>} */
-  const parts = [];
-  const baseR = SKYTREE_BASE_R_M / SKYTREE_HEIGHT_M; // 0.1420 (unit height)
-
-  /** Leg lattice radius at height fraction f (taper to the antenna root). */
-  const radiusAt = (f) => baseR * (1 - 0.88 * Math.pow(f, 0.72)) + 0.012;
-  /** Vertical-gradient steel tint at height fraction f. */
-  const tintAt = (f) => {
-    const a = new THREE.Color(BODY_BOTTOM);
-    a.lerp(new THREE.Color(BODY_TOP), clamp01(f));
-    return a.getHex();
-  };
-
-  // ---- 4 corner legs x 4 tapered segments (thin boxes, slightly tilted in
-  // via per-segment radius steps — reads as the tapering lattice). ----------
-  const LEG_SEGS = [0, 0.24, 0.48, 0.7, 0.88];
-  for (let s = 0; s < LEG_SEGS.length - 1; s++) {
-    const f0 = LEG_SEGS[s];
-    const f1 = LEG_SEGS[s + 1];
-    const rMid = (radiusAt(f0) + radiusAt(f1)) * 0.5;
-    const h = f1 - f0;
-    const thick = 0.016 - 0.008 * f0;
-    for (let l = 0; l < 4; l++) {
-      const a = (l / 4) * Math.PI * 2 + Math.PI / 4;
-      const g = new THREE.BoxGeometry(thick, h, thick);
-      g.translate(Math.cos(a) * rMid * 0.82, f0 + h * 0.5, Math.sin(a) * rMid * 0.82);
-      parts.push({ geometry: g, color: tintAt((f0 + f1) * 0.5) });
-    }
-  }
-
-  // ---- horizontal cross-brace rings (4 sides x 5 levels of thin boxes) ----
-  const BRACE_LEVELS = [0.08, 0.22, 0.38, 0.52, 0.66];
-  for (let b = 0; b < BRACE_LEVELS.length; b++) {
-    const f = BRACE_LEVELS[b];
-    const r = radiusAt(f) * 0.82;
-    for (let l = 0; l < 4; l++) {
-      const a = (l / 4) * Math.PI * 2;
-      const g = new THREE.BoxGeometry(r * 2.05, 0.008, 0.008);
-      g.rotateY(a);
-      g.translate(0, f, 0);
-      parts.push({ geometry: g, color: tintAt(f) });
-    }
-  }
-
-  // ---- core column (shaft behind the lattice) -----------------------------
-  {
-    const g = new THREE.CylinderGeometry(baseR * 0.30, baseR * 0.46, 0.88, 8, 1);
-    g.translate(0, 0.44, 0);
-    parts.push({ geometry: g, color: tintAt(0.4) });
-  }
-
-  // ---- observation decks: 天望デッキ 350m, 天望回廊 450m ------------------
-  {
-    const g1 = new THREE.CylinderGeometry(baseR * 0.52, baseR * 0.46, 0.022, 14, 1);
-    g1.translate(0, 350 / SKYTREE_HEIGHT_M, 0);
-    parts.push({ geometry: g1, color: DECK_COLOR });
-    const g2 = new THREE.CylinderGeometry(baseR * 0.38, baseR * 0.34, 0.018, 14, 1);
-    g2.translate(0, 450 / SKYTREE_HEIGHT_M, 0);
-    parts.push({ geometry: g2, color: DECK_COLOR });
-  }
-
-  // ---- antenna gain tower (0.88 -> 1.0) -----------------------------------
-  {
-    const g = new THREE.CylinderGeometry(0.006, 0.016, 0.12, 6, 1);
-    g.translate(0, 0.94, 0);
-    parts.push({ geometry: g, color: ANTENNA_COLOR });
-  }
-
-  return mergeColoredParts(parts);
-}
-
-/**
- * Build the additive glow/beam composite (unit height, one draw call):
- * a vertical light beam rising from the antenna + a tip-beacon halo of three
- * crossed quads + a soft deck-band glow.
+ * Build the additive glow/beam composite for 台北101 (unit height, one draw
+ * call): a vertical spire beam + tip-beacon halo + observation-floor glow ring.
+ * Proportions tuned to 101's slender bamboo silhouette.
  * @returns {THREE.BufferGeometry}
  */
 function buildGlowGeometry() {
   /** @type {THREE.BufferGeometry[]} */
   const geos = [];
-  // Vertical beam: two crossed planes from the antenna root up into the sky.
+  // Vertical beam: two crossed planes from the spire top (y≈1.52 in 101 geom)
+  // rising into the sky.
   for (let i = 0; i < 2; i++) {
-    const g = new THREE.PlaneGeometry(0.05, 0.9);
+    const g = new THREE.PlaneGeometry(0.04, 0.8);
     g.rotateY(i * Math.PI * 0.5);
-    g.translate(0, 0.9 + 0.45, 0);
+    g.translate(0, 1.52 + 0.4, 0);
     geos.push(g);
   }
-  // Tip beacon: three crossed quads at the antenna top.
+  // Tip beacon: three crossed quads at the spire tip (y≈1.52).
   for (let i = 0; i < 3; i++) {
-    const g = new THREE.PlaneGeometry(0.12, 0.12);
+    const g = new THREE.PlaneGeometry(0.10, 0.10);
     g.rotateY((i / 3) * Math.PI);
-    g.translate(0, 1.0, 0);
+    g.translate(0, 1.52, 0);
     geos.push(g);
   }
-  // Deck-band glow ring (a short, slightly flared open cylinder at deck 1).
+  // Observation-floor glow ring at the top bamboo segment (y≈0.85 unit).
   {
-    const g = new THREE.CylinderGeometry(0.085, 0.085, 0.05, 12, 1, true);
-    g.translate(0, 350 / SKYTREE_HEIGHT_M, 0);
+    const g = new THREE.CylinderGeometry(0.06, 0.06, 0.04, 12, 1, true);
+    g.translate(0, 0.85, 0);
     geos.push(g);
   }
-  // Manual merge (positions/normals/uvs all present and consistent).
+  // Manual merge (positions only — glow material doesn't need normals/uvs).
   let total = 0;
   for (const g of geos) total += g.getAttribute('position').count;
   const pos = new Float32Array(total * 3);
@@ -235,8 +146,9 @@ export class SkytreeView {
     this._beamPulse = false;
     this._pulsePhase = 0;
 
-    /* ---- draw 1: merged vertex-colored lattice body (self-lit) ---- */
-    this._geo = buildTowerGeometry();
+    /* ---- draw 1: pack-driven monument geometry (台北101 bamboo tower) ---- */
+    // buildGeometry(rng) from the pack; rng is unused by taipei101.js.
+    this._geo = _monument.buildGeometry(null);
     /** @type {THREE.MeshBasicMaterial} fog:false sky-element exemption. */
     this._mat = new THREE.MeshBasicMaterial({
       vertexColors: true,
@@ -321,14 +233,14 @@ export class SkytreeView {
     return out;
   }
 
-  /** Tower BASE radius in current sim units (finale contact + guide math). */
+  /** Monument BASE radius in current sim units (finale contact + guide math). */
   get radiusSim() {
-    return SKYTREE_BASE_R_M / this._scaleMgr.worldScale;
+    return MONUMENT_BASE_R_M / this._scaleMgr.worldScale;
   }
 
-  /** Tower height in current sim units (guide arrow aims at the upper tower). */
+  /** Monument height in current sim units (guide arrow aims at the upper tower). */
   get heightSim() {
-    return SKYTREE_HEIGHT_M / this._scaleMgr.worldScale;
+    return MONUMENT_HEIGHT_M / this._scaleMgr.worldScale;
   }
 
   /**
@@ -398,7 +310,7 @@ export class SkytreeView {
     }
 
     // Pose: fixed real-meter footprint, unit-height geometry scaled to sim.
-    const h = SKYTREE_HEIGHT_M / ws;
+    const h = MONUMENT_HEIGHT_M / ws;
     this.group.position.set(_pos.x, 0, _pos.z);
     this.group.scale.setScalar(h);
 
@@ -428,6 +340,6 @@ export class SkytreeView {
   }
 }
 
-/* DEV sanity: the budgeted tri count (<= 1400) is asserted by the Stream A
- * headless smoke test (scripts side), not at boot — geometry is built once
- * and the count is deterministic. */
+/* DEV sanity: the budgeted tri count (<= 600 for 台北101, same HERO_TRI_CAP
+ * bound) is asserted by the Stream A headless smoke test (scripts side), not
+ * at boot — geometry is built once and the count is deterministic. */

@@ -387,7 +387,7 @@ export class Finale {
     this._state = 'called';
     PAYLOADS.goalCall.trueRadius = tr;
     this._bus.emit(EVT.GOAL_CALL, PAYLOADS.goalCall);
-    this._goalView.setBeamPulse(true); // 0.5Hz beacon — 「スカイツリーが呼んでいる…！」
+    this._goalView.setBeamPulse(true); // 0.5Hz beacon — 台北101在呼喚你…！(locale hud.goalCall)
   }
 
   /** APPROACH start: arm the contact test + the 10Hz guide arrow. */

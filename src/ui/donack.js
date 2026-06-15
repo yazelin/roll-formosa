@@ -59,6 +59,7 @@
  */
 
 import { bus as defaultBus, EVT } from '../core/events.js';
+import { activePack } from '../packs/active.js'; // P6a: pack-driven win toast
 import {
   DONACK_SHOW_S,
   DONACK_SHOW_LANDMARK_S,
@@ -370,12 +371,24 @@ export class Donack {
   }
 
   /** 'goalContact' -> phase 'cinematic' + the contact shout (P3 interrupts a
-   *  live play bubble); 'ascension' is scheduled via the 1 Hz tick. */
+   *  live play bubble); 'ascension' is scheduled via the 1 Hz tick.
+   *  P6a: if the active pack supplies goalMonument.winToast, override the
+   *  frozen Japanese goal_contact line with the pack's zh-TW bear-cheer text. */
   _onGoalContact() {
     this._phase = 'cinematic';
     this._contactAt = this._now();
     this._ascensionDone = false;
-    this._trigger('goal_contact');
+    const packToast = activePack.goalMonument && activePack.goalMonument.winToast;
+    if (packToast) {
+      // Show the pack win toast directly, bypassing the frozen donackLines entry.
+      const line = DONACK_LINES['goal_contact'];
+      const override = line
+        ? Object.assign(Object.create(null), line, { text: packToast })
+        : { text: packToast, priority: 3, expression: 'speaking', once: true, phase: 'cinematic' };
+      this._show('goal_contact', override);
+    } else {
+      this._trigger('goal_contact');
+    }
   }
 
   /** 'game:win' -> phase 'result' + the result line. */
