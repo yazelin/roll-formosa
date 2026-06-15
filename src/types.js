@@ -432,78 +432,8 @@
  * @property {number} h  Prism height (real m).
  */
 
-/* ------------------------------------------------------------------ */
-/* v4 Real-Tokyo OSM data shapes (docs/DESIGN-V4.md — Streams P/W/R    */
-/* implement against these FROZEN shapes; Phase-0 contract)            */
-/* ------------------------------------------------------------------ */
-
-/**
- * One decoded OSM building record — a LOGICAL view: osmWorld.js decodes the
- * binary tiles into flat parallel typed arrays (SoA, one pass at title
- * screen); this typedef documents the per-index fields, not a JS object that
- * exists at runtime (zero per-record allocation).
- *
- * Coordinates: GAME METERS (= the v3 "real meters" convention, origin = ball
- * start) — the 1:5 / 1:2.5 mapping is baked at convert time by
- * scripts/osm/geo.mjs toGame(); runtime code treats them exactly like
- * CuratedPlacement.x/z. Sim conversion via live ScaleManager.worldScale +
- * origin shift (curated origin/scale pattern verbatim).
- *
- * @typedef {Object} OsmBuildingRecord
- * @property {number} x       Footprint center X, game m (+X east). Quantized 0.05 m.
- * @property {number} z       Footprint center Z, game m (+Z south). Quantized 0.05 m.
- * @property {number} w       OBB width  (X at yaw=0), game m. Quantized 0.25 m (detail max 63.75).
- * @property {number} d       OBB depth  (Z at yaw=0), game m. Quantized 0.25 m (detail max 63.75).
- * @property {number} h       Height, game m. Quantized 0.5 m detail (max 127.5) / 0.25 m tower.
- * @property {number} yaw     OBB yaw (rad). Quantized pi/128.
- * @property {number} code    Archetype code 94..109 (OSM_CODE_BASE + type; 16 frozen archetypes).
- * @property {boolean} merged MERGED flag (type byte bit 5): convert merged >=2 small neighbors.
- * @property {number} tint    Palette row index (type palette hashed by source wayId at convert).
- * @property {number} rEff    DERIVED at decode: 0.5*sqrt(w^2+d^2+h^2) game m — the ObjectStore radius.
- * @property {number} band    DERIVED at decode from rEff: [1.2,1.6)->2, [1.6,10)->3, [10,60)->4, >=60->5.
- * @property {number} collisionScale DERIVED: clamp(0.5*sqrt(w^2+d^2)/rEff, OSM_COLLIDE_MIN 0.35, 1.0).
- */
-
-/**
- * One OSM tile-index entry (world/osmWorld.js). Tiles partition the decoded
- * record arrays: detail tiles 100 game m grid (tokyo-v4-core.bin), tower
- * tiles 400 m / ground tiles 200 m grid (tokyo-v4-outer.bin). Records within
- * a tile are SORTED BY BAND at convert so per-band ranges are contiguous.
- *
- * @typedef {Object} OsmTile
- * @property {number} tileX     Tile grid X (i16 from the section header).
- * @property {number} tileZ     Tile grid Z (i16).
- * @property {number} offset    First record index into the flat decoded arrays.
- * @property {number} count     Record count in this tile.
- * @property {Int32Array} bandStart Per-band start offsets within [offset, offset+count)
- *   (length 7, indexed by band; bandStart[b]..bandStart[b+1] = band b's range).
- */
-
-/**
- * public/assets/tokyo/tokyo-v4-manifest.json (emitted by
- * scripts/osm/build-tokyo-bin.mjs, asserted by verify-tokyo-data.mjs, read
- * by scripts/pacing-model.mjs — pacing math reads THIS, never design prose).
- *
- * @typedef {Object} OsmManifest
- * @property {number} version        Format version (1).
- * @property {{core: number, outer: number}} shardGzBytes Gzipped shard sizes (budget gate input).
- * @property {Object<string, number>} perBandCounts Shipped building counts keyed 'band2'..'band5'.
- * @property {number[]} bandHistogram Post-thin per-band histogram (authoritative input to the
- *   Phase-3 OSM_ALIVE_CAP re-cut).
- * @property {Object} tileIndexSummary Tile counts + max records/tile per section type.
- * @property {string} extractionDate ISO timestamp of the committed Overpass fetch (ODbL gate).
- * @property {string} attribution    "© OpenStreetMap contributors" (ODbL gate).
- * @property {string} license        "ODbL".
- * @property {string} licenseUrl     "https://opendatacommons.org/licenses/odbl/".
- */
-
-/**
- * v4 OSM voxel archetype = a regular Archetype with the unit-box convention
- * (catalog.js, codes 94..109, Stream C). Constraints (boot-asserted):
- * unitBox === true; axis-aligned normals only (flat/stepped roofs in v1);
- * <=72 tris; tier field carries the naturalBand convention like EXTRA codes.
- * @typedef {Archetype} OsmArchetype
- */
+/* (The v4 Real-Tokyo OSM data-shape typedefs were removed in P2 along with the
+ * OSM subsystem; nothing references them.) */
 
 // Make this file an ES module so typedefs are importable via import('./types.js').X
 export {};

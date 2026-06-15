@@ -252,7 +252,12 @@ if (import.meta.env && import.meta.env.DEV) {
     if (!cond) throw new Error(`[tiers.js invariant] ${msg}`);
   };
 
-  assert(TIERS.length === 7, 'exactly 7 tiers (v3 Hakoniwa Tokyo; NIGHT palette is env-local, never here)');
+  /* P2: the SHARED structural tier invariants (exactly 7 tiers, ARCH_PER_TIER
+   * ids each, unique chunk ids, enterTrueRadius strictly increasing) moved to
+   * the pack-scoped src/packs/_engine/codeMap.js validatePack(), run from the
+   * active pack's validate() at boot (main.js). tiers.js keeps ONLY the checks
+   * validatePack does NOT cover (RESCALE_S relationship, sky/fog/moon
+   * authoring guards below) so no invariant is silently lost. */
   assert(ARCH_PER_TIER === 10, 'ARCH_PER_TIER is frozen at 10');
   assert(
     Math.abs(1 / RESCALE_S - SIM_RADIUS_MAX / SIM_RADIUS_MIN) < 1e-9,
@@ -260,24 +265,8 @@ if (import.meta.env && import.meta.env.DEV) {
   );
   assert(TIERS[0].enterTrueRadius === START_RADIUS_M, 'T0 enterTrueRadius must equal START_RADIUS_M');
 
-  const seen = new Set();
   for (let t = 0; t < TIERS.length; t++) {
     const tier = TIERS[t];
-    assert(tier.index === t, `tier ${t}: index field mismatch`);
-    assert(
-      tier.archetypeIds.length === ARCH_PER_TIER,
-      `tier ${t}: exactly ${ARCH_PER_TIER} archetypeIds (slots 8/9 = chunk landmarks)`
-    );
-    for (const id of tier.archetypeIds) {
-      assert(!seen.has(id), `duplicate archetype id '${id}'`);
-      seen.add(id);
-    }
-    if (t > 0) {
-      assert(
-        tier.enterTrueRadius > TIERS[t - 1].enterTrueRadius,
-        `tier ${t}: enterTrueRadius must be strictly increasing`
-      );
-    }
     /* v3 EXTENDED fog/load floor assert (docs/DESIGN-V3.md スポーンアーキテクチャ):
        the fog wall must hide the spawn-in edge EVEN WHERE the real-meter
        floors bind. At each tier's worst-case worldScale (the tier's native
@@ -318,7 +307,8 @@ if (import.meta.env && import.meta.env.DEV) {
       `tier ${t}: sky scalars out of range`
     );
   }
-  assert(seen.size === 70, 'exactly 70 unique archetype ids across the chunk catalog (10 x 7)');
+  /* (The "exactly 70 unique chunk ids" count is now enforced by
+   * validatePack(): 7 tiers x 10 unique ids each = 70.) */
   // v3: moonAngSize NON-DECREASING (night cosmetic — strictly-increasing relaxed).
   for (let t = 1; t < TIERS.length; t++) {
     assert(

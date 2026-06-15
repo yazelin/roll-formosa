@@ -17,11 +17,6 @@
  *                 _despawnIndex / leftover cleanup ALL skip flagged slots and
  *                 its _aliveCount counts only chunk-owned objects. Curated
  *                 collectibles additionally carry FLAG_RARE (gold tint).
- *   FLAG_OSM    (32) — v4: slot owned by world/osmSpawner.js (OSM real-Tokyo
- *                 buildings, docs/DESIGN-V4.md). The chunk spawner's skip-bit
- *                 test widens to (FLAG_CURATED|FLAG_OSM); OSM render slots
- *                 live in render/osmPools.js (exclusive ownership, invisible
- *                 to the chunk POOL_BY_CODE path, like EXTRA codes).
  *
  * Archetype encoding: store.archetype holds a uint16 CODE
  *   code = tierIndex * ARCH_PER_TIER + indexWithinTier   (0..69, v3 stride 10)
@@ -47,6 +42,7 @@
 import { STORE_CAPACITY } from '../config/tuning.js';
 import { TIERS, ARCH_PER_TIER } from '../config/tiers.js';
 import { FreeList } from '../core/pool.js';
+import { buildCodeMap } from '../packs/_engine/codeMap.js';
 
 /* ================================================================== */
 /* Flags                                                               */
@@ -71,14 +67,8 @@ export const FLAG_RARE = 8;
  * re-enter the chunk path; EXTRA codes >= EXTRA_CODE_BASE never knock off).
  */
 export const FLAG_CURATED = 16;
-/**
- * v4: slot owned by the OsmSpawner (world/osmSpawner.js — real-Tokyo OSM
- * buildings). VALUE FROZEN at 32 by docs/DESIGN-V4.md Phase 0.
- * TODO P2: remove FLAG_OSM once the spawner skip-mask no longer needs it.
- * @deprecated OSM subsystem removed in P1; this constant is retained for P2
- *   cleanup only — no code path reads or sets this flag after P1.
- */
-export const FLAG_OSM = 32;
+/* (Flag bit 32 — the former v4 OSM real-Tokyo building-slot flag — was removed
+ * in P2 along with the OSM subsystem; no flag uses bit 32 now.) */
 
 /* ================================================================== */
 /* Archetype code <-> id mapping (derived from the frozen tier table)  */
@@ -170,6 +160,20 @@ export function collectibleCodeForId(id) {
   return id <= 11 ? EXTRA_CODE_BASE + id : V5_CODE_BASE + (id - 12);
 }
 
+/* The code<->id table is now built by the pack-agnostic buildCodeMap()
+ * (src/packs/_engine/codeMap.js) — the SAME builder the active StagePack uses
+ * (P2 seam). We feed it a local pack-shaped descriptor assembled from THIS
+ * module's frozen Tokyo arrays (TIERS chunk ids, then the EXTRA appendix =
+ * 24 curated + 5 v5, append-only). Output is byte-identical to the old inline
+ * tier-major + appendix loops: chunk codes 0..69, EXTRA codes 70..98.
+ * objects.js does NOT import the assembled activePack here — that would form an
+ * import cycle (active -> _tokyo_transient -> cityMap -> objects). buildCodeMap
+ * is a pure leaf with no pack-module imports, so calling it is cycle-free. */
+const _CODE_MAP = buildCodeMap({
+  tiers: TIERS,
+  extraIds: [...EXTRA_ARCHETYPE_IDS, ...V5_ARCHETYPE_IDS],
+});
+
 /**
  * Flat archetype id table (99 entries):
  * codes 0..69: ARCHETYPE_ID_BY_CODE[tier*ARCH_PER_TIER + i] ===
@@ -177,32 +181,13 @@ export function collectibleCodeForId(id) {
  * codes 94..98: V5_ARCHETYPE_IDS[code - V5_CODE_BASE].
  * @type {string[]}
  */
-export const ARCHETYPE_ID_BY_CODE = [];
+export const ARCHETYPE_ID_BY_CODE = _CODE_MAP.idByCode;
 
 /**
  * Reverse lookup: catalog id -> uint16 archetype code (chunk + EXTRA).
  * @type {Record<string, number>}
  */
-export const ARCHETYPE_CODE_BY_ID = {};
-
-for (let t = 0; t < TIERS.length; t++) {
-  const ids = TIERS[t].archetypeIds;
-  for (let i = 0; i < ids.length; i++) {
-    const code = t * ARCH_PER_TIER + i;
-    ARCHETYPE_ID_BY_CODE[code] = ids[i];
-    ARCHETYPE_CODE_BY_ID[ids[i]] = code;
-  }
-}
-for (let e = 0; e < EXTRA_ARCHETYPE_IDS.length; e++) {
-  const code = EXTRA_CODE_BASE + e;
-  ARCHETYPE_ID_BY_CODE[code] = EXTRA_ARCHETYPE_IDS[e];
-  ARCHETYPE_CODE_BY_ID[EXTRA_ARCHETYPE_IDS[e]] = code;
-}
-for (let v = 0; v < V5_ARCHETYPE_IDS.length; v++) {
-  const code = V5_CODE_BASE + v;
-  ARCHETYPE_ID_BY_CODE[code] = V5_ARCHETYPE_IDS[v];
-  ARCHETYPE_CODE_BY_ID[V5_ARCHETYPE_IDS[v]] = code;
-}
+export const ARCHETYPE_CODE_BY_ID = _CODE_MAP.codeById;
 
 /**
  * Compose a uint16 archetype code from tier index + index within the tier's
@@ -227,64 +212,15 @@ export function archetypeTierOfCode(code) {
   return (code / ARCH_PER_TIER) | 0;
 }
 
-/* Boot DEV-assert: the v3 stride migration (6 -> 7 tiers, 60 -> 70 chunk
-   codes) + the 24 frozen EXTRA codes + the 5 frozen v5 codes must produce
-   exactly 99 entries — cross-checked again from ball.js against this table. */
-if (import.meta.env && import.meta.env.DEV) {
-  if (EXTRA_CODE_BASE !== 70) {
-    throw new Error(
-      `[objects.js invariant] EXTRA_CODE_BASE must be 70 (7 tiers x ARCH_PER_TIER ${ARCH_PER_TIER}), ` +
-        `found ${EXTRA_CODE_BASE}`
-    );
-  }
-  if (EXTRA_ARCHETYPE_IDS.length !== 24) {
-    throw new Error(
-      `[objects.js invariant] EXTRA_ARCHETYPE_IDS must have exactly 24 entries (codes 70..93), ` +
-        `found ${EXTRA_ARCHETYPE_IDS.length}`
-    );
-  }
-  if (V5_CODE_BASE !== 94 || V5_CODE_BASE !== EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length) {
-    throw new Error(
-      `[objects.js invariant] V5_CODE_BASE must be 94 (= EXTRA_CODE_BASE 70 + 24 EXTRA), found ${V5_CODE_BASE}`
-    );
-  }
-  if (V5_ARCHETYPE_IDS.length !== 5) {
-    throw new Error(
-      `[objects.js invariant] V5_ARCHETYPE_IDS must have exactly 5 entries (codes 94..98), ` +
-        `found ${V5_ARCHETYPE_IDS.length}`
-    );
-  }
-  if (
-    collectibleCodeForId(0) !== 70 ||
-    collectibleCodeForId(11) !== 81 ||
-    collectibleCodeForId(12) !== 94 ||
-    ARCHETYPE_ID_BY_CODE[collectibleCodeForId(12)] !== 'stack_chan'
-  ) {
-    throw new Error(
-      '[objects.js invariant] collectibleCodeForId rule broken (ids 0..11 -> 70..81, id 12 -> 94 stack_chan)'
-    );
-  }
-  if (ARCHETYPE_ID_BY_CODE.length !== 99) {
-    throw new Error(
-      `[objects.js invariant] ARCHETYPE_ID_BY_CODE must have exactly 99 entries ` +
-        `(70 chunk + 24 EXTRA + 5 v5), found ${ARCHETYPE_ID_BY_CODE.length}`
-    );
-  }
-  const uniq = new Set();
-  for (let c = 0; c < 99; c++) {
-    const id = ARCHETYPE_ID_BY_CODE[c];
-    if (typeof id !== 'string' || id.length === 0) {
-      throw new Error(`[objects.js invariant] hole in ARCHETYPE_ID_BY_CODE at code ${c}`);
-    }
-    if (uniq.has(id)) {
-      throw new Error(`[objects.js invariant] duplicate archetype id '${id}' (EXTRA/v5 id collides with chunk id?)`);
-    }
-    uniq.add(id);
-    if (ARCHETYPE_CODE_BY_ID[id] !== c) {
-      throw new Error(`[objects.js invariant] ARCHETYPE_CODE_BY_ID['${id}'] !== ${c}`);
-    }
-  }
-}
+/* P2: the old global frozen-table DEV assert block (99-entry count, hole-free,
+ * id<->code round-trip, collectibleCodeForId rule) moved to the pack-scoped
+ * seam. Hole-freeness + uniqueness are now GUARANTEED BY CONSTRUCTION in
+ * buildCodeMap (src/packs/_engine/codeMap.js, unit-tested) and the per-pack
+ * count/ladder invariants run via activePack.validate() (validatePack) at boot
+ * (main.js). The Tokyo wrap is additionally covered by
+ * src/packs/_tokyo_transient/pack.test.js (chunkCount === 70, hole-free over
+ * the real pack, legacy collectible codes preserved) and
+ * src/world/objects.test.js (99 entries, v5 base 94, round-trip). */
 
 /* ================================================================== */
 /* ObjectStore                                                         */

@@ -112,8 +112,17 @@ import { SkytreeView } from './render/goalTower.js'; // Stream A (replaces MoonV
 import { DEV_STARTS } from './config/cityMap.js'; // Stream B
 import * as cityMap from './config/cityMap.js';
 import { buildExtraPools, extraClassIndexForCode } from './render/extraPools.js'; // integration (4 shared EXTRA pools)
+import { activePack } from './packs/active.js'; // P2 StagePack seam (transient Tokyo pack)
 
 import { makeObjectMaterial, setRimTint } from './render/objectMaterial.js'; // rim (was Stream C)
+
+/* P2: pack-scoped boot validation replaces the old global frozen-count asserts
+ * (tiers.js TIERS.length===7 / seen.size===70, objects.js 99-entry table). The
+ * active pack's validate() runs validatePack() — 7 tiers, 10 ids each, ids
+ * resolve, landmark ladder strictly increasing, goal largest, positions in
+ * bounds. Run here (not inside cityMap.js) to avoid a cityMap<->active import
+ * cycle. DEV-only; stripped from production builds like the asserts it replaces. */
+if (import.meta.env && import.meta.env.DEV) activePack.validate();
 
 /* ---- v5 modules (integrated) ------------------------------------------ */
 import { Onboarding } from './game/onboarding.js'; // opening parts guide
