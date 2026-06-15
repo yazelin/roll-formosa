@@ -34,7 +34,7 @@ describe('DEV-boot module-load invariants', () => {
     await expect(import('../packs/taipei/index.js')).resolves.toBeDefined();
   });
 
-  it('config/cityMap.js loads without throwing (placement + v5 appendix asserts)', async () => {
-    await expect(import('../config/cityMap.js')).resolves.toBeDefined();
+  it('packs/taipei/cityMap.js loads without throwing (placements + landmark ladder)', async () => {
+    await expect(import('../packs/taipei/cityMap.js')).resolves.toBeDefined();
   });
 });

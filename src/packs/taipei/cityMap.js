@@ -5,13 +5,13 @@
  * replacing the Tokyo landmark stub. The 8 curated landmarks are wired into
  * PLACEMENTS so they spawn in the world and can be absorbed as the ball grows.
  *
- * Everything else (SHOP, PLACEMENTS body, ZONES, COLLECTIBLES, COLLECTIBLE_IDS,
- * bandAllowedAt, validateCityMap, MAP_BOUNDS, …) still re-exports from the
- * Tokyo city map — these will be replaced in future passes.
+ * The curated base layout (SHOP, ZONES, bandAllowedAt, the chunk-dressing +
+ * collectible PLACEMENTS, MAP_BOUNDS) is the pack's own baked, city-agnostic
+ * data in ./cityData.js — no longer the Tokyo config/cityMap.js (de-Tokyo).
  *
  * Override list:
  *   - LANDMARKS   → native Taipei 9 entries (8 curated + 101 goal)
- *   - PLACEMENTS  → Tokyo PLACEMENTS + the 8 Taipei landmark placements appended
+ *   - PLACEMENTS  → cityData base placements + the 8 Taipei landmark placements
  *   - SKYTREE_POS → TAIPEI101_POS (same as P6a)
  *   - DEV_STARTS  → Taipei-themed teleport keys (same as P6a)
  */
@@ -30,21 +30,15 @@ import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
 import { NM_ARENA } from './landmarks/arena.js';
 import { NM_TAIPEI101 } from './landmarks/taipei101.js';
 
-// Re-export everything from the Tokyo city map that we do NOT override.
-export {
-  SHOP,
-  MAP_BOUNDS,
-  ZONES,
-  bandAllowedAt,
-  COLLECTIBLES,
-  COLLECTIBLE_IDS,
-  validateCityMap,
-  EXTRA_CODE_BASE,
-  CODE_SHOP_SHELL,
-} from '../../config/cityMap.js';
+// Re-export the pack-owned baked layout (cityData.js). The engine consumes
+// SHOP (terrain colliders) + bandAllowedAt (spawn gating); MAP_BOUNDS is the
+// engine world bound; ZONES is bandAllowedAt's data.
+export { SHOP, MAP_BOUNDS, ZONES, bandAllowedAt } from './cityData.js';
 
-// Import Tokyo PLACEMENTS as a base (we append Taipei landmark placements).
-import { PLACEMENTS as _TOKYO_PLACEMENTS } from '../../config/cityMap.js';
+// The pack's curated base placements (chunk dressing 0..69 + collectibles
+// 70..81 + 媽祖 94) — already filtered at bake time. We append the 8 native
+// Taipei landmark singletons below.
+import { PLACEMENTS as _BASE_PLACEMENTS } from './cityData.js';
 
 /** @typedef {import('../../types.js').LandmarkDef} LandmarkDef */
 
@@ -253,15 +247,13 @@ const _TAIPEI_LANDMARK_PLACEMENTS = LANDMARKS
     rIntent: ld.dioramaR / ABSORB_RATIO,
   }));
 
-// Keep Taipei content from the Tokyo authored set: chunk dressing (codes 0..69)
-// + collectibles (70..81) + 媽祖 (94). DROP the Tokyo curated landmarks/buildings:
-// codes 82..89 are re-placed below at Taipei positions (de-dup, was spawning each
-// landmark twice); codes 90..93 + 95..98 are Tokyo leftovers (レインボーブリッジ /
-// 東京タワー / センゴク電子 / Akiba buildings) that also OVERFLOW the landmark-xl
-// pool (cap 4) → invisible-but-collidable. Removing them fixes the invisible walls.
-const _KEEP = (p) => p.archetypeCode < 82 || p.archetypeCode === 94;
+// cityData.PLACEMENTS is already the kept curated base (chunk dressing 0..69 +
+// collectibles 70..81 + 媽祖 94); the former Tokyo landmark/building codes
+// 82..98 were dropped at bake time (they OVERFLOWED the landmark-xl pool →
+// invisible-but-collidable, and the 8 curated landmarks are re-placed natively
+// below). Append the 8 Taipei landmark singletons.
 export const PLACEMENTS = [
-  ..._TOKYO_PLACEMENTS.filter(_KEEP),
+  ..._BASE_PLACEMENTS,
   ..._TAIPEI_LANDMARK_PLACEMENTS,
 ];
 
