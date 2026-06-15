@@ -1058,7 +1058,7 @@ export function validateCityMap() {
   return true;
 }
 
-/* DEV builds validate at module load (stripped from prod by the guard). */
-if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {
-  validateCityMap();
-}
+/* NOTE: this Tokyo validateCityMap() is NOT auto-run anymore — the active pack
+   owns validation (validatePack, per §0 R6). Auto-running it here only printed
+   the misleading TOKYO landmark ladder / aisle table at boot. The function is
+   kept (still re-exported) but the dead Tokyo self-check no longer fires. */
