@@ -949,6 +949,47 @@
     }
     @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline{height:min(32vh,240px)} }
     @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-101{animation:none!important} }
+
+    /* ============ 夜市霓虹 — cohesive in-game HUD + result theme ============ */
+    /* HUD pills: dark-glass with a cyan neon edge (restrained — legibility first) */
+    .pill { background: rgba(7,4,20,.62); border:1px solid rgba(0,221,255,.26); box-shadow:0 0 12px rgba(0,221,255,.12); }
+    #size-value { color:#ffd23f; text-shadow:0 0 13px rgba(255,210,63,.55); }
+    #size-unit { color:#ff9d4d; }
+    #score-value { color:#8fffc6; text-shadow:0 0 13px rgba(143,255,198,.5); }
+    #timer { color:#d2ecff; }
+    #tier-label { color:#7ef3ff; text-shadow:0 0 8px rgba(0,224,255,.45); }
+    /* tier-up banner → neon-pink sign */
+    #tier-banner { font-family:'Bungee', sans-serif; font-weight:400; letter-spacing:.05em; color:#fff;
+      text-shadow:0 0 6px #fff, 0 0 22px #ff2a78, 0 0 46px #ff2a78; }
+    /* dash button → cyan neon ring/fill (the ::before gauge ring is untouched) */
+    #dash-button { color:#dff6ff;
+      background: radial-gradient(circle at 35% 30%, rgba(0,221,255,.42), rgba(18,8,44,.72));
+      border:2px solid rgba(0,221,255,.6); box-shadow:0 0 16px rgba(0,221,255,.32); }
+    #dash-button:active { box-shadow:0 0 26px rgba(255,42,120,.7); }
+    /* toast + collect popup → neon edge */
+    #hud-toast { text-shadow:0 0 14px rgba(255,42,120,.35); }
+    #collect-popup { border-color:rgba(0,221,255,.3) !important; box-shadow:0 0 16px rgba(0,221,255,.16); }
+
+    /* ---- result / win screen → night-market neon ---- */
+    #win-overlay {
+      background:
+        radial-gradient(820px 520px at 50% 26%, rgba(255,42,120,.15), transparent 62%),
+        radial-gradient(900px 560px at 50% 96%, rgba(0,221,255,.13), transparent 60%),
+        linear-gradient(180deg,#06030e 0%,#0b0724 58%,#120a30 100%);
+    }
+    #win-overlay .game-title {
+      font-family:'Bungee', sans-serif; font-weight:400; letter-spacing:.01em;
+      background:none; -webkit-text-fill-color:#fff; color:#fff;
+      text-shadow:0 0 4px #fff, 0 0 16px #00e0ff, 0 0 36px #00e0ff, 0 0 72px rgba(0,221,255,.5);
+    }
+    #win-overlay .result-row { background:rgba(8,4,22,.5); border:1px solid rgba(0,221,255,.22); color:#cdd6ff; }
+    #win-overlay #collection-header { color:#9fb3e6; }
+    #win-overlay .collect-cell { background:rgba(8,4,22,.5); border:1px solid rgba(0,221,255,.2); }
+    #win-overlay .collect-cell:not(.unfound) { border-color:rgba(255,42,120,.45); box-shadow:0 0 10px rgba(255,42,120,.18); }
+    #win-overlay .btn { background:linear-gradient(180deg,#ff6fac,#ff2a78); color:#1b0418;
+      box-shadow:0 0 0 2px rgba(255,255,255,.25) inset, 0 0 20px rgba(255,42,120,.6); }
+    #win-overlay .btn.btn-secondary { background:rgba(8,4,22,.55); color:#dff6ff;
+      border:1px solid rgba(0,221,255,.5); box-shadow:0 0 14px rgba(0,221,255,.28); }
   </style>
 </head>
 <body>
