@@ -65,6 +65,16 @@ import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
 import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
+// DE-TOKYO: 8 Taipei extended landmarks replace the leftover Tokyo EXTRA slots (codes 90-93 + 95-98).
+import { NM_RAINBOW } from './landmarks/rainbow_bridge_tp.js';
+import { NM_SYSHALL } from './landmarks/syshall.js';
+import { NM_STATION } from './landmarks/main_station.js';
+import { NM_PALACE } from './landmarks/palace_museum.js';
+import { NM_XINGTIAN } from './landmarks/xingtian.js';
+import { NM_THEATER } from './landmarks/national_theater.js';
+import { NM_WHEEL } from './landmarks/miramar_wheel.js';
+import { NM_MK_STATION } from './landmarks/maokong_station.js';
+
 /* ================================================================== */
 /* 70 chunk archetypes, assembled in tier order (code = tier*10 + slot)*/
 /* ================================================================== */
@@ -122,7 +132,8 @@ const _TAIPEI_LANDMARKS = [
 const _REPLACED_TOKYO_IDS = new Set([
   ...EXTRA_ARCHETYPE_IDS.slice(0, 12),  // codes 70..81 — collectibles (P7)
   ...EXTRA_ARCHETYPE_IDS.slice(12, 20), // codes 82..89 — landmarks (P6b)
-  V5_ARCHETYPE_IDS[0],                  // code 94 — stack_chan -> 媽祖 (P7)
+  ...EXTRA_ARCHETYPE_IDS.slice(20, 24), // codes 90..93 — Tokyo bridge/tower/shop/skytree -> Taipei (de-Tokyo)
+  ...V5_ARCHETYPE_IDS,                  // codes 94..98 — stack_chan->媽祖 + Akiba bldgs -> Taipei (de-Tokyo)
 ]);
 
 /**
@@ -238,6 +249,45 @@ for (const { code, col } of _TAIPEI_COLLECTIBLES) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = 'collectible-small';
 }
 
+/* DE-TOKYO: 8 Taipei extended landmarks at codes 90-93 + 95-98 (replace the
+   leftover Tokyo EXTRA archetypes). Grounded like landmarks; not placed yet. */
+const _TAIPEI_EXTRA_LANDMARKS = [
+  { code: 90, nm: NM_RAINBOW,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 91, nm: NM_SYSHALL,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 92, nm: NM_STATION,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 93, nm: NM_PALACE,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 95, nm: NM_XINGTIAN,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 96, nm: NM_THEATER,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 97, nm: NM_WHEEL,      sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 98, nm: NM_MK_STATION, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+];
+for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS) {
+  const _g = nm.buildGeometry(() => 0.5);
+  _g.computeBoundingBox();
+  const _yOffset = -1 - _g.boundingBox.min.y;
+  if (_g.dispose) _g.dispose();
+  const entry = {
+    id: nm.id,
+    displayName: nm.name,
+    tier,
+    naturalBand,
+    radiusNominal: nm.dioramaRHint || (sizeClass === 'landmark-xl' ? 80 : 30),
+    radiusJitter: 0,
+    spawnWeight: 0, // curated-only — not placed yet
+    palette: [nm.colorHex],
+    yOffset: _yOffset,
+    upright: true,
+    collisionScale: 1.0,
+    heroTriCap: HERO_TRI_CAP,
+    buildGeometry: nm.buildGeometry.bind(nm),
+    extraCode: code,
+    sizeClass,
+  };
+  CATALOG[nm.id] = entry;
+  EXTRA_CATALOG[code] = entry;
+  EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
+}
+
 /**
  * EXTRA render pool caps. Taipei has 8 landmark singletons:
  *   landmark-mid (codes 82/83/84/86): 4 alive (matches Tokyo floor)
@@ -285,6 +335,11 @@ export const DISPLAY_NAME_BY_CODE = (() => {
   // Override codes 70..81 + 94 with Taipei collectible zh-TW names (P7).
   for (const { code, col } of _TAIPEI_COLLECTIBLES) {
     names[code] = col.name;
+  }
+
+  // DE-TOKYO: codes 90..93 + 95..98 -> Taipei extended landmark zh-TW names.
+  for (const { code, nm } of _TAIPEI_EXTRA_LANDMARKS) {
+    names[code] = nm.name;
   }
 
   return names;

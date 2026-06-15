@@ -89,19 +89,21 @@ describe('taipei catalog surface', () => {
     // P7: Taipei collectibles resolve (codes 70 + 94); remaining Tokyo placeholders too.
     expect(CATALOG['black_bear']).toBeDefined();
     expect(CATALOG['mazu']).toBeDefined();
-    expect(CATALOG['tokyo_skytree']).toBeDefined();
+    expect(CATALOG['palace_museum']).toBeDefined();
   });
 
-  it('DISPLAY_NAME_BY_CODE has zh-TW names at the 70 chunk codes and Tokyo names after', () => {
+  it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Tokyo names left)', () => {
     expect(DISPLAY_NAME_BY_CODE.length).toBe(99);
     // code 0 = T0 slot 0 = marble = 彈珠
     expect(DISPLAY_NAME_BY_CODE[0]).toBe('彈珠');
-    // every chunk code (0..69) is non-empty
-    for (let c = 0; c < 70; c++) {
-      expect(DISPLAY_NAME_BY_CODE[c].length, `chunk code ${c} name`).toBeGreaterThan(0);
+    // EVERY code (0..98) is non-empty AND contains no Japanese kana (zero Tokyo).
+    const kana = /[぀-ゟ゠-ヿ]/;
+    for (let c = 0; c < 99; c++) {
+      const n = DISPLAY_NAME_BY_CODE[c];
+      expect(n.length, `code ${c} name`).toBeGreaterThan(0);
+      expect(kana.test(n), `code ${c} name '${n}' has Japanese kana`).toBe(false);
     }
-    // EXTRA codes keep Tokyo names (placeholder)
-    expect(DISPLAY_NAME_BY_CODE[70].length).toBeGreaterThan(0);
-    expect(DISPLAY_NAME_BY_CODE[93]).toBe('東京スカイツリー');
+    // code 93 is now a Taipei extended landmark (was 東京スカイツリー).
+    expect(DISPLAY_NAME_BY_CODE[93]).toBe('故宮博物院');
   });
 });

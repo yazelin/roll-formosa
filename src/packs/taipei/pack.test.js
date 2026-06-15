@@ -68,11 +68,15 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(activePack.archetypeIdByCode[87]).toBe('cks_memorial');
     expect(activePack.archetypeIdByCode[88]).toBe('liberty_square_arch');
     expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
-    // Codes 90..93 remain Tokyo ids (bridge/tower/shop/skytree, frozen).
-    expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual(ARCHETYPE_ID_BY_CODE.slice(90, 94));
-    // P7: code 94 is 媽祖 (Taipei collectible); 95..98 remain Tokyo v5 ids.
+    // DE-TOKYO: codes 90..93 are Taipei extended landmarks.
+    expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual([
+      'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
+    ]);
+    // code 94 媽祖; codes 95..98 Taipei extended landmarks (de-Tokyo).
     expect(activePack.archetypeIdByCode[94]).toBe('mazu');
-    expect(activePack.archetypeIdByCode.slice(95)).toEqual(ARCHETYPE_ID_BY_CODE.slice(95));
+    expect(activePack.archetypeIdByCode.slice(95)).toEqual([
+      'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
+    ]);
   });
 
   it('exposes full R16 content surface', () => {

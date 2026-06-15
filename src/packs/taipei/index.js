@@ -64,10 +64,10 @@ const extraIds = [
   NM_CKS.id,           // 87 中正紀念堂
   NM_LIBERTY_ARCH.id,  // 88 自由廣場牌樓
   NM_ARENA.id,         // 89 小巨蛋
-  // indices 20..23 — codes 90..93: Tokyo bridge/tower/shop/skytree (frozen)
-  ...EXTRA_ARCHETYPE_IDS.slice(20, 24),
-  // v5 codes 94..98 — 94 = 媽祖 collectible (P7); 95..98 Tokyo placeholders
-  'mazu', ...V5_ARCHETYPE_IDS.slice(1),
+  // indices 20..23 — codes 90..93: Taipei extended landmarks (de-Tokyo)
+  'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
+  // v5 codes 94..98 — 94 媽祖; 95..98 Taipei extended landmarks (de-Tokyo)
+  'mazu', 'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
 ];
 
 // Collectible album id -> index in extraIds (legacy Tokyo rule preserved).
