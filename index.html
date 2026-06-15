@@ -903,11 +903,18 @@
     }
     #title-overlay .ny-lantern::before { content:''; position:absolute; left:50%; top:-40px; width:1px; height:40px; background:rgba(255,180,120,.45); transform:translateX(-50%); }
     #title-overlay .ny-lantern::after { content:''; position:absolute; left:50%; bottom:-7px; width:5px; height:9px; background:#f5c542; transform:translateX(-50%); border-radius:2px; }
-    #title-overlay .ny-skyline-img {
+    #title-overlay .ny-skyline {
       position:absolute; left:50%; bottom:0; transform:translateX(-50%);
-      width:min(1480px,116%); max-width:none; height:auto; opacity:.97; z-index:0;
-      pointer-events:none; filter: drop-shadow(0 0 16px rgba(0,200,255,.16));
+      width:min(1480px,116%); max-width:none; pointer-events:none; z-index:0;
     }
+    #title-overlay .ny-skyline img { display:block; width:100%; height:auto; }
+    #title-overlay .ny-skyline-glow {        /* bloom: blurred bright copy = real neon glow */
+      position:absolute; left:0; bottom:0;
+      filter: blur(13px) brightness(1.6) saturate(1.4);
+      opacity:.85; animation: ny-skyglow 5s ease-in-out infinite;
+    }
+    #title-overlay .ny-skyline-img { position:relative; opacity:.98; filter: drop-shadow(0 0 6px rgba(0,210,255,.3)); }
+    @keyframes ny-skyglow { 0%,100%{opacity:.66} 50%{opacity:.95} }
     #title-overlay .ny-grain {
       position:absolute; inset:0; mix-blend-mode:overlay; opacity:.05;
       background-image: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
@@ -949,8 +956,8 @@
       0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.25) inset,0 0 22px rgba(255,42,120,.7),0 8px 30px rgba(255,42,120,.4)}
       50%{box-shadow:0 0 0 2px rgba(255,255,255,.35) inset,0 0 36px rgba(255,42,120,.95),0 10px 38px rgba(255,42,120,.55)}
     }
-    @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline-img{width:178%} }
-    @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-101{animation:none!important} }
+    @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline{width:178%} }
+    @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-skyline-glow{animation:none!important} }
 
     /* ============ 夜市霓虹 — cohesive in-game HUD + result theme ============ */
     /* HUD pills: each stat is its own LIT neon sign (colored glowing outline) */
@@ -1068,7 +1075,10 @@
       <span class="ny-lantern" style="left:12%;animation-delay:-1s;"></span>
       <span class="ny-lantern opt" style="right:16%;animation-delay:-2.6s;"></span>
       <span class="ny-lantern" style="left:31%;animation-delay:-3.5s;"></span>
-            <img class="ny-skyline-img" src="/assets/title/skyline.webp" alt="台北天際線" />
+            <div class="ny-skyline" aria-hidden="true">
+        <img class="ny-skyline-glow" src="/assets/title/skyline.webp" alt="" />
+        <img class="ny-skyline-img" src="/assets/title/skyline.webp" alt="台北天際線" />
+      </div>
       <div class="ny-grain"></div>
     </div>
     <span class="ny-kicker">夜市 · NIGHT MARKET</span>
