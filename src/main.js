@@ -126,7 +126,11 @@ if (import.meta.env && import.meta.env.DEV) activePack.validate();
 
 /* ---- v5 modules (integrated) ------------------------------------------ */
 import { Onboarding } from './game/onboarding.js'; // opening parts guide
-import { EarthView } from './render/earthView.js'; // space-earth ending sky element
+/* v6: Formosa-island reveal replaces the v5 space-earth globe. EarthView is
+ * no longer imported; EndingView takes the same API slot (same setAnchor /
+ * setProgress01 / setTime / show / hide / dispose surface) and is injected
+ * into the finale via the same setEarthView hook. */
+import { EndingView } from './render/endingView.js'; // pack-driven island reveal
 
 /* ------------------------------------------------------------------ */
 /* Game state machine                                                  */
@@ -352,10 +356,12 @@ const screens = new Screens(bus, worldSeed, collection); // result grid + X text
 const skytree = new SkytreeView(renderer.scene, scaleMgr);
 const finale = new Finale(bus, scaleMgr, skytree, env, cameraRig, ball, renderer.camera);
 finale.setEffects(effects);
-/* v5 space-earth ending: glowing Earth + star dome (sky element, fog:false,
- * +2 draws finale-only — ledger worst 70/72). finale.reset() owns hide(). */
-const earthView = new EarthView(renderer.scene);
-finale.setEarthView(earthView);
+/* v6 Formosa-island ending: flat Taiwan silhouette + city pins + star dome
+ * (sky element, fog:false, +3 draws finale-only — ledger worst 71/72).
+ * Pack-driven: island shape, city pins, and palette come from activePack.ending.
+ * finale.reset() owns hide() via the same setEarthView hook. */
+const endingView = new EndingView(renderer.scene, activePack.ending);
+finale.setEarthView(endingView);
 /* v5 opening onboarding: parts-trail guide (EVT.GOAL_GUIDE kind:'parts').
  * Constructed AFTER the finale (state gate injected); updated at frame-order
  * step 4.6 below; resetWorld owns reset() (plus its GAME_START self-rearm). */
@@ -494,8 +500,8 @@ function resetWorld() {
   terrain.reset(); // re-arms the shop terrain release latch (after scaleMgr.reset)
   curated.reset(); // frees curated slots + consumed bitmask
   collection.resetRun(); // clears foundThisRun; the album mask persists
-  onboarding.reset(); // v5: rearm the opening parts guide (earthView needs no
-  // entry here — finale.reset() above already calls earthView.hide())
+  onboarding.reset(); // v5: rearm the opening parts guide (endingView needs no
+  // entry here — finale.reset() above already calls endingView.hide())
   setRimTint(TIERS[0].skyTop); // v4 rim — env self-resets its palette to tier 0
   simOriginX = 0; // real->sim bridge follows the fresh origin/scale
   simOriginZ = 0;
@@ -631,7 +637,7 @@ if (import.meta.env && import.meta.env.DEV) {
   /** @type {any} */ (window).__v3dbg = {
     ballPhys, scaleMgr, curated, terrain, spawner, store, finale, collection,
     getBallPosReal,
-    onboarding, earthView, // v5 (integrated)
+    onboarding, endingView, // v5/v6 (integrated)
   };
 }
 

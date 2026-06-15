@@ -30,6 +30,7 @@ import { buildCodeMap, validatePack } from '../_engine/codeMap.js';
 import { locale } from './locale.js';
 import { goalMonument } from './monument.js';
 import * as narration from './narration.js';
+import { ending } from './ending.js';
 
 // P6b: Taipei replaces EXTRA codes 82..89 (Tokyo landmark ids at indices 12..19)
 // with Taipei landmark ids. Collectible codes 70..81 (indices 0..11) and codes
@@ -96,6 +97,7 @@ export const activePack = {
   seeds: { primary: 0x54414950, v5: 0x56355441 }, // TAIP / V5TA
   goalMonument, // P6a: 台北101 goal monument (buildGeometry/pos/winToast)
   narration,    // P7: 月牙 zh-TW narration tables (replaces config/donackLines.js)
+  ending,       // v6: Formosa-island reveal definition (islandOutline/cities/colors)
   validate() {
     // P4: structural ladder invariants (no catalog dependency).
     validateTiersStructure();
