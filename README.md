@@ -75,9 +75,18 @@
 npm install
 npm run dev      # 開発サーバー
 npm run build    # dist/ にビルド
+npm test         # vitest（ピュアロジック + DEV-boot 不変条件のリグレッション）
 ```
 
 デバッグ: バッククォートキーでパフォーマンスオーバーレイ、`?r=<メートル>` で任意サイズから開始、`?seed=<n>` でワールド再現。
+
+### パックアーキテクチャ（StagePack シーム）
+
+エンジンが読むコンテンツ（ティア / アーキタイプ / cityMap・ランドマーク / ナレーション）は単一の **`activePack`** から供給される。
+
+- **`src/packs/active.js`** — エンジンが読む唯一のアクティブ StagePack。
+- **`src/packs/_engine/codeMap.js`** — パック非依存のエンジンヘルパ。`buildCodeMap(pack)` がアーキタイプの code↔id 表をロード時に**パックスコープで**構築（グローバル凍結表ではない）。`validatePack(pack)` がパック単位の不変条件（7ティア / 各10 id / id 解決 / ランドマーク梯子が厳密増加 / ゴールが最大 / 座標が境界内）を検証し、各パックの `validate()` から呼ばれる。両者は vitest で TDD 済み。
+- **`src/packs/_tokyo_transient/`** — 既存の東京コンテンツをパックでラップしてシームのバイト同一性を証明する**一時的**な実装。`active.js` が台北パックへ切り替わる P3 で**削除**される。
 
 ## ドキュメント
 
