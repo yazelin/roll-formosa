@@ -77,7 +77,7 @@ import {
 // call-time so future city packs just supply their own narration.js module.
 // The shape contract (DONACK_LINES / TIER_UP_LINE_IDS / LANDMARK_LINE_IDS /
 // COLLECT_LINE_IDS / DUAL_LANDMARK_ID / FIRST_LINE_BY_CODE) is unchanged.
-/** @returns {Record<string,import('../config/donackLines.js').DonackLine>} */
+/** @returns {Record<string,{text:string,priority:number,expression:string,once?:boolean,phase?:string}>} */
 const _lines = () => activePack.narration.DONACK_LINES;
 /** @returns {ReadonlyArray<string>} */
 const _tierIds = () => activePack.narration.TIER_UP_LINE_IDS;
