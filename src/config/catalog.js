@@ -2323,9 +2323,9 @@ add({
  * The 4 shared EXTRA render pools (size classes). Stream B builds ONE pool
  * per class (flat +4 draws, ledger 64/72); instance caps below are the
  * worst-case CONCURRENTLY-ALIVE counts, not archetype counts.
- * v5: collectible-small 12 -> 13 (stack_chan, code 110, joins the 11 v3
+ * v5: collectible-small 12 -> 13 (stack_chan, code 94, joins the 11 v3
  * members) and landmark-mid 4 -> 12 (worst co-location: 5 audited v3
- * members 80/82/83/84/86 + 6 Akihabara placements of codes 111..114 +
+ * members 80/82/83/84/86 + 6 Akihabara placements of codes 95..98 +
  * headroom). Caps are capacity only — same 4 batches, zero extra draws.
  * render/extraPools.js CLASS_CAPS is the render-side authority and must be
  * >= these floors (mirrored there: [13, 12, 6, 6]).
@@ -2340,7 +2340,7 @@ export const EXTRA_POOL_CAPS = Object.freeze({
 
 /**
  * EXTRA archetypes keyed by FROZEN code 70..93 PLUS the v5 curated codes
- * 110..114 (same objects as in CATALOG — each also carries .extraCode and
+ * 94..98 (same objects as in CATALOG — each also carries .extraCode and
  * .sizeClass). v5 codes ride the same 4 shared pools (extraPools.js scans
  * EXTRA_SIZE_CLASS_BY_CODE up to ARCHETYPE_ID_BY_CODE.length).
  * @type {Record<number, Archetype & {extraCode: number, sizeClass: string|null}>}
@@ -2363,7 +2363,7 @@ export const EXTRA_SIZE_CLASS_BY_CODE = {};
 /**
  * Register an EXTRA curated archetype: goes into CATALOG (by id — shared
  * geometry/collisionScale lookups) AND EXTRA_CATALOG (by frozen code).
- * @param {number} code Frozen EXTRA code 70..93, or v5 code 110..114.
+ * @param {number} code Frozen EXTRA code 70..93, or v5 code 94..98.
  * @param {string|null} sizeClass One of EXTRA_POOL_CAPS keys, or null.
  * @param {Archetype} a Archetype (spawnWeight must be 0 — curated-only).
  */
@@ -3027,7 +3027,7 @@ addExtra(93, null, {
  *                       mid-game), landmark-mid pool, cityMap V5 clusters
  */
 
-addExtra(110, 'collectible-small', {
+addExtra(94, 'collectible-small', {
   // スタックチャン — the open-source M5Stack robot (a palm-sized cube body
   // that IS its screen face). Donack's cousin; an electronics shop shelf is
   // its natural habitat. Cute voxel cube + dark screen + cyan eyes/smile.
@@ -3058,7 +3058,7 @@ addExtra(110, 'collectible-small', {
   },
 });
 
-addExtra(111, 'landmark-mid', {
+addExtra(95, 'landmark-mid', {
   id: 'game_center',
   displayNameJa: 'ゲームセンター',
   tier: 4,
@@ -3089,7 +3089,7 @@ addExtra(111, 'landmark-mid', {
   },
 });
 
-addExtra(112, 'landmark-mid', {
+addExtra(96, 'landmark-mid', {
   id: 'denki_retailer',
   displayNameJa: '家電量販店',
   tier: 4,
@@ -3119,7 +3119,7 @@ addExtra(112, 'landmark-mid', {
   },
 });
 
-addExtra(113, 'landmark-mid', {
+addExtra(97, 'landmark-mid', {
   id: 'maid_cafe',
   displayNameJa: 'メイドカフェ',
   tier: 4,
@@ -3147,7 +3147,7 @@ addExtra(113, 'landmark-mid', {
   },
 });
 
-addExtra(114, 'landmark-mid', {
+addExtra(98, 'landmark-mid', {
   id: 'pc_parts_bldg',
   displayNameJa: 'PCパーツショップビル',
   tier: 4,
@@ -3306,10 +3306,10 @@ if (import.meta.env && import.meta.env.DEV) {
     checkCommon(a, `v5 '${id}'`);
   }
   assert(
-    EXTRA_SIZE_CLASS_BY_CODE[110] === 'collectible-small',
-    'code 110 (stack_chan) must ride the collectible-small pool'
+    EXTRA_SIZE_CLASS_BY_CODE[94] === 'collectible-small',
+    'code 94 (stack_chan) must ride the collectible-small pool'
   );
-  for (let c = 111; c <= 114; c++) {
+  for (let c = 95; c <= 98; c++) {
     assert(EXTRA_SIZE_CLASS_BY_CODE[c] === 'landmark-mid', `code ${c} (akiba) must ride the landmark-mid pool`);
   }
 

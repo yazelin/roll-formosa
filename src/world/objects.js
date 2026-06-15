@@ -250,7 +250,7 @@ if (import.meta.env && import.meta.env.DEV) {
   }
   if (V5_ARCHETYPE_IDS.length !== 5) {
     throw new Error(
-      `[objects.js invariant] V5_ARCHETYPE_IDS must have exactly 5 entries (codes 110..114), ` +
+      `[objects.js invariant] V5_ARCHETYPE_IDS must have exactly 5 entries (codes 94..98), ` +
         `found ${V5_ARCHETYPE_IDS.length}`
     );
   }

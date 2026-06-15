@@ -48,10 +48,10 @@
  *   (display-name slot ONLY — never spawned into the store; not a placement
  *   here).
  *
- * v5 appendix codes (objects.js V5_CODE_BASE = 110; the 70+id collectible
- * rule is FULL at 82): 110 スタックチャン (collectible id 12),
- * 111 ゲームセンター, 112 家電量販店, 113 メイドカフェ,
- * 114 PCパーツショップビル. v5 placements expand via a SEPARATE rng stream
+ * v5 appendix codes (objects.js V5_CODE_BASE = 94; the 70+id collectible
+ * rule is FULL at 82): 94 スタックチャン (collectible id 12),
+ * 95 ゲームセンター, 96 家電量販店, 97 メイドカフェ,
+ * 98 PCパーツショップビル. v5 placements expand via a SEPARATE rng stream
  * (mulberry32(0x56355041)) appended AFTER the v4 block — v4 placements stay
  * byte-identical.
  */
@@ -160,13 +160,14 @@ export const CODE_SHOP_SHELL = 92;
 
 /* v5 EXTRA codes (objects.js V5_CODE_BASE appendix — the collectible
  * code = 70 + id rule is FULL at code 82 (西郷さん像), so v5 archetypes
- * append after the 110-entry table; objects.js collectibleCodeForId() is the
- * single mapping authority and the validator asserts through it). */
-const CODE_STACK_CHAN = 110; //      スタックチャン collectible (id 12)
-const CODE_GAME_CENTER = 111; //     ゲームセンター
-const CODE_DENKI_RETAILER = 112; //  家電量販店
-const CODE_MAID_CAFE = 113; //       メイドカフェ
-const CODE_PC_PARTS_BLDG = 114; //   PCパーツショップビル
+ * append after the 94-entry table (codes 0..93); objects.js
+ * collectibleCodeForId() is the single mapping authority and the validator
+ * asserts through it). */
+const CODE_STACK_CHAN = 94; //      スタックチャン collectible (id 12)
+const CODE_GAME_CENTER = 95; //     ゲームセンター
+const CODE_DENKI_RETAILER = 96; //  家電量販店
+const CODE_MAID_CAFE = 97; //       メイドカフェ
+const CODE_PC_PARTS_BLDG = 98; //   PCパーツショップビル
 
 /** Chunk-code lookup (frozen tier table order via objects.js). */
 const C = ARCHETYPE_CODE_BY_ID;
@@ -365,12 +366,12 @@ export const COLLECTIBLE_IDS = Object.freeze({
   GOLDEN_OBJET: 9,
   HACHIKO: 10,
   YAKATABUNE: 11,
-  STACK_CHAN: 12, // v5 append (code 110 via collectibleCodeForId — 70+id is full)
+  STACK_CHAN: 12, // v5 append (code 94 via collectibleCodeForId — 70+id is full)
 });
 
 /**
  * 13 collectible defs (archetypeCode = collectibleCodeForId(id): 70 + id for
- * ids 0..11, v5 appendix codes 110+ for ids 12+). y = surface
+ * ids 0..11, v5 appendix codes 94+ for ids 12+). y = surface
  * rest height (shop shelf/table items); landmarkId -1 except ハチ公像.
  * v4: district collectibles (ids 5..11) are RECOMPUTED via geo.mjs values —
  * shop interior (0..3) and the 秋葉原 exit-lane ゲーミングPC (4) are FROZEN
@@ -394,7 +395,7 @@ export const COLLECTIBLES = Object.freeze([
   { id: 11, nameJa: '屋形船', x: 380 + D_WANGAN.x, y: 0, z: 1340 + D_WANGAN.z, radiusReal: 8.0, archetypeCode: 81, landmarkId: -1, naturalBand: 4, rIntent: 12.5 },
   // v5: スタックチャン (the open-source M5Stack robot — Donack's cousin) on
   // the shelf-A mid level: an electronics shop shelf is its natural home.
-  // Code 110 = the first v5 EXTRA appendix code (70+id rule is full at 82).
+  // Code 94 = the first v5 EXTRA appendix code (70+id rule is full at 82).
   { id: 12, nameJa: 'スタックチャン', x: 0.065, y: 0.7, z: -2.6, radiusReal: 0.04, archetypeCode: CODE_STACK_CHAN, landmarkId: -1, naturalBand: 1, rIntent: 0.4 },
 ]);
 
@@ -582,7 +583,7 @@ const V5_TRAIL_CLUSTERS = [
 ];
 
 /**
- * v5 AKIBA curated buildings (6 singletons, codes 111..114, naturalBand 4 —
+ * v5 AKIBA curated buildings (6 singletons, codes 95..98, naturalBand 4 —
  * absorbable mid-game at ball r ~9..22 m): ゲームセンター x2, 家電量販店,
  * メイドカフェ, PCパーツショップビル x2 dress the 電気街 zone east of the
  * curated strip. Format: [code, x, z, radiusReal] — yaw comes from the v5
@@ -764,7 +765,7 @@ export const PLACEMENTS = [];
   expandClusters(rng2, V5_OPENING_CLUSTERS, true, PLACEMENTS);
   expandClusters(rng2, V5_TRAIL_CLUSTERS, true, PLACEMENTS);
 
-  // 6 akiba building singletons (codes 111..114; explicit naturalBand 4 —
+  // 6 akiba building singletons (codes 95..98; explicit naturalBand 4 —
   // the chunk-code (code/10)|0 rule does not apply to EXTRA appendix codes).
   // colorHex 0xffffff (identity tint, landmark convention): these archetypes
   // are fully vertex-colored (signage bands / pink awnings) — colorHex -1
@@ -809,7 +810,7 @@ export function validateCityMap() {
   assert(PLACEMENTS.length <= CURATED_PLACEMENT_CAP,
     `PLACEMENTS ${PLACEMENTS.length} exceeds CURATED_PLACEMENT_CAP ${CURATED_PLACEMENT_CAP}`);
   for (const p of PLACEMENTS) {
-    // Codes 0..92 (chunk + frozen EXTRA) plus the v5 appendix 110..114.
+    // Codes 0..92 (chunk + frozen EXTRA) plus the v5 appendix 94..98.
     assert(
       Number.isInteger(p.archetypeCode) &&
       ((p.archetypeCode >= 0 && p.archetypeCode <= 92) ||
@@ -825,7 +826,7 @@ export function validateCityMap() {
   }
 
   /* ---- collectible ids: unique, < 31, code rule via collectibleCodeForId
-   *      (70 + id for ids 0..11; v5 appendix 110 + (id - 12) for ids 12+ —
+   *      (70 + id for ids 0..11; v5 appendix 94 + (id - 12) for ids 12+ —
    *      objects.js is the single mapping authority) ---- */
   {
     const ids = Object.values(COLLECTIBLE_IDS);
@@ -844,7 +845,7 @@ export function validateCityMap() {
     // The frozen 70+id range must never be extended past 81 (82 = 西郷さん像).
     for (const cd of COLLECTIBLES) {
       if (cd.id <= 11) assert(cd.archetypeCode === EXTRA_CODE_BASE + cd.id, `v3/v4 collectible ${cd.id}: code must be 70 + id`);
-      else assert(cd.archetypeCode >= CODE_STACK_CHAN, `v5 collectible ${cd.id}: code must be in the 110+ appendix`);
+      else assert(cd.archetypeCode >= CODE_STACK_CHAN, `v5 collectible ${cd.id}: code must be in the 94+ appendix`);
     }
   }
 
@@ -1030,8 +1031,8 @@ export function validateCityMap() {
   /* ---- v5 appendix placements (akiba buildings + スタックチャン) ---- */
   {
     // Expected concurrency per v5 code (extraPools capacity audit input).
-    const wantByCode = { 110: 1, 111: 2, 112: 1, 113: 1, 114: 2 };
-    const gotByCode = { 110: 0, 111: 0, 112: 0, 113: 0, 114: 0 };
+    const wantByCode = { 94: 1, 95: 2, 96: 1, 97: 1, 98: 2 };
+    const gotByCode = { 94: 0, 95: 0, 96: 0, 97: 0, 98: 0 };
     const rk = LANDMARKS[3]; // ラジオ会館風ビル (dioramaR 24) — strip neighbor
     for (const p of PLACEMENTS) {
       if (p.archetypeCode < CODE_STACK_CHAN || p.archetypeCode > CODE_PC_PARTS_BLDG) continue;
