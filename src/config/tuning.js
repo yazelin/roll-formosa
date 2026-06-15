@@ -505,26 +505,17 @@ export const FRAME_BUDGET_MS = 17;
 /** Rolling window for the governor (s). */
 export const GOVERNOR_WINDOW_S = 3;
 /** Budget ceilings (dev-overlay warnings, not runtime behavior).
- *  v3 ledger (4-band tier-transition worst case, the honest peak):
+ *  Worst-case ledger (4-band tier-transition):
  *    40 world InstancedMesh (4 live bands x 10 archetypes)
  *  +  8 stuck-on-ball families
  *  +  6 fixed (sky dome, ground, ball core, effects quads, ... )
  *  +  1 backdrop silhouette ring
  *  +  2 skytree (goalTower mesh + glow, fog:false sky-element exemption)
  *  +  1 terrainMesh (shop walls/prisms, one merged vertex-colored mesh)
- *  +  2 bay water quad + quay-wall strip (v4: bay quads KEPT — OSM water is
- *       rivers/ponds/moats only, ADDITIVE)
+ *  +  2 bay water quad + quay-wall strip
  *  +  4 shared EXTRA InstancedPools (collectible-small / landmark-mid /
  *       landmark-large / landmark-XL — size-class partition, NOT per-archetype)
- *  = 64 v3 worst case.
- *  v4 ledger (honest, no double counting — docs/DESIGN-V4.md レンダリング統合):
- *    64 (v3 worst, above)
- *  +  2 OSM building batches (osm-detail 2048 + osm-large 1024, BatchedExtraPool)
- *  +  1 OSM ground batch (roads/rail/parks, vertex-colored BatchedMesh)
- *  +  1 OSM river/water mesh (shares env water material)
- *  = 68 worst case -> CAP STAYS 72. Pre-approved over-cap levers in order:
- *  (1) merge river into the ground batch as a water vertex-color class (-1);
- *  (2) hide osm-large outside band-4/5 windows (-1). */
+ *  = 64 worst case -> CAP 72 (headroom for future passes). */
 export const DRAW_CALL_CAP = 72;
 export const TRI_BUDGET = 600000;
 /** Per-archetype merged-geometry triangle cap (asserted at boot in dev). */
@@ -538,157 +529,8 @@ export const ARCHETYPE_TRI_CAP = 350;
 export const HUD_THROTTLE_HZ = 10;
 
 /* ================================================================== */
+/* Model quality (catalog.js, geometryFactory.js, objectMaterial.js)   */
 /* ================================================================== */
-/* v4 REAL TOKYO (docs/DESIGN-V4.md — Phase-0 FROZEN constants)        */
-/* ================================================================== */
-/* ================================================================== */
-
-/* ------------------------------------------------------------------ */
-/* v4 OSM geography MIRRORS (scripts/osm/geo.mjs is the SINGLE source  */
-/* of geographic truth — anchors, scale Ks, coverage geometry, fetch   */
-/* cells, EXPECTED_COUNTS, landmark coords. tuning.js mirrors ONLY the */
-/* runtime-needed values; cityMap.js validateCityMap() cross-check-    */
-/* asserts its geo.mjs-generated re-exports against these mirrors.     */
-/* NEVER hand-edit one side alone.                                     */
-/* ------------------------------------------------------------------ */
-
-/** Anchor lat/lon (FROZEN — v5 decision: KEEP; the real 千石電商 maps to game
- *  (36.2, -13.3) under this anchor, ~36 game m from the shop door, so the
- *  センゴク電子 re-theme is geographically honest without any pipeline
- *  re-run): the fictional センゴク電子 (= world origin, ball
- *  start) sits ~180 m real WEST of the actual ラジオ会館 so the authored
- *  shop/street never collides with its real counterpart. */
-export const OSM_ANCHOR_LAT = 35.6987;
-export const OSM_ANCHOR_LON = 139.7693;
-/** Horizontal mapping 1:5 — positions AND footprints (XZ). Geometric
- *  consistency: dense real fill cannot overlap its neighbors. */
-export const OSM_HORIZ_K = 0.2;
-/** Vertical mapping 1:2.5 — hakoniwa drama (v3 landmark precedent: ~1:1
- *  sizes at 1:5 positions; uniform building heights split the difference). */
-export const OSM_HEIGHT_K = 0.4;
-/** Detail-coverage disc radius: 2,500 REAL m around the anchor = 500 game m.
- *  Plus two patch rects (Shibuya/Asakusa) generated in geo.mjs from their
- *  frozen bboxes — see OSM_COVERAGE re-exported by cityMap.js (Stream W). */
-export const OSM_DETAIL_RADIUS_REAL_M = 2500;
-
-/* ------------------------------------------------------------------ */
-/* v4 OSM band assignment / thinning (pipeline truth; runtime re-      */
-/* derives band from decoded w/d/h with the SAME table)                */
-/* ------------------------------------------------------------------ */
-
-/** r_eff = 0.5*sqrt(w^2+d^2+h^2) game m. DROP below edges[0]; band cut
- *  (FROZEN — re-derived so typical houses are band 3: an 8x8x6.5 m house has
- *  r_eff 1.72): [1.2,1.6)->2, [1.6,10)->3, [10,60)->4, >=60->5. */
-export const OSM_BAND_REFF_EDGES = Object.freeze([1.2, 1.6, 10, 60]);
-/**
- * Band for an OSM building by effective radius (game m). Pure function of
- * size — the pipeline and runtime decode share this single implementation.
- * @param {number} rEff 0.5*sqrt(w^2+d^2+h^2), game m.
- * @returns {number} Band 2..5, or -1 (below the r_eff 1.2 drop floor —
- *   shipped data never contains these; decode may DEV-assert).
- */
-export function osmBandForReff(rEff) {
-  if (rEff < OSM_BAND_REFF_EDGES[0]) return -1;
-  if (rEff < OSM_BAND_REFF_EDGES[1]) return 2;
-  if (rEff < OSM_BAND_REFF_EDGES[2]) return 3;
-  if (rEff < OSM_BAND_REFF_EDGES[3]) return 4;
-  return 5;
-}
-/** Deterministic thinning keep-fraction by band: keep iff
- *  mulberry32(wayId)() < OSM_KEEP_K_BY_BAND[band] (baked at convert; runtime
- *  NEVER randomizes — OSM placements are static, seed-independent data).
- *  Initial values derived from the corrected 2,321 buildings/km^2-real
- *  density; THE Phase-3 pacing lever (data-only pipeline re-run).
- *  Indexed by band 0..5 (bands 0/1 unused — OSM ships bands 2..5 only).
- *  PHASE-3 RETUNE (integration 2026-06-12): KEEP_K[4] 1.0 -> 0.53 — the
- *  pre-approved band-4 lever (worst-window 1,437 > cap 768 + measured T4
- *  tower-volume cascade); mirrors scripts/osm/build-tokyo-bin.mjs.
- *  PHASE-3 RETUNE 2 (integration 2026-06-12 evening): KEEP_K[2] 0.35 -> 1.0
- *  — band-2 bridge supply (driven typical-proxy plateaued 348 s at r=2.27,
- *  just under the band-3 absorbability threshold 2.46; only 102 r_eff
- *  [1.2,1.6) records coverage-wide). Ships all ~291 band-2 records; alive
- *  stays bounded by OSM_ALIVE_CAP.b2 + the admission check. */
-export const OSM_KEEP_K_BY_BAND = Object.freeze([0, 0, 1.0, 0.6, 0.53, 1.0]);
-/** collisionScale = clamp(0.5*sqrt(w^2+d^2)/r_eff, OSM_COLLIDE_MIN, 1.0) —
- *  keeps thin towers honest against pushback/bonk. */
-export const OSM_COLLIDE_MIN = 0.35;
-/** Clearance bake (navigability law, convert step 8): road-corridor margin in
- *  game m (1.0 game m = 5 m real). Buildings intruding into a corridor are
- *  inset (max 30%/axis); still-intersecting or post-inset min(w,d) < 0.5
- *  game m are DROPPED. verify's flood-fill gate: >=95% reachable
- *  road-corridor fraction at ball-radius brackets 1 and 3 game m. */
-export const OSM_CLEARANCE_M = 1.0;
-
-/* ------------------------------------------------------------------ */
-/* v4 OSM quantization (the voxel law — quantization IS both the       */
-/* aesthetic and the compression; FROZEN with bin format v1)           */
-/* ------------------------------------------------------------------ */
-
-export const OSM_Q_CENTER_M = 0.05; // footprint center, game m
-export const OSM_Q_WD_M = 0.25; //     OBB width/depth, game m (u8: max 63.75)
-export const OSM_Q_H_M = 0.5; //       height, game m (detail u8: max 127.5; tower u16 @ 0.25)
-export const OSM_Q_YAW = Math.PI / 128; // yaw (u8)
-
-/* ------------------------------------------------------------------ */
-/* v4 OSM runtime budgets (world/osmSpawner.js, render/osmPools.js,    */
-/* render/osmGround.js)                                                */
-/* ------------------------------------------------------------------ */
-
-/* NOTE (Stream C, frozen Phase 0 — lives in world/objects.js, NOT here):
- *   export const FLAG_OSM = 32;        // store flag bit (skip-bit widening:
- *                                      // chunk spawner tests FLAG_CURATED|FLAG_OSM)
- *   export const OSM_CODE_BASE = 94;   // codes 94..109, 16 archetypes;
- *                                      // ARCHETYPE_ID_BY_CODE length 110.
- * knockOff already skips codes >= EXTRA_CODE_BASE(70) -> OSM codes are
- * permanently stuck once absorbed (no reinject path). */
-
-/** OsmSpawner round-robin: <= this many slot ops/frame, NEAREST-FIRST over
- *  tiles intersecting each live band's ring (mirrors CURATED_UPDATE_BUDGET). */
-export const OSM_UPDATE_BUDGET = 64;
-/** Per-band OSM alive caps (sum 2,624). INITIAL values from the corrected
- *  band cut — RE-CUT IN PHASE 3 from verify-tokyo-data's band histogram (the
- *  manifest histogram is authoritative, not prose). First lever if the
- *  0.9-budget DEV warn fires steady-state: b3 1536->1200 + KEEP_K[3] 0.6->0.5. */
-export const OSM_ALIVE_CAP = Object.freeze({ b2: 192, b3: 1536, b4: 768, b5: 128 });
-/** HARD ADMISSION CHECK (coverage-boundary ledger enforcement): osmSpawner
- *  SKIPS activation whenever store.aliveCount() > ALIVE_TOTAL_BUDGET - this
- *  (4096-128 = 3968). At the coverage edge the chunk spawner runs procedural
- *  bands 3/4 at full density outside while OSM holds its caps inside — the
- *  static sum can exceed 4096, so enforcement is runtime, designed as "OSM
- *  thins first at the boundary". BINDING test: parked ON the boundary at
- *  r~4 and r~40, alive < 4096 asserted for 300 frames. */
-export const OSM_ADMISSION_HEADROOM = 128;
-/** OSM BatchedExtraPool capacities. BOOT ASSERT (osmPools.js): sum of
- *  OSM_ALIVE_CAP over each pool's member bands <= pool capacity —
- *  detail (bands 2-3): 192+1536 = 1728 <= 2048; large (bands 4-5):
- *  768+128 = 896 <= 1024. Slot exhaustion structurally impossible. */
-export const OSM_POOL_DETAIL_CAP = 2048;
-export const OSM_POOL_LARGE_CAP = 1024;
-/** OSM ground tile streaming: <= this many tile geometry builds per frame. */
-export const OSM_GROUND_TILE_BUILDS_PER_FRAME = 2;
-/** Minor-road sections render only within this fraction of fogFar (ground LOD). */
-export const OSM_GROUND_MINOR_LOD_FRAC = 0.5;
-/** Baked ground-layer y-offsets (game m, applied at CONVERT — they scale with
- *  the one-frame similarity so the rescale pixel-identity invariant holds;
- *  polygonOffset(-1,-1) remains only as belt-and-braces vs the terrain).
- *  Solves intra-batch coplanarity: parks under minor roads under major+rail. */
-export const OSM_GROUND_Y_PARK = 0.02;
-export const OSM_GROUND_Y_MINOR = 0.04;
-export const OSM_GROUND_Y_MAJOR = 0.06;
-
-/* ------------------------------------------------------------------ */
-/* v4 OSM data budget (scripts/osm/verify-tokyo-data.mjs)              */
-/* ------------------------------------------------------------------ */
-
-/** HARD CAP on total gzipped shipped OSM data (both shards + manifest), KB.
- *  verify-tokyo-data.mjs exits non-zero over budget (predeploy gate).
- *  Expected ~550-750 KB gz from the corrected baselines (detail ~300 KB +
- *  towers ~24 KB + roads ~250 KB + polys ~180 KB + headers ~15 KB raw). */
-export const OSM_DATA_BUDGET_GZ_KB = 1536;
-
-/* ------------------------------------------------------------------ */
-/* v4 model quality (catalog.js, geometryFactory.js, objectMaterial.js)*/
-/* ------------------------------------------------------------------ */
 
 /** Hero-pass per-id tri cap (the 12 frozen HERO_ARCHETYPE_IDS in catalog.js;
  *  all other archetypes keep ARCHETYPE_TRI_CAP 350). Asserted per id at boot
