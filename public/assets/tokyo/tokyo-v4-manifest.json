@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "shardGzBytes": {
+    "core": 106108,
+    "outer": 185279
+  },
+  "perBandCounts": {
+    "band2": 288,
+    "band3": 13020,
+    "band4": 723,
+    "band5": 4
+  },
+  "bandHistogram": [
+    0,
+    0,
+    288,
+    13020,
+    723,
+    4
+  ],
+  "bandStats": {
+    "band3": {
+      "count": 13020,
+      "sumR3": 762092.2,
+      "meanREff": 3.423
+    },
+    "band4": {
+      "count": 723,
+      "sumR3": 7105806.5,
+      "meanREff": 17.835
+    },
+    "band2": {
+      "count": 288,
+      "sumR3": 942.5,
+      "meanREff": 1.479
+    },
+    "band5": {
+      "count": 4,
+      "sumR3": 1039522.4,
+      "meanREff": 63.712
+    }
+  },
+  "coverageAreaGameM2": 933550,
+  "tileIndexSummary": {
+    "detailTiles": 113,
+    "towerTiles": 71,
+    "roadTiles": 387,
+    "polyTiles": 353,
+    "roadRecords": 12929,
+    "polyRecords": 1478,
+    "maxDetailPerTile": 317,
+    "maxPolyN": 63,
+    "polyNHist": {
+      "<=32": 184,
+      "<=16": 425,
+      "<=8": 833,
+      "<=64": 36
+    }
+  },
+  "extractionDate": "2026-06-11T12:50:59.810Z",
+  "attribution": "© OpenStreetMap contributors",
+  "license": "ODbL",
+  "licenseUrl": "https://opendatacommons.org/licenses/odbl/"
+}

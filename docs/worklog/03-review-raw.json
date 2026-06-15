@@ -1,0 +1,310 @@
+{
+  "confirmed": [
+    {
+      "dimension": "correctness",
+      "severity": "low",
+      "title": "Effects particle pools are excluded from the floating-origin rebase — live particles teleport on the rebase frame",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/scaleManager.js",
+      "detail": "ScaleManager.maybeRebase (scaleManager.js:227-253) shifts the ball, store, instance pools, camera (cameraRig.rebaseState), env (env.rebase) and spawner (spawner.onRebase) — but Effects is never passed in, and main.js:307 calls maybeRebase without it. Effects.rebase exists (effects.js:378-382, doc even says 'call it for correctness') but a grep confirms it has zero callers. Particle state is explicitly world-sim-space (effects.js header: 'RESCALE multiplies live particle state by S (world sim positions)') and rescale IS handled via the bus (effects.js:272-276), so rebase is the one transform these positions miss. Failure scenario: the ball crosses REBASE_DISTANCE_SIM (1500 sim) mid-absorb-burst or while speed lines are streaming — exactly when particles are guaranteed to be active around the ball — and every live pop/sparkle/line stays at the old coordinates, i.e. jumps ~1500-2100 sim units away from the ball (far beyond fog far = 137 sim), visibly blinking out mid-flight. This violates the stated pixel-identity contract for the rebase frame. Note also a latent type hazard: Effects.rebase takes a THREE.Vector3 `offset`, while the ScaleManager hook convention passes two scalars (sx, sz) — wiring it through the existing duck-typed `env.rebase(sx, sz)`-style call would compute `px[i] -= offset.x` with offset=number → NaN positions."
+    },
+    {
+      "dimension": "correctness",
+      "severity": "medium",
+      "title": "Sluggish has multiplicative decay but slow linear recovery and no floor — absorb bursts (and the ?r= mass-absorb) freeze the ball for tens of seconds",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/physics/ballPhysics.js",
+      "detail": "Each absorb does `ball.sluggish *= 0.97` (absorb.js:202), but recovery is `SLUGGISH_RECOVERY_RATE = (1 - SLUGGISH_FACTOR) / SLUGGISH_RECOVERY_S` = 0.03/1.5 = +0.02 per second, linear (ballPhysics.js:42, 139-142). This contradicts tuning.js:56 which documents SLUGGISH_RECOVERY_S as 'Sluggishness recovers back to 1.0 over this many seconds'. With multiplicative dips and a fixed +0.02/s, a streak of N absorbs leaves sluggish ≈ 0.97^N needing (1-0.97^N)/0.02 seconds to recover: a 20-absorb combo (normal katamari play, COMBO_WINDOW_S=1.5 encourages streaks) → sluggish 0.54, ~23 s to full recovery; the ?r= boot mass-absorb (previous finding) → sluggish ≈ 0.97^300 ≈ 1e-4, accel = ACCEL_K·r·sluggish ≈ 0, ball effectively undrivable for ~45-50 s. There is no lower clamp on sluggish anywhere."
+    },
+    {
+      "dimension": "correctness",
+      "severity": "low",
+      "title": "knockOff destroys stuck objects even when spawner.reinject rejects them — objects silently vanish under pool/store/flight exhaustion",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/ball.js",
+      "detail": "Ball.knockOff (ball.js:400-428) unconditionally `_cullRecord(rec)`s each ejected record while building the WorldReentry list, BEFORE anyone knows whether the world can accept it. spawner.reinject (spawner.js:400-449) can refuse: store.alloc() == -1 (store full, ALIVE_TOTAL_BUDGET=4096 of 8192 makes this unlikely but POOL_CAPACITY per archetype is 512 and pool.alloc() can fail) → returns false. main.js KNOCK_OFF handler (main.js:165-168) ignores reinject's return value. Failure scenario: a hard bonk in a dense, fully-populated archetype pool — the ejected object is removed from the render ball AND never re-enters the world; it just ceases to exist with no visual. Gameplay-wise the knock-off penalty silently over-penalizes (object not re-absorbable as designed: 'eject 1-3 newest stuck objects ... re-injects them as re-absorbable world instances')."
+    },
+    {
+      "dimension": "correctness",
+      "severity": "low",
+      "title": "SpatialHash.queryBall: visited-key dedup overflow silently drops loose-buffer candidates and the cell clamp is asymmetric",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/spatialHash.js",
+      "detail": "Three coupled edge cases for large query radii: (1) `_visited` holds only 256 keys (spatialHash.js:87) but the scan can cover up to 64x64 = 4096 cells; once visitedCount saturates (line 321 `if (visitedCount < visited.length)`), further cells are scanned but their keys are NOT recorded, so the loose-buffer pass (lines 337-347) — which only emits loose entries whose cached key matches a *visited* key — MISSES recently-inserted objects in those cells entirely (a collidable object the ball is touching is skipped). (2) The same saturation breaks dedup, so packed cells whose hash key repeats get appended twice (benign for absorb because flags go dead after the first absorb, but it burns CANDIDATE_CAP=1024 slots). (3) The per-axis clamp `x1 = x0 + MAX_CELLS_PER_AXIS - 1` (lines 300-301) truncates only the +X/+Z side, so an oversized query covers the corner [x-reach, x-reach+64·cell] instead of being centered on the ball. In normal play reach = r + 16 ≤ 18.5 sim with cell 32 (≈2 cells/axis) so none of this triggers; it is reachable in the ?r= dev path frames before the catch-up rescales (r up to 1200 sim)."
+    },
+    {
+      "dimension": "performance",
+      "severity": "medium",
+      "title": "Dynamic-resolution governor can never recover on 60Hz vsync displays and ratchets down permanently after any pause",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/renderer.js",
+      "detail": "Two compounding defects in the governor. (1) Recovery is unreachable on a 60Hz display: render() measures the raw RAF interval (lines 161-167, `frameMs = now - this._lastTime`), which on a vsync-locked 60Hz monitor is always >= ~16.7ms regardless of how cheap the frame actually is. The recover branch (line 256) requires `avg < FRAME_BUDGET_MS * GOVERNOR_RECOVER_FRAC` = 17 * 0.7 = 11.9ms — mathematically impossible at 60Hz vsync. Meanwhile the drop threshold is 17ms vs the 16.67ms vsync interval (2% headroom), so any 3s window containing a GC hiccup or a spawn-burst stutter trips a drop, and the pixel ratio steps down 0.125 and can NEVER step back up. Over a 6-8 minute run to 500m the resolution monotonically ratchets toward 1.0. (2) Unclamped pause intervals: main.js clamps frameDt to MAX_FRAME_DT=0.1s for the sim (main.js:269), but renderer.render() has no such clamp — a tab switch or window drag feeds one multi-second interval into `_winMs` (line 243) and simultaneously pushes `_winElapsed` past GOVERNOR_WINDOW_S, closing the window with a wildly inflated average -> guaranteed spurious resolution drop. Each tab switch = one permanent -0.125 pixel-ratio step on 60Hz displays."
+    },
+    {
+      "dimension": "performance",
+      "severity": "high",
+      "title": "InstancedPool mesh.count never shrinks — draw calls and degenerate-instance vertex work accumulate permanently as tiers pass",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/instances.js",
+      "detail": "alloc() raises `_highWater` and `mesh.count` (lines 147-150) but free() only zero-scales the matrix (lines 159-167); count only returns to 0 in reset() (game restart). three.js skips an InstancedMesh draw only when count === 0 (WebGLBufferRenderer.renderInstances early-returns on primcount 0), so once a pool has ever allocated a slot it issues a draw call for the rest of the run even after every instance is freed. As tiers pass, the spawner touches bands N..N+2 (48 pools by ~tier 3 thanks to the N+2 pre-warm, main.js builds 48 pools at line 104), and old-band pools are fully drained by _unloadRecord/sub-pixel sweep — yet each keeps its draw call. Endgame ledger: 48 world pools + 8 stuck pools (ball.js) + 3 effects + core + ground + sky + blob shadow ≈ 62 draw calls, exceeding DRAW_CALL_CAP=55 (tuning.js:199). The smoke test's 34/55 was measured before the high-water marks accumulated. Additionally, each stale pool's vertex stage still processes `count` zero-scale instances: up to 512 instances × ~350 tris (ARCHETYPE_TRI_CAP) ≈ 179k degenerate triangles per drained pool per frame — vertex-shaded then pre-raster rejected, pure waste that grows monotonically."
+    },
+    {
+      "dimension": "performance",
+      "severity": "medium",
+      "title": "All three spatial hashes use a fixed 32-current-unit cell size for every band — the N-1 leftover band degrades to ~1000-candidate broadphase saturation for most of each tier",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/main.js",
+      "detail": "main.js:91-95 constructs all three hashes with `TIERS[0].cellSizeSim` (=32) and SpatialHash.rebuild(store, tierBand) never adjusts `cellSize`/`_invCell` (spatialHash.js:113-163), even though tiers.js documents cellSizeSim as the band's NATIVE scale. In current sim units the N-1 band's natural cell is 32*0.2 = 6.4 and N+1's is 160, but both get 32. Consequence for the leftover band right after a rescale: ~1200-2000 leftovers (spawned over a 96-native-unit ring) collapse into a disc of radius ~19 current units around the ball. absorb.resolve queries each hash with maxObjR = cellSize*0.5 = 16 (absorb.js:165), giving reach = r+16 ≈ 17-18.5 — the scanned cells cover the ENTIRE leftover disc, so queryBall returns essentially every leftover, clamped at CANDIDATE_CAP=1024. That is ~1024 narrowphase distance tests per substep × 3 substeps ≈ 3000/frame for the N-1 band alone (~20-30x the intended count with 6.4-unit cells and reach ≈ r+3.2), sustained for most of a tier because leftovers only become sub-pixel (diameter < 0.04*ballR) late in the band. Worse, cap saturation means the 1024-entry scratch can fill with FAR leftovers while NEAR absorbable ones are dropped (queryBall returns early at outCap, spatialHash.js:327), making absorption of leftovers flaky. The fixed maxObjR=16 also inflates band-N queries: reach r+16 instead of r+~2.5 scans ~4x the area (~300 candidates instead of ~80)."
+    },
+    {
+      "dimension": "performance",
+      "severity": "low",
+      "title": "InstancedPool single [min,max] dirty span degenerates to near-full instanceMatrix uploads under steady-state spawn/despawn churn",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/instances.js",
+      "detail": "Dirty tracking is one min/max pair per attribute (_markDirty lines 471-474, flush lines 337-354). Slot allocation is a LIFO FreeList, so after a minute of churn the live slots of a pool are scattered across the whole high-water region. Every streaming frame a pool typically sees: fade-out animator writes on old (often low-index) slots via update(), plus up to 64 spawner setTransform/fadeIn writes on freshly popped (often high-index) slots. One write at slot 3 and one at slot 480 makes the span upload (480-3+1)*64B ≈ 30KB — effectively the full buffer despite the updateRanges machinery. With ~8-16 pools active across the three bands during streaming, that is ~0.25-0.5 MB of bufferSubData per frame, the exact 'full upload where partial was intended' pattern. (Ball.js has the same single-span scheme at lines 264-265/493-503 but FAMILY_CAP=64 keeps the worst case at 4KB — acceptable there.)"
+    },
+    {
+      "dimension": "performance",
+      "severity": "low",
+      "title": "SpatialHash repack pays a fixed O(HASH_TABLE_SIZE=16384) table cost on every trigger; insert-driven repacks fire every ~4 frames during sustained streaming",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/spatialHash.js",
+      "detail": "_repack() (lines 224-276) does counts.fill(0) over 16384 + a 16384-iteration prefix-sum regardless of how many entries actually live in the hash. Two trigger paths make this a recurring per-frame-ish cost: (1) insert() repacks whenever the loose buffer hits LOOSE_CAP=256 (line 175); at the SPAWN_BUDGET_PER_FRAME=64 streaming rate one hash repacks every 4 frames — ~33k fixed ops (~20-50µs) each, amortized ~8k ops/frame just in table bookkeeping. (2) remove() repacks at TOMBSTONE_REBUILD_MIN=32 when the population is small (line 211-216) — during the end of a leftover-band drain (sub-pixel sweep kills up to SUBPIXEL_KILL_CAP=32/frame, spawner.js:1013-1020) a nearly-empty hash can trigger a 33k-op repack every frame or two to compact a few dozen entries. Not a frame-breaker on desktop, but it is the largest avoidable fixed cost in the steady-state loop on mobile."
+    },
+    {
+      "dimension": "performance",
+      "severity": "low",
+      "title": "Consumed-bitmask Map grows without bound within a tier (cleanup only fires on tier change, and only for bands <= tier-2)",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/spawner.js",
+      "detail": "_markConsumed (lines 1090-1098) allocates a new Uint32Array(4) + Map entry per (band, chunk) key on the absorb path — an allocation in a hot-adjacent path, and entries for bands tier-1..tier+2 are never released until _onTierChange deletes bands <= newTier-2 (lines 592-594). A player who roams instead of progressing (absorbing a little everywhere across an unbounded chunk area) accumulates one ~100-byte Map entry per visited-and-grazed chunk forever within the tier. This is a slow leak, not a spike — minutes of wandering ≈ hundreds of KB — but it is the only structurally unbounded collection in the game loop, and the per-absorb `new Uint32Array` is the only remaining allocation reachable from the fixed-step absorb path (via the synchronous EVT.ABSORB handler chain)."
+    },
+    {
+      "dimension": "performance",
+      "severity": "low",
+      "title": "Ball stuck-pool attach uploads the entire instanceColor buffer per absorb with no updateRanges",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/ball.js",
+      "detail": "attachStuck lines 368-369: `mesh.setColorAt(slot, _color); if (mesh.instanceColor !== null) mesh.instanceColor.needsUpdate = true;` — unlike the carefully range-tracked instanceMatrix path in the same class (update() lines 493-503 uses clearUpdateRanges/addUpdateRange), the color write uses bare needsUpdate, uploading the full FAMILY_CAP*3 floats (768B) for one changed RGB triple. During rapid-absorb combos (several absorbs per frame across multiple families) this is several full-buffer uploads per frame. Absolute cost is small (KB-scale), but it is an inconsistency with the file's own dirty-range discipline and free to fix. The same pattern exists in effects.js QuadPool.spawn (line 144-145), also small (POP_CAP=96)."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "critical",
+      "title": "Growth pacing is ~20-30x slower than the documented 60-90s/tier target; combo system never fires",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/config/tuning.js",
+      "detail": "tuning.js:65-66 claims GROWTH_K=0.45 is 'Tuned so each tier takes 60-90s', but the arithmetic contradicts it. Tier 0 needs deltaR^3 = 2.5^3 - 0.5^3 = 15.5 sim^3. Mean T0 object (catalog radii 0.012-0.03m, spawn-weighted, jitter included) contributes GROWTH_K * E[r^3] ~= 0.45 * 0.0076 = 0.0034 sim^3 per absorb -> ~3275 absorbs for tier 0 alone. At density 72/chunk (tiers.js objectsPerChunk, 32-sim cells = 0.070 obj/sim^2) and the honest contact window, a numerical integration of a ball rolling STRAIGHT AT SPEED CAP (upper bound on real play, which turns and misses) gives tier 0 = ~2018s (~34 min); even with the pickup-forgiveness fix it is still ~1293s. Pacing is roughly self-similar per tier, so a full 6-tier run is hours, not ~8 minutes. Side effect: COMBO_WINDOW_S=1.5 (absorb.js combo counter, rising-pitch sfx) is unreachable — the mean absorb gap at T0 start is ~3.6s, so the combo/sfx/HUD feature is dead content for the entire opening. The browser smoke test only validated ?r= shortcuts, never a timed tier."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "high",
+      "title": "Sluggish multiplier collapses to ~0.13 equilibrium at target absorb rates — ball turns to mud during hot streaks",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/physics/ballPhysics.js",
+      "detail": "Each absorb multiplies sluggish by SLUGGISH_FACTOR=0.97 (absorb.js:202) while recovery is a fixed additive (1-0.97)/1.5 = 0.02/s (ballPhysics.js:42, 139-142). The comment 'one absorb's dip recovers in exactly 1.5s' assumes <= 0.67 absorbs/s. At sustained absorb rate L the equilibrium is s* ~= 0.02/(0.03*L): at L=3/s s*=0.22, at L=5/s s*=0.13. Acceleration is ACCEL_K * radius * sluggish (ballPhysics.js:100), and friction-limited cruise speed is approx accel/4.8 (FRICTION_PER_FRAME 0.92 at 60Hz), so at s=0.13 cruise collapses to ~0.6R vs the 8.5R cap — about 7% of cap. Today this is masked only because pacing (finding 2) makes absorbs rare; the moment GROWTH_K/density are fixed to hit 60-90s tiers (several absorbs/s), dense pickup runs will brick the ball's responsiveness, punishing the player precisely when the game should feel best."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "medium",
+      "title": "Mobile players get no movement affordance: virtual joystick is invisible and the title screen omits touch controls",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/index.html",
+      "detail": "input.js implements a full touch joystick (anchor at first touch, 64px radius, second touch = boost) but renders nothing — there is no joystick DOM element or canvas overlay anywhere (index.html has only HUD/overlay/debug nodes). The title screen key-hints block (index.html, .key-hints) lists only 'W A S D / arrows', 'Mouse Camera' and the backquote debug key — keyboard-only guidance, and it even advertises the developer debug toggle to players. A first-time phone player taps START and faces a static scene with zero indication that dragging moves the ball, no stick visual confirming their input registered, and no feedback for the deadzone (JOY_DEADZONE 0.15 means small drags do nothing silently). The viewport/touch-action setup is otherwise correct, so the input works — it is purely undiscoverable."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "low",
+      "title": "boost intent is dead input — Shift and second-touch do nothing",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/input/input.js",
+      "detail": "input.js:9 and 116 produce intent.boost from Shift / a second active touch and document it as a feature ('boost -> Shift held (keyboard) or a second active touch'), but no consumer exists: ballPhysics.step() (the only intent reader, ballPhysics.js:81-143) never references intent.boost, and types.js:76 calls it 'Reserved boost flag'. grep confirms boost appears only in input.js and types.js. Players who try two-finger touch (a natural experiment on mobile) or hold Shift get silent nothing; the keyup handler also intercepts ShiftLeft/Right state for no effect."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "low",
+      "title": "Final-tier progress bar tops out at 58% when the player wins",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/scaleManager.js",
+      "detail": "scaleManager.js:180-183 computes the HUD progress denominator for the last tier as LAST_TIER_EXIT_M = TIERS[5].enterTrueRadius * 5 = 750m (line 55), but the win latch fires at WIN_RADIUS_M = 500m (line 193). At the moment of victory the progress bar reads (500-150)/(750-150) = 58.3%. The one HUD element that communicates 'how close am I to the end' never fills, and the win overlay appears while the bar says you are barely past halfway — confusing exactly at the climax. (Verified the smoke test's ?r=600 start would even win with the bar at 75%.)"
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "low",
+      "title": "ROLL AGAIN returns to the title screen instead of restarting the run",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/screens.js",
+      "detail": "The win-screen button labeled 'もういちど / ROLL AGAIN' (index.html #restart-button) emits only game:reset (screens.js:73-75), which main.js maps to GameState.TITLE + resetWorld() (main.js:232-236) and screens shows the title overlay again (screens.js:88-91). The label promises an immediate replay; the player instead lands on the title and must click START a second time. Two clicks for a one-click promise, at the exact moment of peak motivation to replay. The bus plumbing already supports the intended behavior with zero new code paths: emitting reset then start is well-ordered (reset shows title + resets world; start hides overlays, resets the accumulator, and play resumes in the freshly preloaded world)."
+    },
+    {
+      "dimension": "contracts",
+      "severity": "low",
+      "title": "Floating-origin rebase never reaches Effects — live particles stranded at pre-rebase positions",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/scaleManager.js",
+      "detail": "Effects owns world-space particle SoA state (pops, tierUp ring, speed lines) and exposes a rebase hook (effects.js lines 374-382, QuadPool.rebase lines 220-227), but nothing ever calls it: ScaleManager.maybeRebase (scaleManager.js lines 227-253) notifies store, pools, hashes, cameraRig.rebaseState, env.rebase and spawner.onRebase only; there is no EVT for rebase in core/events.js (EVT has RESCALE but no REBASE), and main.js wires no rebase glue (grep confirms zero callers of effects.rebase). Effects handles RESCALE via the bus (effects.js line 272) but not rebase. Failure scenario: the rebase trigger (|ball.pos| > REBASE_DISTANCE_SIM = 1500) is reached precisely by sustained fast travel — the exact condition under which speed lines are continuously emitted (speed01 > FOV_SPEED_FRAC). On the rebase frame the whole world shifts by ~1500 sim units but live particles keep their old coordinates, so streaks/pops visibly teleport ~600 ball-radii away (then linger off-screen for up to ~1s of lifetime). This breaks the rebase pixel-identity invariant for the effects layer. Note also a latent signature mismatch: effects.rebase takes a THREE.Vector3 offset while every other rebase hook uses the (sx, sz) two-number convention, so even ScaleManager's duck-typed `typeof obj.rebase === 'function'` pattern could not have called it correctly."
+    },
+    {
+      "dimension": "contracts",
+      "severity": "low",
+      "title": "SpatialHash cellSize frozen at construction; ScaleManager re-banding never adopts the band's cellSizeSim",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/spatialHash.js",
+      "detail": "All three hashes are constructed with TIERS[0].cellSizeSim (main.js lines 91-95) and SpatialHash.rebuild(store, tierBand) (spatialHash.js line 113) re-assigns which band an instance owns without ever updating this.cellSize/_invCell. The Tier typedef (types.js line 26) and the spawner (spawner.js _recomputeBand, TIERS[band].cellSizeSim) explicitly treat cellSizeSim as per-tier, and absorb.js relies on hash.cellSize*0.5 as the 'largest possible object radius in this band' candidate bound (absorb.js line 165, spatialHash.js line 289). This only works today because every tier in tiers.js happens to set cellSizeSim: 32 — verified, all six entries. Failure scenario: a Phase-3 tuning pass that changes any tier's cellSizeSim (the typedef invites it) silently leaves the hash cell geometry and the maxObjR query bound wrong for re-banded hashes; oversized objects whose center cell lies outside the scanned range stop being returned by queryBall, so the ball tunnels through them with no error."
+    },
+    {
+      "dimension": "contracts",
+      "severity": "low",
+      "title": "?r= dev start skips Environment's documented init contract and preloads the world before the radius is set",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/main.js",
+      "detail": "Two boot-path mismatches with the ?r= dev key. (1) Environment's integration contract (environment.js lines 119-124) says '?r= dev start: env.setTierPaletteImmediate(startTierIndex)'; main.js never calls it, so a ?r=120 start opens on the Desk palette and then crossfades through 4 stacked TIER_UP events on the first playing frame (each also firing the cameraRig FOV kick and sfx arpeggio). (2) At boot, main.js line 245 calls spawner.preloadStartArea(..., scaleMgr.tierIndex=0, ballPhys.state.radiusSim=0.5) BEFORE ballPhys.reset(startRadiusSim()) at line 247, so the preloaded world is Desk-tier content around a 0.5-sim ball while play actually begins at e.g. simRadius 1200; the first playing seconds run the rescale cascade (one rescale per frame) through an effectively wrong/empty world until the spawner's tier handoff replaces it. Note resetWorld() (lines 203-213) gets the order right — reset radius first, then preload — only the boot path is inverted. Dev-only cosmetic/flow issue; the ?r=120 smoke test recovered, but the transition frames are not what the modules' contracts describe."
+    },
+    {
+      "dimension": "contracts",
+      "severity": "low",
+      "title": "ScaleManager's optional-hook duck typing silently no-ops on misnamed hooks; its own docs name the wrong method",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/world/scaleManager.js",
+      "detail": "The rescale/rebase hooks that guarantee the pixel-identity invariant are dispatched via `typeof x.method === 'function'` checks that silently skip when absent: cameraRig.rescaleState (line 283), env.rescale (line 284), cameraRig.rebaseState (line 249), env.rebase (line 250), spawner.onRebase (line 251). Only the pool hooks warn in dev (lines 322-329). Meanwhile the file's own header (line 19) and the maybeTierUp JSDoc (line 146) document the environment hook as `env.onRescale(S)` — the actual method is `env.rescale(S)` (environment.js line 330). The integration happens to be correct today, but this is exactly the cross-module failure mode that already required integrator fixes: a developer following ScaleManager's documentation and naming a future hook `onRescale` would compile, run, and silently break the rescale frame's pixel identity (env grid origin/fog not scaled) with no warning. Concrete evidence the hazard is real: the unwired effects.rebase in this same codebase (finding 1) is a hook that exists but is silently never called."
+    }
+  ],
+  "refuted": [
+    {
+      "dimension": "correctness",
+      "title": "?r= dev start: boot preloads the world BEFORE applying the start radius — frame-1 mass-absorb of stale tier-0 content",
+      "why": "The surface facts check out: boot (main.js:245-248) preloads before ballPhys.reset while resetWorld (main.js:203-213) does the reverse, ?r=120 maps to radiusSim=1200, and the first PLAYING substep does run absorb.resolve with ballR=1200 against dense tier-0 content (maybeTierUp rescales only once per frame, after the substeps), producing a real frame-1 mass-absorb with combo/count/sluggish pollution. However, the finding's causal mechanism and suggested fix do not hold up. Spawn content depends only on tierIndex and the spawner's _scaleExp (both 0 in either order), not on ballRadiusSim — so applying the suggested fix (reset first, then preload) yields the same tier-0 world around the origin and the identical mass-absorb on the first substep. It is actually marginally worse: with ballRadiusSim=1200 the prewarm threshold (progress >= PREWARM_FRACTION at spawner.js:359-364) triggers, loading the N+2 band whose objects (r <= ~75 sim, all under 0.65*1200) are absorbed too; the sub-pixel sweep/despawn drain are amortized (64/frame) and never run during title frames, so they cannot mitigate. The 'correct order' path is already exercised — restart after win with ?r= still set runs resetWorld and exhibits the same mass-absorb — proving the boot/reset divergence causes no behavioral difference for the claimed symptom. The mass-absorb is inherent to the ?r= catch-up design (one rescale per PLAYING frame applied after absorb), which the finding itself defers to a separate finding. What remains is a consequence-free consistency nit (boot should call resetWorld() instead of duplicating a divergent sequence) on a dev-only URL key unreachable in normal gameplay (smoke test at ?r=120 passed clean). Medium severity is inflated; the proposed fix would not change the behavior complained about."
+    },
+    {
+      "dimension": "correctness",
+      "title": "Spawn-queue overflow loses placements until the next chunk-boundary crossing; _drainSpawn retry-push failure drops them permanently",
+      "why": "The code paths cited are real: _enqueueChunkSpawns (spawner.js:728-736) does return silently when _spawnQ.push fails, and top-up only occurs via the enqueuedThrough<wantK check in _recomputeBand (line 656), which runs only on chunk-boundary crossings or cache invalidation. The finding already concedes its case (2) (_drainSpawn retry-push, lines 805-812) is unreachable — after a shift there is always a free slot. Case (1) fails on reachability arithmetic: the ring is IntRing(8192) (spawner.js:239), while the worst-case single-frame flood — a tier change recomputing all three bands — enqueues only ~3,064 entries (band 0: 29 chunks within loadRadius 96 / cell 32 × objectsPerChunk 72 = 2,088; scenery bands: ~61 chunks × 8 = ~488 each), i.e. ~37% of capacity. The claim that 'a tier change floods the 8192-ring' is false by ~2.7x. Live entries are bounded by the wanted set (~3,064) because enqueuedThrough is monotone per record generation; filling the remaining ~5,100 slots would need thousands of stale entries trapped behind a blocked head, but _drainSpawn consumes stale entries without spending budget even under ALIVE_TOTAL_BUDGET back-pressure, the head record goes stale as the ball moves, and the chunk churn required to create stale entries simultaneously drives the 64/frame despawn drain and 32/frame sub-pixel sweep that release alive budget and resume draining within ~1s. Even in the hypothetical overflow, new chunks are enqueued nearest-ahead-first (insertion sort, lines 668-686), so dropped placements would be the farthest rim chunks, which tiers.js line 151 guarantees lie beyond the fog wall (FOG_FAR_K < loadRadiusSim - cellSizeSim) — invisible while idling, and topped up by line 656 on the first 32-sim-unit chunk crossing toward them. No visible population shortfall is reachable in actual gameplay; this is at most a defensive-coding suggestion."
+    },
+    {
+      "dimension": "correctness",
+      "title": "Win-screen idle camera orbits the world origin, not the ball — shows empty fog after long runs",
+      "why": "The code-level claims are accurate: updateIdle (src/render/cameraRig.js:246-258) orbits the world origin and looks at (0, r*0.5, 0); main.js:271-279 calls it during WIN; the ball can be up to REBASE_DISTANCE_SIM=1500 sim units from origin at win time; fog far = 55*r (~27.5-137.5 sim). However, the claimed player-visible failure is unreachable: #win-overlay (index.html:126-136, .overlay class) is position:fixed inset:0 z-index:20 with a fully opaque background (linear-gradient of opaque #0b0c14/#131630/#1c1438 under the radial layer), shown synchronously in the same frame as GAME_WIN (screens.js:101), with no fade or translucency (.hidden is display:none !important). The title overlay is the same opaque class, so the idle camera's framing is never visible in either non-playing state. The \"empty fog\" celebratory view cannot be observed in actual gameplay; the mis-centered orbit only renders dead pixels behind an opaque DOM layer. It is at most a latent issue that would matter only if the overlay were later made translucent."
+    },
+    {
+      "dimension": "correctness",
+      "title": "Ball and Effects cosmetic RNGs are not re-seeded on game:reset — same-seed runs are not reproducible",
+      "why": "The mechanical facts are accurate: Ball.reset() (src/render/ball.js:528-554) does not re-seed this._rng (created once at ball.js:163), and Effects.reset() (src/render/effects.js:385-392) does not re-seed this._rng (effects.js:252), while absorb.js does re-seed (src/physics/absorb.js:298). However, the claimed failure — 'same-seed runs are not reproducible', violating the determinism contract — does not hold. (1) The contract documented in spawner.js's header covers world generation only: chunk contents are a pure function of hash(worldSeed, cx, cz, band); the win-screen 'shareable ?seed=' (screens.js:32-34) shares the world layout, which is fully honored independent of these cosmetic RNGs. (2) The Ball RNG is consumed per absorption event, whose order depends on live player input — never replayable — so two same-seed runs diverge in these draws regardless of re-seeding. (3) The Effects RNG is consumed in Effects.update(dt, ...) where dt is explicitly the render-frame delta (effects.js:284; called with frameDt in main.js:276/315), making particle outcomes dependent on rAF timing and frame drops — non-deterministic even on a fresh load; the suggested fix cannot deliver reproducibility. (4) The absorb.js parallel is a category error: its RNG selects which objects are knocked off and re-enter the world (gameplay/sim state), hence must reset; Ball/Effects draws affect cosmetics only, matching the project invariant. (5) The screenshot-diff regression harness is hypothetical (none exists in the repo) and would be defeated by frame-timing-dependent effects emission anyway. What remains is a harmless cross-restart state carryover in observably-random cosmetic streams with no contract violation and no player-detectable defect. A one-line re-seed in each reset() would be acceptable hygiene, but it fixes no real behavior."
+    },
+    {
+      "dimension": "performance",
+      "title": "Effects QuadPool rewrites and uploads the full instanceMatrix buffer every frame any particle is alive, with per-particle Matrix4/Quaternion compose",
+      "why": "The mechanical observation is partially real but the finding's central quantitative claim is wrong, and the impact claim does not survive scrutiny. (1) FALSE headline: \"all three pools upload their whole buffers (≈12KB/frame) whenever even one speed-line is alive\" — each QuadPool.update early-returns when its own aliveCount===0 (effects.js:155) and needsUpdate is per-pool, so the common rolling case touches only the 32-slot lines pool: 2KB/frame, not 12KB. The 12KB case needs pops+ring+lines simultaneously alive, a sub-second window around tier-ups. (2) Intentional and documented: the method's doc comment (effects.js:149-150) explicitly states \"small caps — full needsUpdate per touched frame is cheap\" — a deliberate tradeoff, not an oversight. (3) The binding DESIGN.md mandates updateRanges/partial uploads only for the WORLD InstancedPools (capacities 128-512, 24+ meshes, \"P2 risk mitigation\"); effects are specced merely as \"~3 effect meshes, instanced, pooled\" — instances.js complies where required. (4) \"Measurable on mobile\" is unsupported: 2KB (worst 12KB) bufferSubData plus typically ≤32 (worst ≤192) generic Matrix4.compose calls is sub-0.05ms; the in-browser smoke test passed cleanly and the spec's dynamic-resolution governor absorbs far larger costs. (5) No project invariant is violated — zero per-frame allocation holds via module-level scratch objects. What survives is an optional micro-optimization note with no measurable payoff, not a performance defect."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "T0 pickups miss inside the ball's visual silhouette — add planar pickup-forgiveness contact for absorbables",
+      "why": "The finding's geometry is arithmetically correct (verified: coin simR=0.12, restY=0.012, ball center y=R=0.5 gives planar pickup half-width 0.382 vs 0.62 top-down overlap), but it fails as a defect. (1) The code implements the binding DESIGN.md spec exactly — line 16 mandates static bounding spheres with a single overlap test dispatching absorb-vs-pushback; the proposed cylinder-XZ contact is a spec change, not a bug fix. (2) The 'visual silhouette' baseline (R+r planar) is top-down shadow overlap; the ball's silhouette edge there is its equator 0.5 sim above ground, and the rendered ball surface cannot touch a ground coin at that distance. Honest rendered contact for the coin is ~0.27 planar, so the current 0.382 threshold is already ~40% MORE generous than what the player sees touching from the gameplay camera — 'visibly grazes and gets nothing' only holds in a top-down view the game doesn't use. (3) The 0.281 absorbs/s Monte-carlo is the finder's own non-reproducible simulation; absorb pacing is a tuning outcome and the smoke test passed the full loop. (4) Nothing is broken, unreachable, or progression-blocking; the test is continuous in radius (seamlessness law intact). Pickup forgiveness is a legitimate optional game-feel polish suggestion, severity low at most — 'critical' is heavily inflated."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "Knock-off ejects objects without removing their volume — growth double-counts on re-absorb",
+      "why": "The described mechanism is real (knockOff at ball.js:400-428 never decrements radiusSim; spawner.reinject re-creates ALIVE re-absorbable instances; radiusSim is written only by absorb growth, rescale, and reset), but the finding fails as a defect. (1) The behavior is exactly what the binding DESIGN.md specifies: knock-off is defined as ejecting 1-3 newest stuck objects 're-entering the world as re-absorbable instances' as a feel-layer beat, with growth defined only on absorb and no refund or HUD decrement anywhere in the spec — the code conforms to its authority. (2) The 'farm-by-bonking exploit' confers no advantage: re-absorbing an ejected object grants the same growth as absorbing any equal-size fresh object, the world is kept saturated with fresh spawns, and the loop requires ramming a too-big object above 0.7*speedCap (losing momentum to the restitution bounce) then chasing randomly-popped objects — strictly slower than normal play. (3) The quantitative support is fabricated: the finding cites GROWTH_K=10; the actual value is GROWTH_K=0.45 (tuning.js:66, matching DESIGN.md), and the +4% figure applies only to maximum-ratio (0.65R) objects, not a 'recycled coin'. (4) The finding itself concedes the pushback tuning works because the loss is cosmetic and offers 'intended kindness' as a valid alternative — which DESIGN.md confirms is the intent. Residual conservation-of-volume incoherence is a design-philosophy nit, not a code bug."
+    },
+    {
+      "dimension": "contracts",
+      "title": "Hysteresis down-shift emits a celebratory 'tierUp' and orphans spawner records of band tier+3",
+      "why": "The static code reading is accurate on both points: scaleManager.js:168-172 does emit the same EVT.TIER_UP on the downward hysteresis branch (and all five cosmetic consumers — hud, environment, cameraRig, sfx, effects — treat it as an upgrade celebration with no direction check), and spawner.js's machinery (_onTierChange unloads only band <= newTier-2, update's loop covers bands tier..tier+2, _cleanupLeftovers skips rec.band >= tier) would indeed strand band-T+2 pre-warm records after a T -> T-1 shift. However, the failure scenario is unreachable in actual gameplay: ball.radiusSim is strictly non-decreasing in play (absorb.js:201 cbrt growth is the only in-run mutation; knock-off in absorb.js/render/ball.js removes cosmetic stuck objects without touching radiusSim; reset() pairs with scaleManager.reset() which sets tierIndex=0 directly). The rescale preserves trueRadius to ~1 ulp (radiusSim *= 0.2, worldScale /= 0.2), while the down-shift requires trueRadius to fall more than TIER_HYSTERESIS = 10% (tuning.js:25) below a threshold it already crossed — a 1e-16-relative float perturbation cannot cross a 10% band, so even the finding's own 'float-edge' trigger does not exist. Debug paths (forceRescale, ?r= start radius) also cannot lower trueRadius. The down branch is dead defensive code, correctly self-documented as 'shrinking cannot happen in play'; the spawner orphan additionally requires live pre-warm records at the moment of this impossible shift. The finding describes a latent contract asymmetry with zero player-visible impact and no reachable leak — a documentation footnote, not a defect. The suggested hardening (direction flag / extended cleanup) is harmless but fixes nothing reachable."
+    },
+    {
+      "dimension": "contracts",
+      "title": "Spawner spawn queue stalls until the next chunk-boundary crossing when the 8192-entry ring fills",
+      "why": "The code mechanism is real: _enqueueChunkSpawns (src/world/spawner.js:728-736) abandons the top-up when _spawnQ.push fails, and retries only happen via _recomputeBand (boundary crossing / tier change / prewarm toggle). However, the failure scenario is not reachable. The finding's sizing premise ('~512 records x 72 placements') conflates the MAX_RECORDS pool capacity with the wanted set: wantK=72 applies only to the current tier band (~28-32 chunks at loadRadiusSim=96 / cellSizeSim=32 ≈ 2,300 placements); scenery is ~60 chunks x 8 ≈ 480 and pre-warm ~7 x 8 ≈ 56. The worst-case burst (tier change, all bands recomputed, scenery records upgraded 8→72) is ~2,300-3,000 entries — roughly a third of the 8,192-entry IntRing. Sustained accumulation requires the drain to stall, but store exhaustion is impossible (STORE_CAPACITY 8192 vs. occupancy ≤ ALIVE_TOTAL_BUDGET 4096, absorbs free their slots) and the aliveCount stall is a transient post-tier-change overshoot (~1,000 over budget) cleared in about a second by despawn (64/frame), leftover cleanup, and the sub-pixel sweep (up to 1,920 kills/s), while enqueue at speed cap adds only ~500 entries per ~1.5 s crossing vs. drain throughput of 3,840/s. Additionally, the 'permanently sparse while idle' symptom is overstated: _drainSpawn runs every update regardless of motion, so a full ring empties in ~2.1 s of standing still, and the residual un-enqueued tail heals on the first one-chunk movement. What remains is only an undocumented theoretical coupling between push-failure retry and recompute events, with no plausible in-game manifestation given a ring ~2.7x larger than the maximum possible burst."
+    }
+  ],
+  "fix": {
+    "buildPassed": true,
+    "fixed": [
+      {
+        "title": "PICKUP FORGIVENESS (must-fix)",
+        "how": "src/physics/absorb.js + src/config/tuning.js: added PICKUP_FORGIVE_K=0.25 and PICKUP_FORGIVE_MAX_RATIO=0.35; in resolve() the overlap test reach is widened to sum + 0.25*ballR for objects with r <= 0.35*ballR. Forgiven objects are always below ABSORB_RATIO so the widened reach can never trigger a pushback; pushback keeps the honest sum. Continuous in radius, never tier-gated."
+      },
+      {
+        "title": "DRAW-CALL GROWTH / mesh.count never shrinks (must-fix + high)",
+        "how": "src/render/instances.js: mesh.visible=false at construction and on reset; alloc() sets visible=true on the first live instance; free() collapses _highWater/mesh.count to 0 and visible=false the moment allocatedCount hits 0 (covers despawn-fade auto-free and absorb-path frees). Drained old-band pools no longer cost a draw call or degenerate-instance vertex work; endgame stays under DRAW_CALL_CAP=55."
+      },
+      {
+        "title": "KNOCK-OFF COUNT HONESTY (must-fix)",
+        "how": "src/main.js: the KNOCK_OFF handler (ball.knockOff + spawner.reinject) is now registered BEFORE Effects/Sfx are constructed (bus dispatch = subscription order) and writes p.count = records.length back into the payload, so effects burst sizing and the knock sfx see the ACTUAL ejected count, not absorb.js's pre-roll. Old duplicate handler removed; header doc updated."
+      },
+      {
+        "title": "Growth pacing ~20-30x too slow; combos never fire (critical)",
+        "how": "src/config/tuning.js: GROWTH_K 0.45 -> 10 (budget-neutral option from the finding; with pickup forgiveness puts tier 0 at ~60s / ~170 absorbs, mean gap ~0.35s inside COMBO_WINDOW_S). Stale 'tuned so each tier takes 60-90s' comment replaced with the actual model and a note to retune against a measured playthrough."
+      },
+      {
+        "title": "Sluggish collapse: no floor + slow linear recovery (high + medium)",
+        "how": "tuning.js: added SLUGGISH_MIN=0.6; absorb.js clamps ball.sluggish after each multiplicative dip. ballPhysics.js: recovery changed from fixed +0.02/s linear to proportional return s += (1-s)*(dt/SLUGGISH_RECOVERY_S), matching the documented contract; deep streak dips recover fast and the ?r= mass-absorb can never zero acceleration (worst case 60% accel, ~full in a few seconds)."
+      },
+      {
+        "title": "Floating-origin rebase never reaches Effects (low, reported twice)",
+        "how": "core/events.js: added EVT.REBASE + PAYLOADS.rebase {sx, sz}. world/scaleManager.js: maybeRebase emits it after all direct mutations (mirrors EVT.RESCALE). render/effects.js: QuadPool.rebase/Effects.rebase converted from the latent-NaN Vector3 signature to the (sx, sz) scalar convention (y unaffected by rebase) and Effects subscribes to EVT.REBASE — live pops/sparkles/speed-lines now ride the rebase frame."
+      },
+      {
+        "title": "Spatial hashes frozen at 32-current-unit cells for every band (medium + low duplicate)",
+        "how": "spatialHash.js: rebuild(store, tierBand, cellSizeCur) now adopts the band's current-unit cell size (recomputes cellSize/_invCell), so absorb.js's maxObjR = cellSize*0.5 bound is per-band automatically. scaleManager.js: new bandCellSizeCur(band) = TIERS[band].cellSizeSim * 5^(band - rescaleCount); _rebuildHashes passes it. main.js: boot constructs the three hashes at 6.4/32/160 (bands -1/0/+1 in current units) and resetWorld re-bands via rebuild with bandCellSizeCur instead of bare clear(). Kills the N-1 leftover ~1000-candidate broadphase saturation and the candidate-cap absorb flakiness."
+      },
+      {
+        "title": "queryBall visited-key overflow drops loose candidates; asymmetric cell clamp (low)",
+        "how": "spatialHash.js queryBall: oversized queries now clamp CENTERED on the ball cell (both axes) instead of truncating only the +X/+Z side; when the 256-entry visited scratch saturates, the loose-buffer pass falls back to including ALL loose entries (over-inclusive is allowed — caller narrowphases) so touching objects are never silently skipped."
+      },
+      {
+        "title": "Dynamic-resolution governor can never recover on 60Hz vsync and ratchets down after pauses (medium)",
+        "how": "render/renderer.js: _governorTick discards intervals > 250ms (tab switch/window drag can no longer poison the window) and decides on the FRACTION of over-budget frames per 3s window (over = frameMs > FRAME_BUDGET_MS + 4ms slack; a missed 60Hz vsync is ~33ms) instead of an absolute ms average: drop above 10% over-frames, recover below 2% — recovery is now reachable on vsync-locked displays."
+      },
+      {
+        "title": "knockOff destroys stuck objects when spawner.reinject rejects them (low)",
+        "how": "world/spawner.js reinject(): per-archetype render-pool exhaustion no longer refuses the reentry — it falls back to instanceSlot = -1 (invisible but collidable/re-absorbable) and skips only the pool setColor/setTransform; flight/landing paths already guard slot >= 0. Returns false only for store/archetype refusal; JSDoc updated."
+      },
+      {
+        "title": "Mobile: invisible joystick + keyboard-only title hints + player-facing debug hint (medium)",
+        "how": "input/input.js: added a visible virtual-joystick overlay (base ring + thumb dot, position:fixed, pointer-events:none) shown at the touch anchor on touchstart, thumb follows the clamped deflection in touchmove, hidden on touchend/blur, removed in dispose(). ui/screens.js: on touch devices ('ontouchstart' in window) the #key-hints block is swapped to 'Drag = Move / 2nd finger = Boost'. index.html: backquote/debug hint removed from the title screen, Shift=Boost hint added, key-hints div given an id."
+      },
+      {
+        "title": "boost intent was dead input (low)",
+        "how": "physics/ballPhysics.js: intent.boost now multiplies acceleration by BOOST_ACCEL_MUL=1.5 and the speed cap by BOOST_CAP_MUL=1.25 (new tuning.js constants), per the finding's suggested implementation. types.js Intent.boost doc updated from 'Reserved' to the actual behavior."
+      },
+      {
+        "title": "Final-tier progress bar tops out at 58% at the win (low)",
+        "how": "world/scaleManager.js: the last tier's progress denominator is now WIN_RADIUS_M (already imported) instead of enterTrueRadius*5; the bar hits exactly 100% as game:win fires. Unused LAST_TIER_EXIT_M removed."
+      },
+      {
+        "title": "ROLL AGAIN returned to title instead of restarting (low)",
+        "how": "ui/screens.js _onRestartClick: emits GAME_RESET then GAME_START in order (well-ordered per the existing bus plumbing) — one click now resets the world and resumes play immediately."
+      },
+      {
+        "title": "?r= dev start: preload before radius set, wrong start palette (low)",
+        "how": "main.js boot path now mirrors resetWorld(): ballPhys.reset(startRadiusSim()) runs BEFORE spawner.preloadStartArea, and the start tier is derived from the requested radius to call env.setTierPaletteImmediate(devTier) per Environment's documented contract — no stacked palette crossfades on the first playing frame."
+      },
+      {
+        "title": "ScaleManager stale JSDoc (env.onRescale) + silent optional-hook no-ops (low)",
+        "how": "world/scaleManager.js: docs corrected to the real hook names (env.rescale / env.rebase); every optional hook dispatch (cameraRig.rescaleState, env.rescale, cameraRig.rebaseState, env.rebase, spawner.onRebase) now logs a DEV-only console.warn when the object is passed but lacks the method, matching the existing pool-hook warn pattern."
+      }
+    ],
+    "skipped": [
+      {
+        "title": "InstancedPool single [min,max] dirty span degenerates to near-full uploads under churn (low)",
+        "why": "Multi-range updateRanges tracking (or 64-slot block bitmasks) is a structural change to the upload path with real regression risk for a steady-state-bandwidth-only win (~0.25-0.5 MB/frame worst case, no observed frame misses). The new shrink-on-drain fix already reduces span sizes for drained pools. Defer to a measured perf pass."
+      },
+      {
+        "title": "SpatialHash repack pays fixed O(16384) table cost per trigger (low)",
+        "why": "Amortized ~8k ops/frame bookkeeping, explicitly 'not a frame-breaker on desktop'. Making the counting sort content-proportional touches the core packed-region invariants; the safer LOOSE_CAP/TOMBSTONE retune changes broadphase timing behavior right after the cell-size fix. Skipped as low-value/medium-risk this pass."
+      },
+      {
+        "title": "Consumed-bitmask Map grows without bound within a tier (low)",
+        "why": "Slow leak (~hundreds of KB after minutes of pure roaming) already bounded by the tier-change cleanup in normal progression. The suggested LRU/distance eviction interacts with the determinism contract (evicted chunks regenerate consumed objects) — not worth the risk for a demo-length run."
+      },
+      {
+        "title": "Ball attachStuck / effects QuadPool bare instanceColor needsUpdate uploads (low)",
+        "why": "Full-buffer color uploads are 768B (ball families) and sub-KB (POP_CAP=96) — KB-scale per absorb, an internal-consistency nit rather than a budget problem. Adding a parallel per-family color dirty-range to ball.js is extra state in a hot file for negligible measured benefit."
+      }
+    ]
+  },
+  "validation": {
+    "buildPassed": true,
+    "playtestPassed": true,
+    "absorbedIn30s": 22,
+    "drawCallsT0": 34,
+    "drawCallsCity": 34,
+    "consoleErrors": [],
+    "screenshotsSaved": [
+      "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/docs/screenshots/title.png",
+      "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/docs/screenshots/play-t0.png",
+      "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/docs/screenshots/play-city.png",
+      "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/docs/screenshots/win.png"
+    ],
+    "regressionsFoundAndFixed": [
+      "ACCEL_K=22 made the SPEED_K=8.5r speed cap unreachable: terminal velocity = ACCEL_K*FIXED_DT*f/(1-f) = 4.2r, ~50% of cap (even boosted, 6.3r < 10.6r boost cap), so cruise speed and therefore pickup rate were silently halved. Fixed: ACCEL_K 22 -> 45 in src/config/tuning.js (terminal 8.6r, cap now binds, ~0.6s ramp), with a comment documenting the ACCEL_K*dt*f/(1-f) >= SPEED_K constraint.",
+      "Pickup rate still under target after the speed fix (measured 3-6 absorbs per ~20 sim-s of blind rolling vs >10 expected). Widened the fixer's pickup-forgiveness: PICKUP_FORGIVE_K 0.25 -> 0.45, PICKUP_FORGIVE_MAX_RATIO 0.35 -> 0.5 (still < ABSORB_RATIO 0.65 so the forgiven-implies-absorbable invariant holds). Re-measured: 22 absorbs in 18.5 sim-seconds, snowballing correctly."
+    ],
+    "remainingConcerns": [
+      "All in-browser measurements ran on software GL (SwiftShader) at 9-14fps; the fixed-timestep clamp (max 3 substeps) makes the sim run at ~0.6x real time there, so absorbedIn30s=22 corresponds to ~18.5 sim-seconds — at real 60Hz hardware the same play would absorb noticeably more. A quick manual feel-check on real hardware is recommended for the ACCEL_K=45 snappier ramp-up.",
+      "tuning.js GROWTH_K comment claims tier 0 should yield ~170 absorbs/60s (mean gap 0.35s); at the configured density (72 objects per 32x32 chunk) and capped speed the geometric ceiling is roughly 1 absorb per 1-2s early game. The comment's pacing target is unreachable without a density retune — flagging for the designer, not changed.",
+      "At ?r=600 the ROLL AGAIN button re-applies the dev radius and instantly re-wins (reset->start->win loop). This is correct documented dev-param behavior (screens.js: reset THEN start), verified not a regression; the title->start cycle was verified separately on the plain URL.",
+      "Synthetic playtest drives blind straight/weave lines; human players steer toward objects, so perceived pickup rate should exceed the measured one."
+    ],
+    "narrative": "Final validation of the patched Katamari build. npm run build passed cleanly (585.73 kB bundle). Drove the production preview at :4319 with agent-browser (session-isolated, synthetic KeyboardEvents against the window-level WASD listeners, absorbed count read from the #absorbed-value HUD node, sim time integrated in-page to correct for the 9-14fps software-GL environment). Title renders and START works. The first 30s playtest exposed a real gameplay regression the fixer's pickup-forgiveness patch had masked: only 2-4 absorbs per run. Root cause analysis of ballPhysics/tuning showed ACCEL_K=22 against FRICTION_PER_FRAME=0.92 puts terminal velocity at half the SPEED_K cap, making the cap dead code in all input states; fixed to 45 so the cap binds. A follow-up measured run was still under target, so pickup forgiveness was widened (K 0.45, max ratio 0.5, invariant vs ABSORB_RATIO preserved). Final measured run: 22 absorbs in ~18.5 sim-seconds with correct snowballing (rate grows ~r^2), size 5cm -> 13.4cm. Tier checks: ?r=4 renders Street (morning-blue palette, street archetypes, banner), ?r=120 renders City (sunset palette, 123m ball) — both clean. Debug overlay (Backquote): T0 calls 34/55, tris 330,784/600,000, alive 2474, heap stable (+0KB, zero-alloc discipline holding); City calls 34/55, tris 314,984, alive 2494, pxr 1.000. ?r=600&seed=7 wins immediately (YOU ARE COLOSSAL, 600m, seed 7 displayed); ROLL AGAIN re-wins instantly because it is reset+start with the dev radius reapplied — verified as documented behavior, and the title -> start cycle confirmed on the plain URL (overlay hides, HUD shows). Zero console errors on every page load and through all runs. Four screenshots saved to docs/screenshots/, both tuning fixes rebuilt into dist, server and browser session torn down."
+  }
+}

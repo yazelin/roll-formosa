@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>設計書 — Fable Katamari 統合アーキテクチャ</title>
+<meta name="description" content="Fable Katamari の確定設計（DESIGN / DESIGN-V2 / DESIGN-V3 / DESIGN-V4）をエンジニア向けに統合した設計ドキュメント。スケールシステム、自作物理、レンダリング、ワールド生成、OSMリアル東京、フィナーレ状態機械など。">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23ff9d4d'/%3E%3Ccircle cx='11' cy='11' r='4' fill='%23ffe9a8'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav" aria-label="サイト内ナビゲーション">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-ball"></span><span>FABLE KATAMARI</span></a>
+    <div class="nav-links">
+      <a href="index.html">ストーリー</a>
+      <a href="design.html" aria-current="page">設計書</a>
+      <a class="play" href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">▶ 遊ぶ</a>
+      <a href="https://github.com/aieo-product/fableDemoGame" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<header class="hero" style="padding-bottom:0">
+  <p class="kicker" style="margin:0 0 10px">DESIGN DOCUMENT</p>
+  <h1 style="font-size:clamp(28px,6vw,44px)">設計書 — 統合アーキテクチャ</h1>
+  <p class="tagline">DESIGN / DESIGN-V2 / DESIGN-V3 / DESIGN-V4 をエンジニア向けに統合した一次資料</p>
+</header>
+
+<div class="doc-meta reveal">
+  <p>本ページは v1（基盤）/ v2（月アップデート）/ v3（箱庭東京アップデート）/ v4（リアル東京 OSM）/ v5（ポリッシュ）の確定設計（<a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN.md" target="_blank" rel="noopener">docs/DESIGN.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V2.md" target="_blank" rel="noopener">DESIGN-V2.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V3.md" target="_blank" rel="noopener">DESIGN-V3.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V4.md" target="_blank" rel="noopener">DESIGN-V4.md</a>）を統合したものです。各バージョンの設計は ultracode ワークフロー（3視点並列提案→審査統合 / 設計→敵対的批評→改訂）で確定しています。v5 は実プレイフィードバック起点のポリッシュで、計画→敵対的チェック→3並列実装で確定（13章・14章参照）。</p>
+  <p><strong>技術スタック</strong>: Three.js r177（固定）+ Vite / 純粋静的サイト（Cloudflare Pages）/ ランタイムアセットほぼゼロ（ジオメトリ・テクスチャ・音声をすべてコード生成）/ 約30個の小さなESモジュール + JSDoc型 + 単一イベントバス。</p>
+</div>
+
+<section class="reveal">
+  <h3>全バージョン共通の不変条件（binding invariants）</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>不変条件</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td><b>リスケールのピクセル同一性</b></td><td>ティア昇格の相似変換フレームは、変換なしフレームとピクセル単位で同一に描画される</td></tr>
+        <tr><td><b>シームレスネス法</b></td><td>吸収判定・カメラ・フォグ・速度はすべて<strong>半径の連続関数</strong>。ティア番号は見た目のみを駆動</td></tr>
+        <tr><td><b>ゼロアロケーション</b></td><td>ホットパスでのフレーム毎のGCごみは0バイト（WebAudioのみ有界例外 ≦60ノード/秒）</td></tr>
+        <tr><td><b>固定60Hz</b></td><td>アキュムレータ式固定タイムステップ、最大3サブステップ</td></tr>
+        <tr><td><b>決定論スポーン</b></td><td>シード付きPRNGで同シード=同世界（チャンク内容はシードの純関数）</td></tr>
+        <tr><td><b>ドローコール台帳</b></td><td>上限をコメント付き台帳で管理（v1: 55 → v2: 60 → v3: 72 → v4/v5: 72据え置き、v4台帳68）</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 1. architecture ============ -->
+<section id="architecture" class="reveal">
+  <h2>1. 全体アーキテクチャ</h2>
+  <h4>何を / なぜ</h4>
+  <p>「画鋲(2cm)からスカイツリー(634m)まで5桁のスケール変化を60fpsで」という要件に対し、<strong>物理・ワールド・レンダリング・ゲームシステム・UIを完全に分離した約30モジュール構成</strong>を採用。モジュール間の結合は (a) コンストラクタ注入と (b) 再利用ペイロードのイベントバス（<code>src/core/events.js</code>）の2経路のみに限定し、契約（型・イベント名・定数）を <code>src/types.js</code> / <code>src/config/*</code> に凍結することで5並列ストリームでの同時実装を可能にした。</p>
+
+  <figure class="diagram reveal" id="dg-modules">
+    <svg class="dg" viewBox="0 0 720 560" role="img" aria-label="モジュール構成図。main.jsを頂点に9つのモジュールグループが並び、イベントバスが横断レイヤとして全グループとつながる">
+      <defs>
+        <marker id="ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+      </defs>
+      <!-- main -->
+      <rect x="250" y="16" width="220" height="76" rx="14" class="box-gold"/>
+      <text x="360" y="48" text-anchor="middle" class="tt tg">main.js</text>
+      <text x="360" y="74" text-anchor="middle" class="ts">フレーム順序の唯一の所有者</text>
+      <!-- trunk -->
+      <path d="M360 92 L 360 124" class="ln"/>
+      <line x1="92" y1="124" x2="628" y2="124" class="ln"/>
+      <path d="M92 124 L 92 142" class="ln" marker-end="url(#ahm)"/>
+      <path d="M226 124 L 226 142" class="ln" marker-end="url(#ahm)"/>
+      <path d="M360 124 L 360 142" class="ln" marker-end="url(#ahm)"/>
+      <path d="M494 124 L 494 142" class="ln" marker-end="url(#ahm)"/>
+      <path d="M628 124 L 628 142" class="ln" marker-end="url(#ahm)"/>
+      <!-- row 1 -->
+      <g>
+        <rect x="22" y="146" width="140" height="104" rx="12" class="box-sky"/>
+        <text x="92" y="174" text-anchor="middle" class="tt tb" style="font-size:15px">core</text>
+        <text x="92" y="198" text-anchor="middle" class="ts">events / rng</text>
+        <text x="92" y="216" text-anchor="middle" class="ts">pool / mathUtils</text>
+      </g>
+      <g>
+        <rect x="156" y="146" width="140" height="104" rx="12" class="box-violet"/>
+        <text x="226" y="174" text-anchor="middle" class="tt tv" style="font-size:15px">config</text>
+        <text x="226" y="198" text-anchor="middle" class="ts">tiers / catalog / tuning</text>
+        <text x="226" y="216" text-anchor="middle" class="ts">cityMap / donackLines</text>
+      </g>
+      <g>
+        <rect x="290" y="146" width="140" height="104" rx="12" class="box-green"/>
+        <text x="360" y="174" text-anchor="middle" class="tt tgr" style="font-size:15px">world</text>
+        <text x="360" y="198" text-anchor="middle" class="ts">spawner / curated</text>
+        <text x="360" y="216" text-anchor="middle" class="ts">scaleManager / terrain</text>
+      </g>
+      <g>
+        <rect x="424" y="146" width="140" height="104" rx="12" class="box-coral"/>
+        <text x="494" y="174" text-anchor="middle" class="tt tc" style="font-size:15px">physics</text>
+        <text x="494" y="198" text-anchor="middle" class="ts">ballPhysics</text>
+        <text x="494" y="216" text-anchor="middle" class="ts">absorb</text>
+      </g>
+      <g>
+        <rect x="558" y="146" width="140" height="104" rx="12" class="box-sky"/>
+        <text x="628" y="174" text-anchor="middle" class="tt tb" style="font-size:15px">render</text>
+        <text x="628" y="198" text-anchor="middle" class="ts">instances / cameraRig</text>
+        <text x="628" y="216" text-anchor="middle" class="ts">environment / ball …</text>
+      </g>
+      <!-- row 2 -->
+      <line x1="159" y1="124" x2="159" y2="266" class="ln-soft" opacity="0"/>
+      <path d="M159 270 L 159 286" class="ln" opacity="0"/>
+      <g>
+        <rect x="90" y="290" width="140" height="104" rx="12" class="box-violet"/>
+        <text x="160" y="318" text-anchor="middle" class="tt tv" style="font-size:15px">game</text>
+        <text x="160" y="342" text-anchor="middle" class="ts">finale / runStats</text>
+        <text x="160" y="360" text-anchor="middle" class="ts">collection</text>
+      </g>
+      <g>
+        <rect x="248" y="290" width="140" height="104" rx="12" class="box-green"/>
+        <text x="318" y="318" text-anchor="middle" class="tt tgr" style="font-size:15px">input / audio</text>
+        <text x="318" y="342" text-anchor="middle" class="ts">input / sfx / bgm</text>
+        <text x="318" y="360" text-anchor="middle" class="ts">（合成SE・合成BGM）</text>
+      </g>
+      <g>
+        <rect x="406" y="290" width="140" height="104" rx="12" class="box-coral"/>
+        <text x="476" y="318" text-anchor="middle" class="tt tc" style="font-size:15px">ui</text>
+        <text x="476" y="342" text-anchor="middle" class="ts">hud / screens</text>
+        <text x="476" y="360" text-anchor="middle" class="ts">donack</text>
+      </g>
+      <path d="M160 250 L 160 286" class="ln" marker-end="url(#ahm)"/>
+      <path d="M318 250 L 318 286" class="ln" marker-end="url(#ahm)" transform="translate(0 0)"/>
+      <path d="M476 250 L 476 286" class="ln" marker-end="url(#ahm)"/>
+      <!-- event bus -->
+      <rect x="40" y="452" width="640" height="62" rx="14" class="box-violet"/>
+      <text x="360" y="480" text-anchor="middle" class="tt tv">イベントバス events.js</text>
+      <text x="360" y="502" text-anchor="middle" class="ts">再利用ペイロード・ゼロアロケーション emit（ABSORB / TIER_UP / RESCALE / GOAL_* …）</text>
+      <line x1="92" y1="250" x2="92" y2="452" class="ln-dash"/>
+      <line x1="226" y1="250" x2="226" y2="452" class="ln-dash" opacity=".45"/>
+      <line x1="628" y1="250" x2="628" y2="452" class="ln-dash"/>
+      <line x1="160" y1="394" x2="160" y2="452" class="ln-dash"/>
+      <line x1="318" y1="394" x2="318" y2="452" class="ln-dash"/>
+      <line x1="476" y1="394" x2="476" y2="452" class="ln-dash"/>
+      <line x1="494" y1="250" x2="494" y2="290" class="ln-dash" opacity="0"/>
+      <!-- legend -->
+      <line x1="180" y1="540" x2="216" y2="540" class="ln"/>
+      <text x="224" y="546" class="ts">main.js が直接呼ぶ</text>
+      <line x1="404" y1="540" x2="440" y2="540" class="ln-dash"/>
+      <text x="448" y="546" class="ts">バス経由（購読）</text>
+    </svg>
+    <figcaption>図1: モジュール構成 — 結合はコンストラクタ注入とイベントバスの2経路のみ</figcaption>
+  </figure>
+
+  <h4>主要モジュールマップ</h4>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>グループ</th><th>ファイル</th><th>責務</th></tr></thead>
+      <tbody>
+        <tr><td>起動/ループ</td><td><code>src/main.js</code></td><td>フレーム順序の唯一の所有者。状態機械 TITLE→PLAYING→FINALE→WIN。ゲームロジックは持たない</td></tr>
+        <tr><td>コア</td><td><code>src/core/events.js</code> <code>rng.js</code> <code>pool.js</code> <code>mathUtils.js</code></td><td>イベントバス（ゼロアロケーションemit）/ mulberry32 PRNG / フリーリスト / スプリング・イージング</td></tr>
+        <tr><td>設定</td><td><code>src/config/tiers.js</code> <code>catalog.js</code> <code>tuning.js</code> <code>cityMap.js</code>(v3) <code>donackLines.js</code>(v3)</td><td>ティア表 / アーキタイプカタログ / <strong>全フィール定数の単一ファイル</strong> / 箱庭東京データ / 実況コピー</td></tr>
+        <tr><td>ワールド</td><td><code>src/world/objects.js</code> <code>spatialHash.js</code> <code>spawner.js</code> <code>scaleManager.js</code> <code>curated.js</code>(v3) <code>terrain.js</code>(v3)</td><td>SoAストア / 空間ハッシュ / チャンクスポーナー / スケール管理 / キュレーションスポーナー / 地形</td></tr>
+        <tr><td>物理</td><td><code>src/physics/ballPhysics.js</code> <code>absorb.js</code></td><td>ボール運動学 / 吸収・押し戻し判定</td></tr>
+        <tr><td>描画</td><td><code>src/render/renderer.js</code> <code>geometryFactory.js</code> <code>instances.js</code> <code>extraPools.js</code>(v3) <code>ball.js</code> <code>cameraRig.js</code> <code>environment.js</code> <code>effects.js</code> <code>backdrop.js</code>(v2) <code>goalTower.js</code>(v3)</td><td>レンダラ / ジオメトリ生成 / InstancedMeshプール / BatchedMeshプール / 塊本体 / カメラ / 空・フォグ / エフェクト / 遠景 / スカイツリー</td></tr>
+        <tr><td>ゲーム</td><td><code>src/game/finale.js</code>(v2) <code>runStats.js</code>(v2) <code>collection.js</code>(v3)</td><td>フィナーレ状態機械 / タイム・スコア・ランク / コレクション図鑑</td></tr>
+        <tr><td>入出力</td><td><code>src/input/input.js</code> / <code>src/audio/sfx.js</code> <code>bgm.js</code>(v2) / <code>src/ui/hud.js</code> <code>screens.js</code> <code>donack.js</code>(v3)</td><td>入力正規化 / 合成SE / 合成BGM / HUD / タイトル・リザルト / ドナック実況</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>フレームループ順序（v3最終形・BINDING）</h4>
+  <p>main.js ヘッダコメントと同一。<strong>プレーンな関数呼び出し</strong>であり、イベントではない（順序が契約）。</p>
+
+  <figure class="diagram reveal" id="dg-frame-order">
+    <svg class="dg" viewBox="0 0 720 700" role="img" aria-label="フレームループのフローチャート。入力読み取りから描画までの8段の縦フローと、inputLockedとcameraOwnedのゲート分岐">
+      <defs>
+        <marker id="ahf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+      </defs>
+      <!-- step boxes -->
+      <g>
+        <rect x="120" y="14" width="330" height="56" rx="12" class="box"/>
+        <text x="138" y="40" class="tt" style="font-size:15px">1　入力読み取り</text>
+        <text x="138" y="60" class="ts">intent = input.read()</text>
+        <rect x="478" y="22" width="226" height="42" rx="10" class="box-coral"/>
+        <text x="591" y="48" text-anchor="middle" class="ts tc">inputLocked 時は intent をゼロ化</text>
+        <line x1="450" y1="42" x2="478" y2="42" class="ln-dash"/>
+      </g>
+      <path d="M285 70 L 285 92" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="96" width="330" height="74" rx="12" class="box-gold"/>
+        <text x="138" y="122" class="tt tg" style="font-size:15px">2　固定60Hzステップ（最大3回）</text>
+        <text x="138" y="144" class="ts">ballPhys.step（地形衝突を内包・v3）</text>
+        <text x="138" y="162" class="ts">absorb.resolve（吸収・押し戻し）</text>
+        <rect x="478" y="112" width="226" height="42" rx="10" class="box-coral"/>
+        <text x="591" y="138" text-anchor="middle" class="ts tc">吸収は inputLocked でスキップ</text>
+        <line x1="450" y1="133" x2="478" y2="133" class="ln-dash"/>
+      </g>
+      <path d="M285 170 L 285 192" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="196" width="330" height="56" rx="12" class="box"/>
+        <text x="138" y="222" class="tt" style="font-size:15px">3　スポーナー更新（2系統）</text>
+        <text x="138" y="242" class="ts">spawner.update() ＋ curated.update()</text>
+      </g>
+      <path d="M285 252 L 285 274" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="278" width="330" height="56" rx="12" class="box"/>
+        <text x="138" y="304" class="tt" style="font-size:15px">4　スケール管理</text>
+        <text x="138" y="324" class="ts">maybeTierUp（リスケール）/ maybeRebase</text>
+      </g>
+      <path d="M285 334 L 285 356" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="360" width="330" height="56" rx="12" class="box-violet"/>
+        <text x="138" y="386" class="tt tv" style="font-size:15px">4.5　フィナーレ更新（v2+）</text>
+        <text x="138" y="406" class="ts">finale.update — 接触判定・シネマカメラ</text>
+      </g>
+      <path d="M285 416 L 285 438" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="442" width="330" height="56" rx="12" class="box"/>
+        <text x="138" y="468" class="tt" style="font-size:15px">5　塊の更新</text>
+        <text x="138" y="488" class="ts">ball.update — アタッチアニメ・埋没カリング</text>
+      </g>
+      <path d="M285 498 L 285 520" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="524" width="330" height="74" rx="12" class="box"/>
+        <text x="138" y="550" class="tt" style="font-size:15px">6　カメラ・環境・エフェクト</text>
+        <text x="138" y="572" class="ts">cameraRig.update / env / backdrop / effects</text>
+        <text x="138" y="590" class="ts">6.5　runStats.addSimTime（v2+）</text>
+        <rect x="478" y="540" width="226" height="42" rx="10" class="box-coral"/>
+        <text x="591" y="566" text-anchor="middle" class="ts tc">cameraOwned 時は finale が駆動</text>
+        <line x1="450" y1="561" x2="478" y2="561" class="ln-dash"/>
+      </g>
+      <path d="M285 598 L 285 620" class="ln" marker-end="url(#ahf)"/>
+      <g>
+        <rect x="120" y="624" width="330" height="56" rx="12" class="box-green"/>
+        <text x="138" y="650" class="tt tgr" style="font-size:15px">7　フラッシュ &amp; 描画</text>
+        <text x="138" y="670" class="ts">instances.flush() → renderer.render()</text>
+      </g>
+      <!-- loop back -->
+      <path d="M120 652 C 56 652, 56 42, 116 42" class="ln-dash" marker-end="url(#ahf)"/>
+      <text x="62" y="350" class="ts" transform="rotate(-90 62 350)" text-anchor="middle">次フレームへ（requestAnimationFrame）</text>
+      <text x="591" y="664" text-anchor="middle" class="ts">HUDはイベント駆動で別更新</text>
+    </svg>
+    <figcaption>図2: フレームループ — 順序そのものが凍結された契約</figcaption>
+  </figure>
+
+<pre><code>1    intent = input.read()              // inputLocked時はゼロ化
+2    while (accumulator >= 1/60, max3):
+        ballPhys.step(dt, intent, yaw)  // terrain.collide を内包(v3)
+        absorb.resolve(...)             // inputLocked時スキップ
+3    spawner.update(...); curated.update(...)   // 同上ゲート
+4    scaleMgr.maybeTierUp(...); scaleMgr.maybeRebase(...)
+4.5  finale.update(frameDt, ballState)  // 接触判定・シネマカメラ(v2+)
+5    ball.update(dt)                    // アタッチアニメ・埋没カリング
+6    cameraRig.update(...)              // cameraOwned時はfinaleが駆動
+     env.update(); backdrop.update(); effects.update()
+6.5  runStats.addSimTime(steps * FIXED_DT)      // (v2+)
+7    instances.flush(); renderer.render()        // HUDはイベント駆動</code></pre>
+
+  <details class="acc">
+    <summary>並列開発を可能にした「契約凍結」の仕組み</summary>
+    <div class="acc-body">
+      <p>各バージョンの実装は「Phase 0（リード約半日〜1日）→ 5並列ストリーム → 統合」で行われた。Phase 0 が凍結するもの: <code>types.js</code> のJSDoc型 / <code>events.js</code> のイベント名+ペイロード形 / <code>tuning.js</code> の全定数 / <code>tiers.js</code> のティア・アーキタイプID / <code>index.html</code> のDOM id / <code>main.js</code> のフレーム順序スケルトン。</p>
+      <p>各ストリームはファイル単位でゼロオーバーラップに分割され、main.js は統合者しか触れない。クロスストリーム例外（v3では scaleManager の GOAL_RADIUS_M 直接import、ballPhysics の terrain 注入の2件）はすべて設計書の例外台帳に明記される。v3 ではさらに <code>@deprecated MOON_*</code> エイリアス層を Phase 0 が用意し、移行中もビルドが壊れない構造（退役は <code>grep -rn 'MOON_' src</code> == 0 のゲートで統合者が最後に実施）。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 2. scale system ============ -->
+<section id="scale-system" class="reveal">
+  <h2>2. スケールシステム — 相似変換リスケールとシームレスネス法</h2>
+  <h4>何を / なぜ</h4>
+  <p>塊が5桁成長してもFloat32精度と60fpsを保つため、<strong>2つの数値系</strong>を分離した:</p>
+  <ul>
+    <li><strong>(a) シミュレーション単位</strong>: 物理・座標・描画行列のすべて。ボール半径は常に <code>[0.5, 2.5]</code> の帯域、ワールド座標は常に ±2048 sim 以内 → どのスケールでもFloat32仮数精度がフルに使える（ジッタなし）。</li>
+    <li><strong>(b) 実寸メートル</strong>: 表示専用。<code>trueRadius = simRadius × worldScale</code>。<code>worldScale</code> は ScaleManager が持つただのJS double。</li>
+  </ul>
+
+  <h4>リスケール（=ティア昇格）の仕組み</h4>
+  <p><code>simRadius >= 2.5</code> に達したフレームの<strong>物理更新と描画の間</strong>に、1フレームで一様相似変換 <code>S = 0.2</code> を適用する。図解は<a href="index.html#dg-rescale">ストーリーページの図4</a>を参照。</p>
+
+<pre><code>worldScale /= S                       // 実寸の辻褄はdouble側で合わせる
+ball の pos/radius/vel *= S           // 角速度はスケール不変
+全生存オブジェクト(~4000)の px/py/pz/radius *= S   // SoA密ループ &lt;0.3ms
+ballGroup.scale *= S                  // くっ付き済みオブジェクトはボール子階層なので自動追従
+空間ハッシュ3つを再構築
+インスタンス行列を一括書き直し（meshごとに needsUpdate 1回）
+フォグ/ライト/影/カメラスプリング状態 *= S</code></pre>
+
+  <p>これは一様相似変換であり、<strong>すべての視覚量が半径比例</strong>なので、リスケールしたフレームはしなかったフレームとピクセル同一に描画される。dev では強制リスケールキー + スクリーンショット差分で恒常的に検証される。</p>
+
+  <h4>シームレスネス法（構造的ルール）</h4>
+  <p>「閾値で何かがポップする」ことを<strong>構造的に不可能</strong>にする法則:</p>
+  <ul>
+    <li>吸収可能判定 <code>objR &lt;= 0.65 × ballR</code>、カメラ距離 <code>6.5r</code>・高さ <code>3.2r</code>、フォグ <code>14r/55r</code>、速度上限 <code>8.5r/s</code>、サブピクセル消滅 <code>objD &lt; 0.04 × ballR</code> — すべて<strong>半径の連続関数</strong>で、tierIndex を一切参照しない。</li>
+    <li>tierIndex（実寸半径から導出、±10%ヒステリシス）が駆動してよいのは: スポーン内容帯・空/フォグパレットの2秒クロスフェード・HUD表記単位・お祝い演出（FOVキック+アルペジオ+バナー）<strong>のみ</strong>。</li>
+    <li>補助ガードとして<strong>フローティングオリジン</strong>: <code>|ball.pos| &gt; 1500 sim</code> で全座標からボール位置を整数スナップで減算（チャンクキーと消費ビットマスクはシフト前のグローバル座標を維持し決定論を守る）。</li>
+  </ul>
+  <p class="note">関連: <code>src/world/scaleManager.js</code> <code>src/config/tiers.js</code> <code>src/config/tuning.js</code></p>
+
+  <details class="acc">
+    <summary>ティア表の変遷（v1: 6ティア5cm→750m / v3: 7ティア2cm→634m）</summary>
+    <div class="acc-body">
+      <p><strong>v1/v2（6ティア、×5/ティア）</strong>: T0 Desk 5cm–25cm / T1 Room –1.25m / T2 Street –6m / T3 Town –30m / T4 City –150m / T5 Skyline –750m。v1 は 500m でWINバナー、v2 は 420m で「月が呼ぶ」→500m で月降臨。</p>
+      <p><strong>v3（7ティア、開始0.02m）</strong>: T0 パーツ棚 0.02m / T1 ショップ 0.10m / T2 電気街 0.50m / T3 下町 2.5m / T4 都心 12m / T5 大東京 60m / T6 スカイライン 300m。リスケール梯子（実寸 0.1/0.5/2.5/12.5/62.5/312.5m）は不変。GOAL_CALL 380m → GOAL_RADIUS 420m で接触アーム。ペーシングの単一真実: 典型初回クリア5:30–6:30、最適~3:30–4:00（Phase-3 実測リチューン済み）。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 3. physics ============ -->
+<section id="physics" class="reveal">
+  <h2>3. 物理 — 自作アーケード物理と空間ハッシュ</h2>
+  <h4>何を / なぜ</h4>
+  <p>物理ライブラリは<strong>不採用</strong>（3提案全会一致）。rapier3d は ~1.7MB wasm でリスケール時の全ボディのテレポートスケーリングと相性最悪、cannon-es は1k超ボディでJSソルバが遅くアーケード調整と衝突する。このゲームの動体は<strong>ボール1個だけ</strong>（解析平面 y=0 上のキネマティック球）で、他はすべて吸収されるまで静的バウンディング球 —— 約400行・依存ゼロ・シードPRNGと併せて決定論的。</p>
+  <h4>どう実装したか</h4>
+  <ul>
+    <li><strong>タイムステップ</strong>: 固定60Hz + アキュムレータ、上限3サブステップ（可変dtとトンネリングパッチは却下）。</li>
+    <li><strong>ボール運動</strong>: 加速 <code>22r</code>（v3で <code>ACCEL_K=45</code>）、速度上限 <code>8.5r</code>、摩擦 <code>vel *= 0.92^(dt·60)</code> — 全部半径比例なので、どのスケールでも画面上の操作感が同一。</li>
+    <li><strong>滑りなし転がり</strong>（操作感の生命線）: <code>axis = up × v̂</code>, <code>angle = |v|·dt / r</code> の四元数積分。スクラッチ四元数でゼロアロケーション。</li>
+    <li><strong>質量感</strong>: 吸収のたびに加速度×0.97の鈍りを1.5秒かけて回復。地面接地はわずかなオーバーシュート付きyスプリング（吸収時の「ポン」）。</li>
+    <li><strong>ブロードフェーズ</strong>: <strong>生存ティア帯ごとに1つ、計3つの空間ハッシュ</strong>。実装はフラット型付き配列（counting sort による <code>cellStart Int32Array</code> + <code>cellEntries Int32Array</code>、2Dハッシュキー <code>((xi·73856093)^(zi·19349663))&amp;16383</code>、トゥームストーン削除+25%超で日和見再構築）。ティア間で25倍のサイズ差があってもクエリ範囲が常にタイトに保たれる。オブジェクトは静的なので「スポーン時insert・吸収/消滅時remove」だけ — フレーム毎メンテナンスはゼロ。</li>
+    <li><strong>ナローフェーズ</strong>: 3ハッシュへ <code>queryBall</code>(事前確保Int32スクラッチ、~9–25セル、5–40候補、数マイクロ秒)。各オーバーラップで <code>objR &lt;= 0.65·ballR</code> なら<strong>吸収</strong>、それ以外は<strong>押し戻し</strong>（接触法線方向に位置補正+法線速度×0.35反射）。衝突速度が <code>0.7×速度上限</code> を超えると bonk → カメラ微シェイク+合成クロンク音+<strong>ノックオフ</strong>（最新のくっ付きオブジェクト1–3個を弾道放出して再吸収可能に戻す。塊魂らしさの肝で、物理が自作だから自明に実装できる）。</li>
+    <li><strong>GC</strong>: SoAストア（<code>px/py/pz/radius</code> Float32Array(8192)、<code>archetype</code> U16、<code>tierOf/flags</code> U8、<code>instanceSlot</code> I32、フリーリスト）+ モジュールレベルのスクラッチベクトル + 再利用イベントペイロードでフレーム毎アロケーションゼロ。</li>
+  </ul>
+  <p>v3 追加: <code>world/terrain.js</code> の <strong>CityTerrain</strong> — ショップの壁/棚（円vs AABB判定、半径4.0mで一斉解除）、スカイツリー基部の恒久円コライダ（r=54m実寸、絶対に吸収されない）、マップ境界クランプ+ 4r ソフト減速帯。</p>
+  <p class="note">関連: <code>src/physics/ballPhysics.js</code> <code>src/physics/absorb.js</code> <code>src/world/spatialHash.js</code> <code>src/world/objects.js</code> <code>src/world/terrain.js</code></p>
+</section>
+
+<!-- ============ 4. rendering ============ -->
+<section id="rendering" class="reveal">
+  <h2>4. レンダリング — InstancedMeshプールとドローコール台帳</h2>
+  <h4>何を / なぜ</h4>
+  <p>数千オブジェクトを統合GPUで60fps描画するため、<strong>ドローコールを台帳で管理</strong>し、マテリアル3種・シャドウマップなしに徹底。すべてのスポーン/フェード/消滅遷移は<strong>行列スケールのアニメーション</strong>で表現し、不透明度（=ソート発生）は一切使わない。</p>
+  <h4>ドローコール台帳（正直な最悪値で管理）</h4>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>バージョン</th><th>内訳</th><th class="num">最悪値 / 上限</th></tr></thead>
+      <tbody>
+        <tr><td>v1</td><td>8アーキタイプ×3ティア=24ワールド + 8スタック + ボール/地面/空/影 + エフェクト~3</td><td class="num">〜38 / <b>55</b></td></tr>
+        <tr><td>v2</td><td>4帯遷移窓 40ワールド + 8スタック + 固定6（月本体+グロー含む）+ 遠景1</td><td class="num">56 / <b>60</b></td></tr>
+        <tr><td>v3</td><td>40 + 8 + 固定6 + 遠景1 + スカイツリー2 + 地形1 + 水面/岸壁2 + EXTRAプール4</td><td class="num">64 / <b>72</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h4>どう実装したか</h4>
+  <ul>
+    <li><strong>InstancedPool</strong>（<code>render/instances.js</code>）: (アーキタイプ, ティア) ごとに容量128–512のプール。死スロットは<strong>ゼロスケール行列</strong>（スワップ圧縮より単純、縮退三角形はラスタ前に棄却される）。<code>DynamicDrawUsage</code> + r177 の <code>updateRanges</code> で部分アップロード、meshごとに needsUpdate は毎フレーム最大1回、書き込み≦64インスタンス/フレーム。<code>frustumCulled=false</code> — カリングはゲームプレイ駆動（スポーンリングが生存集合を限定し、フォグ 14r/55r が両端を隠す）。</li>
+    <li><strong>ジオメトリ</strong>: 各アーキタイプは2–6個の低分割プリミティブを頂点カラー込みで事前マージした複合体（≦350tris）。起動時にタイトル画面の裏で全アーキタイプを一括生成（~80ms）。マテリアルは Lambert(vertexColors) / 地面+空のShaderMaterial / 影のBasic の3つだけ。</li>
+    <li><strong>くっ付きオブジェクト</strong>: 吸収時に 0.15s のアタッチアニメ（ボール表面ソケットへ lerp + 1.15→1.0 スカッシュ）後、ボール子階層の8スタックプール（512リングバッファ）へ移管。行列は<strong>アタッチ時に1回だけ</strong>ボールローカル座標で書く（8%埋め込み）— 以後500個くっ付いていてもフレーム毎コストは親の行列乗算1回。完全に下層へ埋もれた・相対2%未満になったオブジェクトは<strong>埋没カリング</strong>でスロット回収（~1秒に分散し脱皮が見えない）。ランタイムのジオメトリマージは一切なし → ベイクスパイクなし。</li>
+    <li><strong>ボールコア</strong>: 頂点シェーダノイズ変位付きicosphere。変位量は累計吸収数で増加、ベース色は吸収色へ10%ずつlerp — リングバッファの回転を「塊が履歴を覚えている」見た目で覆う。</li>
+    <li><strong>カメラ</strong>（<code>render/cameraRig.js</code>、操作感の中核）: 距離<code>6.5r</code>/高さ<code>3.2r</code>+速度×0.4の先読み注視を臨界減衰スプリングで追従。スプリングの<strong>遅れ自体が成長フィードバック</strong>（大物を吸うと世界が0.5秒かけて引いて見える）。FOVはティア昇格・ダッシュ・高速時にキック。スプリング状態はsim空間に置き、リスケール時に S を掛ける（恒等変換保証の一部）。v3で屋内プロファイル（距離×0.62/高さ×1.4を interiorAt01 でクロスフェード）+ 壁ブームクランプを注入。</li>
+    <li><strong>BatchedMesh（v3）</strong>: ランドマーク・コレクティブル等のEXTRAアーキタイプ（コード70..92）は<strong>サイズクラス別4つの共有プール</strong>を <code>THREE.BatchedMesh</code> で実装（<code>render/extraPools.js</code>）。1プール=異種ジオメトリ混載で1ドローコール — InstancedMesh では不可能な「雷門と西郷像を同じプールから」を実現し、ワーストでもフラット+4ドローに収めた。</li>
+    <li><strong>動的解像度ガバナ</strong>: 3秒移動平均フレームタイム>17msでpixelRatioを1.0へ向けて低下（上限はmin(dpr,1.5)）。</li>
+  </ul>
+  <p class="note">関連: <code>src/render/instances.js</code> <code>extraPools.js</code> <code>ball.js</code> <code>cameraRig.js</code> <code>environment.js</code> <code>geometryFactory.js</code> <code>renderer.js</code></p>
+
+  <details class="acc">
+    <summary>なぜシャドウマップを捨ててブロブシャドウにしたか</summary>
+    <div class="acc-body">
+      <p>ライトはヘミスフィア+ディレクショナルの2灯のみで、影は canvas のラジアルグラデーションを貼った Basic マテリアルのデカール1枚。シャドウマップはレンダーパスが丸ごと1本増える上に、5桁のスケール変化に対してカスケード設定が破綻する。ブロブシャドウは半径比例でスケールするだけなので<strong>どのスケールでも読みやすく</strong>、リスケールのピクセル同一性も自明に保たれる。</p>
+      <p>v2 の空（太陽・月・星・雲）はすべてスカイドームのフラグメントシェーダ内で完結し（方向ベースの計算なのでリスケール不変）、ドローコール増加ゼロで実装された。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 5. world gen ============ -->
+<section id="world-gen" class="reveal">
+  <h2>5. ワールド生成 — チャンクスポーナーとキュレーションの併存</h2>
+  <h4>何を / なぜ</h4>
+  <p>v1/v2 は無限平面の<strong>決定論的チャンク生成</strong>のみ。v3 で「実在の東京を再現した有限の箱庭」が要件になり、手続き生成（チャンク）と手作業配置（キュレーション）を<strong>同じ ObjectStore 上で共存</strong>させる必要が生じた。2つのスポーナーがスロットの所有権を取り違えると即メモリ破壊級のバグになるため、所有権プロトコルを Phase 0 で凍結した。</p>
+
+  <figure class="diagram reveal" id="dg-spawn-ownership">
+    <svg class="dg" viewBox="0 0 720 500" role="img" aria-label="2スポーナーの所有権図。共有ObjectStoreのスロットに、チャンクスポーナーとCuratedSpawnerがそれぞれ旗を立て、下にABSORBイベントの購読順チェーンが並ぶ">
+      <defs>
+        <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+      </defs>
+      <!-- two spawners -->
+      <rect x="26" y="20" width="240" height="96" rx="14" class="box-sky"/>
+      <text x="146" y="50" text-anchor="middle" class="tt tb">チャンクスポーナー</text>
+      <text x="146" y="76" text-anchor="middle" class="ts">手続き生成（シード依存）</text>
+      <text x="146" y="96" text-anchor="middle" class="ts">無限の埋め草オブジェクト</text>
+      <rect x="454" y="20" width="240" height="96" rx="14" class="box-gold"/>
+      <text x="574" y="50" text-anchor="middle" class="tt tg">CuratedSpawner</text>
+      <text x="574" y="76" text-anchor="middle" class="ts">手作業配置411（シード非依存）</text>
+      <text x="574" y="96" text-anchor="middle" class="ts">ランドマーク11・コレクション12</text>
+      <path d="M146 116 L 226 176" class="ln" marker-end="url(#ahs)"/>
+      <path d="M574 116 L 494 176" class="ln" marker-end="url(#ahs)"/>
+      <!-- shared store -->
+      <rect x="110" y="180" width="500" height="120" rx="16" class="box"/>
+      <text x="360" y="210" text-anchor="middle" class="tt">共有 ObjectStore（8192スロット・SoA）</text>
+      <!-- slots -->
+      <g>
+        <rect x="140" y="228" width="34" height="34" rx="6" class="box-sky"/>
+        <rect x="182" y="228" width="34" height="34" rx="6" class="box-sky"/>
+        <rect x="224" y="228" width="34" height="34" rx="6" class="box-gold"/>
+        <rect x="266" y="228" width="34" height="34" rx="6" class="box-sky"/>
+        <rect x="308" y="228" width="34" height="34" rx="6" class="box-soft"/>
+        <rect x="350" y="228" width="34" height="34" rx="6" class="box-gold"/>
+        <rect x="392" y="228" width="34" height="34" rx="6" class="box-sky"/>
+        <rect x="434" y="228" width="34" height="34" rx="6" class="box-soft"/>
+        <rect x="476" y="228" width="34" height="34" rx="6" class="box-sky"/>
+        <rect x="518" y="228" width="34" height="34" rx="6" class="box-gold"/>
+        <rect x="560" y="228" width="22" height="34" rx="6" class="box-soft" opacity=".4"/>
+        <!-- flags on gold slots -->
+        <line x1="241" y1="228" x2="241" y2="208" stroke="#d9a83f" stroke-width="2"/>
+        <path d="M241 208 L 257 213 L 241 219 Z" fill="#ffc94d"/>
+        <line x1="367" y1="228" x2="367" y2="208" stroke="#d9a83f" stroke-width="2"/>
+        <path d="M367 208 L 383 213 L 367 219 Z" fill="#ffc94d"/>
+        <line x1="535" y1="228" x2="535" y2="208" stroke="#d9a83f" stroke-width="2"/>
+        <path d="M535 208 L 551 213 L 535 219 Z" fill="#ffc94d"/>
+      </g>
+      <text x="360" y="288" text-anchor="middle" class="ts">旗付きスロット = <tspan class="tg">FLAG_CURATED(16)</tspan> — チャンク側の掃除処理は1ビットテストで全スキップ</text>
+      <!-- assert note -->
+      <text x="360" y="330" text-anchor="middle" class="ts tgr">dev: 300フレームごとに chunk.alive + curated.alive === store.alive をassert</text>
+      <!-- subscription chain -->
+      <text x="360" y="376" text-anchor="middle" class="tt" style="font-size:15px">ABSORB イベントの購読順（凍結された契約）</text>
+      <g>
+        <rect x="30" y="396" width="86" height="40" rx="20" class="box-sky"/>
+        <text x="73" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">chunk</text>
+        <path d="M116 416 L 132 416" class="ln-soft" marker-end="url(#ahs)"/>
+        <rect x="134" y="396" width="94" height="40" rx="20" class="box-gold"/>
+        <text x="181" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">curated</text>
+        <path d="M228 416 L 244 416" class="ln-soft" marker-end="url(#ahs)"/>
+        <rect x="246" y="396" width="74" height="40" rx="20" class="box"/>
+        <text x="283" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">ball</text>
+        <path d="M320 416 L 336 416" class="ln-soft" marker-end="url(#ahs)"/>
+        <rect x="338" y="396" width="104" height="40" rx="20" class="box"/>
+        <text x="390" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">runStats</text>
+        <path d="M442 416 L 458 416" class="ln-soft" marker-end="url(#ahs)"/>
+        <rect x="460" y="396" width="110" height="40" rx="20" class="box"/>
+        <text x="515" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">collection</text>
+        <path d="M570 416 L 586 416" class="ln-soft" marker-end="url(#ahs)"/>
+        <rect x="588" y="396" width="112" height="40" rx="20" class="box-violet"/>
+        <text x="644" y="421" text-anchor="middle" class="ts" style="fill:#cdd2e6">sfx/fx/hud</text>
+      </g>
+      <text x="360" y="476" text-anchor="middle" class="ts">この順序があるから「curated は instanceSlot を読まず、清掃を次の update() に遅延する」規約が成立する</text>
+    </svg>
+    <figcaption>図3: 2スポーナーの所有権プロトコル — FLAG_CURATED の旗と凍結された購読順</figcaption>
+  </figure>
+
+  <h4>チャンクスポーナー（v1から継続）</h4>
+  <ul>
+    <li>ティアごとに32 sim単位のチャンクグリッド。チャンク <code>(cx, cz, tier)</code> の内容は <code>mulberry32(hash(worldSeed, cx, cz, tier))</code> の<strong>純関数</strong>（ジッタ付きサブグリッド配置、重み付きアーキタイプ、サイズ/ヨー/パレットのロール）。同じチャンクは常に同一再生成され、吸収済みは消費ビットマスク（<code>Map&lt;chunkKey, Uint32Array&gt;</code>）で記憶。</li>
+    <li>毎フレーム: 欲しいチャンク集合と読込済み集合をdiff → リングキューへ → <strong>≦64スポーン+64デスポーン/フレームに償却</strong>、進行方向優先。スポーンはフォグ遠面（55r &lt; 読込半径96sim）の外で実体化するので見えない。</li>
+    <li>ティア引き継ぎ: 閾値の70%で次々ティアのチャンクをフォグの外にプリウォーム。古いティアの残骸はサブピクセル則（<code>objD &lt; 0.04·ballR</code>、200個/フレームのラウンドロビン掃引）で<strong>個別に</strong>排水 — 一斉削除フレームが存在しない。</li>
+    <li>v3 のゾーンマスク: 決定論ドロー完了後に <code>cityMap.bandAllowedAt(xReal, zReal, band)</code> で棄却するだけ（約20個の軸平行ゾーン矩形の静的参照）。チャンク内容の純関数性は保たれる。密度は <code>DENSITY_K_BY_BAND = [0.45,0.45,0.3,0.3,0.2,0.2,0.15]</code>。</li>
+  </ul>
+
+  <h4>キュレーションスポーナー（v3新規 <code>world/curated.js</code>）</h4>
+  <p>約370の固定配置（ショップ内装240 + 街路70 + 出口導線22 + 街区装飾~38）+ ランドマーク11 + コレクティブル12 + ショップ外殻を所有。データは <code>src/config/cityMap.js</code>（実寸メートル）にあり、<code>mulberry32(0x544f4b59)</code> で展開 — <strong>シード非依存</strong>なのでランドマーク/コレクティブルは全プレイで同一位置（チャンクフィラーだけが <code>?seed=</code> で変わる）。</p>
+
+  <p><strong>FLAG_CURATED 所有権プロトコル（凍結）</strong>:</p>
+  <ul>
+    <li><code>FLAG_CURATED = 16</code>（flags U8: ALIVE 1 / FADING 2 / TOMB 4 / RARE 8 / CURATED 16）。チャンク側の <code>_onAbsorb</code> / サブピクセル掃引 / <code>_despawnIndex</code> / 残骸掃除は旗付きスロットを<strong>1ビットテストで全スキップ</strong>。devでは300フレームごとに <code>spawner.aliveCount + curated.aliveCount === store.aliveCount</code> の恒等式をassert。</li>
+    <li><strong>動的リバンディング</strong>: 各キュレーション配置は naturalBand を持ち、起動時と毎 TIER_UP に <code>tierOf = clamp(naturalBand, tier-1, tier+1)</code> へ再スタンプ（既存の64/フレーム償却に同乗）。これにより T1 の玉でも雷門から押し戻しを受け、T5 の玉でもハチ公を吸える — キュレーション物は<strong>常に衝突/吸収可能</strong>。</li>
+    <li><strong>スロット強奪規約</strong>: render/ball のアタッチハンドラはワールドインスタンスを奪って飛び付きアニメに使う際 <code>store.instanceSlot[i] = -1</code> を書く。CuratedSpawner は ABSORB ハンドラ内で instanceSlot を<strong>読んではならず</strong>、自分の消費ビットマスクだけ見て、スロット清掃は次の update() に遅延する（凍結された購読順がこの規約を成立させる）。</li>
+    <li><strong>ノックオフ</strong>: コード≧70（EXTRA=ランドマーク/コレクティブル）は永久にくっ付いたまま剥がれない。チャンク系コードの再注入は FLAG_CURATED|FLAG_RARE を剥がして既存経路へ（スコアは初回吸収時のみ、二重計上なし）。</li>
+  </ul>
+
+  <h4>レアアイテム（v2導入）</h4>
+  <p><code>_spawnPlacement</code> で全配置に対し rareRoll を<strong>最後に無条件で</strong>ドロー（決定論契約を維持）。<code>RARE_CHANCE=0.002</code> で金色ティント+1.15倍スケール+<code>FLAG_RARE</code>。生存レアは <code>(storeIdx, slotGen)</code> ペアの Int32Array で追跡し、effects が金色のきらめきをポーリング。同シード=同レア配置。</p>
+  <p class="note">関連: <code>src/world/spawner.js</code> <code>curated.js</code> <code>objects.js</code> <code>src/config/cityMap.js</code></p>
+
+  <details class="acc">
+    <summary>箱庭東京マップの構造とバリデータ</summary>
+    <div class="acc-body">
+      <p>マップは 3.6×3.8km の矩形（<code>MAP_BOUNDS x[-1800,1800] z[-1800,2000]</code>、単一ソースは tuning.js）。<strong>原点=ボール開始点</strong>（BallPhysics.reset のハードコード (0,r,0) をそのまま正にする設計判断）。開始地点は屋根なし・全面開口のアキバパーツ館（6×8m、ドールハウス的フィクション）: 壁5枚+棚/カウンター等プリズム4個だけが authored 衝突で、<strong>全世界に段差ゼロ</strong>（h=0）— 「床の意味論」系の批評クラスを構造的に表現不能にした。半径4.0mで地形一斉解除（壁0.6sフェード+棚上アイテムのy降下lerp+カメラクランプ解除の単発構造ハンドオフ、文書化例外）。</p>
+      <p>ランドマーク11基は約1:5圧縮の地理忠実配置（ハチ公1.85m→西郷像6.2m→雷門10.8m→ラジオ会館37m→109 43m→ドーム85m→東京駅135m→議事堂215m→レインボーブリッジ231m→<strong>東京タワー262m</strong>の吸収閾値ラダー。東京タワーのGROWTH_K=10ジャンプ 262→406mがフィナーレ帯への公式ランプ）。スカイツリーはストアに存在せず接触フィナーレ専用。</p>
+      <p><code>validateCityMap()</code> がブートで検証するもの: 通路最低幅1.1m / ボール開始クリアランスと出口レーン / 棚アイテムの3D到達不等式 / ショップが密閉不能であること（最大到達半径 &lt; ゲート半径の半分）/ 出口導線の成長チェーン（出口半径0.10–0.4mで150m以内に吸収可能物≧8）/ ランドマークラダーの単調増加 / <code>SKYTREE_COLLIDER_K(0.6) &lt; GOAL_CONTACT_PAD(0.85)</code>（フィナーレが必ず勝つ）。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 6. game systems ============ -->
+<section id="game-systems" class="reveal">
+  <h2>6. ゲームシステム — 成長式・ダッシュ・スコア/ランク</h2>
+  <h4>成長式と growthKForObjR テーパー</h4>
+  <p>基本式（v1から）: 吸収時 <code>newR = cbrt(R³ + K·r³)</code>、<code>ABSORB_RATIO = 0.65</code>、<code>GROWTH_K = 10</code>。見た目の半径は ≦1.5r/s でスルー（大物を吸うと「段差」でなく「膨らむ」）。</p>
+  <p><strong>v3 の臨界ペーシング修正</strong>: K=10 と吸収比0.65の組合せは、閾値ギリギリの吸収1回で半径×1.554、捕獲レートは ~R² でスケールするため、同帯域の供給が連続している場所では成長が<strong>超指数的</strong>になる（実測で秋葉原にて 4m→117m を3秒の暴走）。修正は<strong>オブジェクト実半径の連続関数</strong>による有効K のテーパー（<code>src/config/tuning.js:353</code>）:</p>
+<pre><code>export function growthKForObjR(objRealM) {
+  if (objRealM &lt;= GROWTH_NORM_REF_M /*0.1m*/) return GROWTH_K;        // 10
+  const k = GROWTH_K * Math.pow(GROWTH_NORM_REF_M / objRealM, GROWTH_NORM_POW /*0.65*/);
+  return k &lt; GROWTH_K_FLOOR /*2*/ ? GROWTH_K_FLOOR : k;
+}</code></pre>
+  <ul>
+    <li>≦0.1m は K=10 のまま（ショップ内の authored ~60秒予算を保護）、~3.6m以上で床値2へ漸減。</li>
+    <li><strong>連続関数なのでシームレスネス法に適合</strong>（ティアゲートではない）。</li>
+    <li>例外: ランドマーク/コレクティブルのキュレーションスロットは absorb.js で除外され K=10 を維持（東京タワー262→406mを含む authored ラダーの×1.554ジャンプは設計どおり残る）。</li>
+    <li>ペアの密度調整 <code>DENSITY_K_BY_BAND</code> と合わせて Phase-3 で実走検証（最適走243秒の実測にランクを合わせた）。</li>
+  </ul>
+  <p class="note">関連: <code>src/config/tuning.js</code> <code>src/physics/absorb.js:239-246</code> <code>src/world/spawner.js:801</code></p>
+
+  <h4>ダッシュ（v2導入）</h4>
+  <p>ゲージ式（<code>dashGauge01</code> 開始1.0、<code>dt/4.0s</code> で回復+吸収ごとに+0.03）。発動で速度上限×2.2・加速×1.8 が0.8秒、インパルス <code>7.0×r</code> を速度方向（低速時はカメラ前方）へ。ゲージ/タイマーは無次元/秒なので<strong>リスケール不変、フックは不要</strong>。演出はイベント駆動: FOV+8°キック、スピードライン10本、合成 whoosh、HUDゲージリング即ゼロ。</p>
+
+  <h4>タイム・スコア・ランク（v2導入 <code>game/runStats.js</code>）</h4>
+  <ul>
+    <li><strong>SIM時間が公式時計</strong>: <code>runStats.addSimTime(steps × FIXED_DT)</code> の積算。低速端末では壁時計上ゆっくり進むが、シミュレート秒あたりの成果は決定論的 — ランクが端末性能に依存しない。</li>
+    <li>スコア: <code>objScore = max(1, round(500 × rel^1.4))</code>（<code>rel = 物の実寸 ÷ ボール実寸</code> — スケールフリー、v2で絶対サイズ依存から改訂）× コンボ係数 <code>min(1+0.10(combo-1), 3.0)</code>。レア+5000 / ランドマーク+8000(v3) / ゴール+20000 + タイムボーナス（290sフル→720sゼロのlerp、最大30000）。</li>
+    <li>ランク（v3、実測ベース）: S≦290 / A≦400 / B≦540 / C≦720 sim秒 / else D（Phase-3 実測の最適走243秒 × 約1.2 = S。設計初期値 240/330/450/600 をリチューン）。</li>
+    <li>リザルト: 段階CSSリビール（タイム→スコアカウントアップ→サイズ→ランクスタンプ→コレクション図鑑→NEW RECORD）+ X intent URL は EVT.GOAL キャッシュ時に<strong>1回だけ</strong>構築し、クリックは同期ジェスチャで <code>window.open || location.href</code>。</li>
+  </ul>
+  <p class="note">関連: <code>src/game/runStats.js</code> <code>src/physics/ballPhysics.js</code> <code>src/ui/screens.js</code></p>
+</section>
+
+<!-- ============ 7. audio ============ -->
+<section id="audio" class="reveal">
+  <h2>7. オーディオ — 完全合成BGMとSE</h2>
+  <h4>何を / なぜ</h4>
+  <p>音声アセットはゼロ。SE（v1）も BGM（v2）も WebAudio でリアルタイム合成する。これは「ホットパスのゼロアロケーション法」に対する唯一の<strong>有界例外</strong>（≦60短命ノード/秒、高コスト確保は初期化時にホイスト: ハット/シェイカー/whoosh 用ノイズ AudioBuffer は1個を永続共有、PeriodicWave は init 時生成）。</p>
+  <h4>BGMスケジューラ（<code>src/audio/bgm.js</code>）</h4>
+  <ul>
+    <li>標準の<strong>2クロック・ルックアヘッド</strong>方式: <code>setInterval(25ms)</code> のティックが <code>ctx.currentTime + 0.12s</code> 先までノートをスケジュール。bgm.js 内で <strong>setTimeout は禁止</strong> — ダッキング・停止・レイヤフェードなどすべてのゲイン操作は <code>setTargetAtTime / linearRampToValueAtTime</code> で ctx 時間にスケジュールする。</li>
+    <li>楽曲: 128BPM スウィング8分・4小節ループ・Aメジャー・16小節コード循環 |AM7|D9|F#m7|E7sus4→E7| のボサポップ。チェーン: layerGains → bgmMaster(0.32) → DynamicsCompressor → destination。</li>
+    <li><strong>ティア解放レイヤ</strong>（cosmetic-only法に適合、TIER_UPで1.5sフェードイン）: L0 ベース+キック+リムショット → L1 オフビートコードスタブ+ハイハット → L2 ペンタトニックリード → L3 シェイカー+スパークルアルペジオ。v3 は7ティアに再キー（L1 t≧2 / L2 t≧3 / L3 t≧5）。</li>
+    <li><strong>タブ可視性</strong>: hidden でティック停止+<code>ctx.suspend()</code>、復帰で <code>ctx.resume()</code> + <code>nextNoteTime</code> 再アンカー（逃した拍はスキップ、バーストキャッチアップは絶対にしない）。</li>
+    <li>ミュートの単一真実は main.js（'M'キー or HUDボタン → 両コンテキストへ setMuted + localStorage 永続 + MUTE_CHANGED）。setMuted(true) はゲイン0でなく<strong>ノード生成自体を停止</strong>してノード予算を守る。Bgm は sfx と別の自前 AudioContext を持ち、ジェスチャ起動は START タップ（iOS実機検証済み）。</li>
+  </ul>
+  <h4>SE（<code>src/audio/sfx.js</code>）</h4>
+  <p>すべてオシレータ+ノイズの合成: ピッチ上昇する吸収コンボブリップ / bonk クロンク / ロールループ / ティアアップ・アルペジオ / ダッシュ whoosh（ノイズのバンドパススイープ300→2400Hz）/ レア5音グリス / ランドマークファンファーレ（v3）/ 接触グランドファンファーレ8音+AM9パッド / ランクスタンプの70Hzサイン thud（GAME_WIN の <strong>+1.6s を ctx 時間で</strong>予約し、CSSのスタンプ演出 1600ms と正確に同期）。デュアルタグ（ハチ公=ランドマーク+コレクティブル）が同フレームで発火した場合はコレクトグリスを抑制してファンファーレのみ鳴らす。</p>
+  <p class="note">関連: <code>src/audio/bgm.js</code> <code>src/audio/sfx.js</code></p>
+</section>
+
+<!-- ============ 8. finale ============ -->
+<section id="finale" class="reveal">
+  <h2>8. フィナーレ — スカイツリー状態機械</h2>
+  <h4>何を / なぜ</h4>
+  <p>v2 で「ゴール=月との接触シネマ」を導入する際、ScaleManager の WIN ラッチを撤去し、ゲーム終了の唯一の経路を <code>game/finale.js</code> の小さな状態機械に集約した。v3 はこれを<strong>機械ごと再テーマ</strong>（月→固定位置のスカイツリー、降下フェーズ削除）。</p>
+
+  <figure class="diagram reveal" id="dg-finale-states">
+    <svg class="dg" viewBox="0 0 720 330" role="img" aria-label="フィナーレ状態遷移図。idleからdoneまで8状態が2行で並び、contact以降はinputLockedとcameraOwnedのフラグ帯がかかる">
+      <defs>
+        <marker id="ahx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+      </defs>
+      <!-- locked band (behind contact + row2) -->
+      <rect x="530" y="24" width="176" height="92" rx="14" fill="rgba(255,201,77,.07)" stroke="#7a5c1e" stroke-dasharray="6 5" stroke-width="1.5"/>
+      <rect x="14" y="156" width="692" height="92" rx="14" fill="rgba(255,201,77,.07)" stroke="#7a5c1e" stroke-dasharray="6 5" stroke-width="1.5"/>
+      <!-- row 1 -->
+      <g>
+        <rect x="22" y="40" width="150" height="64" rx="12" class="box-soft"/>
+        <text x="97" y="66" text-anchor="middle" class="tt" style="font-size:15px">idle</text>
+        <text x="97" y="88" text-anchor="middle" class="ts">通常プレイ（380m未満）</text>
+        <path d="M172 72 L 192 72" class="ln" marker-end="url(#ahx)"/>
+        <rect x="194" y="40" width="150" height="64" rx="12" class="box"/>
+        <text x="269" y="66" text-anchor="middle" class="tt" style="font-size:15px">called</text>
+        <text x="269" y="88" text-anchor="middle" class="ts">380mで「ゴールが呼ぶ」</text>
+        <path d="M344 72 L 364 72" class="ln" marker-end="url(#ahx)"/>
+        <rect x="366" y="40" width="150" height="64" rx="12" class="box"/>
+        <text x="441" y="66" text-anchor="middle" class="tt" style="font-size:15px">approach</text>
+        <text x="441" y="88" text-anchor="middle" class="ts">画面端🗼矢印で誘導</text>
+        <path d="M516 72 L 536 72" class="ln" marker-end="url(#ahx)"/>
+        <rect x="538" y="40" width="160" height="64" rx="12" class="box-gold"/>
+        <text x="618" y="66" text-anchor="middle" class="tt tg" style="font-size:15px">contact</text>
+        <text x="618" y="88" text-anchor="middle" class="ts">接触＝タイム確定</text>
+      </g>
+      <!-- snake arrow -->
+      <path d="M618 104 C 618 136, 97 124, 97 162" class="ln" marker-end="url(#ahx)"/>
+      <!-- row 2 -->
+      <g>
+        <rect x="22" y="166" width="150" height="64" rx="12" class="box-violet"/>
+        <text x="97" y="192" text-anchor="middle" class="tt tv" style="font-size:15px">merge</text>
+        <text x="97" y="214" text-anchor="middle" class="ts">合体 1.2s</text>
+        <path d="M172 198 L 192 198" class="ln" marker-end="url(#ahx)"/>
+        <rect x="194" y="166" width="150" height="64" rx="12" class="box-violet"/>
+        <text x="269" y="192" text-anchor="middle" class="tt tv" style="font-size:15px">ascension</text>
+        <text x="269" y="214" text-anchor="middle" class="ts">昇天 5.0s・夜フェード</text>
+        <path d="M344 198 L 364 198" class="ln" marker-end="url(#ahx)"/>
+        <rect x="366" y="166" width="150" height="64" rx="12" class="box-violet"/>
+        <text x="441" y="192" text-anchor="middle" class="tt tv" style="font-size:15px">afterglow</text>
+        <text x="441" y="214" text-anchor="middle" class="ts">余韻 2.5s</text>
+        <path d="M516 198 L 536 198" class="ln" marker-end="url(#ahx)"/>
+        <rect x="538" y="166" width="160" height="64" rx="12" class="box-green"/>
+        <text x="618" y="192" text-anchor="middle" class="tt tgr" style="font-size:15px">done</text>
+        <text x="618" y="214" text-anchor="middle" class="ts">GAME_WIN → リザルト</text>
+      </g>
+      <text x="360" y="276" text-anchor="middle" class="ts tg">点線の帯 = inputLocked / cameraOwned が true（contact 以降、操作とカメラを finale が所有）</text>
+      <text x="360" y="306" text-anchor="middle" class="ts">v2では called と approach の間に descent / landed（月の降下・着地）が存在した</text>
+    </svg>
+    <figcaption>図4: フィナーレ状態機械（v3） — ゲーム終了の唯一の経路</figcaption>
+  </figure>
+
+  <h4>状態と各フェーズの実装（v3）</h4>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>状態</th><th>トリガ / 内容</th></tr></thead>
+      <tbody>
+        <tr><td><b>idle</b></td><td>trueRadius &lt; 380m。devウォッチドッグ: ゴール×1.2を超えても idle なら console.error + 強制遷移（終了経路が死ぬバグへの保険）</td></tr>
+        <tr><td><b>called</b></td><td>≧380m で1回。EVT.GOAL_CALL → HUDトースト・スカイツリービームパルス・BGMシマー。純コスメ</td></tr>
+        <tr><td><b>approach</b></td><td>ゲームプレイ完全継続。finale が10HzでスカイツリーをNDC投影し EVT.GOAL_GUIDE → 画面端🗼矢印</td></tr>
+        <tr><td><b>contact</b></td><td><code>dist ≤ ballR + towerR×0.85</code> の描画フレーム判定 = クリアタイム確定の瞬間。EVT.GOAL_CONTACT → runStats凍結+リザルト計算、BGMダック→停止、ファンファーレ、HUD全隠し、白フラッシュ。<strong>ここから inputLocked / cameraOwned が true</strong></td></tr>
+        <tr><td><b>merge</b></td><td>1.2s。finale が ball.pos を直接 lerp（intentはゼロ化済みで物理と喧嘩しない）、0.6s でボール非表示</td></tr>
+        <tr><td><b>ascension</b></td><td>5.0s。タワーが <code>+40r</code> までイーズ上昇、<code>env.beginNightFade(5.0)</code> で夜パレットへ、金色スパークル噴水。カメラは毎フレーム導出のターゲットで <code>cameraRig.cinematicUpdate</code>（<strong>キャッシュゼロ=リスケール安全</strong>）</td></tr>
+        <tr><td><b>afterglow</b></td><td>2.5s 余韻 → done。main.js（GAME_WIN の唯一のemitter）がリザルトへ</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>リスケール/リベース安全性の設計</h4>
+  <p>フィナーレ中も rescale/rebase は起こり得る（contact 以降は成長凍結でrescale不可、rebaseはスキップ）。sim空間の数値をキャッシュしてよい場所は <strong><code>_simCache</code> 構造体ただ1つ</strong>（v3: towerX/Z, towerR, mergeFrom*, ascendBaseY）で、finale 自身が EVT.RESCALE（全フィールド×S）/ EVT.REBASE（X/Z -= shift）を購読する。それ以外のカメラターゲット等は<strong>毎フレーム現在ポーズから導出</strong>。新しい状態フィールドは「_simCache に入れるか毎フレーム導出するか」の二択が規約。<code>goalTower.js</code> / <code>terrain.js</code> も同型の自前購読を持つ。</p>
+
+  <h4>スカイツリーの2表現ハンドオフ</h4>
+  <p>worldScale &lt; 0.2 の間、スカイツリーは environment.js の<strong>スカイドームシェーダ内のシルエット</strong>（uGoalSil* ユニフォーム、方位を SKYTREE_POS から毎フレーム再計算）として描画され、ゲーム開始の1フレーム目から航法アンカーになる。simDist &lt; 0.8×CAMERA_FAR に入った最初のフレームで、v2 の月で実証済みの<strong>角サイズ・方向一致クロスフェード</strong>により <code>render/goalTower.js</code> の実メッシュ（~1400tris、fog:false の空要素例外、2ドロー）へ引き継ぐ — ポップが原理的に起きない。</p>
+  <p class="note">関連: <code>src/game/finale.js</code> <code>src/render/goalTower.js</code> <code>src/render/environment.js</code> <code>src/render/cameraRig.js</code></p>
+
+  <details class="acc">
+    <summary>v2 月フィナーレとの差分（descent/landed の削除）</summary>
+    <div class="acc-body">
+      <p>v2 の状態列は idle→called(420m)→<strong>descent</strong>(500m)→<strong>landed</strong>→contact→merge→ascension→afterglow→done。月は空のシェーダディスクとして序盤から見えており、降下開始時に「カメラ位置 + 月方向 × (月半径/tan(角サイズ))」でメッシュの角サイズと画面方向をシェーダディスクに正確に一致させてから 2.0s クロスフェード — 月が6秒かけてボール前方 <code>45r</code> へ降りてきて着地し、ソフトマグネット（入力を上書きしない速度バイアス）で誘導していた。</p>
+      <p>v3 はゴールが世界に固定されたので降下の数学を丸ごと削除し、called/approach/contact 以降の演出機械（夜フェード・シネマカメラ・フラッシュ・リザルト段階表示）を逐語的に再利用した。状態機械・_simCache・ハンドオフという<strong>構造</strong>が再テーマのコストを1ストリームに閉じ込めた好例。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 9. mobile ui ============ -->
+<section id="mobile-ui" class="reveal">
+  <h2>9. モバイルUI — バンドレイアウト</h2>
+  <h4>何を / なぜ</h4>
+  <p>v2 までの「四隅パネル」HUDはスマホ縦持ちで重なりが発生していた（オーナーの主用端末はスマホ）。v3 で<strong>モバイルファーストに全面書き直し</strong>: ベーススタイルが≦480px縦持ちで、768px以上と横持ちは@mediaの「追加装飾」。</p>
+  <h4>バンド重なり解決マトリクス（binding）</h4>
+  <p>画面を横帯に分割し、<strong>各要素は自分の帯の外に置いてはならない</strong>というルールで重なりを構造的に排除:</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>帯</th><th>占有者</th></tr></thead>
+      <tbody>
+        <tr><td>上端ストリップ</td><td>#top-bar（サイズピル+タイマー+スコアピル+ミュート）→ その下に進捗バー</td></tr>
+        <tr><td>中段左</td><td>ドナック（アバター+吹き出し）</td></tr>
+        <tr><td>中段中央</td><td>トースト(74px) / ティアバナー(30vh) / スコアフロート(44vh〜上昇)</td></tr>
+        <tr><td>中段右</td><td>コレクションポップアップ（トーストの反対側 — 構造的に非重複）</td></tr>
+        <tr><td>下段左 65%×55%</td><td>ジョイスティック専有（動的アンカー出現域）</td></tr>
+        <tr><td>下段右</td><td>ダッシュボタン専有（76px、サムターゲット）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h4>実装の要点</h4>
+  <ul>
+    <li>全固定要素は <code>env(safe-area-inset-*)</code> のCSS変数でアンカー（ノッチ/ホームバー対応）。360px幅での収まりは設計書内で<strong>ピクセル算術の証明付き</strong>（104+64+120+36+ギャップ+マージン=358px）。</li>
+    <li>タイマーはモバイル <code>m:ss</code>（デシ秒はデスクトップのみ、上限99:59表示）。</li>
+    <li><strong>ダッシュゲージはリング化</strong>: <code>#dash-button::before</code> の conic-gradient + radial-gradient マスク。<code>@property --gauge { syntax:'&lt;angle&gt;' }</code> 登録により10Hzの書き込みが0.12sで滑らかに補間（iOS16.4+/Chrome85+）。<code>@supports</code> フォールバックでconic非対応環境はボタン内の水平バーに自動降格（hud.js は <code>--gauge</code> と <code>--gauge01</code> の両方を書く）。</li>
+    <li><code>#donack-root</code> は <strong>#hud の外（bodyの直下）</strong>: GOAL_CONTACT のHUD全隠しを生き延びて昇天シーンの台詞を出すため。</li>
+    <li>backdrop-filter のblurは768px未満で停止（Androidコンポジタ節約）。新規UIはすべてDOM/CSSで、GPU側予算（pixelRatio 1.5上限+ガバナ）に触れない。</li>
+    <li>出荷ゲート: 360/390/430縦+横のビューポートマトリクス + <strong>実機 iOS / Android 各1台</strong>のパスが必須。</li>
+  </ul>
+  <p class="note">関連: <code>index.html</code>（CSS本体）<code>src/ui/hud.js</code> <code>src/input/input.js</code></p>
+</section>
+
+<!-- ============ 10. donack ============ -->
+<section id="donack" class="reveal">
+  <h2>10. ドナック実況 — トリガー優先度系</h2>
+  <h4>何を / なぜ</h4>
+  <p>公式ピクセルアートキャラ「ドナック」（緑帽子のアヒル）が吹き出しでランドマーク豆知識・コツ・お祝いを実況する。課題は<strong>スパム化の防止</strong>: イベントは秒間数十発生するが、吹き出しは平均20秒に1個以下に抑えたい。解決は優先度+クールダウン+queue-of-1 の小さなスケジューラ。</p>
+  <h4>トリガー優先度系（<code>src/ui/donack.js</code>）</h4>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>優先度</th><th>トリガ</th><th class="num">最小間隔</th></tr></thead>
+      <tbody>
+        <tr><td><b>P3</b></td><td>ランドマーク吸収・フィナーレ</td><td class="num">0（現在の吹き出しに割り込む）</td></tr>
+        <tr><td><b>P2</b></td><td>コレクティブル・ティアアップ</td><td class="num">4s</td></tr>
+        <tr><td><b>P1</b></td><td>カテゴリ初回吸収・コンボ≧15・ノックオフ・マップ端</td><td class="num">8s</td></tr>
+        <tr><td><b>P0</b></td><td>行き詰まりヒント（10秒無吸収・ダッシュ12秒未使用）</td><td class="num">8s</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ul>
+    <li><strong>queue-of-1</strong>: 保留スロットは1つだけで、最高優先度の候補のみ保持。同位以下の新着は捨てる。</li>
+    <li><strong>デデュープ</strong>: 各行IDは1ランに1回（tips系のみ30秒/IDのクールダウンで再可）。</li>
+    <li><strong>フェーズゲート</strong>: 内部フェーズ {title, play, cinematic, result}。P0–P2 は play のみ、昇天の台詞だけが cinematic、リザルト台詞だけが result で発火可能。GAME_RESET で全タイマー/キュー/デデュープをハードリセット。</li>
+    <li><strong>デュアルタグ規約</strong>: ハチ公（ランドマーク+コレクティブル両属性）は同フレームの COLLECT→LANDMARK に対し、統合された専用行 #42 のみを P3 で発火。</li>
+    <li>台詞は <code>src/config/donackLines.js</code> に<strong>44行を凍結ID付きで</strong> authored（設計表の約42行 → 実装43行 + Phase-3追補1行。ランドマーク豆知識12行を含む。例:「雷門の大提灯、重さ約700kgあるんだよ。いい重りだね」）。表情マップ: 豆知識→speaking / お祝い→happy / ヒント→thinking。</li>
+  </ul>
+  <h4>アセット（ゼロアセット法の文書化例外 #2）</h4>
+  <p><code>public/assets/donack/</code> の <strong>webp 8枚（~20KB）だけ</strong>がデプロイ内の唯一のバイナリアセット（{idle,happy,thinking,speaking}-{0,3}、120×90、自社ファーストパーティ資産）。スプライトシート化もビルドパイプラインもなし — 表情=CSSクラス交換、まばたき=吹き出し表示中のみ動く4fpsのフレーム0/3トグル。<code>scripts/verify-donack-assets.sh</code> が「ちょうど8ファイル・合計40KB以下・余剰なし」をCI/predeployで強制する。</p>
+  <p class="note">関連: <code>src/ui/donack.js</code> <code>src/config/donackLines.js</code> <code>scripts/verify-donack-assets.sh</code> <code>public/assets/donack/</code></p>
+</section>
+
+<!-- ============ 11. persistence ============ -->
+<section id="persistence" class="reveal">
+  <h2>11. 永続化 — localStorage スキーマ</h2>
+  <p>すべて try/catch + 形状バリデーション付き（プライベートモードや破損JSONで null を返し、絶対に throw しない）。</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>キー</th><th>スキーマ</th><th>規約</th></tr></thead>
+      <tbody>
+        <tr><td><code>fableKatamari.v3.best</code></td><td><code>{v:1, bestTime:{timeS,score,rank,seed}, bestScore:{...}}</code></td><td>サブレコードは各指標が更新されたとき<strong>アトミックに丸ごと差し替え</strong>（行内整合性、フィールド混在なし）。v2キーは退役</td></tr>
+        <tr><td><code>fableKatamari.v3.collection</code></td><td><code>{v:1, mask:int}</code></td><td><strong>凍結整数ID（0..11）のビットマスク</strong>をORで蓄積。IDは append-only（v3.1以降は12+を追記、再利用・並べ替え禁止、boot assertでunique且つ&lt;31）。<strong>未知の上位ビットは保存</strong>（前方互換）</td></tr>
+        <tr><td><code>fableKatamari.v3.muted</code></td><td>boolean相当</td><td>main.js が Bgm/Sfx 構築<strong>前</strong>に読み、initialMuted として注入（構築後のsetMutedは遅延コンテキストでno-opになる既知の穴を回避）</td></tr>
+        <tr><td><code>fableKatamari.v3.donackOff</code></td><td>boolean相当</td><td>タイトル画面のトグルピルが永続化。OFF時は donack.js が全イベントを破棄</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>リセット所有権（v3凍結）: <code>main.resetWorld()</code> がスポーナー→ストア→プール→物理→finale→runStats→terrain→curated→collection.resetRun の直接呼び出しチェーンを所有し、バス購読側（cameraRig / env / backdrop / donack / hud）は GAME_RESET / GAME_START で自己リセットする。<strong>localStorage の4キーはリセットの対象外</strong>（周回を跨ぐのが目的）。</p>
+  <p class="note">関連: <code>src/game/runStats.js</code> <code>src/game/collection.js</code> <code>src/main.js</code></p>
+</section>
+
+<!-- ============ 12. version diff ============ -->
+<section id="version-diff" class="reveal">
+  <h2>12. バージョン差分早見表</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>領域</th><th>v1（基盤）</th><th>v2（月アップデート）</th><th>v3（箱庭東京）</th><th>v4（リアル東京 OSM）</th><th>v5（ポリッシュ）</th></tr></thead>
+      <tbody>
+        <tr><td><b>ワールド</b></td><td>無限平面・決定論チャンクのみ</td><td>同左 + 巻き込めないランドマーク12種（アーキタイプ8→10/ティア）</td><td><strong>有限3.6×3.8km東京</strong>・ゾーンマスク + CuratedSpawner（FLAG_CURATED・動的リバンディング）</td><td>カバレッジ内は<strong>OSM実建物14,563棟</strong>（OsmSpawner・FLAG_OSM=32・admission制御）+ 実道路/河川/公園の地表レイヤ</td><td>同v4 + アキバ建物6棟・除外矩形をリボンにも適用</td></tr>
+        <tr><td><b>スケール</b></td><td>6ティア 5cm→750m・500mでWINバナー</td><td>同ティア・420m月コール→500m降臨</td><td><strong>7ティア 2cm→</strong>・380mコール→420mアーム→<strong>スカイツリー634m接触</strong></td><td>同v3（座標は実地理 水平1:5/高さ1:2.5）</td><td>同v4</td></tr>
+        <tr><td><b>ゴール</b></td><td>ScaleManager の WIN ラッチ</td><td><strong>フィナーレ状態機械</strong>（月降下→着地→接触→合体→昇天）</td><td>同機械を再テーマ（降下削除・固定ゴール・シルエット⇔メッシュハンドオフ・基部恒久コライダ）</td><td>同v3</td><td>昇天が<strong>宇宙の地球エンディング</strong>へ（EarthView・GOAL_ASCEND_S 7.0）</td></tr>
+        <tr><td><b>成長</b></td><td><code>cbrt(R³+K·r³)</code> 一律</td><td>同左（K=10に調整）</td><td><strong>growthKForObjR テーパー</strong>（K=10→床2、ランドマーク/コレクティブル除外）+ 帯別密度</td><td>同v3 + OSM帯のKEEP_K間引き（データ側ペーシングレバー）</td><td>同v4</td></tr>
+        <tr><td><b>操作</b></td><td>WASD+タッチジョイスティック</td><td><strong>+ダッシュ</strong>（ゲージ式、Space/ボタン）</td><td>同左（ジョイスティック出現域・透明度を調整）</td><td>同v3</td><td>同v3 + 開幕オンボーディング🔩誘導</td></tr>
+        <tr><td><b>スコア</b></td><td>なし</td><td><strong>タイム/スコア/コンボ/レア/ランクS–D/X共有/自己ベスト</strong></td><td>ランク実測リチューン（S290）+ ランドマークボーナス + コレクション数</td><td>同v3（実測±15%内、再アンカーなし）</td><td>同v4</td></tr>
+        <tr><td><b>収集</b></td><td>なし</td><td>ランダムレア（金ティント、スコアのみ）</td><td><strong>コレクション図鑑12種</strong>（凍結ID・サムネイル・周回永続）+ ランダムレア併存</td><td>同v3</td><td><strong>13種</strong>（スタックチャン追記、append-only・旧セーブ互換）</td></tr>
+        <tr><td><b>音</b></td><td>合成SEのみ</td><td><strong>+合成BGM</strong>（ボサポップ・ティアレイヤ解放・2クロックスケジューラ）+ ミュート</td><td>7ティア再キー + ランドマーク/コレクトSE</td><td>同v3</td><td>同v3</td></tr>
+        <tr><td><b>空・遠景</b></td><td>グラデーションドーム+フォグ</td><td><strong>太陽/月/星/雲のスカイシェーダ + 遠景シルエットリング + 夜フェード</strong></td><td>スカイツリーシルエットスロット + 東京湾の水面/岸壁 + 富士山遠景</td><td>同v3 + OSM河川を共有水面マテリアルへ</td><td>+ 宇宙フェード（setSpaceFade01）・夜の地球・星シェル</td></tr>
+        <tr><td><b>UI</b></td><td>HUD+タイトル/WIN</td><td>タイマー/スコア/ゲージ/トースト/月矢印/リザルト段階表示</td><td><strong>モバイルファースト全面書き直し</strong>（バンドマトリクス・ダッシュリング・セーフエリア）+ 巻き込み名フロート + 図鑑グリッド</td><td>+ OSMクレジット（タイトル/リザルト）+ データ取得進捗行</td><td>+ 🔩パーツ矢印（kindフィールド）+ 13セル図鑑グリッド</td></tr>
+        <tr><td><b>キャラ</b></td><td>なし</td><td>なし</td><td><strong>ドナック実況</strong>（webp8枚・44行・優先度+クールダウン）</td><td>同v3</td><td>45行（スタックチャン+地球の台詞、'start'/'ascension'リテキスト）</td></tr>
+        <tr><td><b>描画上限</b></td><td>55（典型~38）</td><td>60（最悪56）</td><td>72（最悪64、<strong>BatchedMesh</strong> EXTRAプール+4を含む）</td><td>72（台帳68: +OSMプール2+地表1+河川1、実測60）</td><td>72（フィナーレ時のみ+2で最悪70）</td></tr>
+        <tr><td><b>物理</b></td><td>自作400行・空間ハッシュ3面</td><td>不変</td><td>+ CityTerrain（ショップ壁/棚・スカイツリー基部・境界ソフト減速）</td><td>同v3（OSM建物は静的球として既存経路に乗る）</td><td>同v4</td></tr>
+        <tr><td><b>永続化</b></td><td>なし（?seed= URLのみ）</td><td>best / mute（v2キー）</td><td>best / mute / <strong>collection</strong> / donackOff（v3キー、図鑑はappend-only契約）</td><td>同v3</td><td>collection 13ビット（0xFFF→0x1FFF、未知上位ビット保存）</td></tr>
+        <tr><td><b>例外台帳</b></td><td>—</td><td>WebAudio有界アロケーション・月の fog:false・月メッシュ1280tris</td><td>+ ドナックwebp・スカイツリー fog:false~1400tris・ブートサムネイル描画・ショップ地形リリース</td><td>+ 東京データ285KB(ODbL帰属必須)・unitBox軸整列法線制約</td><td>+ EarthView透明パス（depthTest:false・fog:false）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">シード互換性: ストライドや密度・ドロー列が変わるため、<strong>v1/v2のシードURLは v3 では別の世界</strong>を生む。同一ビルド内では従来どおり同シード=同世界（レア・ランドマーク配置含む）。</p>
+</section>
+
+<!-- ============ 13. v4 osm ============ -->
+<section id="v4-osm" class="reveal">
+  <h2>13. v4 リアル東京（OSM）</h2>
+  <h4>何を / なぜ</h4>
+  <p>v3の手作業の箱庭を、<strong>OpenStreetMap由来の実在の東京</strong>で上書きするピュアデルタ。Google Maps Platform は規約上の派生データセット禁止により不採用とし、OSM（ODbL）を採用。全bindingな不変条件（リスケールのピクセル同一性・シームレスネス法・ゼロアロケーション・DRAW_CALL_CAP 72）は据え置きのまま、明示的に定義されたカバレッジ幾何（秋葉原アンカーの詳細ディスク r=500 game m + 渋谷・浅草パッチ矩形）の内側で、手続き生成の帯域3/4フィルを<strong>吸収可能な実建物 14,563棟</strong>（FLAG_OSM=32、コード94..109、16ボクセルアーキタイプ）に置き換える。設計は設計→敵対的批評→改訂の3段で確定し、批評エージェントは設計の数値を信用せず<strong>自らOverpassへカウントクエリを再実行</strong>して全予算を実測値（詳細エリア建物58,155棟=設計の1.5倍）から再導出させた。</p>
+
+  <h4>データパイプライン（ビルド時・<code>scripts/osm/</code>）</h4>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>段</th><th>スクリプト</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td><b>取得</b></td><td><code>fetch-osm.mjs</code></td><td>再開可能なOverpass GETプロトコル（UAヘッダ必須・/api/statusスロットポーリング・429はretry-afterでリトライ回数を消費しない・セルごとアトミック書き込み）。1km四方42セル・約115リクエスト。タグ削減済み生データ 7.3MB/124ファイルをコミット</td></tr>
+        <tr><td><b>変換</b></td><td><code>build-tokyo-bin.mjs</code></td><td>束縛された変換順: グローバル(type,id)重複除去（tower優先）→ マルチポリゴン外輪組み立て → 投影（水平1:5・高さ1:2.5）→ カバレッジ重心クリップ → 除外ゾーン → 凸包+回転キャリパOBB → 接尾辞安全な高さパース → <strong>ボクセル量子化</strong>（0.05/0.25m刻み）→ 長屋マージ（14,546件）→ <strong>クリアランス焼き込み</strong>（未出荷のresidential道路も使い、道路回廊へ食い込むOBBを最大30%インセット/ドロップ: 13,367インセット・14,319ドロップ）→ 帯域+KEEP_K間引き → 最終再クリップ → FKT4 v1シャード+マニフェスト。決定論的（再実行でバイト同一）</td></tr>
+        <tr><td><b>検証</b></td><td><code>verify-tokyo-data.mjs</code></td><td>predeployゲート: 容量予算 / EXPECTED_COUNTS（フェッチ時の<code>out count;</code>再実測）±20% / 重複・カバレッジ外・除外違反ゼロ / POLY u16証明 / 二重実行バイト同一 / ランドマーク実距離グラウンドトゥルース / <strong>ナビゲビリティ</strong>（0.5mラスタ・ボール半径侵食フラッドフィル、連結率≧95%ゲート: r=1で100.0%、r=3で96.7% PASS）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>出荷データ: 建物14,563棟（帯域ヒストグラム [—,—,102→288,13020,1437,4]）+ 道路12,980レコード/387タイル + 水面・公園ポリゴン1,478レコード/353タイル = <strong>core 105KB + outer 181KB ≈ 285KB gz</strong>（ハードキャップ1,536KBの2割以下）。建物レコードは詳細10B/タワー12Bの自前リトルエンディアンバイナリで、実行時は型付き配列へ一発デコード（レコード単位のJSオブジェクトなし=ゼロアロケーション法の継続）。</p>
+
+  <h4>ランタイム統合</h4>
+  <ul>
+    <li><strong>OsmWorld</strong>（<code>world/osmWorld.js</code>）: 2シャード並列fetch+ストリーミング進捗表示 → ワンパスデコード → タイルインデックス（帯域ソート済みレコード+bandStart）。<strong>デッドラインラッチ</strong>: ティア2到達時に未readyなら <code>abortAndFail()</code>（AbortControllerで取得中断・恒久failed・遅延データ破棄）で手続き生成へワンウェイフォールバック — 「空の街並みウィンドウ」と「二重フィル」を両方排除（<code>?osmdelay=ms</code> でレース再現可能）。</li>
+    <li><strong>OsmSpawner</strong>（<code>world/osmSpawner.js</code>）: curatedのオリジン/スケールパターン逐語再利用。フレームあたり≦64スロット操作、最近傍タイル優先の帯域別アクティベーション、帯域別生存上限 <code>OSM_ALIVE_CAP {b2:192, b3:1536, b4:768, b5:128}</code>。<strong>ハード入場制御</strong>: <code>store.aliveCount() &gt; ALIVE_TOTAL_BUDGET(4096) − 128</code> の間はアクティベーション全停止 — カバレッジ境界またぎの最悪ケースを静的算術でなく実行時で抑止（「境界ではOSMが先に薄くなる」は文書化された仕様）。境界に300フレーム駐車して alive&lt;4096 を確認する束縛テスト付き。</li>
+    <li><strong>BatchedMeshプール</strong>（<code>render/osmPools.js</code>）: 詳細2,048+大型1,024の2バッチ。プール所属は帯域で固定し、<code>Σ OSM_ALIVE_CAP[member] ≦ 容量</code>（1728≦2048 / 896≦1024）をブートアサート — スロット枯渇を確率でなく構造で不可能化。unitBoxジオメトリは<strong>軸整列法線</strong>制約をブートアサート（BatchedMeshは逆転置を適用しないため非一様スケールで法線が壊れる斜め面を禁止）。</li>
+    <li><strong>地表レイヤ</strong>（<code>render/osmGround.js</code>）: 道路/鉄道/公園=頂点カラーBatchedMesh 1枚 + 河川=env共有水面マテリアル1枚（計+2ドロー、台帳は正直に68/72）。コプレーナZファイトはconvert焼き込みのYレイヤオフセット（公園+0.02/細街路+0.04/幹線+0.06 game m、相似変換でスケールしリスケール同一性を保持）で解決。≦2タイルビルド/フレーム、フォグ距離連動のリング常駐、細街路LOD。</li>
+    <li><strong>モデル品質パス</strong>: ヒーロー12種の三角形上限350→600、頂点AOベイク、共有マテリアルへの onBeforeCompile リムライト注入（fog前に注入しシームレスネス法に適合）——いずれも独立キルスイッチ付き3コミットに分離し、A/Bスクリーンショットシートでオーナー承認をマップレビューから分離。</li>
+  </ul>
+
+  <h4>地理マッピング</h4>
+  <ul>
+    <li><strong>単一の地理的真実</strong>: <code>scripts/osm/geo.mjs</code> がアンカー（秋葉原 35.69870, 139.76930）・投影・カバレッジ幾何・除外ゾーンのすべてを所有。<code>cityMap.js</code> のカバレッジ矩形はビット同一の式で計算し、貼り付けた倍精度クロスチェック定数と<strong>完全一致をアサート</strong>（Node専用のgeo.mjsをブラウザへimportせずに単一ソースを保証）。</li>
+    <li><strong>縮尺</strong>: 水平1:5・高さ1:2.5。v3のMAP_BOUNDS・ランドマークはしご・吸収65%則はすべて据え置き。</li>
+    <li><strong>ランドマーク照合（手算術の禁止）</strong>: 批評がレインボーブリッジの手打ち表に2.6倍の誤りを発見 → 全ランドマークをOSM要素IDで一度だけ解決してコミットし、ドキュメント表は生成出力、バリデータがランドマーク間の<strong>実距離</strong>をグラウンドトゥルースと照合（橋はrelation 18497742の主塔2本から実測840m→167.9 game m）。v3の地区ゾーン・クラスタは「照合済みランドマーク − v3手置きランドマーク」の差分ベクトルで一括平行移動し、ショップ・開始街路・出口導線は<strong>バイト同一</strong>のまま（開幕1分の無回帰ゲート）。</li>
+  </ul>
+
+  <h4>ODbLコンプライアンス（リリースゲート・全項目必須）</h4>
+  <ul>
+    <li>ゲーム内帰属: タイトル・リザルト両画面に「© OpenStreetMap contributors」→ openstreetmap.org/copyright リンク（リザルトの段階リビールの外に置き、スクリーンショット構図に必ず入る）</li>
+    <li>マニフェストにライセンスリンク+抽出日時（extractionDate 2026-06-11）を記録、READMEにODbL節</li>
+    <li><strong>派生データベース提供義務（ODbL 4.4(b)）</strong>: 公開リポジトリの <code>data/osm-raw/</code>（タグ削減済み生レスポンス）+ <code>scripts/osm/</code>(再現可能パイプライン) を明示的に指定</li>
+    <li><code>npm run osm:verify</code> がODbLフィールドの存在を含めてpredeployで強制</li>
+  </ul>
+  <p class="note">関連: <code>scripts/osm/geo.mjs</code> <code>fetch-osm.mjs</code> <code>build-tokyo-bin.mjs</code> <code>verify-tokyo-data.mjs</code> / <code>src/world/osmWorld.js</code> <code>osmSpawner.js</code> / <code>src/render/osmPools.js</code> <code>osmGround.js</code> / <code>docs/DESIGN-V4.md</code></p>
+</section>
+
+<!-- ============ 14. v5 polish ============ -->
+<section id="v5-polish" class="reveal">
+  <h2>14. v5 ポリッシュ</h2>
+  <h4>何を / なぜ</h4>
+  <p>オーナーのスマホ実プレイ起点のフィードバック対応。①開幕不可視バグ（v4の地表レイヤが2cmボールを覆っていた——浮かせ量がフォグ下限で半径の90%、道路Yオフセットが半径の3倍、そして<strong>実在のJR総武線高架リボンがスポーン直上を通過</strong>。除外ゾーンが建物のみ適用でリボン素通し）のホットフィックス、②要望5点（誘導・スタックチャン・アキバ建物・センゴク電子・地球エンディング）の実装。6エージェント・約97.7万トークン・約100分、計画フェーズの敵対的チェックが実装前に4件のショーストッパーを検出した。</p>
+
+  <h4>オンボーディングシステム（<code>game/onboarding.js</code> 新規）</h4>
+  <ul>
+    <li>フィナーレの🗼矢印機構を再利用: 10Hzで <code>EVT.GOAL_GUIDE</code> を emit し、ペイロードに動的 <code>kind</code> フィールド（誘導中='parts' → HUDが矢印グリフを🔩へ差し替え、引退時の最終emitで'goal'へ復元 — finaleはkindを書かないため共有ペイロードがその後も正しく読める）。</li>
+    <li>実メートルでauthoredされたウェイポイント列（棚→ゲート→側溝）をライブworldScaleで変換して案内。<strong>初回吸収 or 30秒経過 or フィナーレ非idle</strong>で恒久引退、REBASEで即時無効化（座標変換の妥当性が壊れるため）。GAME_STARTで再アーム。</li>
+    <li>あわせて開幕密度を補強: 開始点を囲む5列×8個のT0パーツリング+出口レーン3列（v5専用の独立rngストリーム mulberry32(0x56355041) で生成、<strong>v4の449配置はバイト同一を証明</strong>）。</li>
+  </ul>
+
+  <h4>地表レイヤの半径連続フェード</h4>
+  <ul>
+    <li>地表BatchedMeshのマテリアルへ onBeforeCompile でユニフォーム対 <code>uGroundFade01/uGroundTint</code> を注入し、<code>diffuseColor.rgb = mix(uGroundTint, diffuseColor.rgb, uGroundFade01)</code>。フェード = <code>smoothstep(0.6, 3.0)</code> on <strong>trueRadius = radiusSim × worldScale</strong> — 実寸半径の関数なのでリスケール不変（KeyRピクセル一致は1ulpで成立、実測差1.7e-16）。地色はenvの生きたパレット（クロスフェード追従）から取得。</li>
+    <li>浮かせ量/Yオフセットは<strong>ボール半径10%上限のクランプ</strong>（半径連続）。フェード定数はモジュールローカル（tuning.js非搭載、GROUND_LIFT_K前例に従う）。</li>
+    <li>パイプライン側の本修正: 道路/鉄道リボンをショップ・開始街路の除外矩形からクリップし、<code>osm:verify</code> に再発ゲート（除外ゾーン内リボン頂点=出荷失敗）を追加。</li>
+  </ul>
+
+  <h4>コレクション拡張（append-onlyの実践）</h4>
+  <ul>
+    <li>コード表 <strong>110→115</strong>: <code>V5_CODE_BASE=110</code>（スタックチャン110 / ゲーセン111 / 家電量販112 / メイドカフェ113 / PCパーツビル114）。ID→コード変換は <code>objects.js collectibleCodeForId(id)</code>（id≦11→70+id、id 12+→110+）に<strong>単一集約</strong> — 敵対的チェックが screens.js:465 の <code>70+id</code> ハードコード（id 12が西郷さん像として表示される）を実装前に検出した。</li>
+    <li><code>COLLECT_TOTAL=13</code>。localStorageマスクは 0xFFF→0x1FFF のOR追記、旧12bitセーブは12/13として読み込み、未知上位ビット保存（11章の前方互換契約どおり）。図鑑グリッドは <code>.collect-cell:nth-child(13)</code> で13セル目を中央寄せ（両ブレークポイント対応）。</li>
+    <li>統合検証がさらに2件捕捉: <code>curated.js</code> のプールクラス表がv5コードで範囲外読み（<strong>不可視だが衝突する</strong>配置になるショーストッパー）と、アキバ建物の colorHex −1 がグレーパレットへフォールバックしてレインボー看板が灰色に洗われる問題。</li>
+  </ul>
+
+  <h4>宇宙-地球エンディング（<code>render/earthView.js</code> 新規）</h4>
+  <ul>
+    <li>プロシージャル夜の地球（単位球48×32・2,976tris、シード付き値ノイズ大陸、海岸バイアス+日本弧ブーストの都市光頂点）+ 星シェル700点。共有uTime 1個で頂点属性のきらめきを駆動（フレームあたりユニフォーム書き込み1+スカラー2、アロケーションゼロ）。</li>
+    <li><strong>レンダリングの要点 — 透明パスのペイント順トリック</strong>: 両メッシュとも <code>transparent / depthTest:false / depthWrite:false / fog:false</code> で、不透明ワールド全体の<strong>後</strong>に renderOrder（blobShadow 1 &lt; 星 4 &lt; 地球 5 &lt; スパークル 10）どおりペイントされる。不透明な地面・建物のデプスに遮蔽されないため「完全にフォグに沈んだ夜のジオラマの下に地球が見える」が、<strong>ワールドメッシュに一切触れずに</strong>成立する（フィナーレ専用+2ドロー、最悪台帳70/72）。</li>
+    <li>env側は <code>setSpaceFade01(k)</code> で天頂を宇宙の黒へ（仰角加重——夜フォグの地平線帯が大気のリムとして読める）。finaleのascensionが進行度で持ち上げ（カメラ距離係数14→30）、寸法はすべて凍結ボール半径rの無次元倍数（地球半径45r・星シェル160r）。<code>GOAL_ASCEND_S</code> 5.0→7.0。</li>
+  </ul>
+  <p class="note">関連: <code>src/game/onboarding.js</code> <code>src/render/earthView.js</code> <code>src/render/osmGround.js</code> <code>src/game/finale.js</code> <code>src/world/objects.js</code> <code>src/config/cityMap.js</code> / 一次記録: <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/worklog/14-v5-polish.md" target="_blank" rel="noopener">docs/worklog/14-v5-polish.md</a></p>
+</section>
+
+<!-- ============ refs ============ -->
+<section class="reveal">
+  <h2>参考資料</h2>
+  <ul>
+    <li>確定設計書: <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN.md" target="_blank" rel="noopener">docs/DESIGN.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V2.md" target="_blank" rel="noopener">DESIGN-V2.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V3.md" target="_blank" rel="noopener">DESIGN-V3.md</a> / <a href="https://github.com/aieo-product/fableDemoGame/blob/main/docs/DESIGN-V4.md" target="_blank" rel="noopener">DESIGN-V4.md</a></li>
+    <li>全作業ログ（各フェーズの意思決定・レビュー結果）: <a href="https://github.com/aieo-product/fableDemoGame/tree/main/docs/worklog" target="_blank" rel="noopener">docs/worklog/</a></li>
+    <li>制作の物語（非エンジニア向け）: <a href="index.html">ストーリーページ</a></li>
+    <li>プレイ: <a href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">fable-katamari.pages.dev</a></li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><span class="f-ball"></span><strong style="color:var(--ink)">FABLE KATAMARI</strong></p>
+    <p>Claude (Fable 5) が ultracode（マルチエージェントワークフロー）で制作</p>
+    <p>MIT License ／ <a href="https://github.com/aieo-product/fableDemoGame" target="_blank" rel="noopener">GitHub: aieo-product/fableDemoGame</a> ／ <a href="index.html">ストーリー</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

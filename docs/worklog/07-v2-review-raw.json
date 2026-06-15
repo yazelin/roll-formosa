@@ -1,0 +1,228 @@
+{
+  "confirmed": [
+    {
+      "dimension": "seams",
+      "severity": "medium",
+      "title": "Rank-stamp thud plays ~8.7s before the rank stamp (GOAL fires at contact, reveal is keyed to GAME_WIN)",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/audio/sfx.js",
+      "detail": "sfx.js:127-129 subscribes EVT.GOAL and _rankThud (sfx.js:456-464) schedules the 70Hz thump at ctx.currentTime + 1.6s, with the comment 'to land on the CSS rank-stamp reveal'. But EVT.GOAL is emitted by runStats._onMoonContact (runStats.js:200-256) synchronously inside the MOON_CONTACT dispatch — i.e. at the clear instant — while the rank-stamp CSS reveal is scheduled by screens._onGameWin at CUE_RANK_MS=1600ms AFTER EVT.GAME_WIN (screens.js:51, 281-283). main.js only emits GAME_WIN when finale.state === 'done' (main.js:467-471), which is contact + ~1 frame (contact->merge) + MOON_MERGE_S 1.2 + MOON_ASCEND_S 5.0 + AFTERGLOW_S 2.5 ≈ 8.7s later. Net effect: the thud fires 1.6s after contact, colliding with the grand fanfare tail and the BGM duck, and the actual rank stamp ~10.3s after contact lands silent. DESIGN-V2.md line 85 carries the same conflation ('Rank stamp thud on EVT.GOAL ... +1.6s ... to match the CSS reveal'), so the implementation faithfully reproduces a spec-internal contradiction — but the audible result is wrong either way."
+    },
+    {
+      "dimension": "seams",
+      "severity": "low",
+      "title": "DASH_READY chime can fire mid-finale-cinematic (gauge keeps recharging after MOON_CONTACT)",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/physics/ballPhysics.js",
+      "detail": "Post-contact, main.js keeps calling ballPhys.step every fixed step (main.js:431-437 — only absorb/spawner/rebase/intent are gated by finale.inputLocked). ballPhysics.step recharges dashGauge01 unconditionally and emits EVT.DASH_READY on the refill edge (ballPhysics.js:119-126). A player who dashed shortly before reaching the moon (the natural play pattern) has gauge < 1 at contact with _dashReadyAnnounced false, so within <= DASH_RECHARGE_S (4s) of the merge/ascension cinematic the dash-ready chime (sfx.js:112-114, _readyChime) plays over the fanfare/BGM duck, and hud._onDashReady restarts its flash timer on the hidden HUD. This contradicts the run-is-over framing of MOON_CONTACT ('finale once = run end', events.js:26)."
+    },
+    {
+      "dimension": "seams",
+      "severity": "low",
+      "title": "HUD moon arrow ignores MoonGuideEvent.onScreen — arrow overlaps the moon whenever it is visible on screen",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/hud.js",
+      "detail": "finale._projectAndEmitGuide computes p.onScreen = !behind && |ndc| <= 1 (finale.js:626) per the MOON_GUIDE contract ({x01, y01, onScreen, active} -> 'screen-edge guide', events.js:25, DESIGN-V2.md line 71 '#moon-arrow screen-edge indicator'), but hud._onMoonGuide (hud.js:341-358) never reads onScreen: while p.active it always shows the arrow at the clamped screen position. During the 6s descent the moon is front-and-center for much of the time, so a 56px arrow sits directly on top of the descending moon — the field exists precisely to dim/hide the edge indicator in that case and is dead code today."
+    },
+    {
+      "dimension": "seams",
+      "severity": "low",
+      "title": "MOON_GUIDE projects post-rescale/rebase moon coordinates through the camera's stale pre-transform matrix on the transform frame",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/game/finale.js",
+      "detail": "Pre-contact rescale/rebase remain live during DESCENT/LANDED (main.js:454-457): ScaleManager mutates camera.position at frame step 4 (cameraRig.rescaleState/rebaseState, cameraRig.js:357-392), but camera.matrixWorldInverse is only recomputed at render (step 7). finale._projectAndEmitGuide (finale.js:612-629) then runs at step 4.5 with NEW-space moon coordinates (the RESCALE/REBASE handlers rewrote _simCache, finale.js:178-192) against the LAST frame's OLD-space matrixWorldInverse. The header acknowledges one-frame matrix staleness as fine for a 10Hz guide, but on a rebase frame the inconsistency is not one frame of motion — it is the full integer shift (|shift| ~1500 sim units) or a 5x scale mismatch, so if a 10Hz guide tick lands on that frame the HUD arrow snaps to a wildly wrong position/rotation for 100ms. Rebase during a long LANDED kiting phase (|pos| > 1500) and the 781m rescale during late LANDED growth are both reachable."
+    },
+    {
+      "dimension": "seams",
+      "severity": "low",
+      "title": "Spawner subscribes EVT.ABSORB before the documented-first main attach-handler — the binding ABSORB order comment is inaccurate",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/main.js",
+      "detail": "The binding contract (events.js:32-34, main.js:188-192, runStats.js header) states the ABSORB dispatch order is 'main attach-handler -> runStats -> sfx/effects/hud'. In reality the Spawner constructor subscribes EVT.ABSORB at main.js:164 (spawner.js:339), i.e. BEFORE main's attach-handler subscription at main.js:203, so the true dispatch order is spawner -> main -> runStats -> effects -> sfx -> hud. Today this is benign — spawner._onAbsorb (spawner.js:610-620) increments _slotGen, clears _chunkKeyOf/_placementOf, marks the consumed bitmask and compacts the rare list, none of which touches the store fields main's handler reads (instanceSlot, archetype, px/py/pz/radius are read intact, and absorb.js frees the store only after the emit). But the documented invariant that downstream maintenance is supposed to rely on is wrong: anyone adding logic to spawner._onAbsorb that mutates instanceSlot/archetype (e.g. freeing the render slot there) would silently corrupt the attach/tint path while the comments insist main runs first."
+    },
+    {
+      "dimension": "perf",
+      "severity": "low",
+      "title": "BGM node-budget arithmetic undercounts the lead layer, and the documented 'sfx + bgm combined' 60/s budget is unenforced (sfx absorb blips are unthrottled)",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/audio/bgm.js",
+      "detail": "Two honesty problems with the bounded WebAudio exemption. (1) The header (bgm.js:8-9) claims worst case '~51/s: ... lead 10 ... per 1.875s bar', but the MELODY table (lines 75-84) has bars with 6 non-rest notes (bar 1: indices 0,2,3,5,6,7; bar 7 likewise), and _lead creates 2 nodes per note (osc+gain, lines 609-627), i.e. 12 nodes/bar, not 10. True worst-case bar = bass 8 + kick 4 + rim 4 + hats 16 + stabs 14 + lead 12 + shaker 32 + arp 8 = 98 nodes / 1.875 s ≈ 52.3/s, plus the one-shot MOON_CALL shimmer adds 6 more in a single second (lines 293-307). Still under 60 for bgm alone, but tighter than documented. (2) NODE_BUDGET_PER_S is documented as the 'sfx + bgm combined target' (line 48-49), yet sfx.js subscribes EVT.ABSORB with no rate cap (sfx.js:96-97) and _blip creates 4 nodes per absorb (two _note calls, sfx.js:308-309, each osc+gain). A dash through a dense cluster absorbing 3-5 objects/s adds 12-20 nodes/s; with all bgm layers unlocked (T4+, exactly when absorb rates are highest) combined creation reaches ~65-75 nodes/s, breaching the binding budget. Nothing measures or asserts the combined rate at runtime."
+    },
+    {
+      "dimension": "perf",
+      "severity": "low",
+      "title": "Sky dome (the most expensive fragment shader) is rendered first with depthWrite:false, shading every screen pixel before ground/backdrop/world paint over ~50-70% of them",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/render/environment.js",
+      "detail": "The v2 SKY_FRAG (lines 156-253) runs per pixel: 2-octave value noise for clouds (2 vnoise = 8 hash21 calls + 2 smoothsteps), hashed star grid (hash31 + sin twinkle), sun disc + two pow() glare lobes, moon disc with per-fragment normalize(cross(uMoonDir, up)) and cross() tangent-frame construction (lines 238-239 — uniform-constant expressions rebuilt per fragment unless the driver hoists them), exp() halo, and the horizon melt. The dome is renderOrder = -10 with depthWrite: false (lines 404-411), so it is rasterized across the FULL frame first, then the ground plane, backdrop ring (renderOrder -5, also depthWrite:false, DoubleSide — its own band of sky overdraw), and the whole instanced world repaint most of those pixels. With early-z unusable in this paint order, the most expensive shader in the game pays 100% screen coverage every frame; at 1080p that is ~2M wasted-heavy fragments, the dominant fragment cost on integrated/mobile GPUs and a direct threat to the fixed-60Hz target. The shader itself is sane (branch-free, texture-free) — the cost problem is purely the draw order."
+    },
+    {
+      "dimension": "perf",
+      "severity": "medium",
+      "title": "HUD EVT.SCORE handler forces a synchronous layout reflow per absorb (unthrottled), inside the fixed-step physics loop",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/hud.js",
+      "detail": "EVT.SCORE is emitted synchronously by runStats inside every EVT.ABSORB dispatch, which fires inside absorb.resolve in the 60Hz fixed-step loop (main.js:434). Unlike _onGrow/_onAbsorb, _onScore (hud.js:284-296) has NO HUD_THROTTLE_HZ gate: every single absorb does span.textContent = '+' + p.delta, two classList mutations, `void span.offsetWidth` — a forced synchronous style+layout recalculation — plus _writeScore's score.toLocaleString('ja-JP') (Intl formatting + string allocation). Absorbing several objects in one render frame (dash through a cluster — the common case in T3+ where object density and stride-10 spawning peak) triggers multiple forced reflows in a single frame, each costing ~0.3-2 ms on weak devices, stalling the physics substep mid-frame. This is the largest per-event main-thread cost in the new v2 code and undermines the otherwise-careful diffed/throttled HUD design."
+    },
+    {
+      "dimension": "perf",
+      "severity": "low",
+      "title": "Bgm.dispose() never unsubscribes its 5 bus handlers — a disposed Bgm resurrects a new AudioContext on the next GAME_START",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/audio/bgm.js",
+      "detail": "The constructor subscribes GAME_START/GAME_RESET/TIER_UP/MOON_CALL/MOON_CONTACT on the bus (lines 155-159), but dispose() (lines 191-207) only removes the window/document DOM listeners and closes the context — it never calls eventBus.off for any bus handler. Consequences: (a) the disposed instance stays reachable from the bus forever (memory leak in any test/teardown/HMR scenario — the design's stated purpose for dispose); (b) worse, after dispose() a GAME_START event runs _onGameStart -> _onGesture() -> _ensureCtx() (line 241-243), which recreates a brand-new AudioContext, layer graph, noise buffer and PeriodicWave on the supposedly-dead instance and starts its setInterval scheduler — two Bgm instances then both schedule notes onto separate contexts (doubled node creation, doubled audio, and browsers hard-cap AudioContexts at ~6, after which creation throws). Backdrop.dispose and Environment.dispose both do the bus.off bookkeeping correctly (backdrop.js:288-294, environment.js:688-690), so this is an inconsistency, not a pattern."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "medium",
+      "title": "Score economy: absolute-meters power law makes T5 worth >99% of the score; time/moon/rare bonuses are rounding errors",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/config/tuning.js",
+      "detail": "objScore = 100 * sizeReal^1.4 on REAL meters (runStats.js:177). Catalog magnitudes: T0 thumbtack diameter 0.024m -> max(1, round(100*0.024^1.4)) = 1 point; T5 absorbables are radiusNominal 60-130m (catalog.js:1342,1362,1409,1476,1496), i.e. sizeReal 120-260m -> 100*260^1.4 ~= 241,000 points each, ~723k with the x3 combo cap. That is exactly why dev runs land at 12-15M: virtually the entire total is earned in the last band. Consequences: (a) TIME_BONUS_MAX 30,000 (the only score reward for speed) is ~0.2% of the final score, so the time-bonus curve (FULL 300s / ZERO 720s) is functionally dead and bestScore is fully decoupled from rank/time; (b) MOON_SCORE_BONUS 20,000 and RARE_SCORE_BONUS 5,000 are invisible at goal, while at T0 a single rare (+5,000) outweighs thousands of normal absorbs — the flat constants cannot serve both ends of a 4-orders-of-magnitude size range."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "medium",
+      "title": "Dash ends with a one-substep ~45% speed cut — hard 'hit glue' jerk every dash",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/physics/ballPhysics.js",
+      "detail": "The dash impulse (+7r, line 145) on top of the 8.5r cruise yields ~15.5r during the burst (under the 18.7r dashing cap). When dashTimer expires, the cap reverts to 8.5r and the unconditional clamp at lines 186-193 rescales velocity to the cap in a single 16.7ms substep — an instantaneous ~7r·sim/s (45%) deceleration. The camera position spring (CAM_POS_OMEGA 6) partially hides it, but the ball's screen-space motion and the 0.4s velocity look-ahead target both snap, so every dash ends with a visible hitch instead of a glide-out. The impulse direction logic itself (vel dir above 0.3*cap, else camera forward) is sound and controllable; only the exit is the problem."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "low",
+      "title": "First two minutes of play show '+1' score floats — the score system looks broken exactly during onboarding; late-game '+N' deltas are unformatted",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/hud.js",
+      "detail": "Same power-law root cause, but a distinct first-time-player surface: at T0 every absorb floats '+1' (objScore floor, runStats.js:177) and after a full minute the score panel reads ~200-400 — a new player concludes scoring is broken or pointless during the precise window that decides whether they keep playing. At T5 the opposite: hud.js:289 writes span.textContent = '+' + p.delta with no grouping, so floats read '+723400' while the score panel right next to it shows '14,523,001' via toLocaleString('ja-JP') (hud.js:438) — inconsistent and unreadable at a glance. The 800ms result count-up (screens.js:333-347) does handle 8 digits correctly (rAF + toLocaleString), so the result screen is fine."
+    },
+    {
+      "dimension": "gameplay",
+      "severity": "medium",
+      "title": "~11s of unskippable cinematic + staged reveal on every replay; result buttons are invisible but clickable for the first 2.2s",
+      "file": "/Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/screens.js",
+      "detail": "From moon contact to actionable buttons: MERGE 1.2s + ASCENSION 5.0s + AFTERGLOW 2.5s (finale.js phase chain) + 2.2s staged reveal before .result-buttons gets .result-reveal (screens.js:284-291) ~= 10.9s with no skip input — finale.update has no fast-forward and screens.js installs no tap-to-skip. Magical on the first clear; pure friction for exactly the players you want re-rolling for S rank and posting to X. Separately, while #win-overlay.staged holds .result-buttons at opacity:0 (index.html:457-460), the .btn children keep pointer-events:auto, so an excited click in the lower-center area during the reveal can trigger the invisible 'Xでシェア' (window.open fires — _xUrl is already built at GOAL, screens.js:186-189) or restart before the rank is even shown."
+    }
+  ],
+  "refuted": [
+    {
+      "dimension": "seams",
+      "title": "Finale descent handoff uses static TIERS[ti].moonAngSize instead of the live blended env.getMoonAngSize()",
+      "why": "The code asymmetry is real: finale.js:370 computes the descent start distance from static TIERS[ti].moonAngSize while the same function uses the live blended direction via _getMoonDir/env.getMoonDirWorld (finale.js:371, 676-677), and environment.js:638-647 documents getMoonAngSize() as added precisely for this handoff — yet the finale never calls it (dead helper). However, the claimed visible size pop is unreachable in every scenario the finding cites, because at every reachable _beginDescent the blended _moonAngSize is exactly equal to TIERS[tierIndex].moonAngSize:\n\n1. Normal play: the last TIER_UP fires at enterTrueRadius=150m (tiers.js:179, T5 'Skyline'), the palette fade lasts PALETTE_FADE_S=2.0s (tuning.js:252), and DESCENT triggers at MOON_GOAL_RADIUS_M=500m (tuning.js:35). A fade in flight at descent would require growing 150m->500m (37x volume) within 2 seconds — not achievable; MOON_CALL at 420m intervenes anyway. There is no tier boundary within ~350m of the goal.\n\n2. 'Hysteresis-edge tier flips near the goal': refuted by topology. A down-flip needs tr < 150*0.9=135m, i.e. shrinking, which the game has no mechanic for (scaleManager.js:171 comment: 'shrinking cannot happen in play'; the down-loop is a float-edge guard). No flip can occur near 500m.\n\n3. DEV watchdog force-descent (tr > 600m, finale.js:240-249): DEV-only, signals an already-broken trigger, and still has no fade in flight for the same topology reason — the last TIER_UP remains at 150m.\n\n4. ?r= dev start (e.g. ?r=740, both thresholds in one frame): main.js:368-376 calls env.setTierPaletteImmediate(devTier) BEFORE the first frame. The first-frame TIER_UP cascade does call startPaletteFade, but _beginFade (environment.js:743-761) snapshots the current values — which are already the devTier endpoint — so the resulting fade is an identity fade for moonAngSize; _moonAngSize === TIERS[devTier].moonAngSize throughout.\n\n5. The env-local NIGHT palette (index 6) reuses TIERS[5].moonAngSize (environment.js:89) and beginNightFade only runs in ASCENSION, after the handoff. resetWorld's setTierPaletteImmediate cancels any in-flight fade (_fadeDur=0, environment.js:673).\n\n'Any future retune' is hypothetical, not a current defect. The suggested one-line fix is harmless, matches the documented intent of getMoonAngSize(), and would make the code robust against future retunes — worthwhile hygiene — but it changes nothing observable today. As a behavioral finding ('visible size pop ... reachable in practice') it is refuted; what remains is a latent-consistency/dead-helper note at low severity."
+    },
+    {
+      "dimension": "perf",
+      "title": "Effects and Finale subscribe anonymous closures on the bus with no dispose/unsubscribe path at all",
+      "why": "Code facts verified accurate: effects.js:307-332 subscribes 7 anonymous closures and finale.js:178-192 subscribes 2, with no stored references and no dispose(), while Backdrop/Environment/Bgm store handlers and bus.off() in dispose(). However, the finding describes no real behavior: (1) both classes are constructed exactly once at boot (main.js:228, 236) and restart goes through reset() only — confirmed no re-subscription path; (2) the leak scenarios are nonexistent infrastructure — there is no test directory and no vitest dependency in package.json, and no file uses import.meta.hot, so Vite performs full page reloads (fresh module-singleton bus) rather than HMR re-construction; (3) it is spec-compliant by design — the binding DESIGN-V2.md explicitly specifies dispose() for MoonView/Bgm/Backdrop but the frozen Finale interface (lines 98, 142-143) lists only reset(), and the effects.js entry (line 102) freezes its bus behavior as 'unchanged (already subscribed)'. The 'pinned Float32Array' consequence requires a second instance on the same bus, which no current or specified code path can create. What remains is a zero-cost future-proofing suggestion, not a perf defect — no allocation, leak, or frame cost occurs in any reachable execution of the shipped game."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "Rank table vs modeled pacing: S=300s sits below the ~345s clean-play baseline, and a normal first run lands C/D with zero in-game explanation of thresholds",
+      "why": "Code reading is accurate (RANK_*_S only consumed in runStats.js:216; no UI threshold legend; rank stamp at screens.js:281), but the finding fails as a defect on three grounds. (1) Spec-compliant by design: docs/DESIGN-V2.md line 64 mandates the exact table 'S<=300/A<=400/B<=540/C<=720/else D', line 226 freezes the constants, and line 66 freezes the result-screen layout without a threshold legend — the code implements the binding spec verbatim. (2) Already tracked: DESIGN-V2.md line 273 makes re-tuning from >=3 real playthroughs a BINDING Phase-3 task ('one-line edits by design'), mirrored at tuning.js:102-103 — the finding's main remedy is already scheduled. (3) The central impact claim is contradicted by the project's own playtest data: spec line 64 records 'v1 averaged 6-8min to 500m; dash + flow should put good players ~5min'. 6-8 min = 360-480s lands A/B/C, and D requires >12 minutes — even the finding's own '8-12 min first-timer' gets C, not the claimed 'giant D'. The finding's ~345s arithmetic baseline is speculative; tuning.js:191-192 itself warns against tuning by arithmetic instead of measured playthroughs, and the measured v1 data makes S=300 match the spec's 'good player ~5min' target (the finding concedes S is defensible). What survives is a minor UX polish suggestion (next-rank-delta hint on the result screen, computable from RANK_*_S) — a reasonable enhancement to fold into the planned Phase-3 retune, not a medium gameplay defect."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "Dash gauge reads as a flat 4s cooldown — DASH_ABSORB_GAIN 0.03 is imperceptible against passive recharge",
+      "why": "The finding's arithmetic is correct (passive 0.25/s from DASH_RECHARGE_S=4.0 at ballPhysics.js:119-121; 0.03/absorb at absorb.js:222-223; ~0.086/s at the documented T0 pace of ~0.35s/absorb, tuning.js:188-191), but the conclusion fails as a defect. (1) Spec-compliant by design: both values are explicitly frozen in the binding DESIGN-V2.md (line 58 and tuning block lines 213-214, Phase-0 value-frozen) — the code implements the spec exactly. (2) The asserted intent (\"roll through dense areas to earn dashes\" as the primary loop) appears nowhere in the spec; the absorb gain is documented as a minor one-line bonus on a timed recharge, so there is no broken feedback loop, only a deliberately conservative one. (3) The suggested fix conflicts with a documented binding constraint: DESIGN-V2.md line 274 states the 0.8s duration + 4s recharge bounds dash frequency to protect the 64/frame front-of-motion spawn budget against fog-wall pop-in at 2.2x cap; an absorb-dominant economy (gain 0.10-0.15) would enable ~2.3-3.5s refills precisely in dense areas, eroding that bound. (4) The \"chime becomes noise\" claim is overstated: DASH_READY is edge-emitted once per refill and a refill only follows a player-initiated dash, so its cadence is player-driven — standard cooldown-ready feedback. What remains is a subjective tuning observation (absorb gain is a ~25-34% modifier, gauge mostly reads as a cooldown) that matches the design's stated choice and is a one-line tuning edit subject to the spec's Phase-3 playtest retuning; at most a low-severity suggestion, not a medium gameplay defect."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "Toast queue-of-1 lets a rare pickup stomp the moon-call / 月へ向かえ telegraphs in their short ~7-10s window",
+      "why": "Mechanics confirmed accurate: _showToast is queue-of-1 (hud.js:460-465), shared by rare (:295), moonCall (:333), and one-shot 月へ向かえ (:354-357); thresholds 420/500m and the ~12%-of-band-volume window check out. However the finding fails adversarial review on three grounds. (1) Spec-compliant by design: the binding DESIGN-V2.md explicitly mandates this exact contract — line 71: \"#hud-toast (MOON_CALL / rare / 月へ向かえ, 3s, queue-of-1)\", repeated at line 115 — so the shared queue-of-1 is the specified design, not an implementation bug. (2) Probability overstated: each moon toast is vulnerable only during its 3s display; with ~6-8 absorbs per 3s at designed pacing and RARE_CHANCE 0.002, the stomp probability is ~1.4% per window, ~3% per run — the finding conflates \"rares are common per tier\" with a rare absorb landing in a specific 3s window. (3) Impact cosmetic: moonCall is quadruple-redundant (toast + 0.5Hz sky-moon glow pulse persisting through CALLED + bgm shimmer swell + sfx pad), and the descent telegraph is the game's most dramatic visual (6s moon descent with angular-matched crossfade) plus the persistent 10Hz screen-edge arrow, which the toast stomp does not affect. The suggested priority mechanism is a legitimate Phase-3 polish idea, but as filed this is a design-preference note against explicitly specified behavior with rare occurrence and multi-channel backup."
+    },
+    {
+      "dimension": "gameplay",
+      "title": "Share text: counter style inconsistency (こ vs コ) and ~100 weighted chars of unused headroom for a stronger hook",
+      "why": "Spec-compliant by design. The share text in /Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/ui/screens.js:405-415 is a verbatim transcription of a frozen template specified character-for-character in the binding spec, docs/DESIGN-V2.md line 69 (§Xポスト), which itself contains `まきこんだ ${absorbed}こ・レア${rares}コ`. The こ/コ mixture is not a typo: the same pairing appears two more times in the spec (line 66 result-screen reveal \"まきこんだ n こ + レア n コ\" and line 62 \"result shows レア n コ\"), and follows the deliberate convention of matching the counter's script to the preceding word (hiragana まきこんだ→こ, katakana レア→コ), consistent with the game's kid-kana voice (さいごの大きさ, レアはっけん). Changing only the share text would desync it from the result screen UI that the spec mirrors. The second claim (unused ~109 weighted chars for an invite hook) is an enhancement proposal against a template the binding spec explicitly freezes with its length annotation \"(~170/280 weighted chars — safe)\"; honoring it would require a spec change, not a code fix. No malfunction, no incorrect data, no spec violation exists — the finding itself concedes the plumbing is correct."
+    }
+  ],
+  "fix": {
+    "buildPassed": true,
+    "fixed": [
+      {
+        "title": "MOON BRIGHTNESS (seeded)",
+        "how": "src/render/moon.js: body material MeshLambertMaterial -> MeshBasicMaterial (self-lit; crater shading is fully baked in vertex colors so Basic renders the bake at full brightness) and GLOW_OPACITY_MAX 0.4 -> 0.6. Verified in-browser: ascension screenshot (/tmp/r480_ascension.png) shows a bright glowing full moon with craters + halo against the night sky, no crescent."
+      },
+      {
+        "title": "RANK/PACING REALITY CHECK (seeded)",
+        "how": "Ran three driven in-browser runs (vite dev :4323, headless agent-browser, synthetic held-W + periodic dash + steering wobble, seed 777), logging HUD sim-timer + size every ~2s. Retuned RANK_S_S/A/B/C 300/400/540/720 -> 120/180/280/420 and TIME_BONUS_FULL_S/ZERO_S 300/720 -> 120/420 in src/config/tuning.js, with the empirical model documented in the comment and in docs/DESIGN-V2.md."
+      },
+      {
+        "title": "SCORE MAGNITUDE + score economy + '+1' onboarding floats (seeded + 2 findings)",
+        "how": "runStats._onAbsorb now scores RELATIVE size: objScore = max(1, round(SCORE_SIZE_BASE * (sizeReal/trueRadius)^SCORE_SIZE_POW)) with SCORE_SIZE_BASE 100 -> 500 (tuning.js). Ratio range (0,1.3] makes every tier band contribute ~90-700pt/absorb (x3 combo cap ~2.2k): no more '+1' era at T0, no multi-million T5 absorbs, totals land 6-digit (measured: 87k for a 30m start, 145k for a 1m start, ~200-260k projected full run), so the flat 30k time / 20k moon / 5k rare bonuses are now meaningful 2-15% fractions. HUD float deltas are formatted with a cached Intl.NumberFormat."
+      },
+      {
+        "title": "IN-BROWSER FINALE RESCALE SANITY (seeded)",
+        "how": "?r=480&seed=777, rolled to DESCENT, dispatched KeyR (forceRescale latches and fires in maybeTierUp which runs every frame incl. finale): before/after screenshots (/tmp/r480_descent_before|after.png) show a continuous scene — moon position/size, ball, world all coherent, no pop; console_errors=0; run completed through contact to the result screen."
+      },
+      {
+        "title": "Rank-stamp thud ~8.7s early (medium)",
+        "how": "sfx.js: moved the _rankThud trigger from EVT.GOAL to EVT.GAME_WIN (kept the +1.6s ctx offset, which now matches screens.js CUE_RANK_MS exactly); header + DESIGN-V2.md line-85 wording updated to EVT.GAME_WIN."
+      },
+      {
+        "title": "HUD EVT.SCORE forced reflow per absorb (medium)",
+        "how": "hud.js: _onScore now only accumulates (pendingDelta/pendingScore/pendingRare) and flushes via _flushScore at most once per HUD_THROTTLE_HZ gate (trailing flush piggybacks on _onGrow), so the span textContent + void offsetWidth reflow happens <=10x/s instead of per absorb; toLocaleString replaced with one cached Intl.NumberFormat instance for both panel and floats."
+      },
+      {
+        "title": "~11s unskippable cinematic + invisible-but-clickable result buttons (medium)",
+        "how": "finale.skipCinematic() (5x time scale on MERGE/ASCENSION/AFTERGLOW only, never pre-contact gameplay) wired from main.js on any pointerdown/keydown in FINALE state; screens.js flushes the staged reveal on a tap on #win-overlay (buttons revealed 250ms late so the skipping tap cannot click them); index.html adds '#win-overlay.staged .result-buttons:not(.result-reveal) .btn { pointer-events: none; }'. Verified in-browser: contact -> actionable result in 3.2s (was ~10.9s), second tap flushes reveal with buttons live."
+      },
+      {
+        "title": "Dash-end one-substep ~45% speed snap (medium)",
+        "how": "ballPhysics.js: the hard speed-cap clamp became a soft cap — over-cap EXCESS decays by OVERCAP_BLEED_PER_FRAME (0.85, new tuning.js constant) per 60Hz frame, so the dash tail glides out over ~0.25s; steady-state cruise sits ~0.5% above cap (negligible, still radius-proportional)."
+      },
+      {
+        "title": "DASH_READY chime mid-finale-cinematic (low)",
+        "how": "sfx.js: _runOver latch set on EVT.MOON_CONTACT, cleared on EVT.GAME_START, suppresses _readyChime while the run is over (least-invasive option from the finding)."
+      },
+      {
+        "title": "HUD moon arrow ignores onScreen (low)",
+        "how": "hud.js _onMoonGuide: arrow hidden when p.onScreen (moon visible in frustum); full arrow only for off-screen guidance; the one-per-run 月へ向かえ！ toast still fires either way."
+      },
+      {
+        "title": "MOON_GUIDE stale camera matrix on rescale/rebase frames (low)",
+        "how": "finale.js: RESCALE/REBASE handlers set _skipGuideOnce; _updateGuide consumes it and skips that 10Hz tick (cleared in reset() and _beginDescent so a pre-descent flag can't eat the first emit)."
+      },
+      {
+        "title": "Spawner-first ABSORB order vs documented contract (low)",
+        "how": "Option (a): corrected the binding-order comments in events.js, main.js (header + attach-handler block) and runStats.js to document spawner as position 0 with the explicit constraint that it must not touch instanceSlot/archetype/position fields."
+      },
+      {
+        "title": "BGM node-budget arithmetic + unthrottled sfx blips (low)",
+        "how": "bgm.js header corrected to the true worst case (lead 12/bar, ~52.3/s, +6 one-shot MOON_CALL nodes) and NODE_BUDGET_PER_S re-scoped as bgm-only; sfx.js _blip rate-capped at BLIP_MIN_INTERVAL_S 0.08s (coalesces burst absorbs; latest/highest combo pitch wins — stacked same-frame blips were inaudible anyway)."
+      },
+      {
+        "title": "Bgm.dispose() leaks 5 bus handlers / resurrects AudioContext (low)",
+        "how": "bgm.js dispose() now bus.off()s all five prebound handlers and sets _disposed checked in _ensureCtx; same pattern applied to Sfx (subscriptions recorded in _subs via a local helper, off()'d in dispose, _disposed guard) which shared the omission via its GAME_START handler."
+      },
+      {
+        "title": "Sky dome per-fragment moon tangent frame (partial, from the sky-dome finding)",
+        "how": "Applied the finding's 'independently cheap win': mTan/mBit (normalize+2x cross of uniform-constant expressions, formerly per fragment) are now computed on the CPU in environment.js (_updateMoonFrame, zero-alloc, called from the crossfade path and setTierPaletteImmediate) and passed as uMoonTan/uMoonBit uniforms."
+      },
+      {
+        "title": "BONUS: pre-existing DEV-only boot blocker in catalog.js",
+        "how": "Discovered during in-browser work: dev-mode (vite dev) was COMPLETELY broken — 'overpass' and 'stadium' palettes had 3 tints, failing the DEV 'palette must have 4-6 tints' assert and aborting main.js module load (prod builds strip the assert, which is why integration passed). Added a 4th tint to each (cosmetic only; per-placement draw order unchanged, so deterministic layout is preserved)."
+      }
+    ],
+    "skipped": [
+      {
+        "title": "Sky dome draw-order change (render after opaque world at far plane)",
+        "why": "Low severity and NOT low-risk: moving the dome to a positive renderOrder with depthTest + a forced far-plane gl_Position interacts with the backdrop silhouette ring (renderOrder -5, depthWrite:false, DoubleSide) and the blob shadow — done blind it would likely paint sky over the backdrop band. Needs a dedicated perf pass with visual verification across all 6 tiers + NIGHT. The finding's cheap independent win (CPU-hoisted moon tangent frame) WAS applied."
+      },
+      {
+        "title": "Gating dash-gauge recharge in ballPhys.step via a locked flag (the 'cleaner long-term' option)",
+        "why": "Would change the frozen step() signature/call contract in main's binding frame order; the finding's least-invasive option (sfx _runOver latch) fully fixes the audible symptom, and post-contact gauge state is cosmetically irrelevant (HUD hidden)."
+      },
+      {
+        "title": "DEV-only runtime WebAudio node counter (optional part of the bgm finding)",
+        "why": "New instrumentation beyond surgical scope; the budget claim is now honest (corrected arithmetic, bgm-only scope) and the actual breach vector (unthrottled absorb blips) is fixed with the rate cap."
+      }
+    ],
+    "pacingMeasurements": "In-browser driven runs (vite dev :4323, headless agent-browser, seed 777, synthetic held-forward + dash every ~8s + steering wobble every ~16s; sim-time read from the HUD timer so wall-clock throttling is irrelevant). Run A, default 5cm start: 0.25m(T1) @ 35.8 sim-s, 1.25m(T2) @ 46.6, 6m(T3) @ 57.0, 30m(T4) @ 68.6, 150m(T5) @ 86.0, 308m @ 89.7 (tab crashed there; T5 tail extrapolates +5-15s via mega-absorbs). Run B, ?r=1: 6m @ 10.6, 30m @ 22.0, 150m @ 30.9, MOON CONTACT @ 42.9 sim-s (score 145,262). Run C, ?r=30: 150m @ 27.2, moon-call(420m) @ 31.8, CONTACT @ 35.8 sim-s (score 87,265). Cross-checks agree: each band costs ~10-17 sim-s once rolling; OPTIMAL full 5cm->moon run ~= 95-105 sim-s (massively faster than the v1-guess 300s the old thresholds assumed). Model: casual slack per the spec (x1.5-2 optimal for wandering, ~x2.8 for a decent first run incl. onboarding, ~x4 for slow exploration): S = ~1.2x optimal (optimized run), A = ~1.8x, B = ~2.8x (decent first run), C = ~4x, else D. Score magnitudes under the new relative scoring: 87k-145k for the partial-start runs, ~200-260k projected for a full run — 6 digits, with the 30k time bonus a meaningful ~15% at the S/A boundary.",
+    "newRankThresholds": "RANK_S_S=120, RANK_A_S=180, RANK_B_S=280, RANK_C_S=420 (else D); TIME_BONUS_FULL_S=120, TIME_BONUS_ZERO_S=420, TIME_BONUS_MAX unchanged at 30000 (now ~15% of a typical ~200k total instead of 0.2% of 14M). Set in /Volumes/AIWorkSSD/AIWorkSpace/github/aieo-product/fableDemoGame/src/config/tuning.js with the empirical basis documented inline and mirrored in docs/DESIGN-V2.md."
+  },
+  "validation": {
+    "buildPassed": true,
+    "allChecksPassed": true,
+    "moonReadsGlowing": true,
+    "rescaleMidDescentClean": true,
+    "drawCalls": 47,
+    "consoleErrors": [],
+    "regressionsFoundAndFixed": [],
+    "remainingConcerns": [
+      "KeyR force-rescale is DEV-gated (renderer.js line 313: `if (DEV && e.code === 'KeyR' ...)`) so the mid-descent rescale check ran on the vite dev server (port 4326), not the production bundle — the production finale itself was verified separately on the preview build with no rescale. This is by design, but means the pixel-identity path has no production-build hotkey exercise.",
+      "Headless Chrome rendered at ~9-10 fps (software GL, pxr 1.0), so 60Hz frame pacing, dash-end speed-snap feel, and audio (BGM node budget, rank-stamp thud timing, DASH_READY chime suppression) could not be perceptually verified in this environment — code-level fixes are in place and no errors were thrown, but a quick listen on real hardware before deploy is recommended.",
+      "Moon arrow correctly stays hidden while the moon is on screen (the onScreen fix), but the off-screen case (arrow visible + pointing) was not exercised because the held-W path always kept the moon in frame.",
+      "Post-contact cinematic is now short (~3-4s wall observed) and the result staging begins promptly; if the design intent was a longer skippable cinematic rather than a shortened one, confirm the chosen duration is deliberate."
+    ],
+    "narrative": "FINAL VALIDATION PASS — all green. Build: vite production build succeeded (648.77 kB bundle). Part A (preview :4325, seed=12345): title renders, start works, 54s of play produced 109 absorbs / 30,047 score / 19.3cm size with live '+N' score floats (8 pooled elements: +99/+71/+78/+83/+148/+88), timer running on sim clock, dash gauge drained 100%->3% on Space and refilled to 77% in 4s, mute toggled 🔊->🔇->🔊 (persists to localStorage 'fableKatamari.v2.muted'=1). Backquote overlay: 38/60 calls, 362k/600k tris, heap delta +0KB across all samples (zero per-frame alloc holds). Part B (?r=120): CITY tier label, skyline-silhouette backdrop + dusk sky gradient confirmed, 39/60 calls, heap +0KB. Part C FULL FINALE (?r=480, production): moon-call toast 月へ向かえ！ fired, descent visible (moon grows from horizon dot to full disc), moon arrow correctly hidden while moon on-screen, contact flash (#flash-overlay class 'flash'), ending reads as a GLOWING full moon — bright white disc with halo against a starfield night sky (docs/screenshots/v2-final-ending.png). Staged result: rank S at 00:04.4 (consistent with new thresholds S<=120s/A<=180/B<=280/C<=420 — a dev-shortcut run is trivially S), score 56,576, size 812m, 30 absorbed, NEW RECORD badge, buttons visibly rendered (dimmed during stagger, fully visible after — invisible-button fix confirmed). X button intercepted via window.open stub WITHOUT navigating: valid https://x.com/intent/post?text=... URL containing time/rank/score/size + #FableKatamari + https://fable-katamari.pages.dev. Restart -> clean second run (timer/score reset, title best line 'RANK S・00:04.4・56,576pt' shown) — and the second run produced an IDENTICAL result (00:04.9 / 57,152) to the third run, confirming deterministic seeded simulation. Part D KeyR mid-descent (dev :4326, where the DEV-gated hotkey is live): tight before/after screenshots around the KeyR dispatch at sim 1.8-2.1s show the moon continuing smoothly along its descent path — no pop, no scale jump, no world shift (finale _simCache pixel-identity holds). Draw calls peaked at 47/60 during descent (cap respected everywhere; 31-39 elsewhere). Console: ZERO errors/warnings on the production preview across the entire pass (title, play, city, 3 finales, restart); dev build shows only the expected boot logs. No regressions found, nothing needed fixing. Deliverables written: docs/screenshots/v2-final-play.png, v2-final-ending.png, v2-final-result.png. Both servers killed and confirmed down. Ship it."
+  }
+}

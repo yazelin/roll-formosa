@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0c14" />
+  <title>Fable Katamari — 転がして、東京まるごと。</title>
+
+  <!-- v3 Donack frames (the ONLY 8 shipped webp assets — Stream E prunes the
+       16 surplus frames; scripts/verify-donack-assets.sh enforces the set) -->
+  <link rel="preload" as="image" href="/assets/donack/idle-0.webp" />
+  <link rel="preload" as="image" href="/assets/donack/idle-3.webp" />
+  <link rel="preload" as="image" href="/assets/donack/happy-0.webp" />
+  <link rel="preload" as="image" href="/assets/donack/happy-3.webp" />
+  <link rel="preload" as="image" href="/assets/donack/thinking-0.webp" />
+  <link rel="preload" as="image" href="/assets/donack/thinking-3.webp" />
+  <link rel="preload" as="image" href="/assets/donack/speaking-0.webp" />
+  <link rel="preload" as="image" href="/assets/donack/speaking-3.webp" />
+
+  <style>
+    /* ================================================================
+       v3 MOBILE-FIRST HUD (docs/DESIGN-V3.md §モバイルファーストUI).
+       BASE STYLES ARE THE <=480px PORTRAIT LAYOUT; the >=768px and
+       landscape media queries are ENHANCEMENTS. Frozen band matrix:
+       top strip = stats; mid-left = Donack; mid-center = toast/banner/
+       floats; mid-right = collect popup; bottom-left 65%x55% = joystick;
+       bottom-right = dash. No element may be authored outside its band.
+       ================================================================ */
+
+    /* Dash ring gauge — registered so the 10Hz --gauge writes interpolate
+       (iOS 16.4+ / Chrome 85+). Browsers without @property still render the
+       ring from the inline var; without conic-gradient the @supports
+       fallback below swaps in a plain bar driven by --gauge01 (hud.js
+       writes BOTH custom properties — frozen Phase-0 contract). */
+    /* inherits MUST be true: the var is written on #dash-button but painted
+       by #dash-button::before — a registered non-inheriting property would
+       resolve to initial-value 0deg on the pseudo-element (empty ring
+       forever in every @property-supporting browser). */
+    @property --gauge {
+      syntax: '<angle>';
+      inherits: true;
+      initial-value: 0deg;
+    }
+
+    /* ============ reset / base ============ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      /* Safe-area insets — every fixed element anchors with these. */
+      --s-t: env(safe-area-inset-top, 0px);
+      --s-b: env(safe-area-inset-bottom, 0px);
+      --s-l: env(safe-area-inset-left, 0px);
+      --s-r: env(safe-area-inset-right, 0px);
+    }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      /* iOS Safari auto text inflation would unpredictably scale the small
+         HUD fonts in landscape (and break the proven 358px top-bar fit);
+         applies even with user-scalable=no. */
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      background: #0b0c14;
+      color: #eef0f8;
+      font-family: 'Avenir Next', 'Hiragino Kaku Gothic ProN', 'Segoe UI', system-ui, sans-serif;
+      -webkit-user-select: none; user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hidden { display: none !important; }
+
+    /* ============ canvas ============ */
+    #game-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* ============ vignette (always on, zero GPU cost) ============ */
+    #vignette {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      background: radial-gradient(ellipse 75% 65% at 50% 48%, transparent 60%, rgba(10, 8, 30, 0.32) 100%);
+    }
+
+    /* ============ HUD root ============ */
+    #hud {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ---- 1) #top-bar — replaces the three v2 corner panels ---- */
+    #top-bar {
+      position: fixed;
+      top: calc(8px + var(--s-t));
+      left: calc(8px + var(--s-l));
+      right: calc(8px + var(--s-r));
+      height: 44px;
+      display: flex;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 11;
+    }
+    /* 360px fit proof (m:ss timer): 104+64+120+36 + 3x6 gaps + 16 margins = 358px. */
+    .pill {
+      background: rgba(10, 12, 22, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      white-space: nowrap;
+      min-width: 0;
+      padding: 0 8px;
+      /* NO backdrop-filter below 768px — Android compositor cost. */
+    }
+    .pill-label { display: none; } /* mobile: aria-label only; restored >=768px */
+    #size-pill { flex: 1.2; }
+    #size-value {
+      font-size: 20px; font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #ffe27a;
+      text-shadow: 0 0 14px rgba(255, 226, 122, 0.35);
+      line-height: 1.1;
+    }
+    #size-unit {
+      font-size: 12px; font-weight: 700;
+      color: #ffc14d; margin-left: 3px;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+    #timer {
+      flex: 0.9;
+      min-width: 64px;
+      font-size: 16px; font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #eef0f8;
+      letter-spacing: 0.04em;
+      /* MOBILE FORMAT m:ss — hud.js renders deciseconds ONLY at >=768px
+         (format string owned by hud.js; display capped at 99:59). */
+    }
+    #score-pill { flex: 1.4; flex-direction: column; line-height: 1.15; }
+    #score-value {
+      font-size: 17px; font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #8fffc6;
+      text-shadow: 0 0 12px rgba(143, 255, 198, 0.3);
+    }
+    #absorbed-inline {
+      font-size: 10px; font-weight: 700;
+      color: #9aa3c0;
+      font-variant-numeric: tabular-nums;
+    }
+    #mute-button {
+      flex: none;
+      width: 36px; height: 36px;
+      align-self: center;
+      position: relative; /* anchors the ::after hit-area extender */
+      pointer-events: auto;
+      font-size: 17px; line-height: 1;
+      color: #eef0f8;
+      background: rgba(10, 12, 22, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    /* 44px-min tap target (Apple HIG / WCAG 2.5.5) without changing the
+       36px visual: a button's pseudo-element participates in hit-testing,
+       so inset:-6px makes the effective target 48x48. */
+    #mute-button::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+    }
+    #mute-button:hover { transform: scale(1.08); border-color: rgba(255, 255, 255, 0.4); }
+
+    /* ---- 2) #progress-bar — moved to the top (frees the thumb zone) ---- */
+    #progress-bar {
+      position: fixed;
+      top: calc(56px + var(--s-t));
+      left: calc(10px + var(--s-l));
+      right: calc(10px + var(--s-r));
+      height: 5px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 4px;
+      z-index: 11;
+    }
+    #progress-fill {
+      width: 0%; height: 100%;
+      background: linear-gradient(90deg, #58d6a3, #ffe27a);
+      border-radius: 4px;
+      transition: width 0.2s linear;
+    }
+    #tier-label {
+      position: absolute;
+      left: 6px; top: -12px;
+      font-size: 10px; letter-spacing: 0.2em;
+      color: #aab3d0; text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---- 3) #hud-toast — mid-center band ---- */
+    #hud-toast {
+      position: fixed;
+      top: calc(74px + var(--s-t));
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      max-width: 92vw;
+      font-size: 15px; font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #ffe9b0;
+      text-shadow: 0 2px 16px rgba(255, 210, 110, 0.55);
+      background: rgba(10, 12, 22, 0.5);
+      border: 1px solid rgba(255, 226, 122, 0.25);
+      border-radius: 999px;
+      padding: 7px 18px;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+      z-index: 12;
+      /* The collect popup lives on its OWN row below (top 118px) — no width
+         cap needed while it shows (the old 58vw JS cap is retired). */
+    }
+    #hud-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ---- 4) #donack-root — DIRECT CHILD OF body, OUTSIDE #hud (binding:
+            survives the GOAL_CONTACT hud-hide for the scripted ascension
+            line). Mid-left band; never pointer-events. ---- */
+    #donack-root {
+      position: fixed;
+      left: calc(8px + var(--s-l));
+      /* Third exclusive mid-band row (toast 74 / popup 118 / Donack 206):
+         every EVT.COLLECT fires the popup AND a Donack line simultaneously,
+         and at <=430px a left bubble (avatar 56 + bubble up to 337px) ran
+         deep under the 198px right popup column. Rows can never collide. */
+      top: calc(206px + var(--s-t));
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      max-width: calc(100vw - 16px);
+      pointer-events: none;
+      z-index: 12;
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      visibility: hidden;
+    }
+    #donack-root.show { opacity: 1; transform: translateX(0); visibility: visible; }
+    #donack-avatar {
+      width: 56px; height: 56px;
+      flex: none;
+      image-rendering: pixelated;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    #donack-bubble {
+      position: relative;
+      max-width: min(70vw, 300px);
+      font-size: 13px; line-height: 1.45;
+      color: #eef0f8;
+      background: rgba(10, 12, 22, 0.78);
+      border: 1px solid #65b83e44;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-top: 6px;
+    }
+    #donack-bubble::before {
+      /* left tail toward the avatar */
+      content: '';
+      position: absolute;
+      left: -6px; top: 14px;
+      width: 10px; height: 10px;
+      background: rgba(10, 12, 22, 0.78);
+      border-left: 1px solid #65b83e44;
+      border-bottom: 1px solid #65b83e44;
+      transform: rotate(45deg);
+    }
+    /* Donack expression classes — one webp per class, swapped by ui/donack.js
+       (blink = frame-0 <-> frame-3 toggle at DONACK_BLINK_FPS while visible). */
+    .dk-idle-0     { background-image: url('/assets/donack/idle-0.webp'); }
+    .dk-idle-3     { background-image: url('/assets/donack/idle-3.webp'); }
+    .dk-happy-0    { background-image: url('/assets/donack/happy-0.webp'); }
+    .dk-happy-3    { background-image: url('/assets/donack/happy-3.webp'); }
+    .dk-thinking-0 { background-image: url('/assets/donack/thinking-0.webp'); }
+    .dk-thinking-3 { background-image: url('/assets/donack/thinking-3.webp'); }
+    .dk-speaking-0 { background-image: url('/assets/donack/speaking-0.webp'); }
+    .dk-speaking-3 { background-image: url('/assets/donack/speaking-3.webp'); }
+
+    /* ---- 5) #collect-popup — mid-right band, SECOND row (below the toast
+            row): a centered toast can never clear a 198px right column on a
+            <=412px screen (58vw at 390px still overlapped 124px), so the
+            popup gets its own row instead of shrinking the toast. ---- */
+    #collect-popup {
+      position: fixed;
+      right: calc(8px + var(--s-r));
+      top: calc(118px + var(--s-t));
+      width: 198px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(10, 12, 22, 0.78);
+      border: 1px solid rgba(255, 216, 74, 0.4);
+      border-radius: 12px;
+      padding: 8px;
+      pointer-events: none;
+      z-index: 12;
+      opacity: 0;
+      transform: translateX(16px);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+      visibility: hidden;
+      /* slide-in from the right; auto-out after COLLECT_POPUP_S (hud.js) */
+    }
+    #collect-popup.show { opacity: 1; transform: translateX(0); visibility: visible; }
+    #collect-popup-img {
+      width: 64px; height: 64px;
+      flex: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    #collect-popup-name {
+      font-size: 13px; font-weight: 800;
+      color: #ffd84a;
+      line-height: 1.3;
+    }
+    #collect-popup-count {
+      font-size: 10px;
+      color: #9aa3c0;
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- 6) #score-float-layer — floats rise from below screen-center,
+            above both thumbs, never over the top bar.
+            MAX_FLOATS_MOBILE=3 / 6 at >=768px (hud.js). ---- */
+    #score-float-layer {
+      position: fixed;
+      left: 50%;
+      bottom: 44vh;
+      width: 0; height: 0;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 11;
+    }
+    .score-float {
+      position: absolute;
+      left: 0; top: 0;
+      font-size: 15px; font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: #b6ffd9;
+      text-shadow: 0 0 12px rgba(143, 255, 198, 0.5);
+      opacity: 0;
+      white-space: nowrap;
+      will-change: transform, opacity;
+    }
+    .score-float.rare { color: #ffd84a; text-shadow: 0 0 14px rgba(255, 216, 74, 0.7); }
+    .score-float.fly { animation: score-fly 0.9s ease-out both; }
+    @keyframes score-fly {
+      0%   { opacity: 0; transform: translateY(8px) scale(0.9); }
+      15%  { opacity: 1; transform: translateY(0) scale(1.05); }
+      100% { opacity: 0; transform: translateY(-44px) scale(1); }
+    }
+
+    /* ---- 7) #tier-banner — mid-center band ---- */
+    #tier-banner {
+      position: fixed;
+      top: 30vh; left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      font-size: clamp(26px, 8vw, 42px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: #fff;
+      text-shadow: 0 2px 24px rgba(120, 160, 255, 0.65);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 11;
+    }
+    #tier-banner.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ---- 8) #dash-button — bottom-right exclusive band; gauge is a RING
+            (--gauge/--gauge01, hud.js 10Hz). ---- */
+    #dash-button {
+      position: fixed;
+      right: calc(16px + var(--s-r));
+      bottom: calc(20px + var(--s-b));
+      width: 76px; height: 76px;
+      pointer-events: auto;
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #eef0f8;
+      background: radial-gradient(circle at 35% 30%, rgba(140, 170, 255, 0.5), rgba(40, 50, 110, 0.6));
+      border: 2px solid rgba(170, 195, 255, 0.55);
+      border-radius: 50%;
+      cursor: pointer;
+      touch-action: none;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      z-index: 11;
+    }
+    #dash-button:active { transform: scale(0.92); box-shadow: 0 0 22px rgba(150, 180, 255, 0.7); }
+    /* Ring gauge: hud.js writes --gauge (0-360deg) + --gauge01 (0-1) at 10Hz,
+       snaps both to 0 on EVT.DASH, flashes on DASH_READY. */
+    #dash-button::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(#8fb5ff var(--gauge, 360deg), rgba(255, 255, 255, 0.12) 0);
+      -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+      mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+      transition: --gauge 0.12s linear;
+      pointer-events: none;
+    }
+    /* FALLBACK (no conic-gradient): plain 4px bar inside the button bottom,
+       driven by --gauge01 (transform is animatable without @property). */
+    @supports not (background: conic-gradient(#000 0deg, #000 0)) {
+      #dash-button::before {
+        inset: auto;
+        left: 14%; right: 14%; bottom: 9px;
+        height: 4px;
+        border-radius: 2px;
+        background: #8fb5ff;
+        -webkit-mask: none;
+        mask: none;
+        transform: scaleX(var(--gauge01, 1));
+        transform-origin: left center;
+        transition: transform 0.12s linear;
+      }
+    }
+    #dash-button.flash { animation: gauge-flash 0.5s ease-out 1; }
+    @keyframes gauge-flash {
+      0%   { box-shadow: 0 0 0 0 rgba(180, 200, 255, 0.0); }
+      30%  { box-shadow: 0 0 18px 4px rgba(180, 200, 255, 0.9); }
+      100% { box-shadow: 0 0 0 0 rgba(180, 200, 255, 0.0); }
+    }
+
+    /* ---- 9) #goal-arrow (renamed from #moon-arrow, glyph 🗼) — unchanged
+            screen-edge logic; exclusion zone top 64px / bottom 100px is
+            enforced by hud.js clamping. ---- */
+    #goal-arrow {
+      position: absolute;
+      left: 50%; top: 20%;
+      width: 56px; height: 56px;
+      margin: -28px 0 0 -28px;
+      pointer-events: none;
+      font-size: 30px; line-height: 56px;
+      text-align: center;
+      filter: drop-shadow(0 0 14px rgba(255, 240, 180, 0.8));
+      will-change: transform, left, top;
+    }
+    #goal-arrow .arrow-tip {
+      position: absolute;
+      left: 50%; top: -12px;
+      transform: translateX(-50%) rotate(var(--arrow-rot, 0deg));
+      transform-origin: 50% 40px;
+      width: 0; height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-bottom: 14px solid #ffe9b0;
+    }
+
+    /* ============ flash overlay (goal-contact white flash) ============ */
+    #flash-overlay {
+      position: fixed; inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      /* screens.js drives: add .flash for the 0.12s-in / FLASH_S(0.45s)-out pop */
+    }
+    #flash-overlay.flash { animation: contact-flash 0.57s ease-out 1; }
+    @keyframes contact-flash {
+      0%   { opacity: 0; }
+      21%  { opacity: 1; }   /* 0.12s in */
+      100% { opacity: 0; }   /* 0.45s out */
+    }
+
+    /* ============ full-screen overlays (title / win) ============ */
+    .overlay {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center;
+      /* Overflow-safe centering: justify-content:center clips overflowing
+         column content ABOVE the scrollport with no way to scroll up. The
+         margin:auto pair below absorbs free space when short (= centered)
+         and collapses to 0 when tall (= fully scrollable). */
+      justify-content: flex-start;
+      overflow-y: auto;
+      gap: 16px;
+      padding: calc(12px + var(--s-t)) calc(12px + var(--s-r)) calc(12px + var(--s-b)) calc(12px + var(--s-l));
+      background:
+        radial-gradient(1200px 700px at 50% 30%, rgba(80, 95, 180, 0.28), transparent 65%),
+        linear-gradient(180deg, #0b0c14 0%, #131630 60%, #1c1438 100%);
+      z-index: 20;
+      text-align: center;
+    }
+    .overlay > :first-child { margin-top: auto; }
+    .overlay > :last-child { margin-bottom: auto; }
+    .game-title {
+      font-size: clamp(40px, 9vw, 96px);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+      background: linear-gradient(180deg, #ffffff 20%, #ffd76a 70%, #ff9d5c 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 60px rgba(255, 200, 90, 0.18);
+    }
+    .game-subtitle {
+      font-size: clamp(15px, 2.4vw, 22px);
+      color: #b9c2e2;
+      letter-spacing: 0.08em;
+    }
+    .btn {
+      pointer-events: auto;
+      font: inherit;
+      font-size: 20px; font-weight: 800;
+      letter-spacing: 0.14em;
+      color: #101225;
+      background: linear-gradient(180deg, #ffe27a, #ffb84d);
+      border: none; border-radius: 999px;
+      padding: 16px 56px;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(255, 190, 80, 0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 36px rgba(255, 190, 80, 0.5); }
+    .btn:active { transform: translateY(0) scale(0.98); }
+    .btn.btn-secondary {
+      color: #eef0f8;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: none;
+    }
+    /* v3: Donack commentary toggle pill (title screen; screens.js wires it,
+       persists LS_DONACK_KEY, and keeps the label text in sync). */
+    #donack-toggle {
+      font-size: 14px;
+      min-height: 44px; /* tap-target floor (was ~38px) */
+      padding: 11px 22px;
+      letter-spacing: 0.08em;
+    }
+    .key-hints {
+      display: flex; gap: 26px; flex-wrap: wrap;
+      align-items: center; justify-content: center;
+      color: #9aa3c0; font-size: 14px;
+    }
+    .key-hints kbd {
+      display: inline-block;
+      font: inherit; font-size: 12px; font-weight: 700;
+      color: #eef0f8;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-bottom-width: 3px;
+      border-radius: 6px;
+      padding: 3px 9px;
+      margin-right: 6px;
+    }
+    .seed-line { font-size: 13px; color: #6f7796; letter-spacing: 0.1em; }
+    #title-best-line { font-size: 14px; color: #b9c2e2; letter-spacing: 0.08em; }
+
+    /* v4 ODbL attribution (BINDING release gate — docs/DESIGN-V4.md): linked
+       OSM credit on BOTH the title and result overlays. Lives in the
+       overlays, NOT in #hud — the frozen v3 HUD band matrix is untouched. */
+    .osm-credit {
+      font-size: 11px;
+      color: #6f7796;
+      letter-spacing: 0.05em;
+    }
+    .osm-credit a {
+      color: #8fa3d0;
+      text-decoration: underline;
+      pointer-events: auto;
+    }
+    /* v4 OSM shard fetch progress (title screen only; world/osmWorld.js —
+       Stream W — writes textContent as bytes/total; empty until the fetch
+       starts so the v3 title composition is unchanged with stubs). */
+    #osm-progress {
+      font-size: 11px;
+      color: #6f7796;
+      letter-spacing: 0.08em;
+      min-height: 1.2em;
+      margin-top: -10px; /* tucks under .seed-line within the overlay gap */
+    }
+
+    /* ============ win overlay — staged result ============ */
+    #win-overlay { gap: clamp(8px, 1.6vh, 16px); }
+    #win-overlay .game-title {
+      background: linear-gradient(180deg, #ffffff 15%, #8fe3ff 60%, #b48bff 100%);
+      -webkit-background-clip: text; background-clip: text;
+      font-size: clamp(28px, min(8.4vw, 6vh), 88px);
+    }
+    #result-rows {
+      display: flex; flex-direction: column;
+      gap: clamp(4px, 1vh, 10px);
+      min-width: min(82vw, 460px);
+    }
+    .result-row {
+      display: flex;
+      align-items: baseline; justify-content: space-between;
+      gap: 18px;
+      font-size: clamp(15px, 2.6vw, 22px);
+      color: #b9c2e2;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 12px;
+      padding: clamp(4px, 1vh, 10px) 20px;
+    }
+    .result-label { letter-spacing: 0.1em; white-space: nowrap; }
+    .result-value {
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      color: #ffe27a;
+      text-shadow: 0 0 24px rgba(255, 226, 122, 0.35);
+      font-size: clamp(20px, 3.6vw, 34px);
+    }
+    #result-time { color: #8fe3ff; text-shadow: 0 0 24px rgba(143, 227, 255, 0.35); }
+    #result-score { color: #8fffc6; text-shadow: 0 0 24px rgba(143, 255, 198, 0.35); }
+    #result-detail {
+      justify-content: center;
+      font-size: clamp(13px, 2.2vw, 18px);
+    }
+    #result-detail .result-num {
+      font-weight: 800; color: #eef0f8;
+      font-variant-numeric: tabular-nums;
+      margin: 0 4px;
+    }
+    #result-rares { color: #ffd84a; }
+    /* rank stamp — scale 3 -> 1 bounce + white flash (screens.js adds .stamp) */
+    #result-rank-wrap {
+      position: relative;
+      height: clamp(52px, 11vh, 120px);
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px;
+    }
+    #result-rank {
+      font-size: clamp(44px, 10vh, 110px);
+      font-weight: 900;
+      line-height: 1;
+      color: #ffe27a;
+      text-shadow: 0 0 48px rgba(255, 226, 122, 0.55);
+      opacity: 0;
+      transform: scale(3);
+    }
+    #result-rank.stamp { animation: rank-stamp 0.55s cubic-bezier(0.2, 1.2, 0.3, 1) both; }
+    @keyframes rank-stamp {
+      0%   { opacity: 0; transform: scale(3); filter: brightness(3); }
+      55%  { opacity: 1; transform: scale(0.92); filter: brightness(2.2); }
+      75%  { transform: scale(1.07); filter: brightness(1.4); }
+      100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+    }
+    #new-record-badge {
+      font-size: clamp(14px, 2vw, 18px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: #101225;
+      background: linear-gradient(180deg, #ffe27a, #ff9d5c);
+      border-radius: 999px;
+      padding: 8px 18px;
+      transform: rotate(-6deg);
+      box-shadow: 0 4px 22px rgba(255, 190, 80, 0.5);
+      animation: badge-pop 0.45s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+    }
+    @keyframes badge-pop {
+      0%   { opacity: 0; transform: rotate(-6deg) scale(0.4); }
+      100% { opacity: 1; transform: rotate(-6deg) scale(1); }
+    }
+
+    /* v3: collection album grid — between the rank stamp and the buttons.
+       screens.js (Stream D) fills the 12 cells (found = thumbnail + name,
+       unfound = dark 「？」 cell, NEW badge for this run) and reveals the
+       wrap at the 1.9s cue. */
+    #collection-grid-wrap {
+      display: flex; flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    #collection-header {
+      font-size: 12px;
+      color: #9aa3c0;
+      letter-spacing: 0.15em;
+    }
+    #result-collect-n { color: #ffd84a; font-weight: 800; font-variant-numeric: tabular-nums; }
+    #collection-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 56px);
+      gap: 6px;
+    }
+    .collect-cell {
+      position: relative;
+      width: 56px; height: 56px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1px;
+      overflow: hidden;
+      font-size: 9px; color: #b9c2e2; /* ja-glyph readability floor */
+    }
+    .collect-cell img { width: 38px; height: 38px; }
+    .collect-cell.unfound::before { content: '？'; font-size: 18px; font-weight: 800; color: #3c4260; }
+    /* v5: COLLECT_TOTAL 13 — the 13th cell (スタックチャン) centers on row 4
+       by spanning the middle two columns (cells are fixed-width, so
+       justify-self centers the cell inside the span; width-independent —
+       holds at the 48px mobile breakpoint too). NOTE: the grid cells are
+       .collect-cell ('.cell-new' is the NEW badge INSIDE a cell). */
+    #collection-grid .collect-cell:nth-child(13) { grid-column: 2 / 4; justify-self: center; }
+    .collect-cell .cell-new {
+      position: absolute;
+      top: 2px; right: 2px;
+      font-size: 8px; font-weight: 900; /* readability floor */
+      color: #101225;
+      background: linear-gradient(180deg, #ffe27a, #ff9d5c);
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+    @media (max-width: 360px) {
+      #collection-grid { grid-template-columns: repeat(4, 48px); }
+      .collect-cell { width: 48px; height: 48px; }
+      .collect-cell img { width: 32px; height: 32px; }
+      /* 9px ja names are still noise inside a 48px cell — the thumbnail
+         carries the cell; keep only the NEW badge. */
+      .collect-cell span:not(.cell-new) { display: none; }
+    }
+
+    /* staged reveal machinery: screens.js adds .staged to #win-overlay, then
+       .result-reveal per element on its cue (0.0/0.4/0.9/1.6/1.9/2.2s).
+       Without .staged everything is visible immediately. */
+    #win-overlay.staged .result-row,
+    #win-overlay.staged #collection-grid-wrap,
+    #win-overlay.staged #result-best,
+    #win-overlay.staged #result-seed,
+    #win-overlay.staged .result-buttons { opacity: 0; }
+    /* invisible buttons must not be clickable during the staged reveal */
+    #win-overlay.staged .result-buttons:not(.result-reveal) .btn { pointer-events: none; }
+    .result-reveal { animation: result-reveal 0.45s ease-out both; }
+    @keyframes result-reveal {
+      0%   { opacity: 0; transform: translateY(16px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .result-buttons {
+      display: flex; gap: 16px;
+      flex-wrap: wrap; align-items: center; justify-content: center;
+    }
+    #win-size {
+      font-weight: 900;
+      color: #ffe27a;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ============ debug overlay (backquote) ============ */
+    #debug-overlay {
+      position: fixed;
+      bottom: calc(12px + var(--s-b)); left: calc(12px + var(--s-l));
+      z-index: 30;
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 11px; line-height: 1.5;
+      color: #7dffa8;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(125, 255, 168, 0.25);
+      border-radius: 8px;
+      padding: 8px 12px;
+      pointer-events: none;
+      white-space: pre;
+    }
+
+    /* ================================================================
+       LANDSCAPE PHONE (max-height:480px and landscape)
+       ================================================================ */
+    @media (max-height: 480px) and (orientation: landscape) {
+      #top-bar { height: 36px; top: calc(6px + var(--s-t)); }
+      #size-value { font-size: 18px; }
+      #size-unit { font-size: 10px; }
+      #timer { font-size: 14px; }
+      #score-value { font-size: 15px; }
+      #progress-bar { top: calc(46px + var(--s-t)); }
+      /* EXPLICIT landscape toast anchor (was the spec gap): center, 60vw. */
+      #hud-toast { top: calc(50px + var(--s-t)); max-width: 60vw; }
+      /* Donack/popup drop BELOW the toast band (y ~50..82) on their own
+         sides; the bubble is capped so it can never reach the popup column. */
+      #donack-root { left: calc(8px + var(--s-l)); top: calc(96px + var(--s-t)); }
+      #donack-avatar { width: 48px; height: 48px; }
+      #donack-bubble { max-width: min(55vw, 300px); }
+      #score-float-layer { bottom: 38vh; }
+      #dash-button { width: 68px; height: 68px; bottom: calc(16px + var(--s-b)); }
+      #collect-popup { width: 180px; top: calc(90px + var(--s-t)); }
+    }
+
+    /* ================================================================
+       DESKTOP ENHANCEMENT (min-width:768px) — the top bar dissolves into
+       spacious corners; labels return; deciseconds return (hud.js);
+       backdrop-filter returns (guarded).
+       ================================================================ */
+    @media (min-width: 768px) {
+      #top-bar { display: contents; }
+      .pill {
+        position: fixed;
+        border-radius: 12px;
+        padding: 10px 16px;
+      }
+      .pill-label {
+        display: block;
+        font-size: 11px; letter-spacing: 0.18em;
+        color: #9aa3c0; text-transform: uppercase;
+        text-align: left;
+      }
+      #size-pill {
+        top: calc(16px + var(--s-t)); left: calc(16px + var(--s-l));
+        min-width: 170px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      #size-value { font-size: 34px; }
+      #size-unit { font-size: 18px; margin-left: 4px; }
+      #timer {
+        top: calc(16px + var(--s-t)); left: 50%;
+        transform: translateX(-50%);
+        font-size: 26px;
+        min-width: 132px;
+        padding: 8px 18px;
+        /* hud.js renders deciseconds (m:ss.t) at >=768px */
+      }
+      #score-pill {
+        top: calc(16px + var(--s-t)); right: calc(16px + var(--s-r));
+        min-width: 150px;
+        align-items: flex-end;
+      }
+      #score-value { font-size: 26px; }
+      #absorbed-inline { font-size: 13px; }
+      #mute-button {
+        position: fixed;
+        top: calc(104px + var(--s-t)); right: calc(16px + var(--s-r));
+        width: 44px; height: 44px;
+        font-size: 20px;
+      }
+      /* Below the 44px fixed mute button (bottom edge 148px) — the shared
+         mobile top (118px) slid the card's corner under the button. */
+      #collect-popup { top: calc(156px + var(--s-t)); }
+      @supports (backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px)) {
+        .pill, #mute-button { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+      }
+      #progress-bar {
+        top: auto; bottom: calc(22px + var(--s-b));
+        left: 50%; right: auto;
+        transform: translateX(-50%);
+        width: min(46vw, 420px); height: 10px;
+        border-radius: 6px;
+      }
+      #progress-fill { border-radius: 6px; }
+      #tier-label {
+        left: 50%; top: -18px;
+        transform: translateX(-50%);
+        font-size: 12px; letter-spacing: 0.22em;
+      }
+      #hud-toast { font-size: 20px; padding: 9px 24px; }
+      #score-float-layer { bottom: 46vh; }
+      .score-float { font-size: 18px; }
+      /* Dash button keeps the RING (the bar never returns — one gauge
+         implementation + the @supports fallback). */
+      #dash-button {
+        width: 64px; height: 64px;
+        right: calc(24px + var(--s-r)); bottom: calc(24px + var(--s-b));
+      }
+      #donack-root {
+        top: auto;
+        left: calc(16px + var(--s-l));
+        bottom: 96px; /* no joystick on desktop */
+      }
+      #donack-avatar { width: 80px; height: 80px; }
+      #donack-bubble { max-width: 360px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- WebGL mount -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- static vignette (always on) -->
+  <div id="vignette" aria-hidden="true"></div>
+
+  <!-- ============ HUD (hidden until game:start) ============ -->
+  <div id="hud" class="hidden" aria-hidden="true">
+    <!-- v3 top bar (replaces the three v2 corner panels; dissolves into
+         corners at >=768px via display:contents) -->
+    <div id="top-bar">
+      <div id="size-pill" class="pill" role="status" aria-label="おおきさ / SIZE">
+        <span class="pill-label">おおきさ / SIZE</span>
+        <span><span id="size-value">2.0</span><span id="size-unit">cm</span></span>
+      </div>
+      <div id="timer" class="pill" role="timer" aria-label="タイム / TIME">0:00</div>
+      <div id="score-pill" class="pill" role="status" aria-label="スコア / SCORE">
+        <span class="pill-label">スコア / SCORE</span>
+        <span id="score-value">0</span>
+        <!-- v3: absorbed counter merges into the score pill on mobile
+             (hud.js writes #absorbed-inline.textContent directly). -->
+        <span id="absorbed-inline">x0</span>
+      </div>
+      <button id="mute-button" type="button" aria-label="mute">🔊</button>
+    </div>
+
+    <div id="progress-bar">
+      <span id="tier-label">センゴク電子</span>
+      <div id="progress-fill"></div>
+    </div>
+
+    <div id="hud-toast"></div>
+    <div id="tier-banner"></div>
+    <div id="score-float-layer" aria-hidden="true"></div>
+
+    <!-- v3 rare-collection popup card (mid-right band; hud.js drives) -->
+    <div id="collect-popup" aria-hidden="true">
+      <img id="collect-popup-img" alt="" />
+      <div>
+        <div id="collect-popup-name"></div>
+        <div id="collect-popup-count"></div>
+      </div>
+    </div>
+
+    <!-- v3 goal arrow (renamed from #moon-arrow, glyph 🗼) -->
+    <div id="goal-arrow" class="hidden"><span class="arrow-tip"></span>🗼</div>
+
+    <!-- v3 dash gauge = the ring on #dash-button (--gauge / --gauge01). -->
+    <button id="dash-button" type="button" aria-label="dash">DASH</button>
+  </div>
+
+  <!-- ============ Donack (v3) — DIRECT CHILD OF body, OUTSIDE #hud so it
+       survives the GOAL_CONTACT hud-hide for the scripted ascension line.
+       ui/donack.js (Stream E) drives .show, expression classes and text. -->
+  <div id="donack-root" aria-hidden="true">
+    <div id="donack-avatar" class="dk-idle-0"></div>
+    <div id="donack-bubble"></div>
+  </div>
+
+  <!-- ============ Title overlay ============ -->
+  <div id="title-overlay" class="overlay">
+    <h1 class="game-title">FABLE<br />KATAMARI</h1>
+    <p class="game-subtitle">転がして、東京まるごと。 / Roll up all of Tokyo.</p>
+    <button id="start-button" class="btn" type="button">スタート / START</button>
+    <!-- v3: Donack commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
+    <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true">🦆 ドナック実況 ON</button>
+    <div class="key-hints" id="key-hints">
+      <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>うごく / Move</span>
+      <span><kbd>Shift</kbd>ブースト / Boost</span>
+      <span><kbd>Space</kbd>ダッシュ / Dash</span>
+      <span><kbd>M</kbd>ミュート / Mute</span>
+      <span><kbd>Mouse</kbd>カメラ / Camera</span>
+    </div>
+    <p id="title-best-line" class="hidden">自己ベスト: <span id="title-best-value">—</span></p>
+    <p class="seed-line">2cm のネジから 634m、スカイツリーへ — From a 2cm screw to the Skytree.</p>
+    <!-- v4: OSM shard fetch progress (osmWorld writes; empty until fetching) -->
+    <p id="osm-progress" aria-live="polite"></p>
+    <!-- v4 ODbL release gate: linked attribution (title screen) -->
+    <p class="osm-credit">地図データ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OpenStreetMap contributors</a> (ODbL)</p>
+  </div>
+
+  <!-- ============ Win / result overlay (hidden until game:win) ============ -->
+  <!-- staged result: screens.js adds .staged then reveals rows at
+       0.0s time / 0.4s score count-up / 0.9s size+counts / 1.6s rank stamp /
+       1.9s collection grid / 2.2s record badge + best + buttons. -->
+  <div id="win-overlay" class="overlay hidden">
+    <h1 class="game-title">東京、まるごといただき！<br />YOU ROLLED UP TOKYO</h1>
+    <div id="result-rows">
+      <div class="result-row" id="result-row-time">
+        <span class="result-label">⏱ タイム / TIME</span>
+        <span id="result-time" class="result-value">--:--.-</span>
+      </div>
+      <div class="result-row" id="result-row-score">
+        <span class="result-label">⭐ スコア / SCORE</span>
+        <span id="result-score" class="result-value">0</span>
+      </div>
+      <div class="result-row" id="result-row-size">
+        <span class="result-label">📏 さいごの大きさ / SIZE</span>
+        <span id="result-size" class="result-value"><span id="win-size">420m</span></span>
+      </div>
+      <div class="result-row" id="result-detail">
+        <span>まきこんだ <span id="result-absorbed" class="result-num">0</span> こ ・
+          レア <span id="result-rares" class="result-num">0</span> コ</span>
+      </div>
+    </div>
+    <div id="result-rank-wrap">
+      <div id="result-rank">S</div>
+      <div id="new-record-badge" class="hidden">NEW RECORD!</div>
+    </div>
+    <!-- v3 collection album (screens.js fills the COLLECT_TOTAL cells + count).
+         v5: the static total below MUST track config/tuning.js COLLECT_TOTAL (13). -->
+    <div id="collection-grid-wrap">
+      <div id="collection-header">🏯 コレクション <span id="result-collect-n">0</span>/13</div>
+      <div id="collection-grid"></div>
+    </div>
+    <p id="result-best" class="seed-line"></p>
+    <p id="result-seed" class="seed-line">SEED: <span id="win-seed">—</span>（同じシードで同じ世界 / same seed, same world）</p>
+    <!-- v4 ODbL release gate: linked attribution (result screen — outside the
+         staged-reveal selectors so it is visible in EVERY result screenshot
+         composition from frame one) -->
+    <p class="osm-credit">地図データ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OpenStreetMap contributors</a> (ODbL)</p>
+    <div class="result-buttons">
+      <button id="post-x-button" class="btn" type="button">Xでシェア / POST</button>
+      <button id="restart-button" class="btn btn-secondary" type="button">もういちど / ROLL AGAIN</button>
+    </div>
+  </div>
+
+  <!-- goal-contact white flash (above HUD and overlays) -->
+  <div id="flash-overlay" aria-hidden="true"></div>
+
+  <!-- ============ Debug overlay (toggled with backquote, dev) ============ -->
+  <div id="debug-overlay" class="hidden"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable Katamari — AIがつくった塊魂風ゲーム、制作の物語</title>
+<meta name="description" content="AI（Claude / Fable 5）がマルチエージェントワークフロー ultracode で設計から公開まで一気通貫でつくったブラウザゲーム「Fable Katamari」。v1→v5 の進化の物語と仕組みを、エンジニアでなくても楽しめる形で紹介します。">
+<meta property="og:title" content="Fable Katamari — 転がして、世界を呑み込め">
+<meta property="og:description" content="AIが設計から公開まで全部つくった塊魂風ブラウザゲーム、制作の全記録。">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23ff9d4d'/%3E%3Ccircle cx='11' cy='11' r='4' fill='%23ffe9a8'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav" aria-label="サイト内ナビゲーション">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="brand-ball"></span><span>FABLE KATAMARI</span></a>
+    <div class="nav-links">
+      <a href="index.html" aria-current="page">ストーリー</a>
+      <a href="design.html">設計書</a>
+      <a class="play" href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">▶ 遊ぶ</a>
+      <a href="https://github.com/aieo-product/fableDemoGame" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <h1>FABLE KATAMARI</h1>
+  <p class="tagline">転がして、世界を呑み込め</p>
+  <p class="catch">AIが、設計から公開まで全部つくったブラウザゲーム。</p>
+  <p class="lead">電子パーツショップの棚の上の2cmのボールが、ネジを巻き込み、ネコを巻き込み、ビルを巻き込み、最後には東京スカイツリーまで届く——そんな「塊魂」風の3Dゲームを、AI（Claude / Fable 5）がマルチエージェントワークフローで設計・実装・テスト・公開まで一気通貫でつくりました。人間のオーナーがやったのは「こういうゲームがほしい」と伝えることだけです。</p>
+  <a class="cta" href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">▶ いますぐ遊ぶ</a>
+  <p class="cta-note">fable-katamari.pages.dev ／ PC・スマホ対応、インストール不要</p>
+  <div class="stats">
+    <div class="stat"><b>5</b><small>バージョン<br>(v1→v5)</small></div>
+    <div class="stat"><b>150体+</b><small>動員したAI<br>エージェント</small></div>
+    <div class="stat"><b>1,900万+</b><small>消費トークン<br>(約)</small></div>
+    <div class="stat"><b>19時間</b><small>総制作時間<br>(約)</small></div>
+  </div>
+</header>
+
+<!-- ================= WHAT ================= -->
+<section id="what" class="reveal">
+  <h2>このゲームは何？</h2>
+  <p>「塊魂（かたまりだましい）」というゲームをご存じでしょうか。粘着質のボールを転がして、床に落ちているものを片っ端からくっつけていくゲームです。ボールは巻き込んだぶんだけ大きくなり、最初は消しゴムしか拾えなかったのに、気づけば自転車を、車を、家を、街ごと巻き込めるようになる——この「際限なく大きくなっていく爽快感」が魅力です。</p>
+  <p>Fable Katamari はその遊び心地をブラウザで再現したオマージュ作品です。ルールはたった3つ。</p>
+  <ol>
+    <li><strong>ボールを転がす</strong>（キーボード or スマホの指1本）</li>
+    <li><strong>自分の65%以下の大きさのものは巻き込める</strong>。大きすぎるものにはぶつかって跳ね返される</li>
+    <li><strong>巻き込むほど大きくなる</strong>。さっきまで「壁」だったものが「エサ」に変わる</li>
+  </ol>
+  <p>最新版（v3）では、秋葉原の電子パーツショップの棚の上からスタートして、ネジ → フィギュア → 自転車 → 通行人 → ビル → 雷門 → 東京タワー……と巻き込みながら東京の箱庭を転がり、最後に高さ634mの東京スカイツリーに到達するとフィナーレです。相棒のアヒル「ドナック」が実況してくれます。</p>
+  <p>このゲームの技術的な見どころは「<strong>2cmから600m超まで、画面の切り替えなしでシームレスに成長する</strong>」ことです。普通のゲームなら「ステージ1クリア→ロード→ステージ2」と区切るところを、Fable Katamari は一度もロードを挟みません。しかも巻き込んだものが何千個になっても処理が重くならない設計です。これがオーナーの最初の注文であり、AIが最も頭を使ったポイントでした。</p>
+
+  <h3>はじめて遊ぶ人へ</h3>
+  <ul>
+    <li><strong>操作</strong>: PCは WASD か矢印キーで移動、Space でダッシュ。スマホは画面のどこかに指を置いてスライドすると見えないスティックが現れます。右下のボタンでダッシュ。</li>
+    <li><strong>最初の目標</strong>: ショップの棚にあるネジやコンデンサなど「自分より小さいもの」を狙いましょう。大きいものに突っ込むと跳ね返されます（巻き込んだものが少し剥がれ落ちることも！）。</li>
+    <li><strong>詰まったら</strong>: 相棒のドナックがヒントをくれます。空に見えるスカイツリーのシルエットが、最初からずっとゴールの方角を教えてくれています。</li>
+    <li><strong>クリアしたら</strong>: タイムとランク（S〜D）、集めたコレクションをXでシェアできます。コレクションは12種。全部見つけられますか？</li>
+  </ul>
+</section>
+
+<!-- ================= HOW ================= -->
+<section id="how" class="reveal">
+  <h2>AIはどうやって作ったのか</h2>
+  <p>このプロジェクトでは「ultracode」と呼ばれるマルチエージェントワークフローを使いました。1体のAIが全部やるのではなく、<strong>たくさんのAIエージェントがそれぞれ役割を持ち、チームとして働く</strong>やり方です。</p>
+  <p>各バージョンの制作は、毎回この4つのフェーズで進みました。</p>
+  <ol>
+    <li><strong>設計</strong> — 複数の案を競わせ、審査して1つの設計図に統合する</li>
+    <li><strong>実装</strong> — 設計図と「契約」を凍結し、5チームが並列で作り、棟梁が結合する</li>
+    <li><strong>検査</strong> — 多角的にレビューし、指摘を別のエージェントが反証し、本物だけ直し、最後に実機プレイで確認する</li>
+    <li><strong>公開</strong> — Cloudflare Pages にデプロイし、本番URLでもう一度実機検証する</li>
+  </ol>
+  <p>そして全フェーズを通じて、<strong>すべての思考・意思決定・採点理由・棄却理由がログに記録</strong>されています（オーナーの最初の指示のひとつでした）。いまあなたが読んでいるこのページ自体が、そのログから書き起こされたものです。やっていることは、実は人間の建設プロジェクトとよく似ています。3つの比喩で説明します。</p>
+
+  <h3><span class="no">その1</span>設計コンペ — 複数の設計士が独立に提案し、審査員が統合する</h3>
+  <p>最初に、3体の設計エージェントに<strong>お互いの存在を知らせないまま</strong>、同じ要件で設計案を出させました。1体目は「性能最優先」、2体目は「遊び心地最優先」、3体目は「シンプルさ最優先」という、わざと違うこだわりを持たせています。そして4体目の審査エージェントが3案を採点し、最も優れた案を土台に、他の案の長所を移植して1つの設計図に統合しました。</p>
+  <p>1人の設計士に任せると、その人の思い込みがそのまま製品の欠陥になります。独立した3案を競わせると、「性能案の数学的な堅牢さ」と「体験案の気持ちよさへのこだわり」と「シンプル案の鋭い割り切り」が全部手に入る——v1の心臓部である「リスケール方式」は性能案から、「気持ちよさの法則」は体験案から、「埋没カリング」はシンプル案から採用されました。</p>
+
+  <figure class="diagram reveal" id="dg-judge-panel">
+    <svg class="dg" viewBox="0 0 720 552" role="img" aria-label="設計コンペの図。3体の設計エージェントが互いの案を見ずに独立提案し、審査エージェントが採点して1枚の統合設計図にまとめる">
+      <defs>
+        <marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+        <marker id="ah1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#d9a83f"/>
+        </marker>
+      </defs>
+      <text x="360" y="26" text-anchor="middle" class="ts">3体の設計エージェントが、互いの案を見ずに独立提案</text>
+      <!-- designer cards -->
+      <g>
+        <rect x="22" y="44" width="200" height="128" rx="14" class="box-sky"/>
+        <text x="122" y="74" text-anchor="middle" class="tt tb">設計士A</text>
+        <text x="122" y="98" text-anchor="middle">性能 最優先</text>
+        <rect x="62" y="112" width="34" height="24" rx="3" class="box-soft"/>
+        <line x1="68" y1="120" x2="90" y2="120" class="ln-soft"/>
+        <line x1="68" y1="128" x2="86" y2="128" class="ln-soft"/>
+        <rect x="108" y="108" width="56" height="32" rx="16" class="box-gold"/>
+        <text x="136" y="129" text-anchor="middle" class="tg tt">9.0</text>
+      </g>
+      <g>
+        <rect x="260" y="44" width="200" height="128" rx="14" class="box-coral"/>
+        <text x="360" y="74" text-anchor="middle" class="tt tc">設計士B</text>
+        <text x="360" y="98" text-anchor="middle">遊び心地 最優先</text>
+        <rect x="300" y="112" width="34" height="24" rx="3" class="box-soft"/>
+        <line x1="306" y1="120" x2="328" y2="120" class="ln-soft"/>
+        <line x1="306" y1="128" x2="324" y2="128" class="ln-soft"/>
+        <rect x="346" y="108" width="56" height="32" rx="16" class="box-gold"/>
+        <text x="374" y="129" text-anchor="middle" class="tg tt">8.5</text>
+      </g>
+      <g>
+        <rect x="498" y="44" width="200" height="128" rx="14" class="box-green"/>
+        <text x="598" y="74" text-anchor="middle" class="tt tgr">設計士C</text>
+        <text x="598" y="98" text-anchor="middle">シンプルさ 最優先</text>
+        <rect x="538" y="112" width="34" height="24" rx="3" class="box-soft"/>
+        <line x1="544" y1="120" x2="566" y2="120" class="ln-soft"/>
+        <line x1="544" y1="128" x2="562" y2="128" class="ln-soft"/>
+        <rect x="584" y="108" width="56" height="32" rx="16" class="box-gold"/>
+        <text x="612" y="129" text-anchor="middle" class="tg tt">7.5</text>
+      </g>
+      <!-- blindness separators -->
+      <line x1="241" y1="48" x2="241" y2="168" class="ln-dash"/>
+      <line x1="479" y1="48" x2="479" y2="168" class="ln-dash"/>
+      <!-- arrows into judge -->
+      <path d="M122 172 C 122 210, 280 218, 322 238" class="ln" marker-end="url(#ah1)"/>
+      <path d="M360 172 L 360 234" class="ln" marker-end="url(#ah1)"/>
+      <path d="M598 172 C 598 210, 440 218, 398 238" class="ln" marker-end="url(#ah1)"/>
+      <!-- judge -->
+      <rect x="245" y="240" width="230" height="84" rx="14" class="box-gold"/>
+      <text x="360" y="274" text-anchor="middle" class="tt tg">審査エージェント</text>
+      <text x="360" y="300" text-anchor="middle" class="ts">3案を採点し、統合方針を決定</text>
+      <path d="M360 324 L 360 364" class="ln-gold" marker-end="url(#ah1g)"/>
+      <!-- merged blueprint -->
+      <rect x="150" y="368" width="420" height="146" rx="16" class="box"/>
+      <text x="360" y="400" text-anchor="middle" class="tt">統合設計図（DESIGN.md）</text>
+      <circle cx="186" cy="426" r="5" fill="#7ec8ff"/>
+      <text x="202" y="432" class="ts" style="fill:#cdd2e6">リスケール方式 — A案（性能）から採用</text>
+      <circle cx="186" cy="456" r="5" fill="#ff6b8a"/>
+      <text x="202" y="462" class="ts" style="fill:#cdd2e6">気持ちよさの法則 — B案（体験）から採用</text>
+      <circle cx="186" cy="486" r="5" fill="#6fe3a5"/>
+      <text x="202" y="492" class="ts" style="fill:#cdd2e6">埋没カリング — C案（シンプル）から採用</text>
+      <text x="360" y="540" text-anchor="middle" class="ts tg">最優秀案を土台に、3案の「良いとこ取り」で1枚に統合</text>
+    </svg>
+    <figcaption>図1: 設計コンペ — 独立した3案を審査員が採点し、長所を移植して統合する</figcaption>
+  </figure>
+
+  <h3><span class="no">その2</span>分担工事 — 設計図と「契約」を凍結し、5チームが同時に施工する</h3>
+  <p>実装フェーズでは、まずリードエージェントが<strong>全モジュールの境界線（インターフェース＝契約）を先に確定して凍結</strong>します。家を建てる前に「配管はここを通る」「コンセントの規格はこれ」と決めてしまうイメージです。</p>
+  <p>契約が凍結されると、5体の開発エージェントが<strong>互いのファイルに一切触れない分担</strong>で同時に作業を始めます。物理担当、ワールド生成担当、描画担当、操作と演出の担当、コンテンツとUI担当。お互いの進捗を待つ必要がないので、本来なら直列で何時間もかかる作業が並列で進みます。</p>
+  <p>最後に統合エージェント（棟梁）が5チームの成果物を1つに配線します。ここで面白いのは、棟梁が<strong>7件の食い違いを発見して修正した</strong>ことです。たとえば「カメラの向きの定義が2チームでちょうど180度ずれていた」など、独立作業ならではのズレを、統合時に1か所ずつ突き合わせて解消しました。</p>
+
+  <figure class="diagram reveal" id="dg-parallel-streams">
+    <svg class="dg" viewBox="0 0 720 600" role="img" aria-label="分担工事の図。凍結された設計図と契約から5本の並列ストリームが同時に走り、統合エージェントが1本に結合してビルドと実機テストへ流す">
+      <defs>
+        <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+        <marker id="ah2g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#d9a83f"/>
+        </marker>
+      </defs>
+      <!-- frozen contract -->
+      <rect x="140" y="18" width="440" height="86" rx="14" class="box-gold"/>
+      <text x="360" y="52" text-anchor="middle" class="tt tg">❄ 凍結された設計図と契約</text>
+      <text x="360" y="80" text-anchor="middle" class="ts">型・イベント名・全定数・ファイル分担を先に確定し、以後変更禁止</text>
+      <!-- fanout -->
+      <path d="M250 104 C 200 130, 100 130, 84 150" class="ln" marker-end="url(#ah2)"/>
+      <path d="M310 104 C 290 128, 240 130, 222 150" class="ln" marker-end="url(#ah2)"/>
+      <path d="M360 104 L 360 150" class="ln" marker-end="url(#ah2)"/>
+      <path d="M410 104 C 430 128, 480 130, 498 150" class="ln" marker-end="url(#ah2)"/>
+      <path d="M470 104 C 520 130, 620 130, 636 150" class="ln" marker-end="url(#ah2)"/>
+      <text x="360" y="142" text-anchor="middle" class="ts" style="fill:#b9bed4">5体が同時に実装 — 互いのファイルには一切触れない</text>
+      <!-- 5 lanes -->
+      <g>
+        <rect x="22" y="156" width="124" height="210" rx="13" class="box-sky"/>
+        <text x="84" y="186" text-anchor="middle" class="tt tb">A</text>
+        <text x="84" y="212" text-anchor="middle">物理</text>
+        <text x="84" y="236" text-anchor="middle" class="ts">転がり・吸収</text>
+        <line x1="84" y1="258" x2="84" y2="334" class="ln-dash"/>
+        <path d="M84 334 L 84 346" class="ln-soft" marker-end="url(#ah2)"/>
+      </g>
+      <g>
+        <rect x="160" y="156" width="124" height="210" rx="13" class="box-green"/>
+        <text x="222" y="186" text-anchor="middle" class="tt tgr">B</text>
+        <text x="222" y="212" text-anchor="middle">ワールド生成</text>
+        <text x="222" y="236" text-anchor="middle" class="ts">街・スポーン</text>
+        <line x1="222" y1="258" x2="222" y2="334" class="ln-dash"/>
+        <path d="M222 334 L 222 346" class="ln-soft" marker-end="url(#ah2)"/>
+      </g>
+      <g>
+        <rect x="298" y="156" width="124" height="210" rx="13" class="box-coral"/>
+        <text x="360" y="186" text-anchor="middle" class="tt tc">C</text>
+        <text x="360" y="212" text-anchor="middle">描画</text>
+        <text x="360" y="236" text-anchor="middle" class="ts">3D表示・カメラ</text>
+        <line x1="360" y1="258" x2="360" y2="334" class="ln-dash"/>
+        <path d="M360 334 L 360 346" class="ln-soft" marker-end="url(#ah2)"/>
+      </g>
+      <g>
+        <rect x="436" y="156" width="124" height="210" rx="13" class="box-violet"/>
+        <text x="498" y="186" text-anchor="middle" class="tt tv">D</text>
+        <text x="498" y="212" text-anchor="middle">操作・演出</text>
+        <text x="498" y="236" text-anchor="middle" class="ts">入力・フィナーレ</text>
+        <line x1="498" y1="258" x2="498" y2="334" class="ln-dash"/>
+        <path d="M498 334 L 498 346" class="ln-soft" marker-end="url(#ah2)"/>
+      </g>
+      <g>
+        <rect x="574" y="156" width="124" height="210" rx="13" class="box-sky"/>
+        <text x="636" y="186" text-anchor="middle" class="tt tb">E</text>
+        <text x="636" y="212" text-anchor="middle">コンテンツ・UI</text>
+        <text x="636" y="236" text-anchor="middle" class="ts">HUD・音</text>
+        <line x1="636" y1="258" x2="636" y2="334" class="ln-dash"/>
+        <path d="M636 334 L 636 346" class="ln-soft" marker-end="url(#ah2)"/>
+      </g>
+      <!-- converge -->
+      <path d="M84 366 C 100 402, 200 404, 248 422" class="ln" marker-end="url(#ah2)"/>
+      <path d="M222 366 C 240 396, 280 398, 300 418" class="ln" marker-end="url(#ah2)"/>
+      <path d="M360 366 L 360 414" class="ln" marker-end="url(#ah2)"/>
+      <path d="M498 366 C 480 396, 440 398, 420 418" class="ln" marker-end="url(#ah2)"/>
+      <path d="M636 366 C 620 402, 520 404, 472 422" class="ln" marker-end="url(#ah2)"/>
+      <!-- integrator -->
+      <rect x="210" y="420" width="300" height="86" rx="14" class="box-gold"/>
+      <text x="360" y="454" text-anchor="middle" class="tt tg">統合エージェント（棟梁）</text>
+      <text x="360" y="482" text-anchor="middle" class="ts">5チームの成果を配線 — 7件の食い違いを発見・修正</text>
+      <path d="M360 506 L 360 540" class="ln-gold" marker-end="url(#ah2g)"/>
+      <rect x="240" y="544" width="240" height="44" rx="22" class="box"/>
+      <text x="360" y="573" text-anchor="middle">ビルド → 実機テストへ</text>
+    </svg>
+    <figcaption>図2: 分担工事 — 契約凍結 → 5ストリーム並列 → 棟梁による統合</figcaption>
+  </figure>
+
+  <h3><span class="no">その3</span>検査 — 指摘を「別の検査官」が疑い、本物だけを直す</h3>
+  <p>できあがったゲームは、複数の観点（正しさ・性能・遊び心地・契約整合）からレビューエージェント群が一斉に検査します。ここまでは普通の品質チェックですが、ultracodeには特徴的な仕掛けがあります。<strong>指摘1件ごとに、独立した「懐疑エージェント」がつき、その指摘が本当かどうか反証を試みる</strong>のです。</p>
+  <p>AIのレビューは（人間と同じく）「もっともらしいが実は問題ない指摘」を出すことがあります。指摘を鵜呑みにして全部直すと、直すこと自体が新しいバグを生みます。そこで敵対的検証を挟むと、v1ではレビュー指摘の約3割が「偽陽性」として棄却されました。残った本物の指摘だけを修正エージェントが直し、最後に別のバリデータが実際にゲームをプレイして確認する——この二段構えが、品質と安全性の両方を支えました。</p>
+
+  <figure class="diagram reveal" id="dg-adversarial-review">
+    <svg class="dg" viewBox="0 0 720 440" role="img" aria-label="敵対的レビューの図。レビュー指摘が反証フィルタを通り、本物だけが修正と検証に進み、偽陽性は棄却箱へ落ちる">
+      <defs>
+        <marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#8d93b0"/>
+        </marker>
+        <marker id="ah3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#d9a83f"/>
+        </marker>
+        <marker id="ah3c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#a04a64"/>
+        </marker>
+      </defs>
+      <!-- review cards stack -->
+      <rect x="40" y="96" width="150" height="92" rx="12" class="box-soft" opacity=".5" transform="rotate(-4 115 142)"/>
+      <rect x="34" y="88" width="150" height="92" rx="12" class="box-soft" opacity=".75" transform="rotate(2 109 134)"/>
+      <rect x="28" y="80" width="150" height="92" rx="12" class="box"/>
+      <text x="103" y="112" text-anchor="middle" class="tt" style="font-size:15px">レビュー指摘</text>
+      <text x="103" y="136" text-anchor="middle" class="ts">正しさ / 性能 /</text>
+      <text x="103" y="154" text-anchor="middle" class="ts">遊び心地 / 契約整合</text>
+      <text x="106" y="216" text-anchor="middle" class="ts tg">v1では 30件</text>
+      <path d="M192 132 L 248 132" class="ln" marker-end="url(#ah3)"/>
+      <!-- skeptic filter -->
+      <rect x="252" y="56" width="216" height="160" rx="16" class="box-violet"/>
+      <text x="360" y="90" text-anchor="middle" class="tt tv">懐疑エージェント</text>
+      <text x="360" y="116" text-anchor="middle" class="ts">指摘1件ごとに独立に</text>
+      <text x="360" y="136" text-anchor="middle" class="ts">「本当か？」を反証する</text>
+      <circle cx="344" cy="172" r="16" fill="none" stroke="#c4a8ff" stroke-width="2.5"/>
+      <line x1="355" y1="184" x2="372" y2="200" stroke="#c4a8ff" stroke-width="3" stroke-linecap="round"/>
+      <text x="360" y="240" text-anchor="middle" class="ts tv">敵対的検証</text>
+      <!-- confirmed path -->
+      <path d="M468 110 L 524 110" class="ln-gold" marker-end="url(#ah3g)"/>
+      <text x="496" y="98" text-anchor="middle" class="ts tg">本物</text>
+      <rect x="528" y="76" width="168" height="64" rx="13" class="box-gold"/>
+      <text x="612" y="103" text-anchor="middle" class="tt tg" style="font-size:15px">確定 21件</text>
+      <text x="612" y="126" text-anchor="middle" class="ts">反証に耐えた指摘</text>
+      <path d="M612 140 L 612 168" class="ln" marker-end="url(#ah3)"/>
+      <rect x="528" y="172" width="168" height="56" rx="13" class="box"/>
+      <text x="612" y="206" text-anchor="middle">修正エージェント</text>
+      <path d="M612 228 L 612 256" class="ln" marker-end="url(#ah3)"/>
+      <rect x="528" y="260" width="168" height="74" rx="13" class="box-green"/>
+      <text x="612" y="288" text-anchor="middle" class="tgr">実機プレイ検証</text>
+      <text x="612" y="312" text-anchor="middle" class="ts">別のバリデータが遊んで確認</text>
+      <!-- rejected path -->
+      <path d="M360 216 L 360 264" class="ln" stroke="#a04a64" marker-end="url(#ah3c)"/>
+      <text x="408" y="248" text-anchor="middle" class="ts tc">偽陽性</text>
+      <rect x="262" y="268" width="196" height="92" rx="13" class="box-coral"/>
+      <line x1="262" y1="292" x2="458" y2="292" stroke="#a04a64" stroke-width="1.5"/>
+      <text x="360" y="320" text-anchor="middle" class="tc" style="font-size:15px">棄却箱 9件（30%）</text>
+      <text x="360" y="344" text-anchor="middle" class="ts">「もっともらしいが実害なし」</text>
+      <text x="360" y="416" text-anchor="middle" class="ts">鵜呑みにして直していたら、修正自体が新しいバグを生んでいた</text>
+    </svg>
+    <figcaption>図3: 敵対的レビュー — 指摘→反証→確定/棄却→修正→実機検証の二段構え</figcaption>
+  </figure>
+
+  <h3>なぜ1体のAIではなく「チーム」なのか</h3>
+  <p>3つの比喩に共通するのは、<strong>役割ごとに別の目を入れる</strong>ことです。設計を提案した本人は自分の案の弱点に気づきにくい。実装した本人は自分のコードのバグを見逃しやすい。指摘した本人は自分の指摘を疑わない。だから提案と審査、実装と統合、指摘と反証、修正と検証を、<strong>毎回別のエージェントに分ける</strong>——人間の組織が長い時間をかけてたどり着いた「相互チェック」の知恵を、AIチームはそのまま高速で回しています。</p>
+  <p>もうひとつの理由は並列性です。5チームの分担工事や、指摘1件ごとの反証は、お互いを待つ必要がないので同時に走らせられます。126体・約12時間という数字は、直列なら何倍もかかった作業を圧縮した結果です。</p>
+
+  <details class="acc">
+    <summary>敵対的検証の実例 — 棄却された「もっともらしい指摘」</summary>
+    <div class="acc-body">
+      <p>v1レビューで「<strong>勝利画面のカメラが世界の原点を映していて、長いプレイ後は霧しか映らない</strong>」という指摘が出ました。コードを読む限り完全に正しい指摘です。カメラは確かに原点を周回し、ボールは最大1,500シミュレーション単位も離れている可能性があります。</p>
+      <p>しかし懐疑エージェントが反証した結果——<strong>勝利画面のオーバーレイは完全に不透明なDOMレイヤーで、カメラが何を映していようとプレイヤーには1ピクセルも見えない</strong>ことが判明。「指摘されたカメラの問題は実在するが、観測不可能であり欠陥ではない」として棄却されました。</p>
+      <p>同様に「ノックオフで体積が返却されず成長が二重計上される」という指摘は、引用していた定数値（GROWTH_K=10）が実際の値（0.45）と異なる「数値の捏造」を含むことまで突き止めて棄却。逆に「成長ペースが目標の20〜30倍遅い」という指摘は反証に耐えて<strong>critical確定</strong>となり、ゲームの根本的なチューニング修正につながりました。指摘を疑う工程があるからこそ、確定した指摘には全力で対処できます。</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary>検査の検査 — バリデータが「修正による回帰」を見つけた話</summary>
+    <div class="acc-body">
+      <p>修正エージェントがレビュー指摘を直したあと、最終バリデータが実際にブラウザでプレイテストをします。v1ではここで本物の回帰（修正が引き起こした新しい問題）が2件見つかりました。</p>
+      <p>ひとつは加速度の定数の問題。<code>ACCEL_K=22</code> では摩擦と釣り合う「終端速度」が速度上限の約半分にしかならず、<strong>設計上の最高速度が数学的に到達不可能</strong>になっていました。バリデータは式 <code>終端速度 = ACCEL_K × dt × f ÷ (1 − f)</code> を立てて原因を特定し、45に修正。もうひとつは修正後も吸収ペースが目標未達で、実測（約20秒間プレイして吸収数をカウント）に基づいて「拾いやすさ補正」を広げました。最終計測では18.5秒で22個吸収、雪だるま式の成長カーブが正しく出ることを確認しています。</p>
+      <p>「直した人とは別の人が、実際に動かして確かめる」——人間の現場の鉄則を、AIチームもそのまま実践しています。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= TIMELINE ================= -->
+<section id="timeline" class="reveal">
+  <h2>v1 → v2 → v3 → v4 → v5 進化の物語</h2>
+  <p>5つのバージョンは、毎回オーナーの新しい注文から始まりました。まずは全体図です。</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th></th><th>テーマ</th><th>オーナーの注文（ひとこと）</th><th>ゴール</th><th>所要</th></tr></thead>
+      <tbody>
+        <tr><td><b>v1</b></td><td>技術の証明</td><td>「シームレスに成長する塊魂を、重くならないように」</td><td>500m到達</td><td>約2.5時間</td></tr>
+        <tr><td><b>v2</b></td><td>演出とバズ</td><td>「ゴールは月に変更。クオリティアップ。バズ狙い」</td><td>月と融合</td><td>約3時間</td></tr>
+        <tr><td><b>v3</b></td><td>作品化</td><td>「箱庭の東京。スマホ対応。アヒルの実況つき」</td><td>東京スカイツリー</td><td>約6.8時間</td></tr>
+        <tr><td><b>v4</b></td><td>リアル東京</td><td>「地図データで本物の街並みを。ボクセル風でいい」</td><td>実在の東京14,563棟</td><td>約5時間</td></tr>
+        <tr><td><b>v5</b></td><td>実プレイの声</td><td>「最初のステージが何にも見えない」+ 要望5点</td><td>地球が見える宇宙へ</td><td>約2時間</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="timeline">
+
+    <!-- ===== v1 ===== -->
+    <article class="tl-item reveal">
+      <div class="tl-badge">v1</div>
+      <h3>「シームレスに大きくなる塊魂」を一晩で<span class="tl-theme">所要 約2.5時間</span></h3>
+      <div class="bubble">
+        <span class="who">オーナーの指示（要旨）</span>
+        <p>ブラウザで動く3Dゲームを作ってほしい。塊魂みたいにオブジェクトを取り込んで成長する。成長したら一段階大きい視界へ<strong>シームレスに</strong>移行する仕組みにすること。取り込みスケールが大きくなっても<strong>重くならない</strong>こと。ultracode（マルチエージェント）で実行し、全作業の思考・意思決定をログに残し、Cloudflare Pages に公開すること。</p>
+      </div>
+      <p>空っぽのフォルダから始めて約2.5時間。設計コンペ → 分担工事 → 検査 → デプロイの4フェーズを48体のエージェントで駆け抜け、「机 → 部屋 → 通り → 街 → 都市 → スカイライン」の6ティアを5cmから500mまでシームレスに成長するゲームが公開されました。外部素材ゼロ（3Dモデルも効果音も全部コードから生成）、バンドルはgzip後わずか154KBです。</p>
+      <p>最大の発明は「<strong>世界のほうを縮める</strong>」リスケール方式でした。ボールを無限に大きくしていくとコンピュータの数値計算が精度切れを起こすので、ボールが一定サイズに達した瞬間、<strong>世界全体を1/5に縮めてボールを元のサイズ帯に戻す</strong>。カメラも霧も全部が同じ比率で縮むため、縮めた前後の画面はピクセル単位で同一——プレイヤーには絶対に気づけません。</p>
+
+      <figure class="diagram reveal" id="dg-rescale">
+        <svg class="dg" viewBox="0 0 720 470" role="img" aria-label="リスケールのビフォーアフター。世界全体を1/5に縮めてもカメラから見た画面は同一であることを示す図">
+          <defs>
+            <marker id="ah4g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#d9a83f"/>
+            </marker>
+            <g id="mini-scene">
+              <rect x="0" y="0" width="150" height="92" rx="8" fill="#11131f" stroke="#3a4160" stroke-width="1.5"/>
+              <line x1="8" y1="72" x2="142" y2="72" stroke="#565d7c" stroke-width="1.5"/>
+              <circle cx="52" cy="56" r="16" fill="#ff9d4d"/>
+              <circle cx="46" cy="50" r="5" fill="#ffe9a8"/>
+              <rect x="96" y="34" width="14" height="38" fill="#2c3250"/>
+              <rect x="116" y="44" width="12" height="28" fill="#3a4160"/>
+            </g>
+          </defs>
+          <!-- BEFORE panel -->
+          <rect x="14" y="20" width="324" height="252" rx="14" class="box-soft"/>
+          <text x="176" y="48" text-anchor="middle" class="tt" style="font-size:15px">リスケール直前</text>
+          <text x="176" y="70" text-anchor="middle" class="ts">ボール半径 2.5（上限）に到達</text>
+          <line x1="30" y1="236" x2="322" y2="236" class="ln-soft"/>
+          <circle cx="120" cy="186" r="50" fill="#ff9d4d"/>
+          <circle cx="102" cy="168" r="14" fill="#ffe9a8"/>
+          <rect x="210" y="116" width="38" height="120" fill="#2c3250"/>
+          <rect x="258" y="152" width="30" height="84" fill="#3a4160"/>
+          <text x="120" y="120" text-anchor="middle" class="ts tg">r = 2.5</text>
+          <!-- arrow -->
+          <path d="M342 146 L 376 146" class="ln-gold" marker-end="url(#ah4g)"/>
+          <text x="360" y="124" text-anchor="middle" class="ts tg" style="font-weight:700">×0.2</text>
+          <text x="360" y="174" text-anchor="middle" class="ts">1フレーム</text>
+          <text x="360" y="192" text-anchor="middle" class="ts">で適用</text>
+          <!-- AFTER panel -->
+          <rect x="382" y="20" width="324" height="252" rx="14" class="box-soft"/>
+          <text x="544" y="48" text-anchor="middle" class="tt" style="font-size:15px">世界全体を 1/5 に縮小</text>
+          <text x="544" y="70" text-anchor="middle" class="ts">ボールは半径 0.5 に戻る</text>
+          <line x1="398" y1="236" x2="690" y2="236" class="ln-soft"/>
+          <!-- ghost of old sizes -->
+          <circle cx="488" cy="186" r="50" fill="none" stroke="#3a4160" stroke-width="1.5" stroke-dasharray="6 6"/>
+          <rect x="578" y="116" width="38" height="120" fill="none" stroke="#3a4160" stroke-width="1.5" stroke-dasharray="6 6"/>
+          <!-- shrunken -->
+          <circle cx="488" cy="226" r="10" fill="#ff9d4d"/>
+          <circle cx="484" cy="222" r="3" fill="#ffe9a8"/>
+          <rect x="589" y="212" width="8" height="24" fill="#2c3250"/>
+          <rect x="600" y="219" width="6" height="17" fill="#3a4160"/>
+          <text x="488" y="126" text-anchor="middle" class="ts">r = 0.5</text>
+          <text x="544" y="262" text-anchor="middle" class="ts">カメラ・霧・速度も同じ比率で縮む</text>
+          <!-- identical screens -->
+          <text x="360" y="312" text-anchor="middle" style="font-size:15px" class="tt">カメラから見た画面は…</text>
+          <use href="#mini-scene" x="140" y="330"/>
+          <text x="360" y="386" text-anchor="middle" class="tt tg" style="font-size:26px">=</text>
+          <use href="#mini-scene" x="430" y="330"/>
+          <text x="215" y="446" text-anchor="middle" class="ts">縮小前のフレーム</text>
+          <text x="505" y="446" text-anchor="middle" class="ts">縮小後のフレーム</text>
+          <text x="360" y="466" text-anchor="middle" class="ts tg">ピクセル単位で同一 — プレイヤーには絶対に気づけない</text>
+        </svg>
+        <figcaption>図4: 「世界のほうを縮める」リスケール — 相似変換のビフォーアフター</figcaption>
+      </figure>
+
+      <h4>制作中の見どころエピソード</h4>
+      <ul>
+        <li><strong>48種類のオブジェクトを全部コードで造形</strong>: 消しゴム、マグカップ、ネコ、消火栓、観覧車、クルーズ船……すべて箱や円柱の組み合わせ+頂点カラーで実行時に生成。ビルの窓は「乱数で一部の窓だけ明かりが点いている」演出までコードで焼き込まれています。最大の観覧車でも268ポリゴン、外部の3Dモデルはひとつも使っていません。</li>
+        <li><strong>「拾えない塊魂」事件</strong>: 統合直後のスモークテストで、まっすぐ転がしても10秒間なにも拾えない問題が発覚。正直な球同士の接触判定は、見た目より当たり幅がずっと狭かったのです。レビューフェーズで「自分よりじゅうぶん小さい物には当たり判定を甘くする（大きい物への判定は正直なまま）」という連続的な救済ルールが入り、塊魂らしいバクバク食べる感触になりました。</li>
+        <li><strong>スマホで遊べない疑惑</strong>: レビューが「タッチ用ジョイスティックが存在するのに<strong>見えない</strong>、タイトル画面の説明もキーボード前提」と指摘。指の位置にリングとスティックが表示されるようになり、タッチデバイスでは説明文も差し替わるようになりました。</li>
+      </ul>
+
+      <div class="shots">
+        <figure><img src="img/live-title.png" alt="v1 タイトル画面" loading="lazy" width="500" height="281"><figcaption>v1 タイトル画面（本番URL）</figcaption></figure>
+        <figure><img src="img/live-play.png" alt="v1 プレイ画面" loading="lazy" width="500" height="281"><figcaption>v1 プレイ中 — 机の上の世界</figcaption></figure>
+      </div>
+
+      <details class="acc">
+        <summary>相似変換リスケールの数学</summary>
+        <div class="acc-body">
+          <p>シミュレーションは常にボール半径 0.5〜2.5（シミュレーション単位）の狭い数値帯で行います。半径が2.5に達したフレームで、全座標・全速度・全半径に一様な相似変換 <strong>S = 0.2</strong> を1フレーム内に適用し、ボールを0.5に戻します。「実際の大きさ」は倍精度の <code>worldScale</code> 変数で別管理し（リスケールごとに5倍）、HUD表示にだけ使います。</p>
+          <p>なぜ画面が一切変わらないのか: カメラ距離・フォグ距離・速度上限がすべて「半径の純関数」（例: カメラ距離 = 6.5 × r）だからです。rが0.2倍になればカメラ距離も0.2倍になり、<strong>相似な世界を相似な距離から見る</strong>ので投影結果は同一。32bit浮動小数点の精度は常にフルに保たれ、理論上は成長の上限がありません。検証用に「強制リスケールキー + 前後スクリーンショットのピクセル差分」というテストまで設計に組み込まれており、v3最終検証では「差分は画面上部のタイマー数字のみ、ワールド描画はバイト単位で同一」が実測確認されています。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>シームレス法則 — 「ティアは見た目だけを変える」</summary>
+        <div class="acc-body">
+          <p>設計コンペで「遊び心地最優先」案から移植された、このゲームの憲法です。</p>
+          <p><strong>ティア番号（机/部屋/通り…の段階）が変えてよいのは見た目だけ</strong>——出現する物のラインナップ、色のパレット、BGMのレイヤー、お祝い演出。一方、<strong>吸収判定・カメラ距離・フォグ・速度・消滅判定はすべて半径の連続関数</strong>でなければなりません。</p>
+          <p>こうすると「境界をまたいだ瞬間にゲームの挙動が変わる」ことが構造的に不可能になります。シームレスさを「頑張って違和感を消す」のではなく「違和感が発生し得ない構造にする」——閾値でゲームプレイが分岐しない限り、カクつきもワープも原理的に起きないのです。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>物理エンジンを自作した理由</summary>
+        <div class="acc-body">
+          <p>3つの設計案が<strong>全員一致</strong>で下した唯一の判断が「物理エンジンライブラリを使わない」でした。</p>
+          <p>このゲームで動く物体は実質ボール1個だけ。相手は全部、地面に置かれた静的な球（当たり判定用の近似）です。汎用物理エンジンの rapier（WASM 1.7MB、リスケールのたびに全ボディをテレポートさせると壊れる）や cannon-es（JSソルバが遅く、アーケード的な操作感の調整と喧嘩する）は「このゲームには存在しない問題」を解くための重装備でした。</p>
+          <p>自作したアーケード物理は約400行。固定60Hzの決定的なステップで動き、「ぶつかったら巻き込んだ物が1〜3個剥がれ落ちる」という塊魂の名物挙動もほぼタダで実装できました。<strong>何を使わないかの判断</strong>が、154KBという小ささと安定性を支えています。</p>
+        </div>
+      </details>
+    </article>
+
+    <!-- ===== v2 ===== -->
+    <article class="tl-item reveal">
+      <div class="tl-badge">v2</div>
+      <h3>「ゴールは月。バズ狙いで」<span class="tl-theme">所要 約3時間</span></h3>
+      <div class="bubble">
+        <span class="who">オーナーの指示・第1弾（要旨）</span>
+        <p>背景・陸地・段差を追加。民家の中から始めて街の銅像をゴールにするデモ構成に。BGM/SE、ダッシュ、タイムアタック、レアアイテム、スコアとランク、Xポスト機能。</p>
+      </div>
+      <p>設計チームはこの「銅像ゴール案」を一度きちんと設計しきりました。ところが敵対的批評エージェントが<strong>15件の重大問題</strong>を検出します。「家の中ではカメラが壁にめり込んで破綻する（ブロッカー）」「物をひとつ巻き込んだだけでドアを通れなくなり詰む（ブロッカー）」……。屋内ステージは想像以上にリスクの塊だったのです。</p>
+      <p>そしてオーナーが実際にv1をプレイした上で、方針を転換します。</p>
+      <div class="bubble">
+        <span class="who">オーナーの指示・第2弾（要旨）</span>
+        <p><strong>ゴールは月に変更。家の中案は取り下げ</strong>。BGM・背景・巻き込めない大物オブジェクトでクオリティアップ。Xポストは維持。<strong>バズ狙い</strong>。</p>
+      </div>
+      <p>最もリスクが高かった地形・壁システムはまるごとキャンセル。ただし旧設計のうちゴールに依存しない部分（ダッシュ、タイマー、スコア、レア、ランク、Xポスト、BGMの設計）は「サルベージファイル」として抽出し、新しい設計ワークフローの入力素材に再利用しました。<strong>ボツ案も無駄にしない</strong>のがエージェントワークフローの面白いところです。</p>
+      <p>v2の設計は、v1の「3案コンペ」とは違う形をとりました。既存のコードベースという制約が強く効くため、複数案を競わせるより「<strong>1つの案を敵対的批評で徹底的に叩いて改訂する</strong>」3段パイプライン（設計→批評→改訂）のほうが向いている——という手法の使い分けも、ログに理由つきで記録されています。</p>
+
+      <details class="acc">
+        <summary>銅像案を沈めた批評、月案を鍛えた批評</summary>
+        <div class="acc-body">
+          <p>敵対的批評エージェントは、ボツになった銅像案だけでなく、採用された月案にも<strong>15件の問題</strong>を突きつけました。いくつか抜粋すると——</p>
+          <ul>
+            <li>「設計書は『ball.jsは変更不要』と主張しているが、<strong>コードを実際に確認したら</strong>8列構造の前提がハードコードされていて偽」（批評エージェントはソースの行番号まで挙げて反証しました）</li>
+            <li>「空のシェーダの月と3Dメッシュの月の引き継ぎに、見かけの大きさを一致させる仕様がない——<strong>クロスフェードで月がポンと跳ねて見えるはず</strong>」</li>
+            <li>「月が着地したのに、プレイヤーがダッシュで反対方向へ走り去ったら<strong>誰も月へ導いてくれない</strong>」→ 画面端の矢印と「月へ向かえ！」トースト、月方向への弱い引力が追加</li>
+            <li>「タブを切り替えて戻ると、<strong>止まっていたはずのBGMが溜まっていた音符を一気に鳴らす</strong>」→ 専用のオーディオ時計の再設計につながった</li>
+          </ul>
+          <p>改訂エージェントは15件すべてに「採用した修正」または「採用しなかった理由」を文書で残しています。設計を破壊するためではなく、<strong>実装が始まる前に壊れる場所を全部見つけておく</strong>ための批評です。</p>
+        </div>
+      </details>
+
+      <p>完成したv2では、序盤から空に見えていた月が、最終ティアで本当に降りてくる。接触するとカメラを奪うシネマティック演出が始まり、ボールは月と融合して夜空へ昇っていきます。WebAudioでゼロから合成したボサノヴァ風BGMがティアに合わせてレイヤーを重ね、クリア後はタイムとランクをXにシェアできます。</p>
+
+      <figure><img src="img/live-v2-title.png" alt="v2 タイトル画面" loading="lazy" width="500" height="281"><figcaption>v2 タイトル — 「ROLL UP THE MOON」</figcaption></figure>
+
+      <h4>制作中の見どころエピソード</h4>
+      <ul>
+        <li><strong>「月が暗い」問題</strong>: 統合チームが「上昇シーンの月が、設計の言う『光り輝く THE 月』というより細い三日月で渋い」と申し送り。レビューで材質を自己発光に切り替え、輝く満月+ハロー+星空のエンディングになりました（スクリーンショットで確認済み）。</li>
+        <li><strong>11秒の足止め</strong>: クリア演出+リザルトのアニメーションが毎回11秒スキップ不能で、しかもボタンが「見えないのに押せる」2.2秒間があるという指摘が確定。タップでシネマティックを早送りでき、リザルトも一気に表示できるようになりました（接触→操作可能まで3.2秒に短縮）。</li>
+        <li><strong>Xポストの落とし穴</strong>: ブラウザ実機検証が、シェアボタンの宛先が旧式のURLだったことを発見してその場で修正。アプリ内ブラウザ（LINEなど）でポップアップが開けない場合のフォールバックまで含めて検証されました。</li>
+        <li><strong>開発モードだけ壊れていた日</strong>: レビュー中の偶然の発見として、開発用の厳格チェックが「色のパターンは4〜6種であること」という自前ルールに2つのオブジェクトが違反していて、<strong>開発モードでだけ起動が完全に死んでいた</strong>ことが判明（本番ビルドはチェックが外れるため無事）。色を1つずつ足して解決。</li>
+      </ul>
+
+      <div class="shots">
+        <figure><img src="img/live-v2-play.png" alt="v2 プレイ画面" loading="lazy" width="500" height="281"><figcaption>v2 プレイ中 — 空に月が見えている</figcaption></figure>
+        <figure><img src="img/live-v2-ending.png" alt="v2 エンディング" loading="lazy" width="500" height="281"><figcaption>月と融合するエンディング</figcaption></figure>
+        <figure><img src="img/live-v2-result.png" alt="v2 リザルト画面" loading="lazy" width="500" height="281"><figcaption>タイム・スコア・ランクのリザルト</figcaption></figure>
+      </div>
+
+      <details class="acc">
+        <summary>「空の月」から「本物の月」への手品</summary>
+        <div class="acc-body">
+          <p>序盤に見える月は、実は空のシェーダに描かれたただの円です。フィナーレで降りてくる月は約1,300ポリゴンの3Dメッシュ。このすり替えがバレると興醒めなので、批評エージェントが「クロスフェードで月がポンと跳ねて見える」と指摘し、改訂版では<strong>降下開始位置を「カメラから見た月の見かけの大きさと方向が、シェーダの円と数学的に一致する距離」から逆算</strong>する式が採用されました: <code>開始位置 = カメラ位置 + 月の方向 × (月の半径 ÷ tan(見かけの角直径))</code>。プレイヤーには「ずっとそこにあった月が近づいてきた」ようにしか見えません。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>ペーシング実測の方法 — ランク基準を5分の2にした夜</summary>
+        <div class="acc-body">
+          <p>v2のランク基準（Sランク=300秒以内など）は、当初v1の体感から推定した値でした。レビューフェーズで実測チームが<strong>ボットにゲームを3回通しプレイさせ</strong>、HUDのタイマーと大きさを2秒ごとに記録したところ、最適プレイは約95〜105秒——<strong>推定の3分の1</strong>だったことが判明します。</p>
+          <p>実測値を基準に「S = 最適の約1.2倍、A = 1.8倍、B = まともな初回プレイ（2.8倍）、C = 4倍」というモデルを立て、S/A/B/C = 120/180/280/420秒に全面改訂。スコアも「絶対サイズ依存（終盤の1個が序盤の100万倍）」から「ボールとの相対サイズ依存」に変えて、序盤の「+1」だらけの寂しい画面と終盤のインフレを同時に解消しました。<strong>数字は推測でなく計測で決める</strong>——v3でも同じ実測（最適243秒 → S=290秒）が繰り返されています。</p>
+        </div>
+      </details>
+    </article>
+
+    <!-- ===== v3 ===== -->
+    <article class="tl-item reveal">
+      <div class="tl-badge">v3</div>
+      <h3>「箱庭東京、スマホ対応、相棒はアヒル」<span class="tl-theme">所要 約6.8時間</span></h3>
+      <div class="bubble">
+        <span class="who">オーナーの指示（要旨）</span>
+        <p>スマホ表示の最適化（UIの被りを解消）。<strong>箱庭の東京マップ</strong>——秋葉原のパーツショップから始まり、街へ出て、ランドマークを巻き込み、<strong>スカイツリーがゴール</strong>。巻き込んだ物の名前を表示。レアはコレクションにしてリザルトで一覧、Xで自慢できるように。<strong>ドナック（アヒルのキャラ）が吹き出しで実況</strong>。Xポストの不具合修正。</p>
+      </div>
+      <p>v3は最大のアップデートでした。手続き生成の無限平面から、<strong>手作業で411個の配置を作り込んだ実在感のある東京</strong>へ。雷門、渋谷のスクランブル交差点、ハチ公、東京ドーム、東京駅、国会議事堂、レインボーブリッジ、東京タワー……11のランドマークが「巻き込める順番のはしご」として配置され、12種類のコレクションアイテム（金の招き猫、特上大トロ、だるま……）が各地に隠されています。オブジェクトの種類は94種に拡大。相棒のドナックは公式キャラ設定を調査した上で、44本の日本語セリフと表情4種を持つ実況システムとして実装されました。</p>
+      <p>ゲームの流れはこうです。秋葉原のパーツショップの中（2cm、ネジやコンデンサの世界）→ 店の正面が開いて中央通りへ（道ばたの空き缶、自転車、通行人）→ 街区へ（屋台、ネコ、車、雑居ビル）→ 各地のランドマーク巡り → 東京タワーを巻き込むと一気に400m級へ → スカイツリーに接触してフィナーレ。最初の1フレームから空にスカイツリーのシルエットが見えていて、それが「あそこまで行くんだ」という道しるべになっています。</p>
+      <p>ちなみにオーナーの指示には「スカイツリーがゴール」と「東京タワーを巻き込むまで」が両方含まれていて矛盾していたのですが、設計エージェントは「東京タワー（333m）は終盤の最高のランドマーク、スカイツリー（634m）が最終ゴール」という<strong>両立する解釈</strong>を採用し、その判断理由をログに明記しました。曖昧な指示を勝手に丸めず、解釈を記録して進むのもチームの流儀です。</p>
+      <p>制作中のドラマも v3 が一番でした。</p>
+      <ul>
+        <li><strong>「最初の1フレームからスカイツリーが見える」は物理的に不可能</strong>: 設計の目玉だった「ゲーム開始直後から空にゴールが見える」は、批評エージェントの計算で「ボールが2cmの時点ではカメラの描画距離は実寸約160m。634m先のタワーは描画できない」と判明（ブロッカー判定）。改訂版は、v2で月のために作った「空のシェーダのシルエット → 近づいたら3Dメッシュに引き継ぐ」手品を再利用して解決しました。同じ批評は「ボールが東京タワーの脚を<strong>ゲーム序盤からずっとすり抜けられる</strong>」ことも見抜き、ゴールモニュメント専用の当たり判定が追加されています。</li>
+        <li><strong>成長暴走の発見</strong>: 統合テスト中、秋葉原の通りでWキーを押しっぱなしにしたら<strong>3秒でボールが4mから117mに膨張</strong>する暴走が見つかりました。巻き込み成長率と密度の組み合わせが連鎖反応を起こしていたのです。レビューフェーズで「物の実サイズに応じて成長係数を絞る」修正が入り、実測で最適クリア4分03秒・通常7分17秒という設計目標どおりのカーブに収まりました。</li>
+        <li><strong>トークン上限との戦い</strong>: v3レビューは29体・約356万トークンの大工程で、途中で<strong>セッションのトークン上限に到達して停止</strong>。オーナーに報告し、トークン回復後にワークフローの再開機能（<code>resumeFromRunId</code>）でレビュー結果のキャッシュを温存したまま、止まった工程（修正と最終検証）だけを再実行しました。</li>
+        <li><strong>スマホUIの総当たり検証</strong>: オーナーの第一の注文だった「UIの被り解消」は、5種類の画面サイズで「トースト+コレクション通知+ドナックの吹き出しを<strong>同時に強制表示</strong>して座標の重なりをミリ単位で計測する」方法で検証。最終検証では250ミリ秒間隔の重なり監視を60秒以上回し続け、重なりゼロを確認しました。</li>
+        <li><strong>最後の門番</strong>: 最終バリデータは「デバッグ用URLで0秒クリアの自己ベストが記録できてしまう」という公開前の穴まで発見。デプロイ直前に記録ガードが追加されました。</li>
+      </ul>
+
+      <div class="shots shots-tall">
+        <figure><img src="img/live-v3-title.png" alt="v3 タイトル画面（スマホ）" loading="lazy" width="440" height="953"><figcaption>v3 タイトル（スマホ）</figcaption></figure>
+        <figure><img src="img/live-v3-play.png" alt="v3 プレイ画面（スマホ）" loading="lazy" width="440" height="953"><figcaption>箱庭東京を転がる</figcaption></figure>
+        <figure><img src="img/live-v3-donack.png" alt="ドナックの実況吹き出し" loading="lazy" width="440" height="953"><figcaption>ドナックの実況</figcaption></figure>
+      </div>
+      <figure><img src="img/live-v3-result.png" alt="v3 リザルト画面とコレクション図鑑" loading="lazy" width="500" height="312"><figcaption>v3 リザルト — コレクション図鑑12種とランク</figcaption></figure>
+
+      <details class="acc">
+        <summary>成長暴走の発見と修正 — 4m→117m/3秒 をどう止めたか</summary>
+        <div class="acc-body">
+          <p>暴走の正体は数学的に明快でした。巻き込み成長係数 K=10 のとき、ギリギリ巻き込める相手（自分の65%サイズ）を食べると半径は一気に<strong>1.55倍</strong>になります。さらに移動速度も巻き込み幅も半径に比例するので、捕獲レートは半径の2乗で伸びる——条件が揃うと超指数関数的な連鎖が起きます。</p>
+          <p>修正は2段構えです。(1) <code>growthKForObjR</code>: 実サイズ0.1m以下の小物はK=10のまま（ショップ内の気持ちよさは死守）、それより大きい物はべき乗則でK=2まで漸減。(2) ランドマークとコレクションだけは例外的にK=10を維持——「東京タワーを食べたら一気に406mへジャンプしてフィナーレ突入」という<strong>演出としての暴走</strong>は設計仕様だからです。さらにランドマークのはしごも再調整され、「東京ドームからランドマークだけを連鎖して中盤を全部スキップできる」抜け道は、閾値の隙間をわずか3%まで詰めて封じられました。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>BatchedMesh採用理由 — 統合担当が見つけた設計の穴</summary>
+        <div class="acc-body">
+          <p>v3の設計書には「ランドマークやコレクション用に4本の共有インスタンスプールを使う」とありました。ところが統合エージェントが配線中に気づきます——インスタンス描画（InstancedMesh）は<strong>1メッシュにつき1種類の形状しか持てない</strong>。雷門とハチ公と招き猫を同じプールに入れることは原理的に不可能でした。</p>
+          <p>統合担当は Three.js の比較的新しい <code>BatchedMesh</code>（1回の描画命令で複数形状を描ける仕組み）を採用し、既存のプールとまったく同じ操作面を持つアダプタ <code>BatchedExtraPool</code> を書いて解決。呼び出し側の変更は <code>alloc()</code> を <code>alloc(code)</code> にする1引数だけで、描画回数の予算（+4回）も設計どおりに守られました。設計の理想と実装の現実がぶつかったとき、<strong>契約（インターフェース）を守ったまま中身を差し替える</strong>のが統合エージェントの腕の見せどころです。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>ドナックの実装 — setTimeout を1個も使わない実況キャラ</summary>
+        <div class="acc-body">
+          <p>ドナックは緑の帽子に白い羽毛のピクセルアートのアヒル。公式リポジトリからキャラ設定（表情4種、明るく簡潔な相棒口調）を調査した上で実装されました。アセットは表情ごとに2フレーム、計8枚のWebP画像、<strong>合計たった20KB</strong>です。</p>
+          <p>中身は優先度つきのセリフエンジンです。44本のセリフがそれぞれ優先度・表情・「1回きりか」・出現フェーズを持ち、キューは1件のみ（同格以下は捨てる）、吹き出しの最低間隔はクールダウンで管理。まばたき用の4fpsタイマーが表示時間のカウンタを兼ねるので <code>setTimeout</code> はゼロ。ハチ公のように「ランドマーク」と「コレクション」を兼ねる対象には専用の合成セリフが用意されています。リリース前には<strong>120秒間イベントを浴びせ続けるストームテスト（217項目）</strong>で、スパムしないこと・シネマティック中に喋らないこと・リセットで黙ることを検証。さらに実プレイ計測で「平均12秒間隔はうるさい」と判定され、間隔が約32秒に再調整されました。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>トークン上限からの再開 — resumeFromRunId の仕組み</summary>
+        <div class="acc-body">
+          <p>v3のレビュー工程は29体のエージェントが動く約356万トークンの大仕事で、修正エージェントの実行中にセッションのトークン上限へ到達して停止しました。</p>
+          <p>ここで効いたのがワークフローの<strong>チェックポイント設計</strong>です。各フェーズの成果（レビュー指摘、敵対的検証の判定）は実行IDに紐づけてキャッシュされているため、トークン回復後に <code>resumeFromRunId</code> で再開すると、<strong>完了済みフェーズは再実行せず</strong>、止まった修正・検証だけが走ります。27体分の検証結果が無駄にならず、中断コストは最小で済みました。</p>
+          <p>副作用もひとつありました。再開後の敵対的検証は「レビュー時点のスナップショット」ではなく「最新のコード」に対して反証したため、<strong>初回実行中に並行して直っていた指摘</strong>を「すでに修正済み」として大量に棄却することになり、v3の棄却16件の多くはこの「陳腐化棄却」です。中断・再開すら品質ゲートが正しく機能した記録になっています。</p>
+        </div>
+      </details>
+    </article>
+
+    <!-- ===== v4 ===== -->
+    <article class="tl-item reveal">
+      <div class="tl-badge">v4</div>
+      <h3>「本物の地図データで、リアル東京を」<span class="tl-theme">所要 約5時間</span></h3>
+      <div class="bubble">
+        <span class="who">オーナーの指示（要旨）</span>
+        <p><strong>GoogleMapのデータを使って街並みをゲームに反映</strong>してほしい。テクスチャは重いので、プリミティブな<strong>ボクセル風でいい</strong>。あわせてキャラクターデータの品質も上げること。</p>
+      </div>
+      <p>v3の東京は「それっぽく手作業で作った箱庭」でした。v4はそれを<strong>本物の地図データから生成した、実在の東京</strong>に置き換えます。ただし最初の関門は技術ではなく法律でした。Google Mapsの地図データは、利用規約で「加工して別のデータセットを作って配ること」が禁止されています。そこでAIチームが選んだのが <strong>OpenStreetMap（OSM）</strong>——世界中の有志が育てている「みんなでつくる地図」です。出典を表示するなどのルール（ODbLライセンス）を守れば、合法に使えます。</p>
+      <p>こうして秋葉原を中心とした実寸半径2.5kmのエリア（+渋谷・浅草）から、<strong>実在の建物14,563棟</strong>が実際の位置・実際の高さでボクセルのビルになり、全部巻き込めるようになりました。神田川も隅田川も皇居のお濠も上野公園も、本物の形のまま地面に描かれます。驚くべきはデータの軽さで、東京1区分の建物・道路・川・公園を全部詰めて<strong>たった285KB</strong>（圧縮後）——スマホ写真1枚の10分の1ほどです。建物を「位置・サイズ・向き・色」のわずか10〜12バイトの数値に圧縮する自前バイナリ形式を設計したからです。</p>
+
+      <h4>制作中の見どころエピソード</h4>
+      <ul>
+        <li><strong>批評AIが自分で地図APIに問い合わせた</strong>: 設計案には「対象エリアの建物は約4万棟」という見積もりが書かれていました。敵対的批評エージェントはこの数字を<strong>信用せず、自分でOpenStreetMapの集計APIにカウントクエリを投げて実測</strong>。結果は58,155棟——設計見積もりの約1.5倍で、データ容量からメモリ予算まで下流の計算が全部狂っていることを暴きました。改訂版は実測値を正とし、「数字は散文に書かず、ビルド時に毎回API実測と突き合わせて±20%を超えたら出荷を止める」検証ゲートまで組み込みました。</li>
+        <li><strong>3回の中断を挟んで完走</strong>: v4実装は大工程で、セッション切れ・利用上限到達で<strong>3回も止まりました</strong>（うち1回は約10時間の停止）。それでも各フェーズの成果がチェックポイントとして保存されているため、再開のたびに完了済みの作業はキャッシュから即時返却され、<strong>二重実行はゼロ</strong>。深夜に止まって翌日再開しても、何ひとつやり直しになりませんでした。</li>
+        <li><strong>道が狭すぎて遊べない問題</strong>: 実在の東京の路地は、1/5スケールにするとボールより狭い場所だらけ。そのままでは「本物だけど詰むマップ」になります。ビルド時に道路沿いの建物を自動で少し後退させる「クリアランス焼き込み」を行い、さらに<strong>ボールが実際に通れる範囲をシミュレーションして「95%以上の場所に到達可能」を出荷条件</strong>にしました。</li>
+      </ul>
+
+      <div class="shots">
+        <figure><img src="img/v4-marunouchi.png" alt="v4 丸の内 — 実在のビル群を転がる" loading="lazy" width="500" height="278"><figcaption>丸の内 — 東京駅周辺の実在ビル群</figcaption></figure>
+        <figure><img src="img/v4-ueno.png" alt="v4 上野 — 実データの街並み" loading="lazy" width="500" height="278"><figcaption>上野 — 不忍池も公園も本物の形</figcaption></figure>
+      </div>
+
+      <details class="acc">
+        <summary>OSMパイプライン — 地図データが285KBのゲームデータになるまで</summary>
+        <div class="acc-body">
+          <p>ビルド時の3段パイプライン（<code>scripts/osm/</code>）が、生の地図データを出荷バイナリへ変換します。</p>
+          <ol>
+            <li><strong>取得</strong>（<code>osm:fetch</code>）: Overpass API へ約115リクエスト（1km四方42セル、再開可能・レート制限対応）。取得した生データ7.3MB/124ファイルはリポジトリにコミットされます。</li>
+            <li><strong>変換</strong>（<code>osm:build</code>）: 重複除去 → 飛び地ポリゴンの輪っか組み立て → 座標投影（水平1:5・高さ1:2.5）→ 建物の外接矩形化 → <strong>ボクセル量子化</strong>（位置5cm・サイズ25cm刻み）→ 長屋の結合（14,546件）→ 道路クリアランス焼き込み → 帯域別間引き → 1棟10〜12バイトの自前バイナリ「FKT4」へ。決定論的で、再実行するとバイト単位で同一の出力になります。</li>
+            <li><strong>検証</strong>（<code>osm:verify</code>）: 容量予算・建物数のAPI実測±20%・重複ゼロ・到達可能性95%以上・ランドマーク間の実距離照合——全部に合格しないとデプロイできません（predeployゲート）。</li>
+          </ol>
+          <p>出荷データは建物14,563棟+道路12,980本+水面/公園1,478面で<strong>合計約285KB gz</strong>（ハード上限1,536KBの2割以下）。実行時は型付き配列に一発デコードし、1棟あたりのJSオブジェクトは作りません（ゼロアロケーション法の継続）。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>ODbLライセンス対応 — 「出典表示」だけでは足りない</summary>
+        <div class="acc-body">
+          <p>OpenStreetMapのライセンス（ODbL 1.0）は出典表示だけでなく、<strong>加工したデータベースを作ったらそれも公開する義務</strong>（derivative database条項）があります。v4ではこれをリリースゲート（全項目必須のチェックリスト）にしました。</p>
+          <ul>
+            <li>ゲーム内のタイトル画面とリザルト画面に「© OpenStreetMap contributors」のリンクを常時表示（スクリーンショットを撮っても必ず写る位置）</li>
+            <li>マニフェストにライセンスリンクと抽出日時（2026-06-11）を記録</li>
+            <li>公開リポジトリの <code>data/osm-raw/</code>（生データ）と <code>scripts/osm/</code>（再現可能な変換パイプライン）を、ODbL 4.4(b) の派生データベース提供として明示的に指定</li>
+          </ul>
+          <p>そもそもGoogle Mapsではなく OSM を選んだ理由がここにあります。Google Maps Platform の規約は地図データの派生データセット化・再配布を禁止しており、「地図から生成したゲームデータを静的サイトとして配る」こと自体ができません。<strong>データソースの選定は法務判断から</strong>——設計ログの冒頭に明記されています。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>BatchedMeshプール — 14,563棟を数回の描画命令で</summary>
+        <div class="acc-body">
+          <p>建物が1万棟を超えても、描画命令（ドローコール）の上限72回は据え置きです。v3でランドマーク用に導入した <code>BatchedMesh</code>（異種形状を1回の描画命令でまとめて描く仕組み）のアダプタを拡張し、OSM建物用に<strong>詳細プール2,048スロット+大型プール1,024スロットのわずか2バッチ</strong>を追加。16種のボクセル建物アーキタイプ（民家・雑居ビル・オフィスタワー・寺社…）がここに同居します。</p>
+          <p>面白いのは安全設計です。帯域ごとの生存上限の合計がプール容量を超えないことを<strong>起動時にアサート</strong>し（数学的に枯渇不可能）、さらに実行時には「ストア全体の生存数が予算に近づいたらOSM建物の出現を一時停止する」入場制限（admission control）を入れました。混雑時には遠景の建物から自然に間引かれる——「境界では OSM が先に薄くなる」が仕様として文書化されています。地面の道路・川・公園レイヤも頂点カラーの BatchedMesh 1枚+川メッシュ1枚で、増えたドローコールは合計でも数回。実測は最悪地点（丸の内・半径40m時）でも60/72でした。</p>
+        </div>
+      </details>
+    </article>
+
+    <!-- ===== v5 ===== -->
+    <article class="tl-item reveal">
+      <div class="tl-badge">v5</div>
+      <h3>スマホ実プレイから生まれた磨き込み<span class="tl-theme">所要 約2時間</span></h3>
+      <div class="bubble">
+        <span class="who">オーナーの指示（スマホで遊んだ感想）</span>
+        <p>「<strong>最初のステージが何にも見えない</strong>、カメラ位置おかしくない？」——そして追加要望：「謎の溝が見える」「最初どこへ行けばいいか誘導がほしい」「スタックチャンを出して」「秋葉原らしい建物がほしい」「開始地点は千石電商っぽく」「最後は<strong>地球が見える</strong>エンディングに」</p>
+      </div>
+      <p>v4公開後、オーナーが自分のスマホで遊んでみたら——<strong>開始直後の画面に何も見えない</strong>。AIチームの全自動検証はすり抜けたのに、人間が遊んだら一発で見つかるバグでした。調べてみると原因は笑ってしまうほど「リアル東京」ならではのもの。ゲームの開始地点（秋葉原の電子パーツ店）の真上を、<strong>実在のJR総武線の高架がちょうど通っていた</strong>のです。v4で取り込んだ本物の線路データが実座標に忠実に引かれた結果、2cmのボールから見れば線路のリボンが「天井」になり、空も街も覆い隠していました。建物は開始地点周辺から除外する仕組みがあったのに、道路・線路のリボンだけが素通りしていた——本物の地理データを使ったからこそ起きた、世界でいちばん律儀なバグです。</p>
+      <p>修正とあわせて、オーナーの要望を6体のエージェント・約100分で全部実装しました。</p>
+      <ul>
+        <li><strong>謎の溝の解消</strong>: 開始時に見えていた灰色の帯の正体も、実は本物の道路・線路レイヤでした。ボールが小さいうちは地面レイヤをフェードで消し、大きくなるにつれて街路が浮かび上がる「半径連続フェード」に。</li>
+        <li><strong>最初の誘導</strong>: 開始30秒間だけ、いちばん近いパーツの方向を🔩矢印で案内。1個でも巻き込んだら黙って退場します。</li>
+        <li><strong>スタックチャン</strong>: 手のひらサイズの実在コミュニケーションロボットが、13個目のコレクションとして棚の上に。</li>
+        <li><strong>アキバらしい建物</strong>: ゲームセンター・家電量販店・メイドカフェ・PCパーツビルの4種6棟を秋葉原エリアに追加。</li>
+        <li><strong>センゴク電子</strong>: 開始地点の店名を千石電商風に改名。検証してみると、現実の千石電商の位置はゲーム内の店からわずか36mで、<strong>改名するだけで地理的にほぼ正直</strong>と判明（アンカー座標は動かさずに済みました）。</li>
+        <li><strong>地球エンディング</strong>: スカイツリーに到達した後の昇天シーンで、空が宇宙の黒へ溶け、眼下に<strong>夜の地球</strong>——日本列島の街明かりと星空が広がるようになりました。ドナックの台詞も「うわぁ…地球が見えるよ…！東京の光、きれいだね」に。</li>
+      </ul>
+
+      <div class="shots shots-tall">
+        <figure><img src="img/v5-opening.png" alt="v5 開幕 — センゴク電子の棚の上、視界クリア" loading="lazy" width="369" height="800"><figcaption>修正後の開幕 — 視界クリア、🔩誘導つき</figcaption></figure>
+        <figure><img src="img/v5-akiba.png" alt="v5 秋葉原 — ゲームセンターやメイドカフェ" loading="lazy" width="369" height="800"><figcaption>アキバらしい建物が並ぶ電気街</figcaption></figure>
+        <figure><img src="img/v5-earth-ending.png" alt="v5 地球エンディング — 夜の地球と星空" loading="lazy" width="369" height="800"><figcaption>新エンディング — 夜の地球と星空</figcaption></figure>
+      </div>
+
+      <details class="acc">
+        <summary>半径連続フェードの仕組み — 「消す」のではなく「半径の関数にする」</summary>
+        <div class="acc-body">
+          <p>開幕不可視バグの原因は3つ重なっていました。(1) 地面レイヤの浮かせ量が霧距離の下限に引きずられ、開始時はボール半径の90%もの高さに浮いていた。(2) 道路の重なり順を解決するためのYオフセット（0.06ゲームm）が、2cmボールにとっては半径の3倍の壁だった。(3) 総武線高架のリボンがスポーン直上を通過していた。</p>
+          <p>v5の修正は、このサイトで何度も登場した<strong>シームレス法則</strong>そのままです。浮かせ量とオフセットは「ボール半径の10%」を上限にクランプし（半径の連続関数）、地面レイヤ全体には実寸半径0.6m→3.0mで滑らかに現れる<code>smoothstep</code>フェードをシェーダに注入。フェードの入力は <code>simRadius × worldScale</code>（実寸半径）なので、リスケールをまたいでも値が変わらず、<strong>強制リスケール前後のピクセル一致検証も1ulp（浮動小数点の最小刻み）以内</strong>で保たれました。閾値でパッと消すのではなく連続関数にする——v1から続く憲法が、v5のバグ修正でも効いています。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>リボン除外クリップ+検証ゲート — 同じバグを二度と起こさないために</summary>
+        <div class="acc-body">
+          <p>総武線リボン問題の本修正は、実行時の小細工ではなく<strong>データパイプライン側</strong>に入れました。建物にだけ適用されていた「ショップ・開始街路の除外矩形」を道路・鉄道リボンにも適用し、変換時に除外ゾーンと交差するリボンをクリップします。</p>
+          <p>そして v4 で作った検証スクリプト <code>osm:verify</code> に「<strong>除外ゾーン内にリボンの頂点が1つでもあれば出荷失敗</strong>」という再発ゲートを追加。デプロイ前に必ず走る自動チェックなので、今後データを再取得・再生成しても、開始地点に何かが覆いかぶさった状態では二度と本番に出られません。バグ修正を「直す」で終わらせず「再発を構造的に不可能にする」——v4の±20%カウントゲートと同じ思想です。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>コレクション13個目の互換性 — 昔のセーブデータを壊さない</summary>
+        <div class="acc-body">
+          <p>スタックチャンは13個目のコレクションですが、既存プレイヤーのブラウザには「12個中どれを見つけたか」を12ビットの整数で記録したセーブデータが残っています。v5ではコレクションIDを<strong>append-only（末尾追記のみ、再利用・並べ替え禁止）</strong>の契約どおりID 12として追加し、オブジェクトコード表も94種→110種→115種と末尾にだけ伸ばしました。古いセーブはそのまま「12/13発見済み」として読み込まれ、スタックチャンを取ると13ビット目だけが立ちます（未知の上位ビットも保存する前方互換つき）。</p>
+          <p>このとき敵対的チェックが、実装前に本物の地雷を見つけています。リザルト画面のコードに「ID+70」という<strong>古い式がハードコード</strong>されており、そのままならID 12のスタックチャンを取った瞬間、図鑑に<strong>西郷さん像</strong>が表示されるところでした。ID→コード変換を単一の関数に集約し、起動時に全IDを検証するアサートも追加。さらに統合検証では「13個目のセルが図鑑グリッド（4×3）からはみ出す」CSS問題と、リザルトの「コレクション 13/12」という表示バグも捕まえて修正しています。</p>
+        </div>
+      </details>
+    </article>
+
+  </div>
+</section>
+
+<!-- ================= NUMBERS ================= -->
+<section id="numbers" class="reveal">
+  <h2>数字で見る制作</h2>
+  <p>約1,900万トークンという数字は、おおざっぱに言えば<strong>文庫本140冊分を超える文章量の読み書き</strong>に相当します。延べ150体を超えるエージェントが、それだけの量の設計書・コード・レビュー・反証・検証レポートを約19時間で書き、読み、突き合わせた——その全記録が作業ログとして残っています。</p>
+
+  <h3>フェーズ別の実行統計</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>バージョン</th><th>フェーズ</th><th class="num">エージェント数</th><th class="num">トークン</th><th class="num">所要時間</th></tr></thead>
+      <tbody>
+        <tr><td><b>v1</b></td><td>設計（3案コンペ+審査）</td><td class="num">4</td><td class="num">約18.4万</td><td class="num">約10分</td></tr>
+        <tr><td></td><td>実装（契約凍結+5並列+統合）</td><td class="num">7</td><td class="num">約103.0万</td><td class="num">約65分</td></tr>
+        <tr><td></td><td>レビュー（4次元→敵対的検証→修正→実機検証）</td><td class="num">36</td><td class="num">約255.3万</td><td class="num">約54分</td></tr>
+        <tr><td></td><td>デプロイ+本番検証</td><td class="num">1</td><td class="num">—</td><td class="num">約5分</td></tr>
+        <tr><td></td><td><b>v1 小計</b></td><td class="num"><b>48</b></td><td class="num"><b>約377万</b></td><td class="num"><b>約2.5時間</b></td></tr>
+        <tr><td><b>v2</b></td><td>設計（銅像案+月案の2回）</td><td class="num">6</td><td class="num">約86.4万</td><td class="num">約61分</td></tr>
+        <tr><td></td><td>実装</td><td class="num">7</td><td class="num">約119.6万</td><td class="num">約52分</td></tr>
+        <tr><td></td><td>レビュー+実測ペーシング調整</td><td class="num">24</td><td class="num">約175.8万</td><td class="num">約62分</td></tr>
+        <tr><td></td><td>デプロイ+本番検証</td><td class="num">1</td><td class="num">—</td><td class="num">約5分</td></tr>
+        <tr><td></td><td><b>v2 小計</b></td><td class="num"><b>38</b></td><td class="num"><b>約382万</b></td><td class="num"><b>約3時間</b></td></tr>
+        <tr><td><b>v3</b></td><td>設計（設計→批評→改訂）</td><td class="num">3</td><td class="num">約46.0万</td><td class="num">約37分</td></tr>
+        <tr><td></td><td>実装</td><td class="num">7</td><td class="num">約204.2万</td><td class="num">約125分</td></tr>
+        <tr><td></td><td>レビュー（中断→再開を含む）</td><td class="num">29</td><td class="num">約356.3万</td><td class="num">約235分</td></tr>
+        <tr><td></td><td>デプロイ+本番検証</td><td class="num">1</td><td class="num">—</td><td class="num">約10分</td></tr>
+        <tr><td></td><td><b>v3 小計</b></td><td class="num"><b>40</b></td><td class="num"><b>約607万</b></td><td class="num"><b>約6.8時間</b></td></tr>
+        <tr><td><b>v4</b></td><td>設計（設計→批評→改訂、批評がOverpass実測）</td><td class="num">3</td><td class="num">約40万</td><td class="num">約38分</td></tr>
+        <tr><td></td><td>実装（契約+パイプライン+3並列+統合、中断3回を再開）</td><td class="num">延べ18枠</td><td class="num">約312万</td><td class="num">約4時間</td></tr>
+        <tr><td></td><td>デプロイ+本番検証</td><td class="num">1</td><td class="num">—</td><td class="num">約10分</td></tr>
+        <tr><td></td><td><b>v4 小計</b></td><td class="num"><b>約22</b></td><td class="num"><b>約352万</b></td><td class="num"><b>約5時間</b></td></tr>
+        <tr><td><b>v5</b></td><td>開幕バグ修正+ポリッシュ（計画→敵対的チェック→3並列→統合検証）</td><td class="num">6</td><td class="num">約98万</td><td class="num">約100分</td></tr>
+        <tr><td></td><td><b>v5 小計</b></td><td class="num"><b>6</b></td><td class="num"><b>約98万</b></td><td class="num"><b>約2時間</b></td></tr>
+        <tr><td></td><td>付随作業（作業ログ・Issue・本サイトの生成）</td><td class="num">—</td><td class="num">約80万</td><td class="num">—</td></tr>
+        <tr><td></td><td><b>総計</b></td><td class="num"><b>150体+</b></td><td class="num"><b>約1,900万</b></td><td class="num"><b>約19時間</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>品質ゲートの実績 — 「疑う工程」は何を弾いたか</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>バージョン</th><th class="num">レビュー指摘</th><th class="num">反証に耐えて確定</th><th class="num">偽陽性として棄却</th></tr></thead>
+      <tbody>
+        <tr><td>v1</td><td class="num">30件</td><td class="num">21件</td><td class="num">9件（30%）</td></tr>
+        <tr><td>v2</td><td class="num">19件</td><td class="num">13件</td><td class="num">6件（32%）</td></tr>
+        <tr><td>v3</td><td class="num">22件</td><td class="num">6件</td><td class="num">16件（73%※）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">※ v3の棄却率が高いのは、中断→再開の経緯により「初回実行中にすでに修正済みだった指摘」が陳腐化棄却された分を含むためです。それを除いても、<strong>全バージョンを通じてレビュー指摘の約3割は「もっともらしいが実害のない指摘」</strong>であり、敵対的検証なしに全部直していたら相応の回帰リスクを抱え込んでいたことになります。</p>
+
+  <h3>実測プレイデータ — ボットによる計測プレイの記録</h3>
+  <p>チューニングの基準値は推測ではなく、ボットに実際にプレイさせた計測から決められています。</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>計測</th><th>結果</th></tr></thead>
+      <tbody>
+        <tr><td>v1 最終検証（修正後）</td><td>18.5シミュレーション秒で22個吸収、5cm→13.4cm（雪だるま式カーブを確認）</td></tr>
+        <tr><td>v2 通しプレイ（seed 777）</td><td>最適プレイ 約95〜105秒 → ランクS基準を300秒から<strong>120秒</strong>へ全面改訂</td></tr>
+        <tr><td>v3 最適プレイ（貪欲ルート）</td><td>ショップ→秋葉原→東京駅→国会議事堂→東京タワー→スカイツリー <strong>4分02秒9</strong></td></tr>
+        <tr><td>v3 標準プレイ（初見想定）</td><td><strong>7分17秒5</strong>（設計目標「初回クリア5〜8分」の範囲内）</td></tr>
+        <tr><td>v3 暴走再テスト</td><td>修正前: 4m→117m/3秒 → 修正後: 著者意図のジャンプ以外の最大成長 <strong>1.41倍/秒</strong></td></tr>
+        <tr><td>リスケールのピクセル一致検証</td><td>強制リスケール前後の画面差分: ワールド描画は<strong>バイト単位で同一</strong>（差分はHUDのタイマー数字のみ）</td></tr>
+        <tr><td>ドナックの実況間隔</td><td>初期値: 平均12秒（スパム判定）→ 調整後: 平均<strong>32秒</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>作品そのものの数字</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th></th><th>v1</th><th>v2</th><th>v3</th><th>v4</th><th>v5</th></tr></thead>
+      <tbody>
+        <tr><td>ゴール</td><td>500m到達</td><td>月と融合</td><td>東京スカイツリー(634m)</td><td>同左</td><td>同左+地球の見える宇宙へ</td></tr>
+        <tr><td>オブジェクトの種類</td><td>48</td><td>60</td><td>94</td><td>110</td><td>115</td></tr>
+        <tr><td>手作業配置</td><td>0（全自動生成）</td><td>0</td><td>411箇所</td><td>449箇所 + <strong>実在ビル14,563棟</strong></td><td>520箇所 + 実在ビル14,563棟</td></tr>
+        <tr><td>バンドルサイズ(gzip)</td><td>154KB</td><td>173KB</td><td>205KB</td><td>219KB + 東京データ285KB</td><td>224KB + 東京データ285KB</td></tr>
+        <tr><td>描画命令の上限</td><td>55回</td><td>60回</td><td>72回</td><td>72回（実測最悪60）</td><td>72回</td></tr>
+        <tr><td>外部アセット</td><td>ゼロ</td><td>ゼロ</td><td>ドナックWebP 8枚(20KB)のみ</td><td>+ OSM地図データ(ODbL)</td><td>同左</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>3Dモデル・効果音・BGM・背景は、v3のドナック画像とv4のOpenStreetMap由来データを除き、すべてコードから実行時に生成されています。</p>
+</section>
+
+<!-- ================= LINKS ================= -->
+<section id="links" class="reveal">
+  <h2>リンク</h2>
+  <ul>
+    <li>🎮 <strong>遊ぶ</strong>: <a href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">fable-katamari.pages.dev</a> — PC（WASD/矢印キー+Space）でもスマホ（指1本+ダッシュボタン）でも</li>
+    <li>💻 <strong>GitHub リポジトリ</strong>: <a href="https://github.com/aieo-product/fableDemoGame" target="_blank" rel="noopener">aieo-product/fableDemoGame</a>（公開・MITライセンス）</li>
+    <li>🗺 <strong>制作の全記録（Issue マップ）</strong>: <a href="https://github.com/aieo-product/fableDemoGame/issues/14" target="_blank" rel="noopener">Issue #14 — 全フェーズの案内図</a> ／ 各フェーズの詳細は <a href="https://github.com/aieo-product/fableDemoGame/issues" target="_blank" rel="noopener">Issues #1〜#13</a></li>
+    <li>📐 <strong>設計書ページ</strong>: <a href="design.html">設計ドキュメント（DESIGN / DESIGN-V2 / DESIGN-V3）</a> — エンジニア向けの拘束力ある仕様書3部作</li>
+    <li>📓 <strong>生の作業ログ</strong>: <a href="https://github.com/aieo-product/fableDemoGame/tree/main/docs/worklog" target="_blank" rel="noopener">docs/worklog/</a> — このページの元になった、全フェーズの意思決定・採点・反証の一次記録</li>
+  </ul>
+  <hr>
+  <p>このページの文章も、上の作業ログを読み込んだAIエージェントが書きました。気に入ったら、まずは2cmのボールを転がしてみてください。<strong>世界は、思ったより呑み込めます。</strong></p>
+  <p style="text-align:center"><a class="cta" href="https://fable-katamari.pages.dev" target="_blank" rel="noopener">▶ いますぐ遊ぶ</a></p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><span class="f-ball"></span><strong style="color:var(--ink)">FABLE KATAMARI</strong></p>
+    <p>Claude (Fable 5) が ultracode（マルチエージェントワークフロー）で制作</p>
+    <p>MIT License ／ <a href="https://github.com/aieo-product/fableDemoGame" target="_blank" rel="noopener">GitHub: aieo-product/fableDemoGame</a> ／ <a href="design.html">設計書</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

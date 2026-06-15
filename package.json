@@ -1,0 +1,21 @@
+{
+  "name": "fable-katamari",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "osm:fetch": "node scripts/osm/fetch-osm.mjs",
+    "osm:build": "node scripts/osm/build-tokyo-bin.mjs",
+    "osm:verify": "node scripts/osm/verify-tokyo-data.mjs",
+    "predeploy": "bash scripts/verify-donack-assets.sh && npm run osm:verify"
+  },
+  "dependencies": {
+    "three": "^0.177.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
