@@ -903,13 +903,10 @@
     }
     #title-overlay .ny-lantern::before { content:''; position:absolute; left:50%; top:-40px; width:1px; height:40px; background:rgba(255,180,120,.45); transform:translateX(-50%); }
     #title-overlay .ny-lantern::after { content:''; position:absolute; left:50%; bottom:-7px; width:5px; height:9px; background:#f5c542; transform:translateX(-50%); border-radius:2px; }
-    #title-overlay .ny-skyline { position:absolute; left:0; right:0; bottom:0; height:min(40vh,320px); opacity:.97; }
-    #title-overlay .ny-skyline svg { width:100%; height:100%; display:block; }
-    #title-overlay .ny-101 {
+    #title-overlay .ny-skyline-img {
       position:absolute; left:50%; bottom:0; transform:translateX(-50%);
-      height:min(48vh,400px); width:auto; opacity:.92; z-index:1;
-      filter: drop-shadow(0 0 9px #00e0ff);
-      animation: ny-101glow 4s ease-in-out infinite;
+      width:min(1480px,116%); max-width:none; height:auto; opacity:.97; z-index:0;
+      pointer-events:none; filter: drop-shadow(0 0 16px rgba(0,200,255,.16));
     }
     #title-overlay .ny-grain {
       position:absolute; inset:0; mix-blend-mode:overlay; opacity:.05;
@@ -952,7 +949,7 @@
       0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.25) inset,0 0 22px rgba(255,42,120,.7),0 8px 30px rgba(255,42,120,.4)}
       50%{box-shadow:0 0 0 2px rgba(255,255,255,.35) inset,0 0 36px rgba(255,42,120,.95),0 10px 38px rgba(255,42,120,.55)}
     }
-    @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline{height:min(32vh,240px)} }
+    @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline-img{width:178%} }
     @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-101{animation:none!important} }
 
     /* ============ 夜市霓虹 — cohesive in-game HUD + result theme ============ */
@@ -1071,47 +1068,7 @@
       <span class="ny-lantern" style="left:12%;animation-delay:-1s;"></span>
       <span class="ny-lantern opt" style="right:16%;animation-delay:-2.6s;"></span>
       <span class="ny-lantern" style="left:31%;animation-delay:-3.5s;"></span>
-      <div class="ny-skyline">
-        <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#0c0926">
-            <rect x="0" y="186" width="92" height="134"/><rect x="96" y="150" width="66" height="170"/>
-            <rect x="172" y="206" width="120" height="114"/><rect x="300" y="128" width="78" height="192"/>
-            <rect x="386" y="178" width="96" height="142"/><rect x="760" y="166" width="84" height="154"/>
-            <rect x="852" y="120" width="70" height="200"/><rect x="930" y="190" width="118" height="130"/>
-            <rect x="1056" y="156" width="76" height="164"/><rect x="1138" y="200" width="62" height="120"/>
-          </g>
-          <g fill="#4a3c85" opacity=".55">
-            <rect x="318" y="150" width="4" height="6"/><rect x="332" y="170" width="4" height="6"/><rect x="346" y="150" width="4" height="6"/>
-            <rect x="868" y="150" width="4" height="6"/><rect x="884" y="180" width="4" height="6"/><rect x="900" y="150" width="4" height="6"/>
-            <rect x="40" y="210" width="4" height="6"/><rect x="60" y="230" width="4" height="6"/>
-          </g>
-          <g fill="#0c0926"><rect x="556" y="176" width="48" height="144"/><rect x="640" y="190" width="54" height="130"/><rect x="500" y="206" width="48" height="114"/><rect x="700" y="198" width="46" height="122"/></g>
-        </svg>
-      </div>
-      <svg class="ny-101" viewBox="0 0 140 420" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- podium + 8 flared 倒梯形 segments (teal glass, cyan neon edge) -->
-        <g fill="#0e353f" stroke="#22e0ff" stroke-width="2" stroke-linejoin="round">
-          <polygon points="34,414 106,414 100,360 40,360"/>
-          <polygon points="52,360 88,360 97,327 43,327"/>
-          <polygon points="52,327 88,327 97,294 43,294"/>
-          <polygon points="52,294 88,294 97,261 43,261"/>
-          <polygon points="52,261 88,261 97,228 43,228"/>
-          <polygon points="52,228 88,228 97,195 43,195"/>
-          <polygon points="52,195 88,195 97,162 43,162"/>
-          <polygon points="52,162 88,162 97,129 43,129"/>
-          <polygon points="52,129 88,129 97,96 43,96"/>
-          <polygon points="48,96 92,96 84,74 56,74"/>
-          <polygon points="58,74 82,74 78,58 62,58"/>
-        </g>
-        <rect x="66" y="46" width="8" height="14" fill="#0e353f" stroke="#22e0ff" stroke-width="1.6"/>
-        <line x1="70" y1="46" x2="70" y2="14" stroke="#9af0ff" stroke-width="2.4"/>
-        <g fill="#ffce4a">
-          <circle cx="70" cy="343" r="3"/><circle cx="70" cy="310" r="3"/><circle cx="70" cy="277" r="3"/>
-          <circle cx="70" cy="244" r="3"/><circle cx="70" cy="211" r="3"/><circle cx="70" cy="178" r="2.8"/>
-          <circle cx="70" cy="145" r="2.8"/><circle cx="70" cy="112" r="2.6"/>
-        </g>
-        <g fill="#bdfcff" opacity=".55"><rect x="60" y="300" width="3" height="6"/><rect x="78" y="240" width="3" height="6"/><rect x="62" y="180" width="3" height="6"/></g>
-      </svg>
+            <img class="ny-skyline-img" src="/assets/title/skyline.webp" alt="台北天際線" />
       <div class="ny-grain"></div>
     </div>
     <span class="ny-kicker">夜市 · NIGHT MARKET</span>
