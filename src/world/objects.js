@@ -30,16 +30,12 @@
  * curated codes 70..93 (frozen by docs/DESIGN-V3.md Phase-0 appendix:
  * 70..81 collectibles where code = 70 + COLLECTIBLE_ID, 82..91 landmark
  * singletons, 92 shop shell, 93 Skytree display-name reservation — code 93
- * must NEVER be spawned into the store), PLUS the 16 OSM voxel-building
- * codes 94..109 (v4, frozen by docs/DESIGN-V4.md Phase-0 appendix §B:
- * code = OSM_CODE_BASE + typeIndex from the binary tile record's type bits
- * 0-4), PLUS the 5 v5 curated codes 110..114 (V5_CODE_BASE — stack_chan
- * collectible id 12 + 4 Akihabara buildings, append-only). OSM codes are
- * spawned ONLY by osmSpawner from decoded tile data and, because
- * render/ball.knockOff skips everything >= EXTRA_CODE_BASE (70), absorbed
- * OSM/v5 objects are PERMANENTLY STUCK — no reinject path exists.
+ * must NEVER be spawned into the store), PLUS the 5 v5 curated codes 94..98
+ * (V5_CODE_BASE — stack_chan collectible id 12 + 4 Akihabara buildings,
+ * append-only). render/ball.knockOff skips everything >= EXTRA_CODE_BASE (70),
+ * so absorbed v5 objects are PERMANENTLY STUCK — no reinject path exists.
  * Use archetypeCode() / ARCHETYPE_ID_BY_CODE / ARCHETYPE_CODE_BY_ID below —
- * spawner/curated/osmSpawner write codes, absorb/hud read ids/names back.
+ * spawner/curated write codes, absorb/hud read ids/names back.
  *
  * tierOf is CURATED-MUTABLE (docs/DESIGN-V3.md dynamic re-banding): the chunk
  * spawner stamps it once at spawn; CuratedSpawner re-stamps its OWN flagged
@@ -76,10 +72,9 @@ export const FLAG_RARE = 8;
  */
 export const FLAG_CURATED = 16;
 /**
- * v4: slot owned by the OsmSpawner (world/osmSpawner.js — real-Tokyo OSM
- * buildings). VALUE FROZEN at 32 by docs/DESIGN-V4.md Phase 0. The chunk
- * spawner's skip-bit test is (FLAG_CURATED|FLAG_OSM); knockOff never
- * reinjects OSM codes (>= EXTRA_CODE_BASE skip — permanently stuck).
+ * TODO P2: remove FLAG_OSM once spawner skip-mask drops it.
+ * VALUE FROZEN at 32. The chunk spawner's skip-bit test used to be
+ * (FLAG_CURATED|FLAG_OSM) when the OSM subsystem was active.
  */
 export const FLAG_OSM = 32;
 
@@ -134,67 +129,30 @@ export const EXTRA_ARCHETYPE_IDS = [
 ];
 
 /**
- * First OSM voxel-building code (v4, FROZEN by docs/DESIGN-V4.md Phase-0
- * appendix §B). Codes 94..109 = OSM_CODE_BASE + typeIndex (the binary tile
- * record's type bits 0-4); 16 archetypes, order frozen below. Like EXTRA
- * codes they are >= EXTRA_CODE_BASE, so render/ball.knockOff's existing skip
- * makes every absorbed OSM building permanently stuck (no reinject path).
- */
-export const OSM_CODE_BASE = 94;
-
-/**
- * The 16 OSM voxel-building archetype ids, FROZEN in code order 94..109
- * (docs/DESIGN-V4.md Phase-0 appendix §B — append-only, never reorder; the
- * build pipeline's type->code step and the binary tile format's type bits
- * index into exactly this order). config/catalog.js implements these ids in
- * OSM_CATALOG (unitBox:true, axis-aligned normals, <=72 tris) and
- * cross-asserts there in dev mode.
- * @type {string[]}
- */
-export const OSM_ARCHETYPE_IDS = [
-  'osm_house', // 94
-  'osm_shop_low', // 95
-  'osm_zakkyo', // 96
-  'osm_office_mid', // 97
-  'osm_office_tower', // 98
-  'osm_apartment_tower', // 99
-  'osm_hotel', // 100
-  'osm_school', // 101
-  'osm_temple', // 102 (flat-roofed v1 — axis-aligned-normals law)
-  'osm_shrine', // 103 (flat-roofed v1)
-  'osm_station', // 104
-  'osm_warehouse', // 105
-  'osm_parking', // 106
-  'osm_merged_block', // 107 (MERGED flag fold — bit 5 of the type byte)
-  'osm_tower_generic', // 108
-  'osm_stepped_roof', // 109
-];
-
-/**
- * First v5 curated code (v5, FROZEN by the docs/DESIGN-V5 mini-spec).
+ * First v5 curated code (re-based to 94 after OSM removal; was 110).
  * The collectible code = 70 + id rule CANNOT extend past id 11 (code 82 is
  * already 西郷さん像), so all v5 archetypes — the スタックチャン collectible
- * (id 12) and the 4 Akihabara curated buildings — append AFTER the frozen
- * 110-entry v4 table: codes 110..114 = V5_CODE_BASE + index below.
- * Like EXTRA/OSM codes they are >= EXTRA_CODE_BASE, so render/ball.knockOff's
+ * (id 12) and the 4 Akihabara curated buildings — append after the 24 EXTRA
+ * codes: codes 94..98 = V5_CODE_BASE + index below.
+ * Like EXTRA codes they are >= EXTRA_CODE_BASE, so render/ball.knockOff's
  * existing skip keeps every absorbed v5 object permanently stuck.
  */
-export const V5_CODE_BASE = 110;
+export const V5_CODE_BASE = EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length; // 94 (was 110 before OSM removal)
 
 /**
- * The 5 v5 curated archetype ids, FROZEN in code order 110..114
- * (append-only, never reorder). 110 stack_chan is collectible id 12
- * (collectibleCodeForId below); 111..114 are Akihabara 電気街 curated
+ * The 5 v5 curated archetype ids, FROZEN in code order 94..98
+ * (append-only, never reorder). 94 stack_chan is collectible id 12
+ * (collectibleCodeForId below); 95..98 are Akihabara 電気街 curated
  * buildings (naturalBand 4, landmark-mid pool). config/catalog.js implements
- * exactly these ids (addExtra codes 110..114) and cross-asserts in dev mode.
+ * exactly these ids and cross-asserts in dev mode.
  * @type {string[]}
  */
 export const V5_ARCHETYPE_IDS = [
-  'stack_chan', // 110 スタックチャン (collectible 12 — M5Stack robot tribute)
-  'game_center', // 111 ゲームセンター
-  'denki_retailer', // 112 家電量販店
-  'maid_cafe', // 113 メイドカフェ
-  'pc_parts_bldg', // 114 PCパーツショップビル
+  'stack_chan', // 94 スタックチャン (collectible 12 — M5Stack robot tribute)
+  'game_center', // 95 ゲームセンター
+  'denki_retailer', // 96 家電量販店
+  'maid_cafe', // 97 メイドカフェ
+  'pc_parts_bldg', // 98 PCパーツショップビル
 ];
 
 /**
@@ -211,11 +169,10 @@ export function collectibleCodeForId(id) {
 }
 
 /**
- * Flat archetype id table (115 entries, v5):
+ * Flat archetype id table (99 entries):
  * codes 0..69: ARCHETYPE_ID_BY_CODE[tier*ARCH_PER_TIER + i] ===
  * TIERS[tier].archetypeIds[i]; codes 70..93: EXTRA_ARCHETYPE_IDS[code - 70];
- * codes 94..109: OSM_ARCHETYPE_IDS[code - OSM_CODE_BASE];
- * codes 110..114: V5_ARCHETYPE_IDS[code - V5_CODE_BASE].
+ * codes 94..98: V5_ARCHETYPE_IDS[code - V5_CODE_BASE].
  * @type {string[]}
  */
 export const ARCHETYPE_ID_BY_CODE = [];
@@ -238,11 +195,6 @@ for (let e = 0; e < EXTRA_ARCHETYPE_IDS.length; e++) {
   const code = EXTRA_CODE_BASE + e;
   ARCHETYPE_ID_BY_CODE[code] = EXTRA_ARCHETYPE_IDS[e];
   ARCHETYPE_CODE_BY_ID[EXTRA_ARCHETYPE_IDS[e]] = code;
-}
-for (let o = 0; o < OSM_ARCHETYPE_IDS.length; o++) {
-  const code = OSM_CODE_BASE + o;
-  ARCHETYPE_ID_BY_CODE[code] = OSM_ARCHETYPE_IDS[o];
-  ARCHETYPE_CODE_BY_ID[OSM_ARCHETYPE_IDS[o]] = code;
 }
 for (let v = 0; v < V5_ARCHETYPE_IDS.length; v++) {
   const code = V5_CODE_BASE + v;
@@ -274,9 +226,8 @@ export function archetypeTierOfCode(code) {
 }
 
 /* Boot DEV-assert: the v3 stride migration (6 -> 7 tiers, 60 -> 70 chunk
-   codes) + the 24 frozen EXTRA codes + the 16 frozen v4 OSM codes + the 5
-   frozen v5 codes must produce exactly 115 entries — cross-checked again
-   from ball.js (chunk section) against this very table. */
+   codes) + the 24 frozen EXTRA codes + the 5 frozen v5 codes must produce
+   exactly 99 entries — cross-checked again from ball.js against this table. */
 if (import.meta.env && import.meta.env.DEV) {
   if (EXTRA_CODE_BASE !== 70) {
     throw new Error(
@@ -290,25 +241,12 @@ if (import.meta.env && import.meta.env.DEV) {
         `found ${EXTRA_ARCHETYPE_IDS.length}`
     );
   }
-  if (OSM_CODE_BASE !== 94 || OSM_CODE_BASE !== EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length) {
-    throw new Error(
-      `[objects.js invariant] OSM_CODE_BASE must be 94 (= EXTRA_CODE_BASE 70 + 24 EXTRA codes), ` +
-        `found ${OSM_CODE_BASE}`
-    );
-  }
-  if (OSM_ARCHETYPE_IDS.length !== 16) {
-    throw new Error(
-      `[objects.js invariant] OSM_ARCHETYPE_IDS must have exactly 16 entries (codes 94..109), ` +
-        `found ${OSM_ARCHETYPE_IDS.length}`
-    );
-  }
   if (FLAG_OSM !== 32) {
     throw new Error(`[objects.js invariant] FLAG_OSM frozen at 32, found ${FLAG_OSM}`);
   }
-  if (V5_CODE_BASE !== 110 || V5_CODE_BASE !== OSM_CODE_BASE + OSM_ARCHETYPE_IDS.length) {
+  if (V5_CODE_BASE !== 94 || V5_CODE_BASE !== EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length) {
     throw new Error(
-      `[objects.js invariant] V5_CODE_BASE must be 110 (= OSM_CODE_BASE 94 + 16 OSM codes), ` +
-        `found ${V5_CODE_BASE}`
+      `[objects.js invariant] V5_CODE_BASE must be 94 (= EXTRA_CODE_BASE 70 + 24 EXTRA), found ${V5_CODE_BASE}`
     );
   }
   if (V5_ARCHETYPE_IDS.length !== 5) {
@@ -320,27 +258,27 @@ if (import.meta.env && import.meta.env.DEV) {
   if (
     collectibleCodeForId(0) !== 70 ||
     collectibleCodeForId(11) !== 81 ||
-    collectibleCodeForId(12) !== 110 ||
+    collectibleCodeForId(12) !== 94 ||
     ARCHETYPE_ID_BY_CODE[collectibleCodeForId(12)] !== 'stack_chan'
   ) {
     throw new Error(
-      '[objects.js invariant] collectibleCodeForId rule broken (ids 0..11 -> 70..81, id 12 -> 110 stack_chan)'
+      '[objects.js invariant] collectibleCodeForId rule broken (ids 0..11 -> 70..81, id 12 -> 94 stack_chan)'
     );
   }
-  if (ARCHETYPE_ID_BY_CODE.length !== 115) {
+  if (ARCHETYPE_ID_BY_CODE.length !== 99) {
     throw new Error(
-      `[objects.js invariant] ARCHETYPE_ID_BY_CODE must have exactly 115 entries ` +
-        `(70 chunk + 24 EXTRA + 16 OSM + 5 v5), found ${ARCHETYPE_ID_BY_CODE.length}`
+      `[objects.js invariant] ARCHETYPE_ID_BY_CODE must have exactly 99 entries ` +
+        `(70 chunk + 24 EXTRA + 5 v5), found ${ARCHETYPE_ID_BY_CODE.length}`
     );
   }
   const uniq = new Set();
-  for (let c = 0; c < 115; c++) {
+  for (let c = 0; c < 99; c++) {
     const id = ARCHETYPE_ID_BY_CODE[c];
     if (typeof id !== 'string' || id.length === 0) {
       throw new Error(`[objects.js invariant] hole in ARCHETYPE_ID_BY_CODE at code ${c}`);
     }
     if (uniq.has(id)) {
-      throw new Error(`[objects.js invariant] duplicate archetype id '${id}' (EXTRA/OSM id collides with chunk id?)`);
+      throw new Error(`[objects.js invariant] duplicate archetype id '${id}' (EXTRA/v5 id collides with chunk id?)`);
     }
     uniq.add(id);
     if (ARCHETYPE_CODE_BY_ID[id] !== c) {
