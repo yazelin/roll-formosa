@@ -905,7 +905,12 @@
     #title-overlay .ny-lantern::after { content:''; position:absolute; left:50%; bottom:-7px; width:5px; height:9px; background:#f5c542; transform:translateX(-50%); border-radius:2px; }
     #title-overlay .ny-skyline { position:absolute; left:0; right:0; bottom:0; height:min(40vh,320px); opacity:.97; }
     #title-overlay .ny-skyline svg { width:100%; height:100%; display:block; }
-    #title-overlay .ny-101 { animation: ny-101glow 4s ease-in-out infinite; }
+    #title-overlay .ny-101 {
+      position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+      height:min(48vh,400px); width:auto; opacity:.92; z-index:1;
+      filter: drop-shadow(0 0 9px #00e0ff);
+      animation: ny-101glow 4s ease-in-out infinite;
+    }
     #title-overlay .ny-grain {
       position:absolute; inset:0; mix-blend-mode:overlay; opacity:.05;
       background-image: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
@@ -951,20 +956,23 @@
     @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-101{animation:none!important} }
 
     /* ============ 夜市霓虹 — cohesive in-game HUD + result theme ============ */
-    /* HUD pills: dark-glass with a cyan neon edge (restrained — legibility first) */
-    .pill { background: rgba(7,4,20,.62); border:1px solid rgba(0,221,255,.26); box-shadow:0 0 12px rgba(0,221,255,.12); }
-    #size-value { color:#ffd23f; text-shadow:0 0 13px rgba(255,210,63,.55); }
+    /* HUD pills: each stat is its own LIT neon sign (colored glowing outline) */
+    .pill { background: linear-gradient(180deg, rgba(12,6,30,.76), rgba(7,4,20,.76));
+      border:1.5px solid rgba(0,224,255,.55); box-shadow:0 0 16px rgba(0,224,255,.3), inset 0 0 14px rgba(0,224,255,.07); }
+    #size-pill { border-color:rgba(255,200,60,.6); box-shadow:0 0 16px rgba(255,180,50,.3), inset 0 0 14px rgba(255,180,50,.07); }
+    #score-pill { border-color:rgba(120,255,190,.55); box-shadow:0 0 16px rgba(80,255,180,.28), inset 0 0 14px rgba(80,255,180,.07); }
+    #size-value { color:#ffd84a; text-shadow:0 0 16px rgba(255,210,63,.7); }
     #size-unit { color:#ff9d4d; }
-    #score-value { color:#8fffc6; text-shadow:0 0 13px rgba(143,255,198,.5); }
-    #timer { color:#d2ecff; }
-    #tier-label { color:#7ef3ff; text-shadow:0 0 8px rgba(0,224,255,.45); }
+    #score-value { color:#9affd0; text-shadow:0 0 16px rgba(143,255,198,.7); }
+    #timer { color:#dbf1ff; text-shadow:0 0 10px rgba(0,224,255,.32); }
+    #tier-label { color:#7ef3ff; font-weight:700; text-shadow:0 0 10px rgba(0,224,255,.6); }
     /* tier-up banner → neon-pink sign */
     #tier-banner { font-family:'Bungee', sans-serif; font-weight:400; letter-spacing:.05em; color:#fff;
       text-shadow:0 0 6px #fff, 0 0 22px #ff2a78, 0 0 46px #ff2a78; }
     /* dash button → cyan neon ring/fill (the ::before gauge ring is untouched) */
-    #dash-button { color:#dff6ff;
-      background: radial-gradient(circle at 35% 30%, rgba(0,221,255,.42), rgba(18,8,44,.72));
-      border:2px solid rgba(0,221,255,.6); box-shadow:0 0 16px rgba(0,221,255,.32); }
+    #dash-button { color:#eafaff;
+      background: radial-gradient(circle at 35% 30%, rgba(0,224,255,.5), rgba(18,8,44,.8));
+      border:2px solid rgba(0,224,255,.78); box-shadow:0 0 22px rgba(0,224,255,.42); }
     #dash-button:active { box-shadow:0 0 26px rgba(255,42,120,.7); }
     /* toast + collect popup → neon edge */
     #hud-toast { text-shadow:0 0 14px rgba(255,42,120,.35); }
@@ -1077,21 +1085,30 @@
             <rect x="868" y="150" width="4" height="6"/><rect x="884" y="180" width="4" height="6"/><rect x="900" y="150" width="4" height="6"/>
             <rect x="40" y="210" width="4" height="6"/><rect x="60" y="230" width="4" height="6"/>
           </g>
-          <g class="ny-101">
-            <rect x="582" y="276" width="76" height="44" fill="#0a0824" stroke="#00e0ff" stroke-width="2"/>
-            <polygon points="596,276 644,276 650,72 590,72" fill="#0a0a2c" stroke="#00e0ff" stroke-width="2"/>
-            <g stroke="#00e0ff" stroke-width="1.4" opacity=".85">
-              <line x1="592" y1="250" x2="648" y2="250"/><line x1="593" y1="224" x2="647" y2="224"/>
-              <line x1="594" y1="198" x2="646" y2="198"/><line x1="595" y1="172" x2="645" y2="172"/>
-              <line x1="595" y1="146" x2="645" y2="146"/><line x1="596" y1="120" x2="644" y2="120"/>
-              <line x1="597" y1="96" x2="643" y2="96"/>
-            </g>
-            <g fill="#ffcf5a" opacity=".65"><rect x="608" y="182" width="3" height="5"/><rect x="626" y="150" width="3" height="5"/><rect x="614" y="212" width="3" height="5"/><rect x="630" y="206" width="3" height="5"/></g>
-            <circle cx="620" cy="86" r="3.5" fill="#ffd23f"/>
-            <line x1="620" y1="72" x2="620" y2="34" stroke="#7ef3ff" stroke-width="2.5"/>
-          </g>
+          <g fill="#0c0926"><rect x="556" y="176" width="48" height="144"/><rect x="640" y="190" width="54" height="130"/><rect x="500" y="206" width="48" height="114"/><rect x="700" y="198" width="46" height="122"/></g>
         </svg>
       </div>
+      <svg class="ny-101" viewBox="0 0 140 400" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g fill="#0a0a2e" stroke="#00e0ff" stroke-width="2" stroke-linejoin="round">
+          <polygon points="24,392 116,392 112,322 28,322"/>
+          <polygon points="50,322 90,322 97,293 43,293"/>
+          <polygon points="50,293 90,293 97,264 43,264"/>
+          <polygon points="50,264 90,264 97,235 43,235"/>
+          <polygon points="50,235 90,235 97,206 43,206"/>
+          <polygon points="50,206 90,206 97,177 43,177"/>
+          <polygon points="50,177 90,177 97,148 43,148"/>
+          <polygon points="50,148 90,148 97,119 43,119"/>
+          <polygon points="50,119 90,119 97,90 43,90"/>
+          <polygon points="48,90 92,90 82,66 58,66"/>
+          <polygon points="58,66 82,66 76,52 64,52"/>
+        </g>
+        <line x1="70" y1="52" x2="70" y2="16" stroke="#7ef3ff" stroke-width="2.5"/>
+        <circle cx="70" cy="80" r="4" fill="#ffd23f"/>
+        <g fill="#ffcf5a" opacity=".7">
+          <rect x="62" y="150" width="4" height="6"/><rect x="74" y="200" width="4" height="6"/>
+          <rect x="66" y="250" width="4" height="6"/><rect x="72" y="112" width="4" height="6"/>
+        </g>
+      </svg>
       <div class="ny-grain"></div>
     </div>
     <span class="ny-kicker">夜市 · NIGHT MARKET</span>
