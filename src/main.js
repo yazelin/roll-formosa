@@ -94,7 +94,7 @@ import { bus, EVT, PAYLOADS } from './core/events.js';
 import { resolveWorldSeed } from './core/rng.js';
 import { TIERS } from './config/tiers.js';
 import { CATALOG } from './config/catalog.js';
-import { ObjectStore, EXTRA_CODE_BASE, OSM_ARCHETYPE_IDS, OSM_CODE_BASE } from './world/objects.js';
+import { ObjectStore, EXTRA_CODE_BASE } from './world/objects.js';
 import { SpatialHash } from './world/spatialHash.js';
 import { BallPhysics } from './physics/ballPhysics.js';
 import { Absorb } from './physics/absorb.js';
@@ -129,15 +129,10 @@ import { Collection } from './game/collection.js'; // Stream D
 import { Donack } from './ui/donack.js'; // Stream E
 import { SkytreeView } from './render/goalTower.js'; // Stream A (replaces MoonView)
 import { DEV_STARTS } from './config/cityMap.js'; // Stream B
-import * as cityMap from './config/cityMap.js'; // v4: setOsmCoverageActive guard-called via namespace (lands with Stream W)
+import * as cityMap from './config/cityMap.js';
 import { buildExtraPools, extraClassIndexForCode } from './render/extraPools.js'; // integration (4 shared EXTRA pools)
 
-/* ---- v4 modules (integrated — streams P/C/R/W all landed) ------------- */
-import { OsmWorld } from './world/osmWorld.js'; // Stream W
-import { OsmSpawner } from './world/osmSpawner.js'; // Stream W
-import { makeOsmPools } from './render/osmPools.js'; // Stream R
-import { OsmGround } from './render/osmGround.js'; // Stream R
-import { makeObjectMaterial, setRimTint } from './render/objectMaterial.js'; // Stream C (rim)
+import { makeObjectMaterial, setRimTint } from './render/objectMaterial.js'; // rim (was Stream C)
 
 /* ---- v5 modules (integrated) ------------------------------------------ */
 import { Onboarding } from './game/onboarding.js'; // opening parts guide
@@ -252,102 +247,9 @@ for (let i = 0; i < extraPools.length; i++) {
  * handler must run second) and BEFORE the KNOCK_OFF / ABSORB handlers below. */
 const curated = new CuratedSpawner(store, hashes, instances, extraPools, bus, scaleMgr);
 if (import.meta.env && import.meta.env.DEV) {
-  // v4: curated's 300-frame ownership identity assert is chunk + X === store.
-  // With OSM alive the chunk spawner alone no longer accounts for the rest —
-  // hand curated the 3-spawner sum (spawner + osmSpawner; osmSpawner is
-  // declared below, the getter only evaluates during curated.update()).
-  curated.attachChunkSpawner({
-    get aliveCount() {
-      return spawner.aliveCount + osmSpawner.aliveCount;
-    },
-  });
+  // identity assert: chunk + curated === store.aliveCount (no OSM term).
+  curated.attachChunkSpawner(spawner);
 }
-
-/* ================================================================== */
-/* v4 REAL TOKYO — integrated at the BINDING call sites                */
-/* (docs/DESIGN-V4.md §インターフェース / INTEGRATION order P->C->R->W). */
-/* ================================================================== */
-
-/** OSM shard base URL (public/assets/tokyo/, immutable-cached via _headers). */
-const OSM_BASE_URL = '/assets/tokyo/';
-
-/* OsmWorld (Stream W): fetches both shards (AbortController) + decodes typed
- * arrays at title, emits EVT.OSM_READY, honors ?osmdelay=ms in DEV, drives
- * #osm-progress; abortAndFail() is the ONE-WAY failure latch. */
-const osmWorld = new OsmWorld(bus);
-
-/* osmPools (Stream R): 2 BatchedExtraPool batches — detail cap 2048 (bands
- * 2-3) / large cap 1024 (bands 4-5); OSM_ALIVE_CAP feasibility + unit-box +
- * axis-aligned-normals boot asserts live inside makeOsmPools. Registered in
- * `instances` (reserved keys) + `poolList` exactly like extraPools above so
- * ScaleManager.eachPool covers RESCALE/REBASE and updateAndFlushPools covers
- * fade stepping (+2 draws, honest ledger 68/72). */
-const osmGeometries = [];
-for (let i = 0; i < OSM_ARCHETYPE_IDS.length; i++) {
-  osmGeometries.push({ code: OSM_CODE_BASE + i, geometry: geos[OSM_ARCHETYPE_IDS[i]] });
-}
-const osmPools = makeOsmPools(getSharedObjectMaterial(), osmGeometries);
-renderer.scene.add(osmPools.detail.mesh);
-renderer.scene.add(osmPools.large.mesh);
-instances.set('osm:detail', osmPools.detail);
-instances.set('osm:large', osmPools.large);
-poolList.push(osmPools.detail, osmPools.large);
-
-/* OsmSpawner (Stream W) — MUST construct EXACTLY HERE: after CuratedSpawner
- * (its ABSORB handler is THIRD in the frozen order) and before the
- * KNOCK_OFF/ABSORB attach-handlers below. <=OSM_UPDATE_BUDGET ops/frame
- * nearest-first, hard admission check (ALIVE_TOTAL_BUDGET -
- * OSM_ADMISSION_HEADROOM), consumed bitmasks, deferred ABSORB bookkeeping,
- * RESCALE/REBASE origin handlers (curated pattern verbatim); inert until
- * osmWorld.ready, forever inert if failed. */
-const osmSpawner = new OsmSpawner(store, hashes, osmPools, bus, scaleMgr, osmWorld);
-
-/* OsmGround (Stream R): tile group (scale = 1/worldScale, pos = -origin —
- * pure similarity transform), ground BatchedMesh + river mesh on the shared
- * env water material, <=2 tile builds/frame, major/minor LOD; RESCALE/
- * REBASE/GAME_RESET self-subscribed — NOT added to resetWorld (+2 draws). */
-const osmGround = new OsmGround(renderer.scene, scaleMgr, env.getWaterMaterial(), osmWorld);
-/* v5 謎の溝 fix: live ground tint for the radius-driven OSM ground fade —
- * unwired the ground renders exactly as v4 (and warns in DEV). REQUIRED. */
-osmGround.setEnvironment(env);
-
-/* v4 ONE-SHOT coverage latch — cityMap.setOsmCoverageActive is called
- * EXACTLY ONCE per session (on OSM_READY *or* at the tier-2 deadline),
- * always before band 3 ever matters (~80 s of slack). NOT re-armed by
- * resetWorld (per-session, docs/DESIGN-V4.md データパイプライン step 4). */
-let osmCoverageDecided = false;
-/** @param {boolean} active */
-function decideOsmCoverage(active) {
-  if (osmCoverageDecided) return;
-  osmCoverageDecided = true;
-  // Guarded until Stream W lands setOsmCoverageActive in cityMap.js.
-  const fn = /** @type {any} */ (cityMap).setOsmCoverageActive;
-  if (typeof fn === 'function') fn(active);
-}
-bus.on(EVT.OSM_READY, () => decideOsmCoverage(true));
-/* ONE-WAY TIER-2 DEADLINE LATCH: data lost the race — flip coverage back to
- * procedural permanently (failure-path determinism caveat, documented).
- * INTEGRATION FIX (lead): gated on the RUN states — the latch protocol is
- * "the player reached tier 2 mid-run before the data" (~80 s of slack). A
- * boot-time ?at=/?r= dev teleport at r >= 0.5 emits TIER_UP synchronously
- * during TITLE (devTeleport's forced maybeTierUp), microseconds after the
- * fetch kicked — without this guard every tier>=2 dev start aborts OSM
- * before the local shards can possibly arrive, making the binding browser
- * gates (street/marunouchi/ueno with real fill) structurally impossible.
- * Title-time loads finish before play; the dev-start band-3 window is
- * served by OSM_READY -> setOsmCoverageActive(true) exactly as in a normal
- * run. The ?osmdelay=120000 deadline race (start small, PLAY through tier
- * 2) still latches via this handler. */
-bus.on(EVT.TIER_UP, (p) => {
-  if (state === GameState.TITLE) return; // boot/dev-start TIER_UP — not the race
-  if (p.tierIndex >= 2 && !osmWorld.ready && !osmWorld.failed) {
-    osmWorld.abortAndFail();
-    decideOsmCoverage(false);
-  }
-});
-/* Kick the shard fetch during the title screen (OsmWorld emits OSM_READY
- * after decode or latches failed internally; #osm-progress is its DOM). */
-osmWorld.load(OSM_BASE_URL);
 
 /* v4 (Stream C rim): the sky-tinted rim follows the tier palette — snap on
  * every TIER_UP crossfade start (any sky-ish hex works per design); the
