@@ -73,8 +73,6 @@ import {
 } from './config/tuning.js';
 import { bus, EVT, PAYLOADS } from './core/events.js';
 import { resolveWorldSeed } from './core/rng.js';
-import { TIERS } from './config/tiers.js';
-import { CATALOG } from './config/catalog.js';
 import { ObjectStore, EXTRA_CODE_BASE } from './world/objects.js';
 import { SpatialHash } from './world/spatialHash.js';
 import { BallPhysics } from './physics/ballPhysics.js';
@@ -109,10 +107,12 @@ import { CuratedSpawner } from './world/curated.js'; // Stream B
 import { Collection } from './game/collection.js'; // Stream D
 import { Donack } from './ui/donack.js'; // Stream E
 import { SkytreeView } from './render/goalTower.js'; // Stream A (replaces MoonView)
-import { DEV_STARTS } from './config/cityMap.js'; // Stream B
-import * as cityMap from './config/cityMap.js';
+import { DEV_STARTS } from './config/cityMap.js'; // Stream B — engine constant (frozen spec dev start keys)
 import { buildExtraPools, extraClassIndexForCode } from './render/extraPools.js'; // integration (4 shared EXTRA pools)
 import { activePack } from './packs/active.js'; // P2 StagePack seam (transient Tokyo pack)
+// P2.5: simulation CONTENT read from the active pack (not config/* directly).
+const TIERS = activePack.tiers; // tier table (palettes, cell sizes, rim tints)
+const CATALOG = activePack.archetypes; // archetype recipes (id -> ArchetypeDef)
 
 import { makeObjectMaterial, setRimTint } from './render/objectMaterial.js'; // rim (was Stream C)
 

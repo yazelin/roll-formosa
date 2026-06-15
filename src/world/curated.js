@@ -62,9 +62,11 @@
  */
 
 import * as THREE from 'three';
-import { PLACEMENTS, LANDMARKS } from '../config/cityMap.js';
-import { TIERS } from '../config/tiers.js';
-import { CATALOG } from '../config/catalog.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const PLACEMENTS = activePack.cityMap.PLACEMENTS; // curated SoA placements (city content)
+const LANDMARKS = activePack.landmarks; // curated landmark singletons (city content)
+const TIERS = activePack.tiers; // tier table (loadRadiusSim) from the active pack
+const CATALOG = activePack.archetypes; // archetype recipes (id -> ArchetypeDef)
 import { ARCHETYPE_ID_BY_CODE, FLAG_ALIVE, FLAG_RARE, FLAG_CURATED } from './objects.js';
 import { EVT, PAYLOADS } from '../core/events.js';
 import {

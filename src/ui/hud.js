@@ -43,12 +43,11 @@ import {
   MAX_FLOATS_DESKTOP,
   COLLECT_POPUP_S,
 } from '../config/tuning.js';
-import { TIERS } from '../config/tiers.js';
 import { splitLength, clamp01 } from '../core/mathUtils.js';
-// Namespace import: DISPLAY_NAME_BY_CODE (string[94], frozen) lands with
-// Stream C's catalog.js — namespace access keeps this module loadable either
-// way (missing export -> empty table -> floats render as plain '+N').
-import * as catalogModule from '../config/catalog.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+const TIERS = activePack.tiers; // tier table (banner names) from the active pack
+// DISPLAY_NAME_BY_CODE (string[94], frozen) is pack content; defensive access
+// keeps this module loadable either way (missing -> empty table -> '+N').
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').GrowEvent} GrowEvent */
@@ -63,9 +62,9 @@ import * as catalogModule from '../config/catalog.js';
 /** @typedef {import('../types.js').CollectEvent} CollectEvent */
 /** @typedef {import('../types.js').MuteChangedEvent} MuteChangedEvent */
 
-/** Frozen display-name table (catalog.js, Stream C; boot-asserted length 94). */
+/** Frozen display-name table (activePack content; boot-asserted length 94). */
 const DISPLAY_NAME_BY_CODE = /** @type {string[]} */ (
-  catalogModule.DISPLAY_NAME_BY_CODE !== undefined ? catalogModule.DISPLAY_NAME_BY_CODE : []
+  activePack.displayNameByCode !== undefined ? activePack.displayNameByCode : []
 );
 
 /** How long the tier banner stays popped (ms). Cosmetic only. */

@@ -48,18 +48,17 @@ import { COLLECT_TOTAL, LS_DONACK_KEY } from '../config/tuning.js';
 import { collectibleCodeForId } from '../world/objects.js';
 import { formatLength } from '../core/mathUtils.js';
 import { RunStats } from '../game/runStats.js';
-// Namespace import: DISPLAY_NAME_BY_CODE (string[94], frozen) lands with
-// Stream C's catalog.js — namespace access keeps this module loadable either
-// way (missing export -> empty table -> cells render without names).
-import * as catalogModule from '../config/catalog.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
+// DISPLAY_NAME_BY_CODE (string[94], frozen) is pack content; defensive access
+// keeps this module loadable either way (missing -> empty table -> no names).
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').GameWinEvent} GameWinEvent */
 /** @typedef {import('../types.js').GoalEvent} GoalEvent */
 
-/** Frozen display-name table (catalog.js, Stream C; boot-asserted length 94). */
+/** Frozen display-name table (activePack content; boot-asserted length 94). */
 const DISPLAY_NAME_BY_CODE = /** @type {string[]} */ (
-  catalogModule.DISPLAY_NAME_BY_CODE !== undefined ? catalogModule.DISPLAY_NAME_BY_CODE : []
+  activePack.displayNameByCode !== undefined ? activePack.displayNameByCode : []
 );
 /* v5: collectible id -> code goes through objects.js collectibleCodeForId
    (ids 0..11 -> 70..81 frozen v3 rule, id 12+ -> V5_CODE_BASE 110+). The old

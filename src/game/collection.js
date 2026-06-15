@@ -45,14 +45,14 @@ import { getSharedObjectMaterial } from '../render/instances.js';
 // Namespace import: DISPLAY_NAME_BY_CODE (string[94], frozen) lands with
 // Stream C's catalog.js — the namespace access keeps this module loadable
 // either way (undefined -> empty table -> nameJa '').
-import * as catalogModule from '../config/catalog.js';
+import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').AbsorbEvent} AbsorbEvent */
 
-/** Frozen display-name table (catalog.js, Stream C; boot-asserted length 94). */
+/** Frozen display-name table (activePack content; boot-asserted length 94). */
 const DISPLAY_NAME_BY_CODE = /** @type {string[]} */ (
-  catalogModule.DISPLAY_NAME_BY_CODE !== undefined ? catalogModule.DISPLAY_NAME_BY_CODE : []
+  activePack.displayNameByCode !== undefined ? activePack.displayNameByCode : []
 );
 
 /** Mask of the ids this build displays (bits 0..COLLECT_TOTAL-1). */
