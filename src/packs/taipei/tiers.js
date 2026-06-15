@@ -23,6 +23,14 @@
  */
 
 import { RESCALE_S, ARCH_PER_TIER } from '../../config/tiers.js';
+import {
+  FOG_FAR_K,
+  FOG_FAR_MIN_M,
+  LOAD_RADIUS_MIN_M,
+  SIM_RADIUS_MIN,
+  START_RADIUS_M,
+  MOON_DIR_MIN_ELEV,
+} from '../../config/tuning.js';
 
 export { RESCALE_S, ARCH_PER_TIER };
 
@@ -233,8 +241,55 @@ export function validateTiersStructure() {
         `tier ${t}: enterTrueRadius must be strictly increasing`
       );
     }
+
+    /* Sky/fog authoring guards (relocated from the engine's old config/tiers.js
+       — they now validate the SHIPPING Taipei tier params, not dead Tokyo data).
+       Worst-case worldScale fog/load floor: the fog wall must hide the spawn-in
+       edge EVEN WHERE the real-meter floors bind (ws_t = (START_RADIUS_M /
+       SIM_RADIUS_MIN) * 5^t at reference simRadius 1). */
+    const ws = (START_RADIUS_M / SIM_RADIUS_MIN) * Math.pow(5, t);
+    const fogSim = Math.max(FOG_FAR_K, FOG_FAR_MIN_M / ws);
+    const loadSim = Math.max(tier.loadRadiusSim, LOAD_RADIUS_MIN_M / ws);
+    assert(
+      fogSim < loadSim - tier.cellSizeSim,
+      `tier ${t}: floored fog far (${fogSim.toFixed(1)}) must be < floored load radius - cell ` +
+        `(${(loadSim - tier.cellSizeSim).toFixed(1)}) at worst-case worldScale ${ws}`
+    );
+    assert(
+      Array.isArray(tier.sunDir) && tier.sunDir.length === 3 &&
+        Array.isArray(tier.moonDir) && tier.moonDir.length === 3,
+      `tier ${t}: sunDir/moonDir must be [x,y,z]`
+    );
+    const m = tier.moonDir;
+    const mlen = Math.hypot(m[0], m[1], m[2]);
+    assert(mlen > 1e-6, `tier ${t}: moonDir must be non-zero`);
+    assert(
+      Math.asin(m[1] / mlen) >= MOON_DIR_MIN_ELEV,
+      `tier ${t}: moonDir post-normalization elevation must be >= MOON_DIR_MIN_ELEV (${MOON_DIR_MIN_ELEV} rad)`
+    );
+    assert(
+      tier.moonAngSize > 0 && tier.moonAngSize < 0.2,
+      `tier ${t}: moonAngSize must be a sane angular radius in radians`
+    );
+    assert(
+      tier.starIntensity >= 0 && tier.starIntensity <= 1 &&
+        tier.cloudDensity >= 0 && tier.cloudDensity <= 1 &&
+        tier.sunIntensity >= 0,
+      `tier ${t}: sky scalars out of range`
+    );
   }
   assert(seen.size === 70, 'exactly 70 unique chunk archetype ids (10 x 7) — Part 5 contract');
+  assert(
+    TIERS[0].enterTrueRadius === START_RADIUS_M,
+    'T0 enterTrueRadius must equal START_RADIUS_M'
+  );
+  // moonAngSize NON-DECREASING (night cosmetic — strictly-increasing relaxed).
+  for (let t = 1; t < TIERS.length; t++) {
+    assert(
+      TIERS[t].moonAngSize >= TIERS[t - 1].moonAngSize,
+      `tier ${t}: moonAngSize must be non-decreasing (night cosmetic)`
+    );
+  }
 }
 
 export default TIERS;

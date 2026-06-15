@@ -18,9 +18,18 @@ describe('objects.js code table after OSM removal', () => {
   it('no osm_* archetype id survives', () => {
     for (const id of ARCHETYPE_ID_BY_CODE) expect(id.startsWith('osm_')).toBe(false);
   });
-  it('collectible id 12 (stack_chan) maps to the re-based v5 code 94', () => {
+  it('the frozen code structure is CITY-AGNOSTIC (neutral placeholders, no Tokyo/kana)', () => {
+    const kana = /[぀-ゟ゠-ヿ]/;
+    const neutral = /^(chunk|extra|v5)_\d+$/;
+    for (let c = 0; c < ARCHETYPE_ID_BY_CODE.length; c++) {
+      const id = ARCHETYPE_ID_BY_CODE[c];
+      expect(neutral.test(id), `code ${c} id '${id}' must be a neutral placeholder`).toBe(true);
+      expect(kana.test(id), `code ${c} id '${id}' has Japanese kana`).toBe(false);
+    }
+  });
+  it('collectible id 12 maps to the v5 code 94 (neutral structure)', () => {
     expect(collectibleCodeForId(12)).toBe(94);
-    expect(ARCHETYPE_ID_BY_CODE[94]).toBe('stack_chan');
+    expect(ARCHETYPE_ID_BY_CODE[94]).toBe('v5_94');
   });
   it('every code round-trips id<->code with no holes', () => {
     for (let c = 0; c < ARCHETYPE_ID_BY_CODE.length; c++) {

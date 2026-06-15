@@ -40,7 +40,7 @@
  */
 
 import { STORE_CAPACITY } from '../config/tuning.js';
-import { TIERS, ARCH_PER_TIER } from '../config/tiers.js';
+import { TIER_COUNT, ARCH_PER_TIER } from '../config/tiers.js';
 import { FreeList } from '../core/pool.js';
 import { buildCodeMap } from '../packs/_engine/codeMap.js';
 
@@ -76,83 +76,53 @@ export const FLAG_CURATED = 16;
 
 /**
  * First EXTRA curated code == number of chunk codes
- * (TIERS.length * ARCH_PER_TIER = 70). render/ball.knockOff skips stuck
+ * (TIER_COUNT * ARCH_PER_TIER = 70). render/ball.knockOff skips stuck
  * entries with code >= EXTRA_CODE_BASE (EXTRA objects are permanently stuck).
  */
-export const EXTRA_CODE_BASE = TIERS.length * ARCH_PER_TIER;
+export const EXTRA_CODE_BASE = TIER_COUNT * ARCH_PER_TIER;
 
 /**
- * The 24 EXTRA curated archetype ids, FROZEN in code order 70..93
- * (docs/DESIGN-V3.md Phase-0 appendix — append-only, never reorder):
- *   70..81 collectibles (code = 70 + frozen COLLECTIBLE_ID 0..11;
- *          80 hachiko_statue is DUAL collectible id10 + landmarkId 0),
- *   82..91 landmark singletons (threshold-ladder order),
- *   92 shop shell, 93 Skytree display-name slot (NEVER spawned into the
- *   store — render/goalTower.js + env silhouette only).
- * config/catalog.js implements exactly these ids in EXTRA_CATALOG and is
- * cross-asserted there in dev mode.
+ * The 24 EXTRA curated archetype ids, FROZEN in code order 70..93 (append-only,
+ * never reorder). These are CITY-AGNOSTIC placeholder ids for the engine's
+ * frozen code STRUCTURE only — the active StagePack overrides every code with
+ * its own archetype id (activePack.archetypeIdByCode). Slot layout:
+ *   70..81 collectibles, 82..91 landmark singletons (threshold-ladder order),
+ *   92 shop shell, 93 goal-monument display-name slot.
  * @type {string[]}
  */
-export const EXTRA_ARCHETYPE_IDS = [
-  'gold_maneki_neko', // 70 金の招き猫 (collectible 0)
-  'vacuum_tube', // 71 真空管 (collectible 1)
-  'retro_game_console', // 72 レトロゲーム機 (collectible 2)
-  'akiba_figure', // 73 秋葉原フィギュア (collectible 3)
-  'gaming_pc', // 74 ゲーミングPC (collectible 4)
-  'otoro_sushi', // 75 特上大トロ (collectible 5)
-  'daruma', // 76 だるま (collectible 6)
-  'panda_plush', // 77 パンダのぬいぐるみ (collectible 7)
-  'kaminari_okoshi', // 78 雷おこし (collectible 8)
-  'golden_object', // 79 金色のオブジェ (collectible 9)
-  'hachiko_statue', // 80 ハチ公像 (collectible 10 + landmarkId 0 — DUAL)
-  'yakatabune', // 81 屋形船 (collectible 11)
-  'saigo_statue', // 82 西郷さん像 (landmarkId 1)
-  'kaminarimon', // 83 雷門 (landmarkId 2)
-  'radio_kaikan', // 84 ラジオ会館風ビル (landmarkId 3)
-  'shibuya_109', // 85 渋谷109 (landmarkId 4)
-  'scramble_crossing', // 86 スクランブル交差点 decal (landmarkId 5)
-  'tokyo_dome', // 87 東京ドーム (landmarkId 6)
-  'tokyo_station', // 88 東京駅丸の内駅舎 (landmarkId 7)
-  'national_diet', // 89 国会議事堂 (landmarkId 8)
-  'rainbow_bridge_span', // 90 レインボーブリッジ橋スパン (landmarkId 9)
-  'tokyo_tower', // 91 東京タワー (landmarkId 10)
-  'akiba_parts_shop', // 92 センゴク電子 shop shell (v5 rename — id frozen)
-  'tokyo_skytree', // 93 東京スカイツリー — display-name reservation ONLY
-];
+export const EXTRA_ARCHETYPE_IDS = Array.from(
+  { length: 24 },
+  (_, i) => `extra_${EXTRA_CODE_BASE + i}`
+);
 
 /**
- * First v5 curated code (re-based to 94 after OSM removal; was 110).
- * The collectible code = 70 + id rule CANNOT extend past id 11 (code 82 is
- * already 西郷さん像), so all v5 archetypes — the スタックチャン collectible
- * (id 12) and the 4 Akihabara curated buildings — append after the 24 EXTRA
- * codes: codes 94..98 = V5_CODE_BASE + index below.
- * Like EXTRA codes they are >= EXTRA_CODE_BASE, so render/ball.knockOff's
- * existing skip keeps every absorbed v5 object permanently stuck.
+ * First v5 curated code (94). The collectible code = 70 + id rule cannot extend
+ * past id 11 (code 82 is a landmark), so the v5 codes — the 13th collectible
+ * (id 12) plus 4 extra curated buildings — append after the 24 EXTRA codes:
+ * codes 94..98 = V5_CODE_BASE + index below. Like EXTRA codes they are
+ * >= EXTRA_CODE_BASE, so render/ball.knockOff's skip keeps every absorbed v5
+ * object permanently stuck.
  */
-export const V5_CODE_BASE = EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length; // 94 (was 110 before OSM removal)
+export const V5_CODE_BASE = EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length; // 94
 
 /**
- * The 5 v5 curated archetype ids, FROZEN in code order 94..98
- * (append-only, never reorder). 94 stack_chan is collectible id 12
- * (collectibleCodeForId below); 95..98 are Akihabara 電気街 curated
- * buildings (naturalBand 4, landmark-mid pool). config/catalog.js implements
- * exactly these ids and cross-asserts in dev mode.
+ * The 5 v5 curated archetype ids, FROZEN in code order 94..98 (append-only).
+ * City-agnostic placeholders for the frozen code STRUCTURE — the active
+ * StagePack overrides every code. 94 is collectible id 12 (collectibleCodeForId
+ * below); 95..98 are curated buildings (landmark-mid pool).
  * @type {string[]}
  */
-export const V5_ARCHETYPE_IDS = [
-  'stack_chan', // 94 スタックチャン (collectible 12 — M5Stack robot tribute)
-  'game_center', // 95 ゲームセンター
-  'denki_retailer', // 96 家電量販店
-  'maid_cafe', // 97 メイドカフェ
-  'pc_parts_bldg', // 98 PCパーツショップビル
-];
+export const V5_ARCHETYPE_IDS = Array.from(
+  { length: 5 },
+  (_, i) => `v5_${V5_CODE_BASE + i}`
+);
 
 /**
- * Archetype code of a FROZEN collectible id. ids 0..11 use the frozen v3
- * rule code = 70 + id (DESIGN-V3.md Phase-0 appendix); ids 12+ append after
- * the v4 table at V5_CODE_BASE (the 70 + id rule is unextendable — code 82
- * is 西郷さん像). collection.js / screens.js MUST route every id -> code
- * lookup through this (never hand-roll 70 + id).
+ * Archetype code of a FROZEN collectible id. ids 0..11 use the frozen rule
+ * code = 70 + id; ids 12+ append after the EXTRA table at V5_CODE_BASE (the
+ * 70 + id rule is unextendable — code 82 is the first landmark singleton).
+ * collection.js / screens.js MUST route every id -> code lookup through this
+ * (never hand-roll 70 + id).
  * @param {number} id Frozen collectible id 0..COLLECT_TOTAL-1.
  * @returns {number} uint16 archetype code.
  */
@@ -160,25 +130,29 @@ export function collectibleCodeForId(id) {
   return id <= 11 ? EXTRA_CODE_BASE + id : V5_CODE_BASE + (id - 12);
 }
 
-/* The code<->id table is now built by the pack-agnostic buildCodeMap()
+/* The code<->id table is built by the pack-agnostic buildCodeMap()
  * (src/packs/_engine/codeMap.js) — the SAME builder the active StagePack uses
- * (P2 seam). We feed it a local pack-shaped descriptor assembled from THIS
- * module's frozen Tokyo arrays (TIERS chunk ids, then the EXTRA appendix =
- * 24 curated + 5 v5, append-only). Output is byte-identical to the old inline
- * tier-major + appendix loops: chunk codes 0..69, EXTRA codes 70..98.
- * objects.js does NOT import the assembled activePack here — that would form an
- * import cycle (active -> _tokyo_transient -> cityMap -> objects). buildCodeMap
- * is a pure leaf with no pack-module imports, so calling it is cycle-free. */
+ * (P2 seam). We feed it a CITY-AGNOSTIC descriptor: TIER_COUNT*ARCH_PER_TIER
+ * neutral chunk ids (chunk_0..chunk_69), then the EXTRA appendix (24 + 5 v5).
+ * This is the engine's frozen code STRUCTURE; the active pack supplies the real
+ * ids via activePack.archetypeIdByCode. objects.js must NOT import activePack
+ * here (import cycle); buildCodeMap is a pure leaf, so this stays cycle-free. */
+const _NEUTRAL_TIERS = Array.from({ length: TIER_COUNT }, (_, t) => ({
+  archetypeIds: Array.from(
+    { length: ARCH_PER_TIER },
+    (_, i) => `chunk_${t * ARCH_PER_TIER + i}`
+  ),
+}));
 const _CODE_MAP = buildCodeMap({
-  tiers: TIERS,
+  tiers: _NEUTRAL_TIERS,
   extraIds: [...EXTRA_ARCHETYPE_IDS, ...V5_ARCHETYPE_IDS],
 });
 
 /**
  * Flat archetype id table (99 entries):
- * codes 0..69: ARCHETYPE_ID_BY_CODE[tier*ARCH_PER_TIER + i] ===
- * TIERS[tier].archetypeIds[i]; codes 70..93: EXTRA_ARCHETYPE_IDS[code - 70];
- * codes 94..98: V5_ARCHETYPE_IDS[code - V5_CODE_BASE].
+ * codes 0..69: chunk_<code> (neutral); codes 70..93: EXTRA_ARCHETYPE_IDS[code - 70];
+ * codes 94..98: V5_ARCHETYPE_IDS[code - V5_CODE_BASE]. The active pack overrides
+ * all 99 with its real ids via activePack.archetypeIdByCode.
  * @type {string[]}
  */
 export const ARCHETYPE_ID_BY_CODE = _CODE_MAP.idByCode;
@@ -194,7 +168,7 @@ export const ARCHETYPE_CODE_BY_ID = _CODE_MAP.codeById;
  * frozen ARCH_PER_TIER-id list. CHUNK CODES ONLY (0..69) — EXTRA curated
  * codes 70..93 are not tier-strided.
  * @param {number} tierIndex   Home tier 0..6.
- * @param {number} indexInTier Index 0..ARCH_PER_TIER-1 within TIERS[tierIndex].archetypeIds.
+ * @param {number} indexInTier Index 0..ARCH_PER_TIER-1 within the tier's id list.
  * @returns {number} Code 0..69 for ObjectStore.archetype.
  */
 export function archetypeCode(tierIndex, indexInTier) {
