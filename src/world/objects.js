@@ -71,6 +71,14 @@ export const FLAG_RARE = 8;
  * re-enter the chunk path; EXTRA codes >= EXTRA_CODE_BASE never knock off).
  */
 export const FLAG_CURATED = 16;
+/**
+ * v4: slot owned by the OsmSpawner (world/osmSpawner.js — real-Tokyo OSM
+ * buildings). VALUE FROZEN at 32 by docs/DESIGN-V4.md Phase 0.
+ * TODO P2: remove FLAG_OSM once the spawner skip-mask no longer needs it.
+ * @deprecated OSM subsystem removed in P1; this constant is retained for P2
+ *   cleanup only — no code path reads or sets this flag after P1.
+ */
+export const FLAG_OSM = 32;
 
 /* ================================================================== */
 /* Archetype code <-> id mapping (derived from the frozen tier table)  */
