@@ -48,6 +48,14 @@ import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT sea
 const TIERS = activePack.tiers; // tier table (banner names) from the active pack
 // DISPLAY_NAME_BY_CODE (string[94], frozen) is pack content; defensive access
 // keeps this module loadable either way (missing -> empty table -> '+N').
+/** zh-TW locale t() function from the active pack (R10, R14). */
+const _t = activePack.locale && typeof activePack.locale.t === 'function'
+  ? activePack.locale.t.bind(activePack.locale)
+  : (key) => key; // fallback: return key (never crashes)
+/** Number formatter from the active pack locale (zh-TW grouping). */
+const _numFmtLocale = activePack.locale && activePack.locale.numFmt
+  ? activePack.locale.numFmt
+  : null;
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').GrowEvent} GrowEvent */
@@ -212,11 +220,12 @@ export class Hud {
     this._lastScoreWriteMs = 0;
     /** Latest total score seen (trailing flush via 'grow'). */
     this._pendingScore = -1;
-    /** Cached formatter — toLocaleString re-resolves the locale every call. */
-    this._numFmt =
-      typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function'
-        ? new Intl.NumberFormat('ja-JP')
-        : null;
+    /** Cached formatter — use pack locale (zh-TW) or fall back to system. */
+    this._numFmt = _numFmtLocale !== null
+      ? _numFmtLocale
+      : (typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function'
+          ? new Intl.NumberFormat('zh-TW')
+          : null);
 
     /* --- timers --- */
     /** @type {ReturnType<typeof setTimeout> | 0} */
@@ -412,7 +421,7 @@ export class Hud {
    */
   _onScore(p) {
     this._pendingScore = p.score;
-    if (p.rare) this._showToast('レアはっけん！+5000');
+    if (p.rare) this._showToast(_t('hud.rareFound'));
 
     const now = performance.now();
     const code = typeof p.archetypeCode === 'number' ? p.archetypeCode : -1;
@@ -530,7 +539,7 @@ export class Hud {
    * @param {GoalCallEvent} _p
    */
   _onGoalCall(_p) {
-    this._showToast('スカイツリーが呼んでいる…！');
+    this._showToast(_t('hud.goalCall'));
   }
 
   /**
@@ -558,7 +567,7 @@ export class Hud {
       this._arrowEl.classList.add('hidden');
       if (p.active && !parts && !this._guideToastShown) {
         this._guideToastShown = true;
-        this._showToast('スカイツリーへ向かえ！');
+        this._showToast(_t('hud.goalGuide'));
       }
       return;
     }
@@ -581,7 +590,7 @@ export class Hud {
     this._arrowEl.style.setProperty('--arrow-rot', deg.toFixed(1) + 'deg');
     if (!parts && !this._guideToastShown) {
       this._guideToastShown = true;
-      this._showToast('スカイツリーへ向かえ！');
+      this._showToast(_t('hud.goalGuide'));
     }
   }
 
@@ -599,7 +608,7 @@ export class Hud {
    * @param {LandmarkEvent} p
    */
   _onLandmark(p) {
-    this._showToast('「' + p.nameJa + '」まきこんだ！');
+    this._showToast(_t('hud.landmark', p.nameJa));
   }
 
   /**
@@ -618,7 +627,7 @@ export class Hud {
     }
     this._popupNameEl.textContent = p.nameJa;
     this._popupCountEl.textContent =
-      (p.isNew ? 'NEW!　' : '') + 'コレクション ' + p.found + '/' + p.total;
+      (p.isNew ? 'NEW!　' : '') + _t('hud.collect', p.found, p.total);
     this._popupEl.classList.add('show');
     this._popupEl.setAttribute('aria-hidden', 'false');
     // (The popup lives on its own band row below the toast — the old 58vw

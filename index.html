@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0c14" />
-  <title>Fable Katamari — 転がして、東京まるごと。</title>
+  <title>Roll Formosa — 捲啊捲，捲遍全台北。</title>
 
   <!-- v3 Donack frames (the ONLY 8 shipped webp assets — Stream E prunes the
        16 surplus frames; scripts/verify-donack-assets.sh enforces the set) -->
@@ -874,13 +874,13 @@
     <!-- v3 top bar (replaces the three v2 corner panels; dissolves into
          corners at >=768px via display:contents) -->
     <div id="top-bar">
-      <div id="size-pill" class="pill" role="status" aria-label="おおきさ / SIZE">
-        <span class="pill-label">おおきさ / SIZE</span>
+      <div id="size-pill" class="pill" role="status" aria-label="大小 / SIZE">
+        <span class="pill-label">大小 / SIZE</span>
         <span><span id="size-value">2.0</span><span id="size-unit">cm</span></span>
       </div>
-      <div id="timer" class="pill" role="timer" aria-label="タイム / TIME">0:00</div>
-      <div id="score-pill" class="pill" role="status" aria-label="スコア / SCORE">
-        <span class="pill-label">スコア / SCORE</span>
+      <div id="timer" class="pill" role="timer" aria-label="時間 / TIME">0:00</div>
+      <div id="score-pill" class="pill" role="status" aria-label="分數 / SCORE">
+        <span class="pill-label">分數 / SCORE</span>
         <span id="score-value">0</span>
         <!-- v3: absorbed counter merges into the score pill on mobile
              (hud.js writes #absorbed-inline.textContent directly). -->
@@ -925,19 +925,19 @@
   <!-- ============ Title overlay ============ -->
   <div id="title-overlay" class="overlay">
     <h1 class="game-title">FABLE<br />KATAMARI</h1>
-    <p class="game-subtitle">転がして、東京まるごと。 / Roll up all of Tokyo.</p>
-    <button id="start-button" class="btn" type="button">スタート / START</button>
-    <!-- v3: Donack commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
-    <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true">🦆 ドナック実況 ON</button>
+    <p class="game-subtitle">捲啊捲，捲遍全台北。 / Roll up all of Taipei.</p>
+    <button id="start-button" class="btn" type="button">開始 / START</button>
+    <!-- v3: bear mascot commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
+    <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true">🐻 熊安 ON</button>
     <div class="key-hints" id="key-hints">
-      <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>うごく / Move</span>
-      <span><kbd>Shift</kbd>ブースト / Boost</span>
-      <span><kbd>Space</kbd>ダッシュ / Dash</span>
-      <span><kbd>M</kbd>ミュート / Mute</span>
-      <span><kbd>Mouse</kbd>カメラ / Camera</span>
+      <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>移動 / Move</span>
+      <span><kbd>Shift</kbd>加速 / Boost</span>
+      <span><kbd>Space</kbd>衝刺 / Dash</span>
+      <span><kbd>M</kbd>靜音 / Mute</span>
+      <span><kbd>Mouse</kbd>鏡頭 / Camera</span>
     </div>
-    <p id="title-best-line" class="hidden">自己ベスト: <span id="title-best-value">—</span></p>
-    <p class="seed-line">2cm のネジから 634m、スカイツリーへ — From a 2cm screw to the Skytree.</p>
+    <p id="title-best-line" class="hidden">個人最佳：<span id="title-best-value">—</span></p>
+    <p class="seed-line">從 2cm 圖釘，一路到 508m 台北 101 — From a 2cm pushpin to Taipei 101.</p>
   </div>
 
   <!-- ============ Win / result overlay (hidden until game:win) ============ -->
@@ -945,23 +945,23 @@
        0.0s time / 0.4s score count-up / 0.9s size+counts / 1.6s rank stamp /
        1.9s collection grid / 2.2s record badge + best + buttons. -->
   <div id="win-overlay" class="overlay hidden">
-    <h1 class="game-title">東京、まるごといただき！<br />YOU ROLLED UP TOKYO</h1>
+    <h1 class="game-title">台北，全部捲走了！<br />YOU ROLLED UP TAIPEI</h1>
     <div id="result-rows">
       <div class="result-row" id="result-row-time">
-        <span class="result-label">⏱ タイム / TIME</span>
+        <span class="result-label">⏱ 時間 / TIME</span>
         <span id="result-time" class="result-value">--:--.-</span>
       </div>
       <div class="result-row" id="result-row-score">
-        <span class="result-label">⭐ スコア / SCORE</span>
+        <span class="result-label">⭐ 分數 / SCORE</span>
         <span id="result-score" class="result-value">0</span>
       </div>
       <div class="result-row" id="result-row-size">
-        <span class="result-label">📏 さいごの大きさ / SIZE</span>
+        <span class="result-label">📏 最終大小 / SIZE</span>
         <span id="result-size" class="result-value"><span id="win-size">420m</span></span>
       </div>
       <div class="result-row" id="result-detail">
-        <span>まきこんだ <span id="result-absorbed" class="result-num">0</span> こ ・
-          レア <span id="result-rares" class="result-num">0</span> コ</span>
+        <span>捲入 <span id="result-absorbed" class="result-num">0</span> 個 ·
+          稀有 <span id="result-rares" class="result-num">0</span> 個</span>
       </div>
     </div>
     <div id="result-rank-wrap">
@@ -971,14 +971,14 @@
     <!-- v3 collection album (screens.js fills the COLLECT_TOTAL cells + count).
          v5: the static total below MUST track config/tuning.js COLLECT_TOTAL (13). -->
     <div id="collection-grid-wrap">
-      <div id="collection-header">🏯 コレクション <span id="result-collect-n">0</span>/13</div>
+      <div id="collection-header">🏯 收藏 <span id="result-collect-n">0</span>/13</div>
       <div id="collection-grid"></div>
     </div>
     <p id="result-best" class="seed-line"></p>
-    <p id="result-seed" class="seed-line">SEED: <span id="win-seed">—</span>（同じシードで同じ世界 / same seed, same world）</p>
+    <p id="result-seed" class="seed-line">SEED: <span id="win-seed">—</span>（同一 seed，同樣世界 / same seed, same world）</p>
     <div class="result-buttons">
-      <button id="post-x-button" class="btn" type="button">Xでシェア / POST</button>
-      <button id="restart-button" class="btn btn-secondary" type="button">もういちど / ROLL AGAIN</button>
+      <button id="post-x-button" class="btn" type="button">X 分享 / POST</button>
+      <button id="restart-button" class="btn btn-secondary" type="button">再來一次 / ROLL AGAIN</button>
     </div>
   </div>
 

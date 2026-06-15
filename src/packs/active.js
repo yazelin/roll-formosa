@@ -1,7 +1,6 @@
 /**
  * @file active.js — THE single active StagePack the engine reads.
- * Phase 1 (P2): tokyo transient (proves byte-identity). P3 flips this to
- * taipei. Engine modules import the active pack from here, never from a
- * specific pack module.
+ * P3: flipped to taipei pack (zh-TW shell, Tokyo simulation data as stub).
+ * P4 (tiers), P5 (catalog), P6 (cityMap/landmarks) replace the stubs.
  */
-export { activePack, default } from './_tokyo_transient/index.js';
+export { activePack, default } from './taipei/index.js';

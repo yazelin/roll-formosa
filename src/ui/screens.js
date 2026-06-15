@@ -51,6 +51,14 @@ import { RunStats } from '../game/runStats.js';
 import { activePack } from '../packs/active.js'; // P2.5: simulation CONTENT seam
 // DISPLAY_NAME_BY_CODE (string[94], frozen) is pack content; defensive access
 // keeps this module loadable either way (missing -> empty table -> no names).
+/** zh-TW locale t() function from the active pack (R10, R14). */
+const _t = activePack.locale && typeof activePack.locale.t === 'function'
+  ? activePack.locale.t.bind(activePack.locale)
+  : (key) => key;
+/** Number formatter from the active pack locale (zh-TW grouping). */
+const _numFmt = activePack.locale && activePack.locale.numFmt
+  ? activePack.locale.numFmt
+  : (typeof Intl !== 'undefined' ? new Intl.NumberFormat('zh-TW') : null);
 
 /** @typedef {import('../core/events.js').EventBus} EventBus */
 /** @typedef {import('../types.js').GameWinEvent} GameWinEvent */
@@ -217,9 +225,9 @@ export class Screens {
     const hints = document.getElementById('key-hints');
     if (hints !== null && typeof window !== 'undefined' && 'ontouchstart' in window) {
       hints.innerHTML =
-        '<span><kbd>ドラッグ / Drag</kbd>うごく / Move</span>' +
-        '<span><kbd>2本指 / 2nd finger</kbd>ブースト / Boost</span>' +
-        '<span><kbd>DASH</kbd>ダッシュ / Dash</span>';
+        `<span><kbd>${_t('hints.drag')}</kbd>${_t('hints.move')}</span>` +
+        `<span><kbd>${_t('hints.two')}</kbd>${_t('hints.boost')}</span>` +
+        `<span><kbd>DASH</kbd>${_t('hints.dash')}</span>`;
     }
 
     bus.on(EVT.GAME_START, this._onGameStart);
@@ -290,8 +298,8 @@ export class Screens {
   /** Sync the #donack-toggle label/aria with the persisted state. */
   _renderDonackToggle() {
     this._donackToggleBtn.textContent = this._donackOff
-      ? '🦆 ドナック実況 OFF'
-      : '🦆 ドナック実況 ON';
+      ? _t('donack.off')
+      : _t('donack.on');
     this._donackToggleBtn.setAttribute('aria-pressed', this._donackOff ? 'false' : 'true');
   }
 
@@ -355,7 +363,7 @@ export class Screens {
       cancelAnimationFrame(this._countupRaf);
       this._countupRaf = 0;
     }
-    this._scoreEl.textContent = g.score.toLocaleString('ja-JP');
+    this._scoreEl.textContent = _numFmt !== null ? _numFmt.format(g.score) : String(g.score);
     this._rowTimeEl.classList.add('result-reveal');
     this._rowScoreEl.classList.add('result-reveal');
     this._rowSizeEl.classList.add('result-reveal');
@@ -527,7 +535,8 @@ export class Screens {
     const tick = () => {
       const k = Math.min((performance.now() - startMs) / COUNTUP_MS, 1);
       const eased = 1 - (1 - k) * (1 - k) * (1 - k); // easeOutCubic
-      el.textContent = Math.round(finalScore * eased).toLocaleString('ja-JP');
+      const v = Math.round(finalScore * eased);
+      el.textContent = _numFmt !== null ? _numFmt.format(v) : String(v);
       if (k < 1) {
         this._countupRaf = requestAnimationFrame(tick);
       } else {
@@ -557,9 +566,9 @@ export class Screens {
       this._titleBestLineEl.classList.add('hidden');
       return;
     }
+    const scoreFmt = _numFmt !== null ? _numFmt.format(rec.score) : String(rec.score);
     this._titleBestValueEl.textContent =
-      'RANK ' + rec.rank + ' ・ ' + formatTime(rec.timeS) + ' ・ ' +
-      rec.score.toLocaleString('ja-JP') + 'pt';
+      'RANK ' + rec.rank + ' ・ ' + formatTime(rec.timeS) + ' ・ ' + scoreFmt + 'pt';
     this._titleBestLineEl.classList.remove('hidden');
   }
 
@@ -578,13 +587,14 @@ export class Screens {
     if (best === null) return '';
     let line = '';
     if (best.bestTime !== null) {
-      line += 'ベストタイム ' + formatTime(best.bestTime.timeS) + ' (RANK ' + best.bestTime.rank + ')';
+      line += _t('screens.bestTime', formatTime(best.bestTime.timeS), best.bestTime.rank);
     }
     if (best.bestScore !== null) {
       if (line !== '') line += ' ／ ';
-      line += 'ベストスコア ' + best.bestScore.score.toLocaleString('ja-JP');
+      const scoreFmt = _numFmt !== null ? _numFmt.format(best.bestScore.score) : String(best.bestScore.score);
+      line += _t('screens.bestScore', scoreFmt);
     }
-    return line === '' ? '' : '自己ベスト: ' + line;
+    return line === '' ? '' : _t('screens.personalBest', line);
   }
 
   /**
@@ -599,15 +609,12 @@ export class Screens {
     // SAME battle-tested mechanism as v2: time/rank/score/collection in
     // `text`, hashtag via `hashtags=`, link via `url=` (separate params
     // avoid encoding pitfalls and let X count the URL at its fixed weight).
-    const text =
-      '🗼FABLE KATAMARI 東京を転がした！\n' +
-      '⏱' + formatTime(g.timeS) +
-      '／RANK ' + g.rank +
-      '／⭐' + g.score.toLocaleString('ja-JP') + '\n' +
-      '🏯レア' + g.collectFound + '/' + COLLECT_TOTAL + 'コレクション';
+    const scoreFmt = _numFmt !== null ? _numFmt.format(g.score) : String(g.score);
+    const text = _t('screens.shareText',
+      formatTime(g.timeS), g.rank, scoreFmt, g.collectFound, COLLECT_TOTAL);
     return X_INTENT +
       '?text=' + encodeURIComponent(text) +
       '&url=' + encodeURIComponent(SHARE_URL) +
-      '&hashtags=' + encodeURIComponent('FableKatamari');
+      '&hashtags=' + encodeURIComponent('RollFormosa');
   }
 }
