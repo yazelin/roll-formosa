@@ -7,10 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "osm:fetch": "node scripts/osm/fetch-osm.mjs",
-    "osm:build": "node scripts/osm/build-tokyo-bin.mjs",
-    "osm:verify": "node scripts/osm/verify-tokyo-data.mjs",
-    "predeploy": "bash scripts/verify-donack-assets.sh && npm run osm:verify",
+    "predeploy": "bash scripts/verify-donack-assets.sh",
     "test": "vitest run",
     "test:watch": "vitest"
   },

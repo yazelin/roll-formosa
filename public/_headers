@@ -4,13 +4,6 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# v4 OSM data shards (public/assets/tokyo/ — NOT content-hashed, but the
-# build pipeline only ever replaces them alongside a manifest/version bump;
-# explicit immutable cache so osmWorld's title-screen fetch is a cache hit
-# on every repeat visit (docs/DESIGN-V4.md データパイプライン step 4).
-/assets/tokyo/*
-  Cache-Control: public, max-age=31536000, immutable
-
 # HTML entry must always revalidate so deploys propagate immediately.
 /
   Cache-Control: public, max-age=0, must-revalidate

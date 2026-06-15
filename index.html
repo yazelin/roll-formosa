@@ -573,30 +573,6 @@
     .seed-line { font-size: 13px; color: #6f7796; letter-spacing: 0.1em; }
     #title-best-line { font-size: 14px; color: #b9c2e2; letter-spacing: 0.08em; }
 
-    /* v4 ODbL attribution (BINDING release gate — docs/DESIGN-V4.md): linked
-       OSM credit on BOTH the title and result overlays. Lives in the
-       overlays, NOT in #hud — the frozen v3 HUD band matrix is untouched. */
-    .osm-credit {
-      font-size: 11px;
-      color: #6f7796;
-      letter-spacing: 0.05em;
-    }
-    .osm-credit a {
-      color: #8fa3d0;
-      text-decoration: underline;
-      pointer-events: auto;
-    }
-    /* v4 OSM shard fetch progress (title screen only; world/osmWorld.js —
-       Stream W — writes textContent as bytes/total; empty until the fetch
-       starts so the v3 title composition is unchanged with stubs). */
-    #osm-progress {
-      font-size: 11px;
-      color: #6f7796;
-      letter-spacing: 0.08em;
-      min-height: 1.2em;
-      margin-top: -10px; /* tucks under .seed-line within the overlay gap */
-    }
-
     /* ============ win overlay — staged result ============ */
     #win-overlay { gap: clamp(8px, 1.6vh, 16px); }
     #win-overlay .game-title {
@@ -962,10 +938,6 @@
     </div>
     <p id="title-best-line" class="hidden">自己ベスト: <span id="title-best-value">—</span></p>
     <p class="seed-line">2cm のネジから 634m、スカイツリーへ — From a 2cm screw to the Skytree.</p>
-    <!-- v4: OSM shard fetch progress (osmWorld writes; empty until fetching) -->
-    <p id="osm-progress" aria-live="polite"></p>
-    <!-- v4 ODbL release gate: linked attribution (title screen) -->
-    <p class="osm-credit">地図データ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OpenStreetMap contributors</a> (ODbL)</p>
   </div>
 
   <!-- ============ Win / result overlay (hidden until game:win) ============ -->
@@ -1004,10 +976,6 @@
     </div>
     <p id="result-best" class="seed-line"></p>
     <p id="result-seed" class="seed-line">SEED: <span id="win-seed">—</span>（同じシードで同じ世界 / same seed, same world）</p>
-    <!-- v4 ODbL release gate: linked attribution (result screen — outside the
-         staged-reveal selectors so it is visible in EVERY result screenshot
-         composition from frame one) -->
-    <p class="osm-credit">地図データ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OpenStreetMap contributors</a> (ODbL)</p>
     <div class="result-buttons">
       <button id="post-x-button" class="btn" type="button">Xでシェア / POST</button>
       <button id="restart-button" class="btn btn-secondary" type="button">もういちど / ROLL AGAIN</button>
