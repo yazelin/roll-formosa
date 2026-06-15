@@ -71,12 +71,6 @@ export const FLAG_RARE = 8;
  * re-enter the chunk path; EXTRA codes >= EXTRA_CODE_BASE never knock off).
  */
 export const FLAG_CURATED = 16;
-/**
- * TODO P2: remove FLAG_OSM once spawner skip-mask drops it.
- * VALUE FROZEN at 32. The chunk spawner's skip-bit test used to be
- * (FLAG_CURATED|FLAG_OSM) when the OSM subsystem was active.
- */
-export const FLAG_OSM = 32;
 
 /* ================================================================== */
 /* Archetype code <-> id mapping (derived from the frozen tier table)  */
@@ -240,9 +234,6 @@ if (import.meta.env && import.meta.env.DEV) {
       `[objects.js invariant] EXTRA_ARCHETYPE_IDS must have exactly 24 entries (codes 70..93), ` +
         `found ${EXTRA_ARCHETYPE_IDS.length}`
     );
-  }
-  if (FLAG_OSM !== 32) {
-    throw new Error(`[objects.js invariant] FLAG_OSM frozen at 32, found ${FLAG_OSM}`);
   }
   if (V5_CODE_BASE !== 94 || V5_CODE_BASE !== EXTRA_CODE_BASE + EXTRA_ARCHETYPE_IDS.length) {
     throw new Error(

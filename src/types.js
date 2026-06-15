@@ -438,15 +438,6 @@
 /* ------------------------------------------------------------------ */
 
 /**
- * 'osmReady' — both OSM shards fetched + decoded (world/osmWorld.js, ONCE per
- * session, never after abortAndFail()). -> main.js (calls
- * cityMap.setOsmCoverageActive(true) — the one-shot latch — and arms the
- * osmSpawner), debug overlay.
- * @typedef {Object} OsmReadyEvent
- * @property {number} buildings Total decoded building records (detail + tower).
- */
-
-/**
  * One decoded OSM building record — a LOGICAL view: osmWorld.js decodes the
  * binary tiles into flat parallel typed arrays (SoA, one pass at title
  * screen); this typedef documents the per-index fields, not a JS object that

@@ -67,7 +67,7 @@ import { TIERS, ARCH_PER_TIER } from '../config/tiers.js';
 import { hash } from '../core/rng.js';
 import { FreeList, IntRing } from '../core/pool.js';
 import { EVT } from '../core/events.js';
-import { FLAG_RARE, FLAG_CURATED, FLAG_OSM } from './objects.js';
+import { FLAG_RARE, FLAG_CURATED } from './objects.js';
 import { bandAllowedAt } from '../config/cityMap.js';
 import {
   ALIVE_TOTAL_BUDGET,
@@ -131,12 +131,9 @@ const STORE_MASK = STORE_CAPACITY - 1;
 const POW5 = [1, 5, 25, 125, 625, 3125, 15625, 78125, 390625, 1953125, 9765625, 48828125, 244140625];
 /* FLAG_CURATED (16, frozen) now imported from objects.js — unified at
  * integration per the Phase-0 note. */
-/** v4 skip-bit widening (docs/DESIGN-V4.md spawner ownership, the ONE
- *  spawner.js change): every chunk-side ownership test that skipped
- *  FLAG_CURATED slots now skips FLAG_OSM (32) slots too — osmSpawner owns
- *  their bookkeeping exactly like curated owns its own. No other logic
- *  change (zone masking is data-driven via bandAllowedAt). */
-const SKIP_FLAGS = FLAG_CURATED | FLAG_OSM;
+/** Chunk-side ownership skip mask: chunk bookkeeping skips FLAG_CURATED slots
+ *  (curated.js owns their bookkeeping). */
+const SKIP_FLAGS = FLAG_CURATED;
 /** Boot worldScale (band-native real meters per native sim unit at band 0). */
 const WS0 = START_RADIUS_M / SIM_RADIUS_MIN;
 
@@ -710,11 +707,10 @@ export class Spawner {
   _onAbsorb(p) {
     const idx = p.objIndex;
     if (idx < 0 || idx >= STORE_CAPACITY) return;
-    /* v3/v4 OWNERSHIP: curated- and osm-owned slots are none of our business
+    /* OWNERSHIP: curated-owned slots are none of our business
        — their bookkeeping (consumed bitmasks, alive counts, render slots)
-       lives in world/curated.js / world/osmSpawner.js. Flags are still
-       intact here: absorb.js emits BEFORE store.free and this handler is
-       subscribed FIRST. */
+       lives in world/curated.js. Flags are still intact here: absorb.js
+       emits BEFORE store.free and this handler is subscribed FIRST. */
     if ((this._store.flags[idx] & SKIP_FLAGS) !== 0) return;
     const key = this._chunkKeyOf[idx];
     if (key >= 0) this._markConsumed(key, this._placementOf[idx]);
@@ -1202,12 +1198,12 @@ export class Spawner {
   _despawnIndex(idx, fadeS, consume) {
     const store = this._store;
     if ((store.flags[idx] & 1) === 0) return; // already gone
-    /* v3/v4 DEV assert: no chunk-owned operation may ever free a curated or
-       osm slot. Those slots never enter chunk records/queues (chunkKeyOf
+    /* DEV assert: no chunk-owned operation may ever free a curated slot.
+       Those slots never enter chunk records/queues (chunkKeyOf
        stays -1 and slotGen guards recycled indices) — reaching here flagged
        means the ownership protocol broke. */
     if (DEV && (store.flags[idx] & SKIP_FLAGS) !== 0) {
-      throw new Error(`[spawner] chunk op tried to free FLAG_CURATED|FLAG_OSM slot ${idx}`);
+      throw new Error(`[spawner] chunk op tried to free FLAG_CURATED slot ${idx}`);
     }
     if ((store.flags[idx] & SKIP_FLAGS) !== 0) return; // prod: refuse quietly
     if (consume) {

@@ -1,5 +1,5 @@
 /**
- * @file catalog.js — v5 リアル東京: all 115 archetypes.
+ * @file catalog.js — v5 リアル東京: all 99 archetypes.
  *
  * 70 CHUNK archetypes (ARCH_PER_TIER 10 x 7 tiers, ids FROZEN by
  * config/tiers.js; slots [8]/[9] of every tier are CHUNK LANDMARKS —
@@ -7,10 +7,7 @@
  * upright, archRoll-eligible only at chunk placement j === 0) PLUS 24 EXTRA
  * curated archetypes (codes 70..93 FROZEN by docs/DESIGN-V3.md Phase-0
  * appendix: 12 collectibles, 10 landmark singletons + ハチ公 dual, shop
- * shell, Skytree display-name slot) PLUS 16 OSM voxel-building archetypes
- * (v4, codes 94..109 FROZEN by docs/DESIGN-V4.md Phase-0 appendix §B —
- * spawned ONLY by world/osmSpawner.js from decoded tile data, unitBox
- * convention, see below). EXTRA entries are spawned ONLY by
+ * shell, Skytree display-name slot). EXTRA entries are spawned ONLY by
  * world/curated.js from cityMap placements (spawnWeight 0 — never
  * random-rolled); code 93 (東京スカイツリー) is a display-name reservation
  * and must NEVER be spawned into the store.
@@ -26,38 +23,28 @@
  *   - HERO PASS: the 12 frozen HERO_ARCHETYPE_IDS get upgraded silhouettes
  *     with per-id tri cap HERO_TRI_CAP (600) instead of ARCHETYPE_TRI_CAP
  *     (350), marked by `heroTriCap` on the entry (geometryFactory asserts).
- *   - OSM voxel archetypes: `unitBox: true` entries use the UNIT-BOX
- *     convention (geometry spans EXACTLY [-1,1] on all 3 axes; render scale
- *     = (w/2, h/2, d/2) NON-UNIFORM, store radius stays r_eff). BINDING
- *     NORMALS LAW (boot-asserted in geometryFactory): every unitBox
- *     geometry's normals are axis-aligned (+-X/Y/Z) — BatchedMesh applies no
- *     inverse-transpose, so non-uniform scale would mislight sloped faces.
- *     Consequence: ALL 16 OSM archetypes are flat/stepped boxes in v1
- *     (temple/shrine ship flat-roofed with vermilion/wood banding). <=72
- *     tris each (OSM_UNITBOX_TRI_CAP, asserted in geometryFactory).
  *   - Baked vertex AO: geometryFactory applies bakeSimpleAO(geo, k) to every
  *     entry at boot; k = entry.aoK ?? AO_BAKE_DEFAULT (tuning.js; global
  *     kill switch = 0).
  *
- * EXPORTS (Phase-0 frozen shapes): CATALOG (115 ids), DISPLAY_NAME_BY_CODE
- * (string[115], code-indexed), EXTRA_CATALOG (codes 70..93 + v5 110..114 ->
+ * EXPORTS (Phase-0 frozen shapes): CATALOG (99 ids), DISPLAY_NAME_BY_CODE
+ * (string[99], code-indexed), EXTRA_CATALOG (codes 70..93 + v5 94..98 ->
  * archetype), EXTRA_SIZE_CLASS_BY_CODE + EXTRA_POOL_CAPS (the 4 shared EXTRA
  * render pools: collectible-small/landmark-mid/landmark-large/landmark-xl —
- * flat +4 draws in the 64/72 ledger), OSM_CATALOG (code 94..109 ->
- * archetype), HERO_ARCHETYPE_IDS (12, frozen). v5 adds codes 110..114
- * (stack_chan collectible 12 + 4 Akihabara buildings — append-only).
+ * flat +4 draws in the 64/72 ledger), HERO_ARCHETYPE_IDS (12, frozen).
+ * v5 adds codes 94..98 (stack_chan collectible 12 + 4 Akihabara buildings —
+ * append-only).
  *
  * Each archetype's buildGeometry(rng) returns ONE merged, vertex-colored
  * BufferGeometry composed of a handful of low-segment primitives
- * (<= ARCHETYPE_TRI_CAP = 350 triangles; heroes <= HERO_TRI_CAP = 600; OSM
- * voxels <= 72). Built ONCE at boot by render/geometryFactory.js —
+ * (<= ARCHETYPE_TRI_CAP = 350 triangles; heroes <= HERO_TRI_CAP = 600).
+ * Built ONCE at boot by render/geometryFactory.js —
  * allocation here is fine, per-frame code never touches this module.
  *
  * GEOMETRY CONVENTION (binding for spawner / curated / instances / absorb):
  *   - Every returned geometry is normalized to a UNIT BOUNDING SPHERE
  *     (radius 1.0) centered at the geometry origin. Instance scale =
- *     the placed object's radiusSim, directly. EXCEPTION: unitBox entries
- *     (OSM, v4) skip sphere normalization and span [-1,1]^3 instead.
+ *     the placed object's radiusSim, directly.
  *   - yOffset positions the object center at restY = radius * (1 + yOffset),
  *     so yOffset = 0 means "sphere sitting on the ground" and flat objects
  *     (coin-likes, decals) use strongly negative offsets. Values were
@@ -81,8 +68,6 @@ import { HERO_TRI_CAP } from './tuning.js';
 import {
   EXTRA_ARCHETYPE_IDS,
   EXTRA_CODE_BASE,
-  OSM_ARCHETYPE_IDS,
-  OSM_CODE_BASE,
   V5_ARCHETYPE_IDS,
   V5_CODE_BASE,
 } from '../world/objects.js';
@@ -3028,442 +3013,17 @@ addExtra(93, null, {
 });
 
 /* ================================================================== */
-/* v4 OSM voxel archetypes — codes 94..109 (docs/DESIGN-V4.md 付録§B)  */
+/* v5 curated archetypes — codes 94..98 (DESIGN-V5 mini-spec)          */
 /* ================================================================== */
 /*
- * UNIT-BOX LAW (binding, boot-asserted in geometryFactory):
- *   - every geometry spans EXACTLY [-1, 1] on all three axes (the OBB mass
- *     fills the footprint — clearance baking and collision read the OBB, so
- *     the visual mass must match it; small facade accents may protrude by
- *     <= 0.06 unit, ~3% of the half-extent, accepted in the design);
- *   - normals are axis-aligned (+-X/Y/Z) ONLY: parts are axis-aligned boxes,
- *     never rotated — BatchedMesh applies no inverse-transpose, non-uniform
- *     (w/2, h/2, d/2) scale would mislight sloped faces. Flat/stepped roofs
- *     only in v1 (temple/shrine ship flat-roofed with vermilion/wood
- *     banding; sloped variants are a documented post-ship option);
- *   - <= 72 triangles each (OSM_UNITBOX_TRI_CAP, asserted in
- *     geometryFactory).
- * Window-band rows are baked vertex colors (towerBanded-style row parity);
- * they stretch with the per-record non-uniform height scale — accepted as
- * part of the voxel aesthetic (quantization IS the look).
- * Spawned ONLY by world/osmSpawner.js: render scale = (w/2, h/2, d/2) from
- * the decoded record, tint = palette row hashed by wayId, store radius =
- * r_eff. spawnWeight 0 — never chunk-rolled; radiusNominal/collisionScale
- * are representative fallbacks (runtime uses per-record values).
- */
-
-/**
- * OSM archetypes keyed by FROZEN code 94..109 (same objects as in CATALOG —
- * each also carries .osmCode and .unitBox = true).
- * @type {Record<number, Archetype & {osmCode: number, unitBox: true}>}
- */
-export const OSM_CATALOG = {};
-
-/**
- * Register an OSM voxel archetype: goes into CATALOG (by id) AND OSM_CATALOG
- * (by frozen code 94..109).
- * @param {number} code Frozen OSM code 94..109.
- * @param {Archetype} a Archetype (spawnWeight must be 0 — osmSpawner-only).
- */
-function addOsm(code, a) {
-  a.osmCode = code;
-  a.unitBox = true;
-  CATALOG[a.id] = a;
-  OSM_CATALOG[code] = a;
-}
-
-/**
- * Unit-space banded wall slab for OSM voxels: an axis-aligned BoxGeometry
- * (1 x floors x 1 segments) with towerBanded-style alternating wall/window
- * vertex-color rows + deterministic lit windows. NEVER rotated (normals law).
- * @param {number} w Full width (x). @param {number} d Full depth (z).
- * @param {number} yMin @param {number} yMax Vertical span in unit space.
- * @param {number} floors Height segments (8*floors+4 tris).
- * @param {number} wallHex @param {number} winHex @param {number} litHex
- * @param {() => number} rng Boot rng (deterministic lit-window pattern).
- * @returns {THREE.BufferGeometry}
- */
-function ubands(w, d, yMin, yMax, floors, wallHex, winHex, litHex, rng) {
-  const h = yMax - yMin;
-  const geo = towerBanded(w, h, d, floors, wallHex, winHex, litHex, rng);
-  geo.translate(0, (yMin + yMax) / 2, 0);
-  return geo;
-}
-
-/* ---- 94 osm_house 民家 — body + flat roof slab + door (36 tris) ----- */
-addOsm(94, {
-  id: 'osm_house',
-  displayNameJa: '民家',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 1.7, // representative r_eff (8x8x6.5 m real house)
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xe8e0d0, 0xc8b89a, 0xd8d0c4, 0xb0a890, 0xe2d4b8], // beiges/wood
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.85,
-  buildGeometry(rng) {
-    void rng;
-    return finishUnitBox([
-      box(2, 1.7, 2, 0xffffff, { y: -0.15, hex2: 0xd8d0c4 }), // walls (tinted)
-      box(2, 0.3, 2, 0x6a6a72, { y: 0.85 }), // flat roof slab (dark)
-      box(0.5, 0.7, 0.1, 0x6a5a48, { y: -0.65, z: 1.0 }), // door
-    ]);
-  },
-});
-
-/* ---- 95 osm_shop_low 商店 — fascia + glass front (48 tris) ---------- */
-addOsm(95, {
-  id: 'osm_shop_low',
-  displayNameJa: '商店',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 2.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xe2d8c8, 0xc8d2d8, 0xd9c2c2, 0xb8c4b0], // light retail
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.85,
-  buildGeometry(rng) {
-    void rng;
-    return finishUnitBox([
-      box(2, 1.5, 2, 0xffffff, { y: -0.25, hex2: 0xe2ded4 }), // body (tinted)
-      box(2.04, 0.35, 2.04, 0xc83828, { y: 0.62 }), // fascia sign band (accent)
-      box(2, 0.26, 2, 0x6a6a72, { y: 0.87 }), // roof slab
-      box(1.7, 0.9, 0.08, 0x8fb4c8, { y: -0.5, z: 1.02 }), // glass front
-    ]);
-  },
-});
-
-/* ---- 96 osm_zakkyo 雑居ビル — banded + vertical sign strip (64) ----- */
-addOsm(96, {
-  id: 'osm_zakkyo',
-  displayNameJa: '雑居ビル',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 4.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xd8cec0, 0xb8b2a4, 0xc4bcb0, 0xa89e94, 0xccc0ae], // warm grays
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 6, 0xffffff, 0x39465e, 0xffd98a, rng), // banded block (tinted)
-      box(0.3, 1.5, 0.12, 0xe04f3a, { x: 0.7, y: 0.1, z: 1.02 }), // vertical kanban strip (signage accent)
-    ]);
-  },
-});
-
-/* ---- 97 osm_office_mid オフィスビル — banded + parapet (64) --------- */
-addOsm(97, {
-  id: 'osm_office_mid',
-  displayNameJa: 'オフィスビル',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 5.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xc2ccd9, 0x9aa8bc, 0xb4c0d0, 0x8a98ac], // office blue-grays
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 0.88, 6, 0xffffff, 0x35424f, 0xe8f0c8, rng), // banded block (tinted)
-      box(2.04, 0.12, 2.04, 0x7a8088, { y: 0.94 }), // parapet cap
-    ]);
-  },
-});
-
-/* ---- 98 osm_office_tower 高層オフィス — 8-floor banded (68) --------- */
-addOsm(98, {
-  id: 'osm_office_tower',
-  displayNameJa: '高層オフィス',
-  tier: 4,
-  naturalBand: 4,
-  radiusNominal: 14,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xaabccc, 0x7a90a8, 0x98aabc, 0x687e96], // curtain-wall glass
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 8, 0xffffff, 0x2e3c4c, 0xd8e8f0, rng), // glass tower (tinted)
-    ]);
-  },
-});
-
-/* ---- 99 osm_apartment_tower タワーマンション — banded + rail (64) --- */
-addOsm(99, {
-  id: 'osm_apartment_tower',
-  displayNameJa: 'タワーマンション',
-  tier: 4,
-  naturalBand: 4,
-  radiusNominal: 14,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xe2d8c8, 0xc0b8a8, 0xd0d8e2, 0xb0bac4], // apartment beiges
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 6, 0xffffff, 0x44506a, 0xffe0a0, rng), // slab block (tinted)
-      box(2.05, 0.06, 2.05, 0xd8d4cc, { y: 0.1 }), // balcony rail band
-    ]);
-  },
-});
-
-/* ---- 100 osm_hotel ホテル — banded + canopy + roof sign (68) -------- */
-addOsm(100, {
-  id: 'osm_hotel',
-  displayNameJa: 'ホテル',
-  tier: 4,
-  naturalBand: 4,
-  radiusNominal: 11,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xd9ccc2, 0xb09a8a, 0xc8b8b0, 0x9a8878], // hotel warm stone
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 5, 0xffffff, 0x3c3744, 0xffd98a, rng), // body (tinted)
-      box(1.2, 0.12, 0.22, 0x8a3030, { y: -0.86, z: 0.96 }), // entrance canopy (accent, z<=1.07 within unitBox eps)
-      box(0.9, 0.18, 0.1, 0xfff2c0, { y: 0.86, z: 1.0 }), // lit roof sign plate
-    ]);
-  },
-});
-
-/* ---- 101 osm_school 学校 — banded + roof + porch (60) --------------- */
-addOsm(101, {
-  id: 'osm_school',
-  displayNameJa: '学校',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 6.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xe8e4d8, 0xc8ccc0, 0xdcd8c8, 0xb8bcae], // school creams
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 0.85, 4, 0xffffff, 0x4a5a6a, 0xf0f0d8, rng), // classroom rows (tinted)
-      box(2, 0.3, 2, 0x7a8088, { y: 0.85 }), // flat roof
-      box(0.7, 0.5, 0.14, 0x6a7078, { y: -0.75, z: 1.02 }), // entrance porch
-    ]);
-  },
-});
-
-/* ---- 102 osm_temple 寺院 — flat stepped roofs + wood banding (48) ---- */
-addOsm(102, {
-  id: 'osm_temple',
-  displayNameJa: '寺院',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 2.5,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0x8a6a4a, 0x6a5038, 0x9a7a58, 0x584430], // temple wood
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.85,
-  buildGeometry(rng) {
-    void rng;
-    // FLAT-ROOFED v1 (axis-aligned-normals law) — the "temple read" comes
-    // from the dark eaves slab + stacked upper roof + wood banding.
-    return finishUnitBox([
-      box(2, 1.3, 2, 0xffffff, { y: -0.35, hex2: 0xc8b090 }), // wood body (tinted)
-      box(2.06, 0.18, 2.06, 0xb03428, { y: 0.2 }), // vermilion beam band
-      box(2.06, 0.35, 2.06, 0x3c3430, { y: 0.47 }), // lower eaves slab (dark)
-      box(1.4, 0.3, 1.4, 0x4a403a, { y: 0.8 }), // upper stacked roof
-    ]);
-  },
-});
-
-/* ---- 103 osm_shrine 神社 — vermilion + flat roof + ridge (48) -------- */
-addOsm(103, {
-  id: 'osm_shrine',
-  displayNameJa: '神社',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 2.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xc04030, 0xa83424, 0xd05040, 0x983020], // shrine vermilion
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.85,
-  buildGeometry(rng) {
-    void rng;
-    return finishUnitBox([
-      box(2, 1.4, 2, 0xffffff, { y: -0.3, hex2: 0xe05a44 }), // vermilion body (tinted)
-      box(2.04, 0.25, 2.04, 0xf2ead8, { y: -0.84 }), // white base band
-      box(2.06, 0.3, 2.06, 0x3c3430, { y: 0.55 }), // flat dark roof slab
-      box(0.5, 0.3, 2.1, 0x2e2824, { y: 0.85 }), // ridge beam (katsuogi row)
-    ]);
-  },
-});
-
-/* ---- 104 osm_station 駅舎 — brick banded + entrance (60) ------------ */
-addOsm(104, {
-  id: 'osm_station',
-  displayNameJa: '駅舎',
-  tier: 4,
-  naturalBand: 4,
-  radiusNominal: 8.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xa86048, 0x8a4c38, 0xb87058, 0x784030], // station brick
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 0.7, 4, 0xffffff, 0x584438, 0xffe0a0, rng), // brick arcade rows (tinted)
-      box(2, 0.3, 2, 0x5a5a62, { y: 0.85 }), // flat roof deck
-      box(1.1, 0.5, 0.14, 0x3c3a44, { y: -0.7, z: 1.02 }), // entrance maw
-    ]);
-  },
-});
-
-/* ---- 105 osm_warehouse 倉庫 — ribbed shed + shutter (60) ------------ */
-addOsm(105, {
-  id: 'osm_warehouse',
-  displayNameJa: '倉庫',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 5.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0x9aa4b0, 0x788494, 0xa8b0b8, 0x687480], // corrugated steel
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    void rng;
-    return finishUnitBox([
-      box(2, 2, 2, 0xffffff, { hex2: 0xc8d0d8 }), // shed volume (tinted)
-      box(2.04, 0.1, 2.04, 0x5a626e, { y: 0.3 }), // rib band
-      box(2.04, 0.1, 2.04, 0x5a626e, { y: -0.3 }), // rib band
-      box(2.04, 0.1, 2.04, 0x5a626e, { y: -0.9 }), // rib band (skirt)
-      box(1.1, 1.1, 0.06, 0x6a7078, { y: -0.45, z: 1.0 }), // shutter door
-    ]);
-  },
-});
-
-/* ---- 106 osm_parking 駐車場ビル — open decks (72) -------------------- */
-addOsm(106, {
-  id: 'osm_parking',
-  displayNameJa: '駐車場ビル',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 5.0,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xc8ccd4, 0xa8acb4, 0xb8c0c8, 0x989ca4], // concrete grays
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    void rng;
-    const parts = [];
-    for (let i = 0; i < 4; i++) {
-      parts.push(box(2, 0.14, 2, 0xffffff, { y: -0.93 + i * 0.62, hex2: 0xd8dce2 })); // deck slabs (tinted)
-    }
-    parts.push(box(2, 1.14, 2, 0xffffff, { y: 0.43 })); // top floors volume
-    parts.push(box(0.18, 2, 2, 0xb0b4bc, { x: -0.91 })); // end wall
-    return finishUnitBox(parts); // 6 boxes = 72 tris (the cap, exactly)
-  },
-});
-
-/* ---- 107 osm_merged_block 長屋ブロック — row volume + dividers (60) - */
-addOsm(107, {
-  id: 'osm_merged_block',
-  displayNameJa: '長屋ブロック',
-  tier: 3,
-  naturalBand: 3,
-  radiusNominal: 4.5,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xd8cec0, 0xb4aa9c, 0xc8beb2, 0xa49a8e], // shitamachi rows
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.92,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 4, 0xffffff, 0x4c4640, 0xffd98a, rng), // merged row volume (tinted)
-      box(0.08, 2.02, 2.02, 0x6a6258, { x: -0.34 }), // party-wall divider
-      box(0.08, 2.02, 2.02, 0x6a6258, { x: 0.34 }), // party-wall divider
-    ]);
-  },
-});
-
-/* ---- 108 osm_tower_generic 超高層ビル — 8-floor banded (68) ---------- */
-addOsm(108, {
-  id: 'osm_tower_generic',
-  displayNameJa: '超高層ビル',
-  tier: 5,
-  naturalBand: 5,
-  radiusNominal: 64,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0x9ab0c4, 0x6a8098, 0x88a0b4, 0x587088], // mega-tower glass
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 1, 8, 0xffffff, 0x26323e, 0xc8e0f0, rng), // curtain wall (tinted)
-    ]);
-  },
-});
-
-/* ---- 109 osm_stepped_roof 段々ビル — 2 stacked banded boxes (68) ----- */
-addOsm(109, {
-  id: 'osm_stepped_roof',
-  displayNameJa: '段々ビル',
-  tier: 4,
-  naturalBand: 4,
-  radiusNominal: 12,
-  radiusJitter: 0,
-  spawnWeight: 0,
-  palette: [0xc2c8d0, 0xa0a8b4, 0xb2bac2, 0x909aa6], // setback concrete
-  yOffset: 0,
-  upright: true,
-  collisionScale: 0.9,
-  buildGeometry(rng) {
-    return finishUnitBox([
-      ubands(2, 2, -1, 0.4, 4, 0xffffff, 0x3c4654, 0xffe0a0, rng), // lower mass (tinted)
-      ubands(1.2, 1.2, 0.4, 0.92, 2, 0xf0eee8, 0x3c4654, 0xffe0a0, rng), // setback upper
-      box(1.2, 0.16, 1.2, 0x7a8088, { y: 0.96 }), // top slab
-    ]);
-  },
-});
-
-/* ================================================================== */
-/* v5 curated archetypes — codes 110..114 (DESIGN-V5 mini-spec)        */
-/* ================================================================== */
-/*
- * Append-only after the frozen 110-entry v4 table (objects.js
- * V5_CODE_BASE/V5_ARCHETYPE_IDS). Registered through the same addExtra path
- * as codes 70..93: curated-only (spawnWeight 0), rendered from the shared
- * EXTRA size-class pools (zero extra draws — capacity raises only, see
- * EXTRA_POOL_CAPS above), permanently stuck once absorbed (ball.knockOff's
- * >= EXTRA_CODE_BASE skip). Normal unit-sphere finish() geometry, <= 350
- * tris each (ARCHETYPE_TRI_CAP — these are NOT unitBox/OSM entries).
- *   110 stack_chan      collectible id 12 (collectibleCodeForId), band 1 —
+ * Registered through the same addExtra path as codes 70..93: curated-only
+ * (spawnWeight 0), rendered from the shared EXTRA size-class pools (zero
+ * extra draws — capacity raises only, see EXTRA_POOL_CAPS above), permanently
+ * stuck once absorbed (ball.knockOff's >= EXTRA_CODE_BASE skip). Normal
+ * unit-sphere finish() geometry, <= 350 tris each (ARCHETYPE_TRI_CAP).
+ *   94 stack_chan       collectible id 12 (collectibleCodeForId), band 1 —
  *                       parts-shop shelf placement (cityMap COLLECTIBLES)
- *   111..114            Akihabara 電気街 buildings, band 4 (absorbable
+ *   95..98              Akihabara 電気街 buildings, band 4 (absorbable
  *                       mid-game), landmark-mid pool, cityMap V5 clusters
  */
 
@@ -3616,23 +3176,21 @@ addExtra(114, 'landmark-mid', {
 });
 
 /* ================================================================== */
-/* DISPLAY_NAME_BY_CODE — string[115], code-indexed (append-only)      */
+/* DISPLAY_NAME_BY_CODE — string[99], code-indexed (append-only)       */
 /* ================================================================== */
 
 /**
  * Code -> Japanese display name (hud absorb-name floats with FLOAT_MERGE_S
  * burst merging, collection album, landmark toasts). Codes 0..69 follow the
  * frozen tiers.js order; 70..93 the frozen EXTRA order from objects.js;
- * 94..109 the frozen v4 OSM order; 110..114 the frozen v5 order from
- * objects.js (115 total). Built unconditionally (prod ships it); asserted
- * complete in dev.
+ * 94..98 the frozen v5 order from objects.js (99 total). Built
+ * unconditionally (prod ships it); asserted complete in dev.
  * @type {string[]}
  */
 export const DISPLAY_NAME_BY_CODE = (() => {
   const names = new Array(
     TIERS.length * ARCH_PER_TIER +
       EXTRA_ARCHETYPE_IDS.length +
-      OSM_ARCHETYPE_IDS.length +
       V5_ARCHETYPE_IDS.length
   );
   for (let t = 0; t < TIERS.length; t++) {
@@ -3645,10 +3203,6 @@ export const DISPLAY_NAME_BY_CODE = (() => {
   for (let e = 0; e < EXTRA_ARCHETYPE_IDS.length; e++) {
     const a = CATALOG[EXTRA_ARCHETYPE_IDS[e]];
     names[EXTRA_CODE_BASE + e] = a !== undefined && a.displayNameJa ? a.displayNameJa : '';
-  }
-  for (let o = 0; o < OSM_ARCHETYPE_IDS.length; o++) {
-    const a = CATALOG[OSM_ARCHETYPE_IDS[o]];
-    names[OSM_CODE_BASE + o] = a !== undefined && a.displayNameJa ? a.displayNameJa : '';
   }
   for (let v = 0; v < V5_ARCHETYPE_IDS.length; v++) {
     const a = CATALOG[V5_ARCHETYPE_IDS[v]];
@@ -3732,23 +3286,7 @@ if (import.meta.env && import.meta.env.DEV) {
   assert(CATALOG['tokyo_tower'].collisionScale === 0.45, '東京タワー collisionScale frozen at 0.45');
   assert(CATALOG['tokyo_tower'].radiusNominal === 170, '東京タワー dioramaR frozen at 170');
 
-  // ---- 16 OSM voxel archetypes (frozen objects.js codes 94..109, v4) --
-  for (let o = 0; o < OSM_ARCHETYPE_IDS.length; o++) {
-    const code = OSM_CODE_BASE + o;
-    const id = OSM_ARCHETYPE_IDS[o];
-    const a = OSM_CATALOG[code];
-    assert(a !== undefined, `OSM code ${code}: missing archetype '${id}'`);
-    assert(a.id === id, `OSM code ${code}: id must be '${id}', found '${a.id}'`);
-    assert(CATALOG[id] === a, `OSM '${id}': must be the same object in CATALOG and OSM_CATALOG`);
-    assert(a.osmCode === code, `OSM '${id}': osmCode field mismatch`);
-    assert(a.unitBox === true, `OSM '${id}': unitBox must be true (DESIGN-V4 unit-box law)`);
-    assert(a.spawnWeight === 0, `OSM '${id}': spawnWeight must be 0 (osmSpawner-only, never chunk-rolled)`);
-    assert(a.tier === a.naturalBand, `OSM '${id}': tier field must equal naturalBand`);
-    checkCommon(a, `OSM '${id}'`);
-  }
-  assert(Object.keys(OSM_CATALOG).length === 16, 'OSM_CATALOG must contain exactly 16 codes (94..109)');
-
-  // ---- 5 v5 curated archetypes (frozen objects.js codes 110..114) -----
+  // ---- 5 v5 curated archetypes (frozen objects.js codes 94..98) --------
   for (let v = 0; v < V5_ARCHETYPE_IDS.length; v++) {
     const code = V5_CODE_BASE + v;
     const id = V5_ARCHETYPE_IDS[v];
@@ -3791,15 +3329,14 @@ if (import.meta.env && import.meta.env.DEV) {
 
   // ---- totals + display-name table ------------------------------------
   assert(
-    Object.keys(CATALOG).length === 115,
-    `CATALOG must contain exactly 115 ids (70 chunk + 24 EXTRA + 16 OSM + 5 v5), found ${Object.keys(CATALOG).length}`
+    Object.keys(CATALOG).length === 99,
+    `CATALOG must contain exactly 99 ids (70 chunk + 24 EXTRA + 5 v5), found ${Object.keys(CATALOG).length}`
   );
-  assert(DISPLAY_NAME_BY_CODE.length === 115, 'DISPLAY_NAME_BY_CODE must have exactly 115 entries');
-  for (let c = 0; c < 115; c++) {
+  assert(DISPLAY_NAME_BY_CODE.length === 99, 'DISPLAY_NAME_BY_CODE must have exactly 99 entries');
+  for (let c = 0; c < 99; c++) {
     assert(DISPLAY_NAME_BY_CODE[c].length > 0, `DISPLAY_NAME_BY_CODE hole at code ${c}`);
   }
   assert(DISPLAY_NAME_BY_CODE[92] === 'センゴク電子', 'code 92 (shop shell) display name is センゴク電子 (v5)');
   assert(DISPLAY_NAME_BY_CODE[93] === '東京スカイツリー', 'code 93 reserved for 東京スカイツリー');
-  assert(DISPLAY_NAME_BY_CODE[96] === '雑居ビル', 'code 96 (osm_zakkyo) display name frozen as 雑居ビル');
-  assert(DISPLAY_NAME_BY_CODE[110] === 'スタックチャン', 'code 110 reserved for スタックチャン (collectible 12)');
+  assert(DISPLAY_NAME_BY_CODE[94] === 'スタックチャン', 'code 94 reserved for スタックチャン (collectible 12)');
 }

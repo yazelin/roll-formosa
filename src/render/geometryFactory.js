@@ -1,5 +1,5 @@
 /**
- * @file geometryFactory.js — Builds all 110 merged vertex-colored composite
+ * @file geometryFactory.js — Builds all 99 merged vertex-colored composite
  * archetype geometries from catalog recipes ONCE at boot (~80ms during the
  * title screen).
  *
@@ -11,24 +11,14 @@
  *   instance pos.y  = r * (1 + archetype.yOffset)   // yOffset 0 = sphere sits on ground
  * This decouples catalog modeling units from spawn scaling entirely.
  *
- * v4 UNIT-BOX EXCEPTION (docs/DESIGN-V4.md — OSM archetypes, codes 94..109):
- * entries with `unitBox: true` SKIP sphere normalization. Their geometry is
- * authored to span EXACTLY [-1, 1] on all three axes (asserted below, with a
- * small facade-accent tolerance) so render/osmPools.js can scale each
- * instance NON-UNIFORMLY to (w/2, h/2, d/2) while the ObjectStore radius
- * stays r_eff. BINDING NORMALS LAW (boot-asserted here): every unitBox
- * geometry's normals are axis-aligned (+-X/Y/Z) — BatchedMesh applies no
- * inverse-transpose, so non-uniform scale would mislight sloped faces.
- *
- * v4 TRI CAPS: ARCHETYPE_TRI_CAP (350) default; entries carrying
+ * TRI CAPS: ARCHETYPE_TRI_CAP (350) default; entries carrying
  * `heroTriCap` (the 12 frozen HERO_ARCHETYPE_IDS, = HERO_TRI_CAP 600) are
- * asserted per id; unitBox entries are asserted <= OSM_UNITBOX_TRI_CAP (72).
+ * asserted per id.
  *
- * v4 BAKED VERTEX AO (bakeSimpleAO, boot-time only, zero runtime cost):
+ * BAKED VERTEX AO (bakeSimpleAO, boot-time only, zero runtime cost):
  * applied to EVERY archetype after normalization with k = entry.aoK ??
  * AO_BAKE_DEFAULT (tuning.js). GLOBAL KILL SWITCH: AO_BAKE_DEFAULT = 0
- * (a per-entry aoK: 0 kills one entry). Separable change — see
- * docs/DESIGN-V4.md モデル品質パス.
+ * (a per-entry aoK: 0 kills one entry). Separable change.
  *
  * Each recipe gets a DETERMINISTIC PRNG seeded from (GEOMETRY_SEED, id, tier)
  * so geometry detail jitter is identical across boots and machines (the
@@ -49,18 +39,6 @@ const DEV = !!(import.meta.env && import.meta.env.DEV);
 
 /** Domain seed for deterministic per-archetype geometry rngs ('GEO\0'). */
 const GEOMETRY_SEED = 0x47454f00;
-
-/** v4: per-OSM-voxel triangle cap (docs/DESIGN-V4.md モデル品質パス —
- *  "<=72 tris each", frozen Phase 0; box=12, banded box 8f+4, f<=8). */
-const OSM_UNITBOX_TRI_CAP = 72;
-
-/** v4: unitBox span tolerance — geometry must cover [-1,1]^3 (the OBB mass
- *  fills the footprint) but facade accents may protrude <= this much. */
-const UNITBOX_SPAN_EPS = 0.1;
-
-/** v4: axis-alignment tolerance for the unitBox normals law (unit normals —
- *  one component must be +-1 within this epsilon, the others ~0). */
-const AXIS_NORMAL_EPS = 1e-3;
 
 /**
  * FNV-1a 32-bit string hash (id -> uint32) for per-archetype rng seeding.
@@ -187,67 +165,14 @@ export function bakeSimpleAO(geo, k01) {
 }
 
 /**
- * v4 DEV assert: every normal of a unitBox geometry must be axis-aligned
- * (+-X/Y/Z) — the binding lighting law for non-uniformly scaled BatchedMesh
- * members (no inverse-transpose). Throws with the offending vertex index.
- * @param {string} id Archetype id (error context).
- * @param {THREE.BufferGeometry} geometry
- */
-function assertAxisAlignedNormals(id, geometry) {
-  const normal = geometry.getAttribute('normal');
-  if (normal === undefined) {
-    throw new Error(`[geometryFactory] unitBox '${id}' has no normal attribute`);
-  }
-  for (let i = 0; i < normal.count; i++) {
-    const x = Math.abs(normal.getX(i));
-    const y = Math.abs(normal.getY(i));
-    const z = Math.abs(normal.getZ(i));
-    const ok =
-      (x > 1 - AXIS_NORMAL_EPS && y < AXIS_NORMAL_EPS && z < AXIS_NORMAL_EPS) ||
-      (y > 1 - AXIS_NORMAL_EPS && x < AXIS_NORMAL_EPS && z < AXIS_NORMAL_EPS) ||
-      (z > 1 - AXIS_NORMAL_EPS && x < AXIS_NORMAL_EPS && y < AXIS_NORMAL_EPS);
-    if (!ok) {
-      throw new Error(
-        `[geometryFactory] unitBox '${id}' violates the axis-aligned-normals law at vertex ${i} ` +
-          `(normal ${normal.getX(i).toFixed(3)},${normal.getY(i).toFixed(3)},${normal.getZ(i).toFixed(3)}) — ` +
-          `non-uniform scale would mislight this face (DESIGN-V4 レンダリング統合)`
-      );
-    }
-  }
-}
-
-/**
- * v4 DEV assert: a unitBox geometry spans [-1,1] on all three axes — covers
- * the OBB (footprint = collision = clearance bake) within UNITBOX_SPAN_EPS,
- * and protrudes no further than the accent tolerance.
- * @param {string} id Archetype id (error context).
- * @param {THREE.BufferGeometry} geometry
- */
-function assertUnitBoxSpan(id, geometry) {
-  geometry.computeBoundingBox();
-  const bb = geometry.boundingBox;
-  const mins = [bb.min.x, bb.min.y, bb.min.z];
-  const maxs = [bb.max.x, bb.max.y, bb.max.z];
-  for (let a = 0; a < 3; a++) {
-    if (Math.abs(mins[a] + 1) > UNITBOX_SPAN_EPS || Math.abs(maxs[a] - 1) > UNITBOX_SPAN_EPS) {
-      throw new Error(
-        `[geometryFactory] unitBox '${id}' must span [-1,1] per axis (+-${UNITBOX_SPAN_EPS}); ` +
-          `axis ${a} spans [${mins[a].toFixed(3)}, ${maxs[a].toFixed(3)}]`
-      );
-    }
-  }
-}
-
-/**
  * Build every archetype geometry from the catalog, once, at boot.
  *
  * Pipeline per archetype: buildGeometry(deterministic rng) -> ensure normals
  * -> ensure 'color' attribute (white fallback + dev warn) -> normalize to
- * unit bounding sphere (unitBox entries: KEEP unit-box space + axis-aligned
- * normals/span asserts instead) -> bake vertex AO (aoK ?? AO_BAKE_DEFAULT)
- * -> dev tri-cap assert (350 / heroTriCap 600 / unitBox 72).
+ * unit bounding sphere -> bake vertex AO (aoK ?? AO_BAKE_DEFAULT)
+ * -> dev tri-cap assert (350 / heroTriCap 600).
  *
- * @param {Record<string, Archetype>} catalog The 110-entry CATALOG.
+ * @param {Record<string, Archetype>} catalog The 99-entry CATALOG.
  * @returns {Record<string, THREE.BufferGeometry>} id -> normalized geometry.
  */
 export function buildAllGeometries(catalog) {
@@ -270,20 +195,9 @@ export function buildAllGeometries(catalog) {
       bakeVertexColors(geometry, 0xffffff);
     }
 
-    if (arch.unitBox === true) {
-      // v4 OSM unit-box path: NO sphere normalization — author space IS the
-      // render space. Enforce the two binding laws in dev.
-      geometry.computeBoundingSphere();
-      geometry.computeBoundingBox();
-      if (DEV) {
-        assertAxisAlignedNormals(id, geometry);
-        assertUnitBoxSpan(id, geometry);
-      }
-    } else {
-      normalizeToUnitRadius(geometry);
-    }
+    normalizeToUnitRadius(geometry);
 
-    // v4: baked vertex AO (boot-time; kill switch AO_BAKE_DEFAULT = 0,
+    // Baked vertex AO (boot-time; kill switch AO_BAKE_DEFAULT = 0,
     // per-entry override via aoK).
     bakeSimpleAO(geometry, arch.aoK !== undefined ? arch.aoK : AO_BAKE_DEFAULT);
 
@@ -291,9 +205,7 @@ export function buildAllGeometries(catalog) {
     totalTris += tris;
     if (DEV) {
       let cap = ARCHETYPE_TRI_CAP;
-      if (arch.unitBox === true) {
-        cap = OSM_UNITBOX_TRI_CAP;
-      } else if (arch.heroTriCap !== undefined) {
+      if (arch.heroTriCap !== undefined) {
         if (arch.heroTriCap > HERO_TRI_CAP) {
           throw new Error(
             `[geometryFactory] '${id}' heroTriCap ${arch.heroTriCap} > HERO_TRI_CAP (${HERO_TRI_CAP})`
@@ -304,7 +216,7 @@ export function buildAllGeometries(catalog) {
       if (tris > cap) {
         throw new Error(
           `[geometryFactory] '${id}' has ${tris} tris > cap ${cap} ` +
-            `(${arch.unitBox === true ? 'OSM_UNITBOX_TRI_CAP' : arch.heroTriCap !== undefined ? 'heroTriCap' : 'ARCHETYPE_TRI_CAP'})`
+            `(${arch.heroTriCap !== undefined ? 'heroTriCap' : 'ARCHETYPE_TRI_CAP'})`
         );
       }
     }
