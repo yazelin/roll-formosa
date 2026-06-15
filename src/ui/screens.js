@@ -297,9 +297,13 @@ export class Screens {
 
   /** Sync the #donack-toggle label/aria with the persisted state. */
   _renderDonackToggle() {
-    this._donackToggleBtn.textContent = this._donackOff
-      ? _t('donack.off')
-      : _t('donack.on');
+    const label = this._donackToggleBtn.querySelector('#donack-toggle-label');
+    const text = this._donackOff ? _t('donack.off') : _t('donack.on');
+    if (label !== null) {
+      label.textContent = text; // keep the 月牙 face <img> intact
+    } else {
+      this._donackToggleBtn.textContent = text;
+    }
     this._donackToggleBtn.setAttribute('aria-pressed', this._donackOff ? 'false' : 'true');
   }
 
