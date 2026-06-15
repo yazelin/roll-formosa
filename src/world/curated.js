@@ -249,6 +249,13 @@ export class CuratedSpawner {
       this._chunkPalette[c] = a && a.palette && a.palette.length > 0 ? a.palette : FALLBACK_PALETTE;
       this._chunkYOff[c] = a ? a.yOffset || 0 : 0;
     }
+    /* ---- full per-code ground offset (chunk AND curated/EXTRA landmarks) so
+       wide/low landmarks rest on the ground instead of floating ---- */
+    this._yOffByCode = new Float32Array(_PACK_ID_BY_CODE.length);
+    for (let c = 0; c < _PACK_ID_BY_CODE.length; c++) {
+      const a = CATALOG ? CATALOG[_PACK_ID_BY_CODE[c]] : undefined;
+      this._yOffByCode[c] = a ? a.yOffset || 0 : 0;
+    }
 
     /* ---- landmark metadata (EVT.LANDMARK payload source) ---- */
     this._lmName = new Array(LANDMARKS.length);
@@ -793,7 +800,7 @@ export class CuratedSpawner {
       ySurf *= 1 - (this._dropT < RELEASE_FADE_S ? this._dropT / RELEASE_FADE_S : 1);
     }
     const code = this._code[pi];
-    const yOff = code < CHUNK_CODES ? this._chunkYOff[code] : 0;
+    const yOff = this._yOffByCode[code] || 0;
     return ySurf * invWS + objR * (1 + yOff) * this._yK[pi];
   }
 

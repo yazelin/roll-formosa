@@ -42,9 +42,9 @@ const TABLE = {
   'hints.boost':  '加速 / Boost',
   'hints.dash':   '衝刺 / Dash',
 
-  // ---- Donack toggle ----
-  'donack.on':  '🐻 熊安 ON',
-  'donack.off': '🐻 熊安 OFF',
+  // ---- 月牙 (mascot) toggle ----
+  'donack.on':  '月牙 ON',
+  'donack.off': '月牙 OFF',
 
   // ---- Title screen ----
   'title.subtitle':    '捲啊捲，捲遍全台北。 / Roll up all of Taipei.',

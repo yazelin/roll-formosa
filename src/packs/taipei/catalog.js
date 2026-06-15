@@ -148,6 +148,13 @@ export const EXTRA_CATALOG = { ...TOKYO_EXTRA_CATALOG };
 export const EXTRA_SIZE_CLASS_BY_CODE = { ...TOKYO_EXTRA_SIZE_CLASS_BY_CODE };
 
 for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
+  // Ground offset: build the finished (unit-sphere-normalized) geometry once and
+  // set yOffset = -1 - minY so the landmark's BASE rests on the ground. A fixed
+  // -0.2 left wide/low landmarks (北門/龍山寺/牌樓/小巨蛋) floating (P6b bug).
+  const _g = nm.buildGeometry(() => 0.5);
+  _g.computeBoundingBox();
+  const _yOffset = -1 - _g.boundingBox.min.y;
+  if (_g.dispose) _g.dispose();
   /** @type {import('../../../types.js').Archetype & {extraCode:number, sizeClass:string}} */
   const entry = {
     id: nm.id,
@@ -158,7 +165,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
     radiusJitter: 0,
     spawnWeight: 0, // curated-only — never random-rolled
     palette: [nm.colorHex],
-    yOffset: -0.2,
+    yOffset: _yOffset,
     upright: true,
     collisionScale: 1.0,
     heroTriCap: HERO_TRI_CAP, // landmark geometries use the 600-tri hero budget
