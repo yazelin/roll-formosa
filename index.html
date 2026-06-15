@@ -872,6 +872,84 @@
       #donack-bubble { max-width: 360px; font-size: 14px; }
     }
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@500;700;900&display=swap" />
+  <style>
+    /* ============ 夜市霓虹 — Roll Formosa title (night-market neon) ============ */
+    #title-overlay {
+      gap: clamp(10px, 2vh, 18px);
+      isolation: isolate;
+      font-family: 'Noto Sans TC', 'Avenir Next', system-ui, sans-serif;
+      background:
+        radial-gradient(760px 460px at 16% 20%, rgba(255,42,120,.18), transparent 62%),
+        radial-gradient(760px 460px at 84% 24%, rgba(0,221,255,.15), transparent 62%),
+        radial-gradient(1300px 760px at 50% 128%, rgba(255,150,38,.20), transparent 60%),
+        linear-gradient(180deg, #06030e 0%, #0b0724 50%, #120a30 100%);
+    }
+    #title-overlay .neon-scene { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+    #title-overlay .ny-sign {
+      position:absolute; font-family:'Bungee', sans-serif;
+      font-size: var(--sz, clamp(15px, 3vw, 34px)); line-height:1; color:var(--c,#ff3b81);
+      text-shadow: 0 0 4px rgba(255,255,255,.4), 0 0 10px var(--c,#ff3b81), 0 0 26px var(--c,#ff3b81);
+      transform: rotate(var(--rot,-6deg)); opacity:.92; will-change:opacity;
+      animation: ny-flicker var(--fd, 6s) steps(1,end) infinite;
+    }
+    #title-overlay .ny-lantern {
+      position:absolute; top:-2px; width:30px; height:40px; border-radius:50% / 42%;
+      background: radial-gradient(circle at 38% 30%, #ff9a64, #d61f3a 68%, #8e0f25);
+      box-shadow: 0 0 22px 6px rgba(255,70,60,.45);
+      transform-origin: 50% -40px; animation: ny-sway 5.5s ease-in-out infinite;
+    }
+    #title-overlay .ny-lantern::before { content:''; position:absolute; left:50%; top:-40px; width:1px; height:40px; background:rgba(255,180,120,.45); transform:translateX(-50%); }
+    #title-overlay .ny-lantern::after { content:''; position:absolute; left:50%; bottom:-7px; width:5px; height:9px; background:#f5c542; transform:translateX(-50%); border-radius:2px; }
+    #title-overlay .ny-skyline { position:absolute; left:0; right:0; bottom:0; height:min(40vh,320px); opacity:.97; }
+    #title-overlay .ny-skyline svg { width:100%; height:100%; display:block; }
+    #title-overlay .ny-101 { animation: ny-101glow 4s ease-in-out infinite; }
+    #title-overlay .ny-grain {
+      position:absolute; inset:0; mix-blend-mode:overlay; opacity:.05;
+      background-image: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
+    }
+    #title-overlay .ny-kicker {
+      font-family:'Bungee', sans-serif; font-size: clamp(11px, 1.8vw, 16px);
+      letter-spacing:.42em; color:#7ef3ff; padding-left:.42em;
+      text-shadow: 0 0 8px #00e0ff, 0 0 20px #00b3ff;
+    }
+    #title-overlay .game-title {
+      font-family:'Bungee', sans-serif; font-weight:400;
+      font-size: clamp(46px, 13vw, 130px); line-height:.92; letter-spacing:.01em;
+      background:none; -webkit-text-fill-color:#fff; color:#fff;
+      text-shadow: 0 0 4px #fff, 0 0 14px #ff2a78, 0 0 30px #ff2a78, 0 0 60px #ff2a78, 0 0 92px rgba(255,42,120,.55);
+      animation: ny-titleflick 7s infinite;
+    }
+    #title-overlay .game-subtitle { color:#cfd8ff; text-shadow:0 0 10px rgba(0,190,255,.22); }
+    #title-overlay #start-button {
+      background: linear-gradient(180deg, #ff6fac, #ff2a78); color:#1b0418;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.25) inset, 0 0 22px rgba(255,42,120,.7), 0 8px 30px rgba(255,42,120,.4);
+      animation: ny-btnpulse 2.4s ease-in-out infinite;
+    }
+    #title-overlay #start-button:hover { box-shadow: 0 0 0 2px rgba(255,255,255,.4) inset, 0 0 34px rgba(255,42,120,.95), 0 12px 40px rgba(255,42,120,.55); }
+    #title-overlay #donack-toggle { background: rgba(8,4,22,.55); border:1px solid rgba(0,221,255,.5); box-shadow:0 0 14px rgba(0,221,255,.28); color:#dff6ff; }
+    #title-overlay .donack-toggle-face { box-shadow: 0 0 0 2px #00e0ff, 0 0 12px rgba(0,224,255,.7); }
+    #title-overlay .key-hints { color:#93a3da; }
+    #title-overlay .key-hints kbd { background:rgba(0,221,255,.08); border-color:rgba(0,221,255,.3); }
+    #title-overlay #title-best-line { color:#ffd36a; text-shadow:0 0 10px rgba(255,180,60,.4); }
+    #title-overlay .seed-line { color:#6b6fa0; }
+    @keyframes ny-flicker { 0%,18%,22%,25%,53%,57%,100%{opacity:.92} 19%,24%,55%{opacity:.22} 20%,23%,56%{opacity:.8} }
+    @keyframes ny-titleflick {
+      0%,2%,8%,100%{text-shadow:0 0 4px #fff,0 0 14px #ff2a78,0 0 30px #ff2a78,0 0 60px #ff2a78,0 0 92px rgba(255,42,120,.55)}
+      3%,7%{text-shadow:0 0 2px #fff,0 0 6px #ff2a78,0 0 12px #ff2a78}
+      5%{text-shadow:none;color:#ffe}
+    }
+    @keyframes ny-sway { 0%,100%{transform:rotate(-7deg)} 50%{transform:rotate(7deg)} }
+    @keyframes ny-101glow { 0%,100%{filter:drop-shadow(0 0 6px #00e0ff)} 50%{filter:drop-shadow(0 0 16px #00e0ff)} }
+    @keyframes ny-btnpulse {
+      0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.25) inset,0 0 22px rgba(255,42,120,.7),0 8px 30px rgba(255,42,120,.4)}
+      50%{box-shadow:0 0 0 2px rgba(255,255,255,.35) inset,0 0 36px rgba(255,42,120,.95),0 10px 38px rgba(255,42,120,.55)}
+    }
+    @media (max-width:560px){ #title-overlay .ny-sign.opt{display:none} #title-overlay .ny-lantern{width:24px;height:32px} #title-overlay .ny-skyline{height:min(32vh,240px)} }
+    @media (prefers-reduced-motion:reduce){ #title-overlay .ny-sign,#title-overlay .game-title,#title-overlay #start-button,#title-overlay .ny-lantern,#title-overlay .ny-101{animation:none!important} }
+  </style>
 </head>
 <body>
   <!-- WebGL mount -->
@@ -935,6 +1013,47 @@
 
   <!-- ============ Title overlay ============ -->
   <div id="title-overlay" class="overlay">
+    <div class="neon-scene" aria-hidden="true">
+      <span class="ny-sign" style="--c:#ff3b81;--rot:-8deg;top:12%;left:6%;">小吃</span>
+      <span class="ny-sign opt" style="--c:#00e0ff;--rot:6deg;top:19%;right:7%;--fd:7s;">夜市</span>
+      <span class="ny-sign" style="--c:#ffd23f;--rot:-5deg;top:33%;right:10%;--fd:5.5s;--sz:clamp(13px,2.4vw,26px);">雞排</span>
+      <span class="ny-sign opt" style="--c:#ff8a3d;--rot:7deg;top:42%;left:7%;--fd:8s;--sz:clamp(13px,2.4vw,26px);">滷味</span>
+      <span class="ny-sign opt" style="--c:#9b6bff;--rot:-4deg;top:9%;right:27%;--fd:6.5s;--sz:clamp(12px,2vw,22px);">珍奶</span>
+      <span class="ny-lantern" style="left:12%;animation-delay:-1s;"></span>
+      <span class="ny-lantern opt" style="right:16%;animation-delay:-2.6s;"></span>
+      <span class="ny-lantern" style="left:31%;animation-delay:-3.5s;"></span>
+      <div class="ny-skyline">
+        <svg viewBox="0 0 1200 320" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#0c0926">
+            <rect x="0" y="186" width="92" height="134"/><rect x="96" y="150" width="66" height="170"/>
+            <rect x="172" y="206" width="120" height="114"/><rect x="300" y="128" width="78" height="192"/>
+            <rect x="386" y="178" width="96" height="142"/><rect x="760" y="166" width="84" height="154"/>
+            <rect x="852" y="120" width="70" height="200"/><rect x="930" y="190" width="118" height="130"/>
+            <rect x="1056" y="156" width="76" height="164"/><rect x="1138" y="200" width="62" height="120"/>
+          </g>
+          <g fill="#4a3c85" opacity=".55">
+            <rect x="318" y="150" width="4" height="6"/><rect x="332" y="170" width="4" height="6"/><rect x="346" y="150" width="4" height="6"/>
+            <rect x="868" y="150" width="4" height="6"/><rect x="884" y="180" width="4" height="6"/><rect x="900" y="150" width="4" height="6"/>
+            <rect x="40" y="210" width="4" height="6"/><rect x="60" y="230" width="4" height="6"/>
+          </g>
+          <g class="ny-101">
+            <rect x="582" y="276" width="76" height="44" fill="#0a0824" stroke="#00e0ff" stroke-width="2"/>
+            <polygon points="596,276 644,276 650,72 590,72" fill="#0a0a2c" stroke="#00e0ff" stroke-width="2"/>
+            <g stroke="#00e0ff" stroke-width="1.4" opacity=".85">
+              <line x1="592" y1="250" x2="648" y2="250"/><line x1="593" y1="224" x2="647" y2="224"/>
+              <line x1="594" y1="198" x2="646" y2="198"/><line x1="595" y1="172" x2="645" y2="172"/>
+              <line x1="595" y1="146" x2="645" y2="146"/><line x1="596" y1="120" x2="644" y2="120"/>
+              <line x1="597" y1="96" x2="643" y2="96"/>
+            </g>
+            <g fill="#ffcf5a" opacity=".65"><rect x="608" y="182" width="3" height="5"/><rect x="626" y="150" width="3" height="5"/><rect x="614" y="212" width="3" height="5"/><rect x="630" y="206" width="3" height="5"/></g>
+            <circle cx="620" cy="86" r="3.5" fill="#ffd23f"/>
+            <line x1="620" y1="72" x2="620" y2="34" stroke="#7ef3ff" stroke-width="2.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="ny-grain"></div>
+    </div>
+    <span class="ny-kicker">夜市 · NIGHT MARKET</span>
     <h1 class="game-title">ROLL<br />FORMOSA</h1>
     <p class="game-subtitle">捲啊捲，捲遍全台北。 / Roll up all of Taipei.</p>
     <button id="start-button" class="btn" type="button">開始 / START</button>
