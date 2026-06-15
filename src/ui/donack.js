@@ -53,7 +53,7 @@
  * While off every trigger is dropped at the door (phase tracking continues).
  *
  * ZERO PER-FRAME ALLOCATION: no rAF hook at all; handlers are prebound at
- * construction, all strings are static (config/donackLines.js), display is
+ * construction, all strings come from activePack.narration (pack-driven), display is
  * textContent/className writes on trigger only; the only timers are the 1 Hz
  * run ticker and the 4 Hz blink interval while a bubble is visible.
  */
@@ -73,14 +73,22 @@ import {
   MAP_BOUNDS,
   EDGE_SOFT_BAND_K,
 } from '../config/tuning.js';
-import {
-  DONACK_LINES,
-  TIER_UP_LINE_IDS,
-  LANDMARK_LINE_IDS,
-  COLLECT_LINE_IDS,
-  DUAL_LANDMARK_ID,
-  FIRST_LINE_BY_CODE,
-} from '../config/donackLines.js';
+// Narration tables are now pack-driven: read from activePack.narration at
+// call-time so future city packs just supply their own narration.js module.
+// The shape contract (DONACK_LINES / TIER_UP_LINE_IDS / LANDMARK_LINE_IDS /
+// COLLECT_LINE_IDS / DUAL_LANDMARK_ID / FIRST_LINE_BY_CODE) is unchanged.
+/** @returns {Record<string,import('../config/donackLines.js').DonackLine>} */
+const _lines = () => activePack.narration.DONACK_LINES;
+/** @returns {ReadonlyArray<string>} */
+const _tierIds = () => activePack.narration.TIER_UP_LINE_IDS;
+/** @returns {ReadonlyArray<string>} */
+const _landmarkIds = () => activePack.narration.LANDMARK_LINE_IDS;
+/** @returns {ReadonlyArray<string>} */
+const _collectIds = () => activePack.narration.COLLECT_LINE_IDS;
+/** @returns {number} */
+const _dualLandmarkId = () => activePack.narration.DUAL_LANDMARK_ID;
+/** @returns {Record<number,string>} */
+const _firstByCo = () => activePack.narration.FIRST_LINE_BY_CODE;
 
 /* ---- module-local tuning (DESIGN-V3.md §ドナック実況) ---- */
 /** Combo line threshold (ScoreEvent.combo). */
@@ -288,7 +296,7 @@ export class Donack {
 
   /** @param {import('../types.js').TierUpEvent} p */
   _onTierUp(p) {
-    const id = TIER_UP_LINE_IDS[p.tierIndex];
+    const id = _tierIds()[p.tierIndex];
     if (id !== undefined && id !== '') this._trigger(id);
   }
 
@@ -298,7 +306,7 @@ export class Donack {
    */
   _onScore(p) {
     this._lastProgressAt = this._now();
-    const firstId = FIRST_LINE_BY_CODE[p.archetypeCode];
+    const firstId = _firstByCo()[p.archetypeCode];
     if (firstId !== undefined) this._trigger(firstId);
     if (p.combo >= COMBO_LINE_AT) this._trigger('combo15');
   }
@@ -351,8 +359,8 @@ export class Donack {
    * @param {import('../types.js').LandmarkEvent} p
    */
   _onLandmark(p) {
-    if (p.landmarkId === DUAL_LANDMARK_ID) return;
-    const id = LANDMARK_LINE_IDS[p.landmarkId];
+    if (p.landmarkId === _dualLandmarkId()) return;
+    const id = _landmarkIds()[p.landmarkId];
     if (id !== undefined && id !== '') this._trigger(id);
   }
 
@@ -362,7 +370,7 @@ export class Donack {
    * @param {import('../types.js').CollectEvent} p
    */
   _onCollect(p) {
-    const id = COLLECT_LINE_IDS[p.collectibleId];
+    const id = _collectIds()[p.collectibleId];
     this._trigger(id !== undefined ? id : 'col_generic');
   }
 
@@ -380,8 +388,8 @@ export class Donack {
     this._ascensionDone = false;
     const packToast = activePack.goalMonument && activePack.goalMonument.winToast;
     if (packToast) {
-      // Show the pack win toast directly, bypassing the frozen donackLines entry.
-      const line = DONACK_LINES['goal_contact'];
+      // Show the pack win toast directly, bypassing the narration goal_contact entry.
+      const line = _lines()['goal_contact'];
       const override = line
         ? Object.assign(Object.create(null), line, { text: packToast })
         : { text: packToast, priority: 3, expression: 'speaking', once: true, phase: 'cinematic' };
@@ -463,11 +471,11 @@ export class Donack {
 
   /**
    * Route one line id through the off/phase/dedupe/priority pipeline.
-   * @param {string} id Frozen line id (config/donackLines.js).
+   * @param {string} id Line id (from activePack.narration.DONACK_LINES).
    */
   _trigger(id) {
     if (this._off) return;
-    const line = DONACK_LINES[id];
+    const line = _lines()[id];
     if (line === undefined || line.phase !== this._phase) return;
     if (!this._eligible(id, line)) return;
     if (line.priority === 3) {
@@ -522,7 +530,7 @@ export class Donack {
    */
   _enqueue(id, line) {
     if (this._pendingId !== null) {
-      const cur = DONACK_LINES[this._pendingId];
+      const cur = _lines()[this._pendingId];
       if (line.priority <= cur.priority) return;
     }
     this._pendingId = id;
@@ -533,7 +541,7 @@ export class Donack {
   _flushPending() {
     const id = this._pendingId;
     if (id === null || this._off) return;
-    const line = DONACK_LINES[id];
+    const line = _lines()[id];
     if (line === undefined || line.phase !== this._phase || !this._eligible(id, line)) {
       this._pendingId = null; // stale — drop
       return;
@@ -550,7 +558,7 @@ export class Donack {
   /**
    * Show a line NOW (replaces any live bubble — only P3 and the pending
    * flush reach here while visible). Marks dedupe at show time.
-   * @param {string} id @param {import('../config/donackLines.js').DonackLine} line
+   * @param {string} id @param {import('../packs/taipei/narration.js').DonackLine} line
    */
   _show(id, line) {
     if (line.once) this._shownOnce.add(id);
