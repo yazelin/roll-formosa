@@ -267,13 +267,13 @@ export const PLACEMENTS = [
  * Authored in REAL METERS (same coordinate frame as all cityMap geometry:
  * origin = ball start / 迪化街 shop, +X east, +Z south).
  *
- * Two rects approximate the river's north-to-east arc:
- *   - north band  x[-200, 1400]  z[-700, -550]  (main east-west stretch)
- *   - east leg    x[1200, 1400]  z[-700, -200]  (northeastern bend turning south)
+ * A 5-point centerline + width (150 m) traces the river's real north→northeast
+ * arc as a smooth diagonal ribbon (consumed by environment.js via ribbonQuads),
+ * instead of the old 2-rect axis-aligned approximation that rendered a blocky L.
  *
- * Both rects stay within MAP_BOUNDS (x:-1800..1800, z:-1800..2000) and clear
- * the shop start (0,0) and the 101 goal (749,-252) — the east leg ends at
- * z=-200 (north of the goal) and the goal is at x=749 (west of x=1200).
+ * The centerline stays within MAP_BOUNDS (x:-1800..1800, z:-1800..2000) and
+ * clears the shop start (0,0) and the 101 goal (749,-252) — every point is at
+ * z ≤ -200 (north of the play area / goal).
  *
  * color: slightly greenish-muddy blue (siltier than open-sea 0x2a4a6e),
  * evoking the river's characteristic turbid look.
@@ -283,9 +283,13 @@ export const water = Object.freeze({
   name: '基隆河',
   color: 0x3a5a52,
   yM: 0.3,
-  rects: Object.freeze([
-    Object.freeze({ x0: -200, x1: 1400, z0: -700, z1: -550 }),  // north band
-    Object.freeze({ x0: 1200, x1: 1400, z0: -700, z1: -200 }),  // east leg (bend)
+  width: 150,
+  centerline: Object.freeze([
+    Object.freeze({ x: -200, z: -620 }),
+    Object.freeze({ x:  400, z: -640 }),
+    Object.freeze({ x:  900, z: -560 }),
+    Object.freeze({ x: 1250, z: -420 }),
+    Object.freeze({ x: 1350, z: -200 }),
   ]),
 });
 
