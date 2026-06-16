@@ -197,6 +197,22 @@ export function buildAllGeometries(catalog) {
 
     normalizeToUnitRadius(geometry);
 
+    // INVISIBLE-COLLIDER FIX: object collision is sphere-based (absorb.js uses
+    // radius * collisionScale). A tall/thin building's bounding sphere is far
+    // wider than its visible footprint, so the collision sphere pokes well past
+    // the visible mass — you bonk "transparent" space beside big buildings.
+    // Tighten collisionScale toward the horizontal footprint (× margin, floored
+    // so it never shrinks to a clip-through, and never INCREASED). Mutates the
+    // shared catalog archetype; absorb.js (constructed after buildAllGeometries,
+    // main.js) reads the tightened value. Compact objects are unaffected.
+    {
+      const bb = geometry.boundingBox; // unit-sphere space (radius 1)
+      const horizHalf = Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z) * 0.5;
+      const declared = typeof arch.collisionScale === 'number' ? arch.collisionScale : 1;
+      const footScale = Math.max(horizHalf * 1.35, 0.42); // ~footprint, floored
+      if (footScale < declared) arch.collisionScale = footScale;
+    }
+
     // Baked vertex AO (boot-time; kill switch AO_BAKE_DEFAULT = 0,
     // per-entry override via aoK).
     bakeSimpleAO(geometry, arch.aoK !== undefined ? arch.aoK : AO_BAKE_DEFAULT);
