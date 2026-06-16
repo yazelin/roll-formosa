@@ -1,20 +1,20 @@
 /**
- * @file catalog.js — Taipei pack catalog (P5/P6b).
+ * @file catalog.js — Kaohsiung pack catalog (P5/P6b).
  *
- * Assembles the 70 Taipei chunk ArchetypeDefs from the 7 per-tier files,
- * then merges the EXTRA/v5 placeholders so all 99 codes still resolve.
+ * Assembles the 70 Kaohsiung chunk ArchetypeDefs from the 7 per-tier files,
+ * then merges the EXTRA/v5 codes so all 99 codes resolve.
  *
- * P6b: overrides EXTRA codes 82..89 with the 8 curated Taipei landmark
- * geometries (北門/龍山寺/西門紅樓/圓山大飯店/總統府/中正紀念堂/
- * 自由廣場牌樓/小巨蛋). Codes 70..81 (collectibles), 90..92 (shop/bridge/
- * tower slot), 93 (goal display slot), and v5 94..98 are unchanged placeholders.
+ * P6b: overrides EXTRA codes 82..89 with the 8 curated Kaohsiung core landmark
+ * geometries (光之穹頂/駁二/旗津燈塔/龍虎塔/三鳳宮/流行音樂中心/大港橋/
+ * 夢時代摩天輪). Codes 70..81+94 are collectibles; codes 90..93+95..98 are the
+ * extended Kaohsiung landmarks. Code 93 (takao_railway) doubles as the goal
+ * display-name slot consumed by goalTower.js.
  *
  * Exports (P5/P6b shape):
- *   CHUNK_ARCHETYPES  Record<id, ArchetypeDef> — 70 Taipei chunk archetypes
+ *   CHUNK_ARCHETYPES  Record<id, ArchetypeDef> — 70 Kaohsiung chunk archetypes
  *   CATALOG           Record<id, ArchetypeDef> — 70 chunk + 29 EXTRA/v5 (99 ids)
  *   DISPLAY_NAME_BY_CODE  string[99] — indices 0..69 zh-TW, 70..98 names
- *   EXTRA_CATALOG, EXTRA_SIZE_CLASS_BY_CODE, EXTRA_POOL_CAPS — Taipei-native
- *     for codes 82..89; remainder from the legacy engine catalog
+ *   EXTRA_CATALOG, EXTRA_SIZE_CLASS_BY_CODE, EXTRA_POOL_CAPS — Kaohsiung-native
  */
 
 import { T0_ARCHETYPES } from './archetypes/t0.js';
@@ -26,45 +26,45 @@ import { T5_ARCHETYPES } from './archetypes/t5.js';
 import { T6_ARCHETYPES } from './archetypes/t6.js';
 
 // DE-TOKYO: the legacy engine catalog is deleted; every EXTRA/v5 code
-// (70..98) is now Taipei (collectibles + landmarks), registered below.
+// (70..98) is now Kaohsiung (collectibles + landmarks), registered below.
 import { HERO_TRI_CAP } from '../../config/tuning.js';
 
 import { EXTRA_CODE_BASE } from '../../world/objects.js';
 
-// P6b: 8 curated Taipei landmark geometry descriptors (codes 82..89).
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+// P6b: 8 curated Kaohsiung core landmark geometry descriptors (codes 82..89).
+import { NM_DOME_OF_LIGHT } from './landmarks/dome_of_light.js';
+import { NM_PIER2 } from './landmarks/pier2.js';
+import { NM_CIJIN_LIGHTHOUSE } from './landmarks/cijin_lighthouse.js';
+import { NM_DRAGON_TIGER } from './landmarks/dragon_tiger.js';
+import { NM_SANFENG } from './landmarks/sanfeng_temple.js';
+import { NM_MUSIC_CENTER } from './landmarks/music_center.js';
+import { NM_DAGANG_BRIDGE } from './landmarks/dagang_bridge.js';
+import { NM_DREAM_WHEEL } from './landmarks/dream_mall_wheel.js';
 
-// P7: 13 Taipei collectible (rare album) geometries (codes 70..81 + 94).
+// P7: 13 Kaohsiung collectible (rare album) geometries (codes 70..81 + 94).
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
-import { COL_BOBA } from './collectibles/boba.js';
-import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
-import { COL_GUABAO } from './collectibles/gua_bao.js';
-import { COL_XLB } from './collectibles/xiaolongbao.js';
-import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
-import { COL_SANTAIZI } from './collectibles/santaizi.js';
-import { COL_PUPPET } from './collectibles/budaixi.js';
-import { COL_YOUBIKE } from './collectibles/youbike.js';
-import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
-import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
-import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
-import { COL_MAZU } from './collectibles/mazu.js';
+import { COL_PAPAYA_MILK } from './collectibles/papaya_milk_king.js';
+import { COL_BIG_BOWL_ICE } from './collectibles/big_bowl_ice.js';
+import { COL_QIGU_CAKE } from './collectibles/qigu_cake.js';
+import { COL_DUCK_MEAT } from './collectibles/duck_meat.js';
+import { COL_ODEN } from './collectibles/oden.js';
+import { COL_CIJIN_FERRY } from './collectibles/cijin_ferry.js';
+import { COL_MRT_GIRLS } from './collectibles/mrt_girls.js';
+import { COL_PEDICAB } from './collectibles/pedicab.js';
+import { COL_CISHAN_BANANA } from './collectibles/cishan_banana.js';
+import { COL_MINI_CONTAINER } from './collectibles/mini_container.js';
+import { COL_SPRING_AUTUMN } from './collectibles/spring_autumn.js';
+import { COL_MEINONG_UMBRELLA } from './collectibles/meinong_umbrella.js';
 
-// DE-TOKYO: 8 Taipei extended landmarks replace the leftover EXTRA slots (codes 90-93 + 95-98).
-import { NM_RAINBOW } from './landmarks/rainbow_bridge_tp.js';
-import { NM_SYSHALL } from './landmarks/syshall.js';
-import { NM_STATION } from './landmarks/main_station.js';
-import { NM_PALACE } from './landmarks/palace_museum.js';
-import { NM_XINGTIAN } from './landmarks/xingtian.js';
-import { NM_THEATER } from './landmarks/national_theater.js';
-import { NM_WHEEL } from './landmarks/miramar_wheel.js';
-import { NM_MK_STATION } from './landmarks/maokong_station.js';
+// DE-TOKYO: 8 Kaohsiung extended landmarks fill codes 90-93 + 95-98.
+import { NM_WEIWUYING } from './landmarks/weiwuying.js';
+import { NM_FOGUANGSHAN } from './landmarks/foguangshan.js';
+import { NM_TAKAO_RAILWAY } from './landmarks/takao_railway.js';
+import { NM_CIHOU_FORT } from './landmarks/cihou_fort.js';
+import { NM_CHENGCING } from './landmarks/chengcing_pagoda.js';
+import { NM_KAO_ARENA } from './landmarks/kaohsiung_arena.js';
+import { NM_HOLY_ROSARY } from './landmarks/holy_rosary.js';
+import { NM_LOVE_RIVER_HEART } from './landmarks/love_river_heart.js';
 
 /* ================================================================== */
 /* 70 chunk archetypes, assembled in tier order (code = tier*10 + slot)*/
@@ -83,12 +83,12 @@ const _allTierArchetypes = [
 
 if (_allTierArchetypes.length !== 70) {
   throw new Error(
-    `[taipei/catalog] expected exactly 70 chunk archetypes, got ${_allTierArchetypes.length}`
+    `[kaohsiung/catalog] expected exactly 70 chunk archetypes, got ${_allTierArchetypes.length}`
   );
 }
 
 /**
- * Taipei chunk archetypes keyed by id — 70 entries (one per slot across 7 tiers).
+ * Kaohsiung chunk archetypes keyed by id — 70 entries (one per slot across 7 tiers).
  * Code i = the archetype at array position i (tier*10 + slot within tier).
  * @type {Record<string, import('../../../types.js').Archetype>}
  */
@@ -98,36 +98,30 @@ for (const arch of _allTierArchetypes) {
 }
 
 /* ================================================================== */
-/* CATALOG — 70 chunk + 29 EXTRA/v5 placeholders = 99 ids             */
+/* CATALOG — 70 chunk + 29 EXTRA/v5 = 99 ids                          */
 /* ================================================================== */
 
 /**
- * The 8 Taipei curated landmark geometry descriptors (codes 82..89).
- * These REPLACE the placeholder landmark ids at the same codes — the id field is
- * the Taipei landmark id (e.g. 'beimen') not the legacy id.
- * P6b: tier/naturalBand match the EXTRA_POOL_CLASS assignment in curated.js:
+ * The 8 Kaohsiung curated core landmark geometry descriptors (codes 82..89).
+ * tier/naturalBand mirror the Taipei pack's per-code assignment:
  *   82 mid, 83 mid, 84 mid, 85 large, 86 mid, 87 large, 88 large, 89 large.
  */
-const _TAIPEI_LANDMARKS = [
-  { code: 82, nm: NM_BEIMEN,        sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 83, nm: NM_LONGSHAN,      sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 84, nm: NM_XIMEN,         sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 85, nm: NM_GRAND_HOTEL,   sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
-  { code: 86, nm: NM_PRESIDENTIAL,  sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
-  { code: 87, nm: NM_CKS,           sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 88, nm: NM_LIBERTY_ARCH,  sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 89, nm: NM_ARENA,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+const _KAOHSIUNG_LANDMARKS = [
+  { code: 82, nm: NM_DOME_OF_LIGHT,     sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 83, nm: NM_PIER2,             sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 84, nm: NM_CIJIN_LIGHTHOUSE,  sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 85, nm: NM_DRAGON_TIGER,      sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
+  { code: 86, nm: NM_SANFENG,           sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
+  { code: 87, nm: NM_MUSIC_CENTER,      sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 88, nm: NM_DAGANG_BRIDGE,     sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 89, nm: NM_DREAM_WHEEL,       sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
 ];
 
 /**
- * Full id-keyed catalog: 70 Taipei chunk archetypes PLUS the 24 EXTRA
- * (codes 70..93) and 5 v5 (codes 94..98). Codes 82..89 are replaced with
- * Taipei landmark geometries; all others carry placeholder archetypes.
- * Total: exactly 99 ids.
+ * Full id-keyed catalog: 70 Kaohsiung chunk archetypes PLUS the 24 EXTRA
+ * (codes 70..93) and 5 v5 (codes 94..98). Total: exactly 99 ids.
  * @type {Record<string, import('../../../types.js').Archetype>}
  */
-// CATALOG = 70 Taipei chunk archetypes + the Taipei EXTRA/v5 (collectibles +
-// landmarks) registered by the loops below. No placeholder archetypes (de-Tokyo).
 export const CATALOG = { ...CHUNK_ARCHETYPES };
 
 /* ================================================================== */
@@ -136,8 +130,8 @@ export const CATALOG = { ...CHUNK_ARCHETYPES };
 
 /**
  * EXTRA archetypes keyed by frozen code (70..93 + v5 94..98). Every code is a
- * Taipei collectible (70..81+94) or landmark (82..93+95..98), filled by the
- * registration loops below. No placeholder entries (de-Tokyo).
+ * Kaohsiung collectible (70..81+94) or landmark (82..93+95..98), filled by the
+ * registration loops below.
  * @type {Record<number, import('../../../types.js').Archetype & {extraCode:number, sizeClass:string|null}>}
  */
 export const EXTRA_CATALOG = {};
@@ -148,10 +142,9 @@ export const EXTRA_CATALOG = {};
  */
 export const EXTRA_SIZE_CLASS_BY_CODE = {};
 
-for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
+for (const { code, nm, sizeClass, tier, naturalBand } of _KAOHSIUNG_LANDMARKS) {
   // Ground offset: build the finished (unit-sphere-normalized) geometry once and
-  // set yOffset = -1 - minY so the landmark's BASE rests on the ground. A fixed
-  // -0.2 left wide/low landmarks (北門/龍山寺/牌樓/小巨蛋) floating (P6b bug).
+  // set yOffset = -1 - minY so the landmark's BASE rests on the ground.
   const _g = nm.buildGeometry(() => 0.5);
   _g.computeBoundingBox();
   const _yOffset = -1 - _g.boundingBox.min.y;
@@ -179,24 +172,24 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
 }
 
-/* P7: 13 Taipei collectibles at codes 70..81 + 94 (replace placeholder album items).
+/* P7: 13 Kaohsiung collectibles at codes 70..81 + 94 (rare album items).
    Grounded like landmarks (yOffset = -1 - minY); curated-only (spawnWeight 0). */
-const _TAIPEI_COLLECTIBLES = [
+const _KAOHSIUNG_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
-  { code: 71, col: COL_BOBA },
-  { code: 72, col: COL_CHICKEN },
-  { code: 73, col: COL_GUABAO },
-  { code: 74, col: COL_XLB },
-  { code: 75, col: COL_PINEAPPLE },
-  { code: 76, col: COL_SANTAIZI },
-  { code: 77, col: COL_PUPPET },
-  { code: 78, col: COL_YOUBIKE },
-  { code: 79, col: COL_PRES_TROPHY },
-  { code: 80, col: COL_GONDOLA },
-  { code: 81, col: COL_BIGCHICKEN },
-  { code: 94, col: COL_MAZU },
+  { code: 71, col: COL_PAPAYA_MILK },
+  { code: 72, col: COL_BIG_BOWL_ICE },
+  { code: 73, col: COL_QIGU_CAKE },
+  { code: 74, col: COL_DUCK_MEAT },
+  { code: 75, col: COL_ODEN },
+  { code: 76, col: COL_CIJIN_FERRY },
+  { code: 77, col: COL_MRT_GIRLS },
+  { code: 78, col: COL_PEDICAB },
+  { code: 79, col: COL_CISHAN_BANANA },
+  { code: 80, col: COL_MINI_CONTAINER },
+  { code: 81, col: COL_SPRING_AUTUMN },
+  { code: 94, col: COL_MEINONG_UMBRELLA },
 ];
-for (const { code, col } of _TAIPEI_COLLECTIBLES) {
+for (const { code, col } of _KAOHSIUNG_COLLECTIBLES) {
   const _g = col.buildGeometry(() => 0.5);
   _g.computeBoundingBox();
   const _yOffset = -1 - _g.boundingBox.min.y;
@@ -222,19 +215,19 @@ for (const { code, col } of _TAIPEI_COLLECTIBLES) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = 'collectible-small';
 }
 
-/* DE-TOKYO: 8 Taipei extended landmarks at codes 90-93 + 95-98 (replace the
-   leftover EXTRA archetypes). Grounded like landmarks; not placed yet. */
-const _TAIPEI_EXTRA_LANDMARKS = [
-  { code: 90, nm: NM_RAINBOW,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 91, nm: NM_SYSHALL,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 92, nm: NM_STATION,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 93, nm: NM_PALACE,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 95, nm: NM_XINGTIAN,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
-  { code: 96, nm: NM_THEATER,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 97, nm: NM_WHEEL,      sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 98, nm: NM_MK_STATION, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+/* DE-TOKYO: 8 Kaohsiung extended landmarks at codes 90-93 + 95-98.
+   Grounded like landmarks; not placed yet (code 93 doubles as goal slot). */
+const _KAOHSIUNG_EXTRA_LANDMARKS = [
+  { code: 90, nm: NM_WEIWUYING,       sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 91, nm: NM_FOGUANGSHAN,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 92, nm: NM_TAKAO_RAILWAY,   sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 93, nm: NM_CIHOU_FORT,      sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 95, nm: NM_CHENGCING,       sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 96, nm: NM_KAO_ARENA,       sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 97, nm: NM_HOLY_ROSARY,     sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 98, nm: NM_LOVE_RIVER_HEART, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
 ];
-for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS) {
+for (const { code, nm, sizeClass, tier, naturalBand } of _KAOHSIUNG_EXTRA_LANDMARKS) {
   const _g = nm.buildGeometry(() => 0.5);
   _g.computeBoundingBox();
   const _yOffset = -1 - _g.boundingBox.min.y;
@@ -262,7 +255,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS
 }
 
 /**
- * EXTRA render pool caps. Taipei has 8 landmark singletons:
+ * EXTRA render pool caps. Kaohsiung has 8 core landmark singletons:
  *   landmark-mid (codes 82/83/84/86): 4 alive (matches the original engine floor)
  *   landmark-large (codes 85/87/88/89): 4 alive
  * Caps are capacity only — same 4 batches, zero extra draws.
@@ -281,10 +274,10 @@ export const EXTRA_POOL_CAPS = Object.freeze({
 
 /**
  * Code-indexed display names (99 total):
- *   0..69  — zh-TW names from the Taipei chunk archetypes (displayName field)
- *   70..81 — placeholder names (collectibles)
- *   82..89 — Taipei landmark zh-TW names (P6b)
- *   90..98 — placeholder names (shop shell, bridge, tower, v5)
+ *   0..69  — zh-TW names from the Kaohsiung chunk archetypes (displayName field)
+ *   70..81 — Kaohsiung collectible zh-TW names
+ *   82..89 — Kaohsiung core landmark zh-TW names
+ *   90..98 — Kaohsiung extended landmark + 媽傘(94) zh-TW names
  * @type {string[]}
  */
 export const DISPLAY_NAME_BY_CODE = (() => {
@@ -295,24 +288,24 @@ export const DISPLAY_NAME_BY_CODE = (() => {
     names[i] = _allTierArchetypes[i].displayName || '';
   }
 
-  // Codes 70..98: every code is overridden below with a Taipei zh-TW name
+  // Codes 70..98: every code is overridden below with a Kaohsiung zh-TW name
   // (collectibles 70..81+94, landmarks 82..93+95..98). Init '' (de-Tokyo).
   for (let c = EXTRA_CODE_BASE; c < 99; c++) {
     names[c] = '';
   }
 
-  // Override codes 82..89 with Taipei landmark zh-TW names.
-  for (const { code, nm } of _TAIPEI_LANDMARKS) {
+  // Override codes 82..89 with Kaohsiung core landmark zh-TW names.
+  for (const { code, nm } of _KAOHSIUNG_LANDMARKS) {
     names[code] = nm.name;
   }
 
-  // Override codes 70..81 + 94 with Taipei collectible zh-TW names (P7).
-  for (const { code, col } of _TAIPEI_COLLECTIBLES) {
+  // Override codes 70..81 + 94 with Kaohsiung collectible zh-TW names (P7).
+  for (const { code, col } of _KAOHSIUNG_COLLECTIBLES) {
     names[code] = col.name;
   }
 
-  // DE-TOKYO: codes 90..93 + 95..98 -> Taipei extended landmark zh-TW names.
-  for (const { code, nm } of _TAIPEI_EXTRA_LANDMARKS) {
+  // DE-TOKYO: codes 90..93 + 95..98 -> Kaohsiung extended landmark zh-TW names.
+  for (const { code, nm } of _KAOHSIUNG_EXTRA_LANDMARKS) {
     names[code] = nm.name;
   }
 
@@ -321,6 +314,6 @@ export const DISPLAY_NAME_BY_CODE = (() => {
 
 if (DISPLAY_NAME_BY_CODE.length !== 99) {
   throw new Error(
-    `[taipei/catalog] DISPLAY_NAME_BY_CODE must be 99 entries, got ${DISPLAY_NAME_BY_CODE.length}`
+    `[kaohsiung/catalog] DISPLAY_NAME_BY_CODE must be 99 entries, got ${DISPLAY_NAME_BY_CODE.length}`
   );
 }
