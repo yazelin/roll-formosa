@@ -1028,6 +1028,9 @@
     #city-select {
       font-family: 'Noto Sans TC', 'Avenir Next', system-ui, sans-serif;
       gap: clamp(12px, 2.6vh, 22px);
+      /* Top-most modal: must sit above #win-overlay (z-index 30) so 換城市 works
+         from the result screen too (.overlay base z-index is only 20). */
+      z-index: 50;
       background:
         radial-gradient(760px 460px at 16% 20%, rgba(255,42,120,.18), transparent 62%),
         radial-gradient(760px 460px at 84% 24%, rgba(0,221,255,.15), transparent 62%),
