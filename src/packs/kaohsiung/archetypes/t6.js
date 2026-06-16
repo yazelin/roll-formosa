@@ -1,11 +1,13 @@
 /**
- * @file packs/taipei/archetypes/t6.js — Roll Formosa Taipei pack, Tier 6.
+ * @file packs/kaohsiung/archetypes/t6.js — Roll Formosa Kaohsiung pack, Tier 6.
  *
- * T6 — 信義天際線 (Xinyi night skyline). The finale band: glass curtain-wall
- * highrises, business towers, cross-street skybridges and rooftop mech rooms
- * lit against the 信義夜空 deep blue-violet sky. Ten ArchetypeDefs, authored in
- * the FROZEN tier order (tiers.js T6.archetypeIds) — slots [0..7] absorbable,
- * slots [8..9] repeatable chunk landmarks (lower spawnWeight).
+ * T6 — 亞洲新灣區天際線 (Asia New Bay Area skyline). The finale band: glass
+ * curtain-wall highrises, the 高雄展覽館 exhibition hall, the 高雄流行音樂中心
+ * (Music Center) crystal towers, the 高雄市立圖書館總館 suspended library, giant
+ * LED ad walls and rooftop mech rooms lit against the 新灣區 deep blue-violet
+ * night. Ten ArchetypeDefs, authored in the FROZEN tier order
+ * (tiers.js T6.archetypeIds) — slots [0..7] absorbable, slots [8..9] repeatable
+ * chunk landmarks (lower spawnWeight).
  *
  * Built ONLY with the engine geometry vocabulary (geomHelpers.js): the math is
  * an engine red line. finish() merges → recenters → normalizes to a UNIT
@@ -14,10 +16,10 @@
  *
  * Contract (catalog.test.js): tier === naturalBand === 6, palette 4-6 tints,
  * -1.01 < yOffset <= 0.5, 0 < collisionScale <= 1, <= 350 triangles each.
- * Size band: 60-300 m radiusNominal (Xinyi skyscraper scale).
+ * Size band: 60-300 m radiusNominal (新灣區 skyscraper scale).
  */
 
-import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, cone, sph, towerBanded, finish } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
@@ -32,14 +34,14 @@ export const T6_ARCHETYPES = [
     radiusNominal: 180,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
+    palette: [0x2f5478, 0x4a7aa0, 0x6fb0cc, 0x9fd0e4, 0xffe08a],
     yOffset: -0.04,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and a vertical mullion seam.
+      // Slender all-glass slab with a stepped glass crown and vertical mullion seams.
       return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.7 }), // glass shaft (cool blue + lit windows)
+        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6fb0cc, 0xffe08a, rng, { y: 1.7 }), // glass shaft (港邊藍 + lit windows)
         towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
         box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
         box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
@@ -49,41 +51,36 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 跨橋 cross bridge -------------------------------------- */
+  /* ---- slot 1: 高雄展覽館 Kaohsiung Exhibition Center ------------------ */
   {
-    id: 'cross_bridge',
-    displayName: '跨橋',
+    id: 'exhibition_hall',
+    displayName: '高雄展覽館',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 200,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xb8b0a4, 0xc8c0b4, 0xe05a4a, 0xd8d4cc, 0xffd25a],
-    yOffset: -0.561,
+    palette: [0x3a6a86, 0x5a96b0, 0x88c0d4, 0xcbe6ee, 0xffd884],
+    yOffset: -0.541,
     upright: true,
-    collisionScale: 0.55,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      // Cable-stayed road bridge: two A-pylons, a long deck, fanned stay cables.
+      // Low-slung waterfront convention hall: long glass-walled hangar block under a
+      // sweeping wave roof, fronted by a glazed canopy on slim columns.
       const parts = [
-        box(4.2, 0.16, 0.9, 0xc4bcb0, { y: 1.2 }), // deck (concrete)
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: 0.42 }), // parapet rail near
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: -0.42 }), // parapet rail far
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: -3.0, y: 0.55 }), // approach pier
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: 3.0, y: 0.55 }), // approach pier
+        box(4.0, 0.16, 2.0, 0x33586e, { y: 0.08 }), // waterfront apron slab
+        towerBanded(3.6, 1.3, 1.7, 4, 0x3a6a86, 0x88c0d4, 0xffd884, rng, { y: 0.81 }), // glazed hall body
+        box(3.7, 0.18, 1.78, 0x6aa6bc, { y: 1.55, hex2: 0x9fd0e4 }), // roof slab over hall
       ];
-      // Two A-frame pylons rising from the deck.
-      for (const px of [-1.1, 1.1]) {
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: 0.13, x: px - 0.18, y: 2.15 })); // pylon leg
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: -0.13, x: px + 0.18, y: 2.15 })); // pylon leg
-        parts.push(box(0.5, 0.12, 0.16, 0xe05a4a, { x: px, y: 2.7 })); // pylon crossbeam
-        // fanned stay cables both directions
-        for (let i = 0; i < 3; i++) {
-          const span = 0.55 + i * 0.55;
-          const len = Math.hypot(span, 1.65);
-          const ang = Math.atan2(span, 1.65);
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: ang, x: px - span / 2, y: 2.1 })); // cable left
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: -ang, x: px + span / 2, y: 2.1 })); // cable right
-        }
+      // sweeping wave roof — three shallow shells along the length
+      for (let i = 0; i < 3; i++) {
+        const x = -1.2 + i * 1.2;
+        parts.push(cyl(0.6, 0.6, 1.8, 10, 0xcbe6ee, { rx: Math.PI / 2, x, y: 1.85, thetaLen: Math.PI, theta0: 0, hex2: 0x9fd0e4 })); // half-shell wave
+      }
+      // glazed entrance canopy on slim columns, water side
+      parts.push(box(3.4, 0.08, 0.7, 0xb4dde8, { y: 1.0, z: 1.2 })); // canopy plate
+      for (const cx of [-1.4, -0.5, 0.5, 1.4]) {
+        parts.push(cyl(0.05, 0.05, 1.0, 6, 0x9fb6c2, { x: cx, y: 0.5, z: 1.2 })); // canopy column
       }
       return finish(parts);
     },
@@ -98,12 +95,12 @@ export const T6_ARCHETYPES = [
     radiusNominal: 190,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
+    palette: [0x46566c, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
     yOffset: -0.046,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic Xinyi peer.
+      // Tapered three-tier office tower with a slim antenna — a generic 新灣區 peer.
       return finish([
         towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
         towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
@@ -114,7 +111,7 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ------------------------------- */
+  /* ---- slot 3: 巨型廣告牆 giant LED ad wall --------------------------- */
   {
     id: 'giant_ad_wall',
     displayName: '巨型廣告牆',
@@ -146,57 +143,78 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 商辦塔 business tower ---------------------------------- */
+  /* ---- slot 4: 高雄市立圖書館總館 main library tower ------------------ */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'library_tower',
+    displayName: '高雄市立圖書館總館',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
-    yOffset: -0.191,
+    palette: [0x3c5e74, 0x6a9ab0, 0xa8d2e0, 0xe6f1f4, 0xffe6a0],
+    yOffset: -0.336,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
-      return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
-      ]);
+      // 高雄總圖: the famous suspended-garden cube — a tall glass core hoisting a
+      // wide glazed reading box clear of the ground on a single fat mast, leaving an
+      // open plaza beneath. Horizontal floor bands read as its signature stacking.
+      const parts = [
+        box(3.0, 0.14, 2.6, 0x2f4d60, { y: 0.07 }), // open ground plaza slab
+        cyl(0.42, 0.42, 1.5, 8, 0x6a9ab0, { y: 0.85, hex2: 0x8ab8cc }), // central suspension core/mast
+        towerBanded(2.6, 1.9, 2.3, 6, 0x3c5e74, 0xa8d2e0, 0xffe6a0, rng, { y: 2.45 }), // suspended glazed reading box
+        box(2.74, 0.16, 2.44, 0xe6f1f4, { y: 3.45 }), // bright roof-garden slab
+      ];
+      // suspension stay rods from the roof down to the lifted box corners
+      for (const sx of [-1.1, 1.1]) {
+        for (const sz of [-0.95, 0.95]) {
+          parts.push(box(0.04, 1.6, 0.04, 0xcdd8dc, { x: sx, y: 2.55, z: sz })); // hanger rod
+        }
+      }
+      // thin floor-edge bands to read the stacked reading levels
+      for (let i = 0; i < 3; i++) {
+        parts.push(box(2.72, 0.05, 2.42, 0xcbe6ee, { y: 1.7 + i * 0.5 })); // floor band
+      }
+      return finish(parts);
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 高雄流行音樂中心 music center -------------------------- */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'music_center',
+    displayName: '高雄流行音樂中心',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 85,
-    radiusJitter: 0.18,
+    radiusNominal: 160,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
-    yOffset: -0.427,
+    palette: [0x2c3a66, 0x4a5e9a, 0x7a86c8, 0xb6c0ec, 0x9fe6e0],
+    yOffset: -0.25,
     upright: true,
-    collisionScale: 0.65,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
-      return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
-      ]);
+      // 高流: the cluster of faceted crystalline towers rising from the 愛河灣
+      // waterfront — angular jewel-like peaks of varied height over a low podium,
+      // skinned in cool violet-cyan glass.
+      const parts = [
+        box(3.4, 0.18, 1.6, 0x26305c, { y: 0.09 }), // waterfront podium deck
+      ];
+      // a row of faceted crystal towers (low-seg cones = jewel facets) of varied height
+      const peaks = [
+        { x: -1.3, h: 1.7, r: 0.5 },
+        { x: -0.55, h: 2.6, r: 0.46 },
+        { x: 0.2, h: 2.1, r: 0.5 },
+        { x: 0.95, h: 3.0, r: 0.44 },
+        { x: 1.55, h: 1.5, r: 0.42 },
+      ];
+      for (let i = 0; i < peaks.length; i++) {
+        const p = peaks[i];
+        const wall = i % 2 ? 0x4a5e9a : 0x3a4c84;
+        parts.push(cyl(p.r * 0.74, p.r, p.h, 5, wall, { x: p.x, y: 0.18 + p.h / 2, hex2: 0x7a86c8 })); // pentagonal crystal shaft
+        parts.push(cone(p.r * 0.78, p.h * 0.42, 5, 0x9fe6e0, { x: p.x, y: 0.18 + p.h + p.h * 0.21 })); // faceted glass peak (lit cyan)
+      }
+      return finish(parts);
     },
   },
 
@@ -232,35 +250,36 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 天際線量體 skyline block ------------------------------- */
+  /* ---- slot 7: 灣區量體 bay-area block ------------------------------- */
   {
-    id: 'skyline_block',
-    displayName: '天際線量體',
+    id: 'bayarea_block',
+    displayName: '灣區量體',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x36405a, 0x4a5670, 0x7a86a0, 0xb0bccc, 0xffd884],
+    palette: [0x32405e, 0x46567a, 0x7a86b0, 0xa8c0d8, 0xffd884],
     yOffset: -0.308,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      // A whole stretch of skyline: a row of staggered lit towers of varying heights.
-      const parts = [box(3.6, 0.16, 1.4, 0x2a3142, { y: 0.08 })]; // ground / street slab
+      // A whole stretch of 新灣區 waterfront skyline: staggered lit towers of varying
+      // heights along a quay, the lights reflecting in the harbour blue.
+      const parts = [box(3.6, 0.16, 1.4, 0x232b46, { y: 0.08 })]; // quay / street slab
       const hs = [2.4, 3.4, 1.8, 2.9, 2.2];
       const floorsArr = [6, 8, 5, 7, 6];
-      const wallHex = [0x36405a, 0x3e4a64, 0x44506c, 0x3a4660, 0x404c66];
+      const wallHex = [0x32405e, 0x3a4a6e, 0x405074, 0x36466a, 0x3c4c70];
       for (let i = 0; i < 5; i++) {
         const h = hs[i];
         const x = -1.4 + i * 0.7;
         parts.push(
-          towerBanded(0.56, h, 0.78, floorsArr[i], wallHex[i], 0x7a86a0, 0xffd884, rng, {
+          towerBanded(0.56, h, 0.78, floorsArr[i], wallHex[i], 0x7a86b0, 0xffd884, rng, {
             x, y: 0.16 + h / 2, z: (i % 2) * 0.18 - 0.09,
           }) // skyline tower
         );
         // small rooftop cap so silhouettes vary
-        parts.push(box(0.3, 0.16, 0.3, 0x6a7488, { x, y: 0.16 + h + 0.06, z: (i % 2) * 0.18 - 0.09 }));
+        parts.push(box(0.3, 0.16, 0.3, 0x6a7494, { x, y: 0.16 + h + 0.06, z: (i % 2) * 0.18 - 0.09 }));
       }
       return finish(parts);
     },
@@ -275,13 +294,13 @@ export const T6_ARCHETYPES = [
     radiusNominal: 280,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x3c5876, 0x5a86a8, 0x9fd0e4, 0xc8d0d8, 0xffe0a0],
+    palette: [0x33526e, 0x5a86a8, 0x9fd0e4, 0xc8d0d8, 0xffe0a0],
     yOffset: -0.485,
     upright: true,
     collisionScale: 0.75,
     buildGeometry(rng) {
       // Monumental: a wide multi-level glazed skybridge spanning a street between
-      // two big mixed-use blocks — the signature Xinyi air-corridor.
+      // two big 新灣區 mixed-use blocks — the signature waterfront air-corridor.
       const parts = [
         towerBanded(1.3, 2.8, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: -2.0, y: 1.4 }), // block A
         towerBanded(1.3, 3.0, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: 2.0, y: 1.5 }), // block B
@@ -310,13 +329,13 @@ export const T6_ARCHETYPES = [
     radiusNominal: 260,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x4a5260, 0x646c7a, 0x8a92a0, 0xb8bcc6, 0xe0c860],
+    palette: [0x42505e, 0x646c7a, 0x8a92a0, 0xb8bcc6, 0xe0c860],
     yOffset: -0.044,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
       // A tall tower crowned by a dense mechanical/antenna mast head — the kind of
-      // rooftop mech stack that tops Xinyi's tallest service towers.
+      // rooftop mech stack that tops 新灣區's tallest service towers.
       const parts = [
         towerBanded(1.4, 3.4, 1.4, 11, 0x42505e, 0x8a92a0, 0xe0c860, rng, { y: 1.7 }), // main shaft
         box(1.5, 0.2, 1.5, 0x363c46, { y: 3.5 }), // roof slab

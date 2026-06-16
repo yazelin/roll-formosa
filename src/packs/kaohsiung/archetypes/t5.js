@@ -1,11 +1,14 @@
 /**
- * @file archetypes/t5.js — Taipei pack T5 「商業文教區」chunk archetypes.
+ * @file archetypes/t5.js — Kaohsiung pack T5 「港區與商業」chunk archetypes.
  *
- * Tier 5 (naturalBand 5) of the 7-tier ladder: the commercial / civic
+ * Tier 5 (naturalBand 5) of the 7-tier ladder: the harbor / commercial
  * district scale band (radiusNominal 12–60 m real). Eight absorbable
  * archetypes (slots 0–7, spawnWeight 1.0) plus two repeatable CHUNK
- * LANDMARKS (slots 8–9, spawnWeight ~0.3). ids are the FROZEN CONTRACT
- * declared in packs/taipei/tiers.js — spelling must NOT drift.
+ * LANDMARKS (slots 8–9, spawnWeight ~0.5). ids are the FROZEN CONTRACT
+ * declared in packs/kaohsiung/tiers.js — spelling must NOT drift.
+ *
+ * Theme: 港都金紫暮色 — port warehouses, container yards, the light rail
+ * (環狀輕軌) viaduct, harbor crossings, glass office towers along 亞洲新灣區.
  *
  * Every buildGeometry(rng) returns ONE merged, vertex-colored
  * BufferGeometry built only from the geomHelpers vocabulary, normalized by
@@ -14,7 +17,7 @@
  * small deterministic variation (lit window bands, sign tints), never for
  * structure.
  *
- * Palette = 4–5 hex tints (catalog.test enforces 4–6). Bodies meant to be
+ * Palette = 4–6 hex tints (catalog.test enforces 4–6). Bodies meant to be
  * tinted per-instance are baked near-white (0xffffff) so instanceColor reads
  * through; fixed parts (glass, steel, asphalt) are baked dark/desaturated so
  * tints only nudge them.
@@ -70,123 +73,141 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 百貨 department_store ------------------------------ */
+  /* ---- slot 1: 港倉 port_warehouse -------------------------------- */
   {
-    id: 'department_store',
-    displayName: '百貨',
+    id: 'port_warehouse',
+    displayName: '港倉',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 28,
+    radiusNominal: 30,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc8b8a0, 0xe8dcc8, 0x8a7a64, 0xb84a3a, 0xf0e8d8],
-    yOffset: -0.38,
+    palette: [0xc0a86a, 0xd8c488, 0x8a7848, 0x5a6470, 0xe6d8a8, 0xb8443a],
+    yOffset: -0.42,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Broad stone block with a glass display podium + a big vertical brand band.
+      // Long corrugated-metal harbor shed: gable roof, big roller doors, a
+      // 駁二-style brick / steel warehouse mass on the wharf.
       const parts = [
-        box(4.4, 4.6, 3.4, 0xffffff, { y: 2.5 }), // main stone mass (tinted)
-        box(4.5, 0.3, 3.5, 0x9a8a72, { y: 4.95 }), // cornice cap
-        // glass podium (ground 2 floors) wrapping the front
-        box(4.6, 1.5, 0.4, 0x2b3640, { y: 0.95, z: 1.7 }), // dark glass frame
-        box(4.2, 1.2, 0.06, 0xb9c8da, { y: 0.95, z: 1.92 }), // bright display glass
-        // entrance canopy
-        box(2.0, 0.18, 1.0, 0xb84a3a, { y: 1.9, z: 2.0 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: -0.8, y: 1.0, z: 2.4 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: 0.8, y: 1.0, z: 2.4 }),
-        // vertical brand band on the corner
-        box(0.5, 3.6, 0.12, 0xb84a3a, { x: -2.15, y: 2.9, z: 1.66 }),
-        box(0.34, 3.2, 0.06, 0xf0e0c8, { x: -2.15, y: 2.9, z: 1.73 }),
+        box(6.4, 2.8, 4.0, 0xffffff, { y: 1.4 }), // main shed body (tinted)
+        // low-pitch gable roof (two leaning ridges)
+        box(6.6, 0.16, 2.2, 0x7a6a40, { y: 2.95, z: 1.0, rx: 0.18 }),
+        box(6.6, 0.16, 2.2, 0x7a6a40, { y: 2.95, z: -1.0, rx: -0.18 }),
+        box(6.6, 0.18, 0.2, 0x5a4e30, { y: 3.22 }), // ridge cap
+        // continuous loading-dock plinth at the front
+        box(6.4, 0.5, 0.5, 0x6a6258, { y: 0.25, z: 2.0 }),
+        // gable-end name band
+        box(2.6, 0.6, 0.08, 0xb8443a, { x: -3.18, y: 2.3, z: 0 }),
       ];
-      // a row of square clerestory windows along the upper facade
-      for (let i = 0; i < 6; i++) {
-        const lit = rng() < 0.5 ? 0xfff0c8 : 0x6a7280;
-        parts.push(box(0.42, 0.5, 0.05, lit, { x: -1.7 + i * 0.68, y: 4.0, z: 1.72 }));
+      // a row of big roller doors + dark window strip along the front
+      const litWin = [0xfff0c8, 0x5f6670];
+      for (let i = 0; i < 4; i++) {
+        const x = -2.4 + i * 1.6;
+        parts.push(box(1.1, 1.7, 0.1, 0x37404a, { x, y: 0.95, z: 2.02 })); // door frame
+        parts.push(box(0.9, 1.5, 0.06, 0x9aa0a8, { x, y: 0.95, z: 2.08 })); // corrugated door
+        const lit = rng() < 0.4 ? litWin[0] : litWin[1];
+        parts.push(box(0.9, 0.34, 0.05, lit, { x, y: 2.2, z: 2.05 })); // clerestory window
       }
+      // vertical corrugation ribs on the long wall
+      for (let i = 0; i < 6; i++) {
+        parts.push(box(0.06, 2.6, 0.04, 0x9a8a58, { x: -2.7 + i * 1.08, y: 1.4, z: 2.0 }));
+      }
+      // rooftop vent stacks
+      parts.push(cyl(0.16, 0.16, 0.5, 6, 0x4a4e54, { x: -1.6, y: 3.3 }));
+      parts.push(cyl(0.16, 0.16, 0.5, 6, 0x4a4e54, { x: 1.6, y: 3.3 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 2: 捷運高架 metro_viaduct ----------------------------- */
+  /* ---- slot 2: 輕軌高架 lrt_viaduct ------------------------------- */
   {
-    id: 'metro_viaduct',
-    displayName: '捷運高架',
+    id: 'lrt_viaduct',
+    displayName: '輕軌高架',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 40,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xb0b6be, 0x8a9098, 0xd0d4da, 0x6a7078, 0x3a6ca8],
+    palette: [0xb0b6be, 0x8a9098, 0xd0d4da, 0x6a7078, 0x2e8a5a, 0xe6e2d4],
     yOffset: -0.49,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // Elevated rail: a long box girder deck on twin Y-piers + a train car.
+      // Kaohsiung 環狀輕軌: a lower, slimmer deck on single pillars + a green
+      // low-floor tram car (catenary-free streetcar look).
       const parts = [
-        // continuous deck girder (long along X)
-        box(9.0, 0.7, 1.8, 0xffffff, { y: 3.4 }), // deck (tinted concrete)
-        box(9.0, 0.5, 0.18, 0x8a9098, { y: 3.6, z: 0.95 }), // side parapet
-        box(9.0, 0.5, 0.18, 0x8a9098, { y: 3.6, z: -0.95 }), // side parapet
+        // continuous deck girder (long along X) — slimmer than a heavy metro
+        box(9.0, 0.5, 1.4, 0xffffff, { y: 2.8 }), // deck (tinted concrete)
+        box(9.0, 0.34, 0.12, 0x8a9098, { y: 2.95, z: 0.72 }), // side parapet
+        box(9.0, 0.34, 0.12, 0x8a9098, { y: 2.95, z: -0.72 }), // side parapet
       ];
-      // piers: square columns with flared caps at intervals
+      // single slim round pillars at intervals (LRT signature)
       for (let i = 0; i < 4; i++) {
         const x = -3.6 + i * 2.4;
-        parts.push(cyl(0.55, 0.7, 3.1, 6, 0xc2c6cc, { x, y: 1.55 }));
-        parts.push(box(1.5, 0.4, 1.9, 0xb0b6be, { x, y: 3.05 })); // pier cap
+        parts.push(cyl(0.32, 0.4, 2.55, 7, 0xc2c6cc, { x, y: 1.27 }));
+        parts.push(box(1.0, 0.3, 1.5, 0xb0b6be, { x, y: 2.5 })); // pier cap
       }
-      // a train car sitting on the deck
-      parts.push(box(4.2, 1.1, 1.2, 0xffffff, { y: 4.35 })); // car body (tinted)
-      parts.push(box(4.24, 0.36, 0.06, 0x2e3a48, { y: 4.55, z: 0.62 })); // window strip
-      parts.push(box(4.24, 0.36, 0.06, 0x2e3a48, { y: 4.55, z: -0.62 })); // window strip
-      parts.push(box(4.3, 0.18, 1.24, 0x3a6ca8, { y: 4.95 })); // brand stripe / roof trim
+      // a green low-floor tram car on the deck
+      parts.push(box(4.6, 0.95, 1.0, 0xffffff, { y: 3.55 })); // car body (tinted)
+      parts.push(box(4.64, 0.34, 0.06, 0x2e3a48, { y: 3.65, z: 0.52 })); // window strip
+      parts.push(box(4.64, 0.34, 0.06, 0x2e3a48, { y: 3.65, z: -0.52 })); // window strip
+      parts.push(box(4.7, 0.16, 1.04, 0x2e8a5a, { y: 4.08 })); // green roof / brand stripe
+      parts.push(box(0.5, 0.7, 0.04, 0xe6e2d4, { x: 2.3, y: 3.55, z: 0.51 })); // cab window
       return finish(parts);
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 跨港天橋 harbor_bridge ----------------------------- */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'harbor_bridge',
+    displayName: '跨港天橋',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 16,
+    radiusNominal: 44,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
-    yOffset: -0.57,
+    palette: [0xd6dce2, 0x9aa0a8, 0xe04f3a, 0x3a6ca8, 0x6a7078, 0xeef2f6],
+    yOffset: -0.36,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.68,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
+      // 高雄港橫渡:a cable-stayed harbor bridge — single inclined pylon with
+      // stay cables fanning to a flat deck over the water.
       const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
+        // deck (long span across the harbor)
+        box(8.4, 0.34, 1.4, 0xffffff, { y: 2.2 }), // deck (tinted)
+        box(8.4, 0.18, 0.08, 0x8a9098, { y: 2.45, z: 0.66 }), // railing
+        box(8.4, 0.18, 0.08, 0x8a9098, { y: 2.45, z: -0.66 }), // railing
+        // two squat support piers under the deck
+        box(0.7, 2.0, 1.4, 0xc2c6cc, { x: -3.0, y: 1.1 }),
+        box(0.7, 2.0, 1.4, 0xc2c6cc, { x: 3.0, y: 1.1 }),
+        // single inclined A-pylon near one third point
+        box(0.46, 5.2, 0.46, 0xe04f3a, { x: -1.2, y: 4.6, rz: 0.12 }),
+        box(0.9, 0.4, 1.6, 0xc23a2c, { x: -1.5, y: 7.0 }), // pylon head
       ];
-      // railing posts (sparse) + canopy supports
-      for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
+      // stay cables fanning from the pylon head to deck points (thin tilted boxes)
+      const headX = -1.5;
+      const headY = 7.0;
+      for (let i = 0; i < 5; i++) {
+        const dx = 1.4 + i * 1.4; // forward span anchor offset
+        const ax = headX + dx;
+        const ay = 2.36;
+        const mx = (headX + ax) / 2;
+        const my = (headY + ay) / 2;
+        const len = Math.hypot(ax - headX, ay - headY);
+        const ang = Math.atan2(ay - headY, ax - headX); // negative slope
+        parts.push(box(len, 0.05, 0.05, 0xeef2f6, { x: mx, y: my, rz: ang }));
       }
-      // twin stair / lift towers at the ends
-      for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
-          }));
-        }
+      // a couple of back-stay cables behind the pylon
+      for (let i = 0; i < 2; i++) {
+        const ax = headX - (1.6 + i * 1.6);
+        const ay = 2.36;
+        const mx = (headX + ax) / 2;
+        const my = (headY + ay) / 2;
+        const len = Math.hypot(ax - headX, ay - headY);
+        const ang = Math.atan2(ay - headY, ax - headX);
+        parts.push(box(len, 0.05, 0.05, 0xeef2f6, { x: mx, y: my, rz: ang }));
       }
       return finish(parts);
     },
@@ -229,21 +250,21 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 巨型看板 giant_billboard --------------------------- */
+  /* ---- slot 5: 港區看板 port_billboard ---------------------------- */
   {
-    id: 'giant_billboard',
-    displayName: '巨型看板',
+    id: 'port_billboard',
+    displayName: '港區看板',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 20,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46, 0xf2f2ee],
+    palette: [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46, 0xf2f2ee, 0x2e3138],
     yOffset: -0.21,
     upright: true,
     collisionScale: 0.5,
     buildGeometry(rng) {
-      // A rooftop / roadside billboard: big bright panel on a lattice gantry.
+      // A wharfside / rooftop billboard: big bright panel on a lattice gantry.
       const parts = [
         // gantry legs (wide A-stance)
         box(0.22, 4.6, 0.22, 0x44484f, { x: -1.7, y: 2.3, rz: 0.06 }),
@@ -327,11 +348,10 @@ export const T5_ARCHETYPES = [
         box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
         // portico: entablature beam + triangular pediment up front
         box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        // pediment apex (low triangular prism)
+        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }),
+        // stylobate / steps
+        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }),
       ];
       for (let i = 0; i < 4; i++) {
         const x = -1.35 + i * 0.9;
@@ -346,22 +366,22 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 商辦塔樓 commercial_tower (CHUNK LANDMARK) --------- */
+  /* ---- slot 8: 港邊商辦塔 waterfront_office_tower (CHUNK LANDMARK) - */
   {
-    id: 'commercial_tower',
-    displayName: '商辦塔樓',
+    id: 'waterfront_office_tower',
+    displayName: '港邊商辦塔',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 55,
     radiusJitter: 0.14,
     spawnWeight: 0.5,
-    palette: [0x3e4e66, 0xaecae0, 0x7a8aa0, 0x232c38, 0xe6eef6],
+    palette: [0x3e4e66, 0xaecae0, 0x7a8aa0, 0x232c38, 0xe6eef6, 0xd8a84a],
     yOffset: -0.04,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Big setback skyscraper — the district's repeatable landmark mass:
-      // wide podium → tapered banded shaft → crown + antenna.
+      // 亞洲新灣區 waterfront skyscraper — the district's repeatable landmark
+      // mass: wide podium → tapered banded glass shaft → crown + antenna.
       return finish([
         // multi-floor podium
         box(4.2, 1.8, 3.4, 0xffffff, { y: 0.9 }),
@@ -376,59 +396,63 @@ export const T5_ARCHETYPES = [
         box(2.4, 0.4, 1.9, 0x7a8aa0, { y: 11.2 }),
         // tapered upper shaft
         towerBanded(1.9, 3.4, 1.6, 7, 0xe6eef6, 0x33404f, 0xfff0c0, rng, { y: 13.1 }),
-        // crown
+        // crown (gold-lit dusk accent)
         box(1.5, 0.6, 1.2, 0xaecae0, { y: 15.1 }),
-        cone(0.9, 1.2, 6, 0x55657a, { y: 16.0 }),
+        box(1.5, 0.16, 1.2, 0xd8a84a, { y: 15.5 }),
+        cone(0.9, 1.2, 6, 0x55657a, { y: 16.1 }),
         // antenna mast
-        cyl(0.06, 0.08, 2.4, 6, 0xb0b6be, { y: 17.6 }),
-        sph(0.14, 0xff5040, { ws: 6, hs: 4, y: 18.9 }), // beacon
+        cyl(0.06, 0.08, 2.4, 6, 0xb0b6be, { y: 17.7 }),
+        sph(0.14, 0xff5040, { ws: 6, hs: 4, y: 19.0 }), // beacon
       ]);
     },
   },
 
-  /* ---- slot 9: 百貨量體 department_mass (CHUNK LANDMARK) ---------- */
+  /* ---- slot 9: 港倉量體 warehouse_mass (CHUNK LANDMARK) ----------- */
   {
-    id: 'department_mass',
-    displayName: '百貨量體',
+    id: 'warehouse_mass',
+    displayName: '港倉量體',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 50,
     radiusJitter: 0.14,
     spawnWeight: 0.5,
-    palette: [0xcabfa8, 0xe8dcc4, 0x8a7c60, 0xb8443a, 0xf2ead6],
-    yOffset: -0.3,
+    palette: [0xc0a86a, 0xd8c488, 0x8a7848, 0x5a6470, 0xe6d8a8, 0xb8443a],
+    yOffset: -0.41,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // A whole department-store block: a broad multi-wing mall mass with a
-      // curved glass atrium, escalator-glass front, brand crown.
+      // A whole bonded-warehouse block (駁二/中島區 scale): a long north-light
+      // transit shed with a stacked container wall, gantry rail + rooftop sign.
       const parts = [
-        // two stacked retail volumes (wide low + narrower upper)
-        box(5.6, 3.6, 4.2, 0xffffff, { y: 2.0 }), // lower mass (tinted)
-        box(4.2, 2.6, 3.4, 0xffffff, { y: 5.1 }), // upper mass
-        box(5.7, 0.3, 4.3, 0x9a8c70, { y: 3.85 }), // mid cornice
-        box(4.3, 0.3, 3.5, 0x9a8c70, { y: 6.45 }), // upper cornice
-        // curved glass atrium bay on the front (half-cylinder)
-        cyl(1.5, 1.5, 4.6, 9, 0x9fc4d8, { y: 2.3, z: 2.1, rx: HALF_PI,
-          theta0: -HALF_PI, thetaLen: PI }),
-        box(2.6, 4.4, 0.12, 0x2c3a44, { y: 2.3, z: 2.0 }), // atrium dark frame behind glass
-        // entrance canopy + brand band
-        box(3.2, 0.22, 1.2, 0xb8443a, { y: 1.5, z: 2.7 }),
-        box(4.2, 0.7, 0.16, 0xb8443a, { y: 6.9, z: 1.74 }), // upper brand band
-        box(4.0, 0.5, 0.06, 0xf2ead6, { y: 6.9, z: 1.82 }), // band face
-        // rooftop services + sign pylon
-        box(1.4, 0.7, 1.0, 0x6a6050, { x: 1.0, y: 6.9 }),
-        box(0.5, 1.8, 0.5, 0xb8443a, { x: -1.4, y: 7.3 }), // sign pylon
+        // long low warehouse mass
+        box(7.2, 3.2, 4.6, 0xffffff, { y: 1.6 }), // shed body (tinted)
+        box(7.3, 0.3, 4.7, 0x8a7848, { y: 3.25 }), // cornice
+        // dock plinth along the front
+        box(7.2, 0.5, 0.6, 0x6a6258, { y: 0.25, z: 2.3 }),
+        // stacked container wall at one end (port yard)
+        box(2.0, 1.1, 1.2, 0xb8443a, { x: 2.4, y: 0.55, z: 2.8 }),
+        box(2.0, 1.1, 1.2, 0x3f6cc4, { x: 2.4, y: 1.7, z: 2.8 }),
+        box(2.0, 1.1, 1.2, 0x2e7a46, { x: 4.6, y: 0.55, z: 2.8 }),
+        box(2.0, 1.1, 1.2, 0xd8a84a, { x: 4.6, y: 1.7, z: 2.8 }),
+        // rooftop sign pylon + name band
+        box(0.5, 1.8, 0.5, 0xb8443a, { x: -2.8, y: 4.0 }),
+        box(3.0, 0.7, 0.16, 0xb8443a, { x: -1.4, y: 3.7, z: 2.32 }),
+        box(2.8, 0.5, 0.06, 0xe6d8a8, { x: -1.4, y: 3.7, z: 2.4 }), // band face
       ];
-      // clerestory window rows on both volumes
-      for (let i = 0; i < 7; i++) {
-        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5f6670;
-        parts.push(box(0.5, 0.6, 0.05, lit, { x: -2.4 + i * 0.8, y: 3.1, z: 2.12 }));
+      // north-light sawtooth roof — 4 glazed slopes
+      for (let i = 0; i < 4; i++) {
+        const x = -2.7 + i * 1.8;
+        parts.push(box(1.7, 0.14, 2.0, 0x7a6a40, { x, y: 3.6, z: 0.5, rx: 0.34 })); // opaque slope
+        parts.push(box(1.7, 0.5, 0.06, 0x9fc4d8, { x, y: 3.9, z: -0.6, rx: -0.6 })); // glazed slope
       }
-      for (let i = 0; i < 5; i++) {
-        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5f6670;
-        parts.push(box(0.5, 0.5, 0.05, lit, { x: -1.6 + i * 0.8, y: 5.5, z: 1.72 }));
+      // big roller doors along the long front wall
+      for (let i = 0; i < 4; i++) {
+        const x = -2.7 + i * 1.6;
+        parts.push(box(1.1, 1.9, 0.1, 0x37404a, { x, y: 1.05, z: 2.32 })); // door frame
+        parts.push(box(0.9, 1.7, 0.06, 0x9aa0a8, { x, y: 1.05, z: 2.38 })); // corrugated door
       }
+      // gantry rail beam over the yard
+      parts.push(box(5.0, 0.2, 0.2, 0x5a6470, { x: 2.0, y: 3.0, z: 1.6 }));
       return finish(parts);
     },
   },

@@ -1,8 +1,8 @@
 /**
- * @file packs/taipei/archetypes/t0.js — Roll Formosa Taipei pack, TIER 0
- *   柑仔店桌頭 (corner-store tabletop trinkets), the smallest absorbable band
+ * @file packs/kaohsiung/archetypes/t0.js — Roll Formosa Kaohsiung pack, TIER 0
+ *   鹽埕柑仔店桌頭 (corner-store tabletop trinkets), the smallest absorbable band
  *   (radiusNominal 0.01–0.05 m). 10 ArchetypeDefs, ids FROZEN by
- *   packs/taipei/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
+ *   packs/kaohsiung/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
  *   slots [8..9] = chunk landmarks 戳戳樂板 / 籤筒, spawnWeight ~0.3).
  *
  * Authored ONLY with the engine geometry vocabulary (geomHelpers.js):
@@ -105,11 +105,11 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] bottle_cap 瓶蓋 — shallow crimped soda-bottle cap              */
+  /* [3] soda_cap 黑松汽水蓋 — shallow crimped soda-bottle crown cap     */
   /* ---------------------------------------------------------------- */
   {
-    id: 'bottle_cap',
-    displayName: '瓶蓋',
+    id: 'soda_cap',
+    displayName: '黑松汽水蓋',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.013,
@@ -124,6 +124,7 @@ export const T0_ARCHETYPES = [
         cyl(1.0, 1.0, 0.16, 14, 0xffffff, { y: 0.42 }), // top disc (printed face, tinted)
         cyl(1.04, 1.04, 0.4, 14, 0xffffff, { y: 0.2 }), // crimped skirt (tinted)
         cyl(0.6, 0.6, 0.06, 12, 0xf2f2f4, { y: 0.51 }), // pale logo medallion
+        cyl(0.34, 0.34, 0.08, 10, 0x1f6f3a, { y: 0.53 }), // 黑松 green brand dot
       ];
       // crimp teeth around the skirt (low-count ring of tiny boxes)
       const teeth = 12;
@@ -136,31 +137,33 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [4] candy 糖果 — twist-wrap candy (oval body + two pinched ends)    */
+  /* [4] preserved_fruit 鹹酸甜 — dried preserved-plum 蜜餞 snack         */
+  /*     knobbly squashed plum dusted with sugar/liquorice powder        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'candy',
-    displayName: '糖果',
+    id: 'preserved_fruit',
+    displayName: '鹹酸甜',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.014,
-    radiusJitter: 0.18,
+    radiusJitter: 0.2,
     spawnWeight: 1.0,
-    palette: [0xff6f91, 0xffb347, 0x6fcf97, 0x56ccf2, 0xc792ea],
-    yOffset: -0.49, // resting on its side (= -1 - minY of normalized geo)
+    palette: [0x8a4a2b, 0x6f3a22, 0xa05a30, 0x7d4226, 0x934e2c],
+    yOffset: -0.66, // resting on the table (= -1 - minY of normalized geo)
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 7, x: 0.0, sx: 1.25 }), // candy body (tinted, stretched along x)
-        // wrapper stripe band over the body for the classic candy look
-        torus(0.62, 0.16, 6, 10, 0xffffff, { ry: HALF_PI, x: 0.0 }), // tinted stripe ring
-        // twisted wrapper ends: cones fanning outward at each tip
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: -HALF_PI, x: 1.15 }), // right twist
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: HALF_PI, x: -1.15 }), // left twist
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: -HALF_PI, x: 1.55 }), // right twist tip
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: HALF_PI, x: -1.55 }), // left twist tip
-      ]);
+      const parts = [
+        // squashed plum body (low-detail icosa reads as a knobbly preserved fruit)
+        ico(0.95, 1, 0xffffff, { y: 0.55, sy: 0.72 }), // dark preserved-plum flesh (tinted brown)
+        // sugar / liquorice powder dusting — a few pale clumps on top
+        ico(0.22, 0, 0xe9dcc2, { x: 0.22, z: 0.0, y: 0.96 }),
+        ico(0.18, 0, 0xe9dcc2, { x: -0.28, z: 0.24, y: 0.9 }),
+        ico(0.16, 0, 0xe9dcc2, { x: 0.05, z: -0.32, y: 0.92 }),
+        // stem nub / pucker at the crown
+        cone(0.14, 0.26, 6, 0x3c2114, { y: 1.04 }),
+      ];
+      return finish(parts);
     },
   },
 

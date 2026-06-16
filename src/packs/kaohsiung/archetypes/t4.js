@@ -1,9 +1,9 @@
 /**
- * @file packs/taipei/archetypes/t4.js — Roll Formosa Taipei pack, TIER 4
- * content: 萬華街屋與廟 (Wanhua shophouses & temple).
+ * @file packs/kaohsiung/archetypes/t4.js — Roll Formosa Kaohsiung pack, TIER 4
+ * content: 鹽埕街屋與廟 (Yancheng shophouses & temple).
  *
  * The 10 tier-4 ArchetypeDefs (size band 3–12 m REAL). ids are the FROZEN
- * CONTRACT from packs/taipei/tiers.js TIERS[4].archetypeIds — slots [0..7]
+ * CONTRACT from packs/kaohsiung/tiers.js TIERS[4].archetypeIds — slots [0..7]
  * absorbable street structures (spawnWeight 1.0), slots [8..9] repeatable
  * CHUNK LANDMARK masses (spawnWeight ~0.3, ~2.5–3x the tier's largest body).
  *
@@ -31,7 +31,7 @@ export const T4_ARCHETYPES = [
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xe6dcc6, 0xd6c6ae, 0xcdd4ce, 0xdcd0bc, 0xccc0b0],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
@@ -40,7 +40,7 @@ export const T4_ARCHETYPES = [
         // tall narrow banded body (深長街屋), tinted plaster + warm windows
         towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
         box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
+        box(1.12, 0.22, 1.62, 0xc6baa6, { y: 0.22 }), // ground-floor plinth
         // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
         box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
         cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
@@ -70,7 +70,7 @@ export const T4_ARCHETYPES = [
     radiusJitter: 0.18,
     spawnWeight: 1.0,
     palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
-    yOffset: -0.42,
+    yOffset: -0.43,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
@@ -95,17 +95,17 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 老公寓 (5-storey walk-up) ------------------------------ */
   {
-    id: 'apartment',
-    displayName: '公寓',
+    id: 'old_apartment',
+    displayName: '老公寓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
-    yOffset: -0.28,
+    palette: [0xe0d6c4, 0xced6de, 0xdecec2, 0xd4dbce, 0xc6baa6],
+    yOffset: -0.25,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
@@ -113,7 +113,7 @@ export const T4_ARCHETYPES = [
         // wide squat 5-floor banded slab (公寓比透天矮胖)
         towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
         box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
+        box(2.04, 0.22, 1.34, 0xc6baa6, { y: 0.16 }), // ground plinth
         // rooftop clutter: water tanks + 鐵皮加蓋
         box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
         cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
@@ -141,7 +141,7 @@ export const T4_ARCHETYPES = [
     radiusJitter: 0.12,
     spawnWeight: 1.0,
     palette: [0xffffff, 0xe8edf2, 0xf6f0e6, 0xdfeae2, 0xd8dee6],
-    yOffset: -0.6,
+    yOffset: -0.56,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
@@ -220,7 +220,7 @@ export const T4_ARCHETYPES = [
     radiusJitter: 0.12,
     spawnWeight: 1.0,
     palette: [0xe0c83a, 0xd8b830, 0xe8d048, 0x9aa0aa, 0x6a7078],
-    yOffset: -0.6,
+    yOffset: -0.58,
     upright: true,
     collisionScale: 0.75,
     buildGeometry(rng) {
@@ -302,7 +302,7 @@ export const T4_ARCHETYPES = [
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xd6cbb6, 0xc6baa6, 0xded0be, 0xcdd4ce, 0xb6aa96],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
@@ -310,15 +310,15 @@ export const T4_ARCHETYPES = [
       const parts = [
         // the slab beam the storefront sits under (騎樓 ceiling)
         box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        box(3.24, 0.12, 1.24, 0xb6aa96, { y: 2.2 }), // upper edge band (street-house above)
+        box(2.0, 0.5, 1.0, 0xcdd4ce, { z: -0.4, y: 1.4 }), // rear shop wall recess
       ];
       // 4 square arcade columns with capital + base
       const cx = [-1.35, -0.45, 0.45, 1.35];
       for (let i = 0; i < cx.length; i++) {
         parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
+        parts.push(box(0.46, 0.16, 0.46, 0xc6baa6, { x: cx[i], y: 1.82 })); // capital
+        parts.push(box(0.46, 0.18, 0.46, 0xb6aa96, { x: cx[i], y: 0.16 })); // base
         // small shop signboard between alternating columns
         if (i < cx.length - 1 && i % 2 === 0) {
           parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
@@ -332,21 +332,21 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 公寓街屋量體 (chunk landmark — street-house row mass) --- */
+  /* ---- slot 8: 鹽埕街屋量體 (chunk landmark — Yancheng street-house row) */
   {
-    id: 'streethouse_mass',
-    displayName: '公寓街屋量體',
+    id: 'saltfield_streethouse_mass',
+    displayName: '鹽埕街屋量體',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
     radiusJitter: 0.18,
     spawnWeight: 0.3,
-    palette: [0xe2d8c8, 0xc8bca8, 0xd0d8e0, 0xd9c8b0, 0xb8ac98],
-    yOffset: -0.48,
+    palette: [0xe0d6c4, 0xc6baa6, 0xced6de, 0xd6c6ae, 0xb6aa96],
+    yOffset: -0.50,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // a contiguous row of 4 abutting street-houses of varying height (連棟街屋)
+      // a contiguous row of 4 abutting Yancheng street-houses of varying height (連棟街屋)
       const parts = [];
       const heights = [2.2, 2.8, 2.4, 3.0];
       const xs = [-2.1, -0.7, 0.7, 2.1];
@@ -362,9 +362,9 @@ export const T4_ARCHETYPES = [
         if (i % 2 === 0) parts.push(box(0.7, 0.4, 0.9, 0xb0563a, { x: xs[i] + 0.2, y: h + 0.25, hex2: 0xc8704a })); // tin penthouse
       }
       // continuous 騎樓 colonnade across the whole ground floor front
-      parts.push(box(5.8, 0.24, 1.36, 0xc8bca8, { y: 0.78, z: 0.02 })); // arcade beam
+      parts.push(box(5.8, 0.24, 1.36, 0xc6baa6, { y: 0.78, z: 0.02 })); // arcade beam
       for (let i = 0; i < 5; i++) {
-        parts.push(box(0.3, 0.7, 0.3, 0xd8cdb8, { x: -2.4 + i * 1.2, y: 0.35, z: 0.55 })); // arcade column
+        parts.push(box(0.3, 0.7, 0.3, 0xd6cbb6, { x: -2.4 + i * 1.2, y: 0.35, z: 0.55 })); // arcade column
       }
       // street-front shop sign band
       parts.push(box(5.6, 0.2, 0.06, 0xc83828, { y: 0.96, z: 0.7 }));
@@ -388,7 +388,7 @@ export const T4_ARCHETYPES = [
     buildGeometry(rng) {
       const parts = [
         // raised stone platform (廟埕台基)
-        box(4.2, 0.4, 2.8, 0xb8ac98, { y: 0.2 }),
+        box(4.2, 0.4, 2.8, 0xb6aa96, { y: 0.2 }),
         // main hall body — red walls + warm interior glow
         box(3.4, 1.3, 2.0, 0xffffff, { y: 1.05, hex2: 0xd2402a }),
         // front vermilion columns (龍柱) of the portico

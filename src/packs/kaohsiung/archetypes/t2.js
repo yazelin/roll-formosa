@@ -1,10 +1,12 @@
 /**
- * @file packs/taipei/archetypes/t2.js — Roll Formosa Taipei pack, TIER 2 「騎樓邊」.
+ * @file packs/kaohsiung/archetypes/t2.js — Roll Formosa Kaohsiung pack, TIER 2 「鹽埕騎樓」.
  *
- * The 10 arcade-sidewalk (騎樓) rollable archetypes, authored in the FROZEN id
- * order of tiers.js T2.archetypeIds (slots [0..7] absorbable, slots [8..9] are
- * the repeatable CHUNK LANDMARKS — vendor_cart / temple_incense_burner — at
- * spawnWeight ~0.3 and ~2.5-4x the largest absorbable radius).
+ * The 10 arcade-sidewalk (騎樓街邊物件) rollable archetypes, authored in the
+ * FROZEN id order of tiers.js T2.archetypeIds (slots [0..7] absorbable, slots
+ * [8..9] are the repeatable CHUNK LANDMARKS — salt_vendor_cart /
+ * temple_incense_burner — at spawnWeight ~0.3 and ~2.5-4x the largest
+ * absorbable radius). These are the everyday objects of 鹽埕 (Yancheng), the old
+ * salt-trade harbour district of 高雄/港都.
  *
  * Size band: radiusNominal 0.25–1.2 m. Every buildGeometry(rng) returns ONE
  * merged, vertex-colored BufferGeometry built ONLY from the engine geometry
@@ -85,10 +87,10 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 大同電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
   {
     id: 'rice_cooker',
-    displayName: '電鍋',
+    displayName: '大同電鍋',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
@@ -214,7 +216,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat (招財貓), seated with raised paw */
+  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat, seated with raised paw */
   {
     id: 'lucky_cat',
     displayName: '招財貓',
@@ -252,21 +254,21 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7 ---- YouBike樁柱 — the orange dock post + slot rail of a YouBike station */
+  /* ---- slot 7 ---- 鐵馬樁 — the bike-share dock post + wheel-slot rail (港都 iBike) */
   {
-    id: 'youbike_dock',
-    displayName: 'YouBike樁柱',
+    id: 'bike_dock',
+    displayName: '鐵馬樁',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.55,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf26a1f, 0xff7a28, 0x303338, 0xd8d8d4, 0xe05a18],
+    palette: [0xe8b03d, 0xf0c050, 0x303338, 0xd8d8d4, 0xc89028],
     yOffset: -0.210,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      const orange = 0xffffff; // tinted orange housing
+      const yellow = 0xffffff; // tinted yellow housing (港都 iBike)
       const dark = 0x2a2c30;
       return finish([
         // base plate bolted to pavement
@@ -275,26 +277,26 @@ export const T2_ARCHETYPES = [
         box(0.24, 0.5, 1.5, 0x4a4d52, { y: 0.35, z: 0.1 }),
         box(0.1, 0.7, 1.5, 0x6a6d72, { y: 0.6, z: 0.1 }), // upright guide fin
         // dock terminal post
-        cyl(0.18, 0.22, 1.7, 8, orange, { y: 1.05, z: -0.55 }),
+        cyl(0.18, 0.22, 1.7, 8, yellow, { y: 1.05, z: -0.55 }),
         // info/payment head (tilted panel)
-        box(0.5, 0.6, 0.18, orange, { y: 2.0, z: -0.5, rx: 0.25 }),
+        box(0.5, 0.6, 0.18, yellow, { y: 2.0, z: -0.5, rx: 0.25 }),
         box(0.4, 0.46, 0.04, 0x202225, { y: 2.0, z: -0.38, rx: 0.25 }), // dark screen
         // small reader bump
-        cyl(0.08, 0.1, 0.08, 6, 0xf0c020, { y: 1.7, z: -0.36 }),
+        cyl(0.08, 0.1, 0.08, 6, 0x2e6a48, { y: 1.7, z: -0.36 }),
       ]);
     },
   },
 
-  /* ---- slot 8 (CHUNK LANDMARK) ---- 攤販推車 — wheeled street vendor cart w/ awning + lamp */
+  /* ---- slot 8 (CHUNK LANDMARK) ---- 鹽埕推車 — the salt-vendor handcart of old 鹽埕 (Yancheng) */
   {
-    id: 'vendor_cart',
-    displayName: '攤販推車',
+    id: 'salt_vendor_cart',
+    displayName: '鹽埕推車',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 1.8,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0xd83026, 0xe0a050, 0xc94f46, 0x9a8a78, 0xead8b0],
+    palette: [0xe9e4d8, 0xc9a36a, 0x9a7a52, 0x7a93a8, 0xd8cdb8],
     yOffset: -0.369,
     upright: true,
     collisionScale: 0.85,
@@ -302,23 +304,30 @@ export const T2_ARCHETYPES = [
       const cart = 0xffffff; // tinted body
       const wood = 0x9a7a52;
       return finish([
-        // cart body cabinet
+        // cart body cabinet (the salt bin)
         box(2.0, 1.0, 1.1, wood, { y: 0.75 }),
-        // counter / stainless top
-        box(2.15, 0.1, 1.25, 0xd8dce2, { y: 1.3 }),
-        // glass display upstand at back
-        box(2.0, 0.5, 0.06, 0xbfd8e0, { y: 1.6, z: -0.55 }),
-        // front face panel (signboard, tint)
+        // plank counter top
+        box(2.15, 0.1, 1.25, 0xc9a36a, { y: 1.3 }),
+        // heaped salt mounds on the counter (pale, tint-resistant)
+        cone(0.4, 0.5, 6, 0xf2efe6, { y: 1.6, x: -0.55, z: 0.0 }),
+        cone(0.34, 0.42, 6, 0xeae5da, { y: 1.56, x: 0.3, z: 0.2 }),
+        cone(0.28, 0.34, 5, 0xf2efe6, { y: 1.52, x: 0.6, z: -0.3 }),
+        // a couple of stacked salt sacks at the back
+        box(0.5, 0.55, 0.4, 0xddd2bb, { y: 1.6, z: -0.45, x: -0.7 }),
+        box(0.45, 0.5, 0.38, 0xcfc3a8, { y: 1.55, z: -0.45, x: 0.0 }),
+        // front signboard face (tint)
         box(2.0, 0.5, 0.06, cart, { y: 0.7, z: 0.56 }),
+        // wooden scoop / measuring bucket on the counter
+        cyl(0.16, 0.13, 0.26, 6, 0x8a6a40, { y: 1.5, x: 0.9, z: 0.35 }),
         // four roof posts
         cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: 0.45 }),
         cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: 0.45 }),
         cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: -0.45 }),
         cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: -0.45 }),
-        // striped awning roof (tint), slightly peaked
-        box(2.4, 0.12, 1.5, cart, { y: 2.6, rx: 0.0 }),
-        // valance strip hanging off the awning front
-        box(2.4, 0.28, 0.06, 0xe0a050, { y: 2.42, z: 0.74 }),
+        // canvas awning roof (tint), slightly above the posts
+        box(2.4, 0.12, 1.5, cart, { y: 2.6 }),
+        // valance strip hanging off the awning front (harbour blue)
+        box(2.4, 0.28, 0.06, 0x6f8da6, { y: 2.42, z: 0.74 }),
         // hanging lamp
         sph(0.2, 0xffd06a, { ws: 6, hs: 4, x: 0.7, y: 2.3, z: 0.5 }),
         // two cart wheels (sideways cylinders)
@@ -330,10 +339,10 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐(鼎) — the bronze temple incense burner / ding */
+  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐 — the bronze temple incense burner / ding */
   {
     id: 'temple_incense_burner',
-    displayName: '廟前香爐(鼎)',
+    displayName: '廟前香爐',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 1.5,
