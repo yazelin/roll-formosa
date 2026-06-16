@@ -1138,8 +1138,11 @@ export class Environment {
     // shade of the ground — a synthwave neon grid so the player sees the path.
     const ground = new THREE.Color(src.skyBottom).lerp(fog, 0.35).multiplyScalar(0.92);
     const line = new THREE.Color(src.cloudHex).multiplyScalar(0.85);
-    const hemiSky = skyTop.clone();
-    const hemiGround = ground.clone();
+    // 夜色 pass: lift the sky-ambient (was the near-black skyTop) toward the
+    // per-tier neon so object bodies actually read in the dark — otherwise you
+    // roll into things you can't see. Neon-tinted, keeps the night mood.
+    const hemiSky = skyTop.clone().lerp(new THREE.Color(src.cloudHex), 0.32).multiplyScalar(1.45);
+    const hemiGround = ground.clone().multiplyScalar(1.15);
     return {
       fog,
       skyTop,

@@ -540,7 +540,7 @@ export const HERO_TRI_CAP = 600;
  *  color.rgb += uRimK * pow(1-max(dot(n,v),0), 3) * uRimTint (sky-tinted,
  *  updated on palette crossfade). View/normal-direction-dependent only ->
  *  invariant under the uniform similarity rescale. KILL SWITCH: 0. */
-export const RIM_K = 0.42; // 搖滾·福爾摩沙 夜色 pass: stronger neon edge glow (was 0.18 daylight)
+export const RIM_K = 0.52; // 搖滾·福爾摩沙 夜色 pass: neon edge glow so objects read in the dark (was 0.18 daylight)
 /** bakeSimpleAO default strength k (geometryFactory, boot-time only —
  *  vertical occlusion gradient + underside -25% value; per catalog entry
  *  override). GLOBAL KILL SWITCH: 0. */
