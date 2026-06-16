@@ -1133,10 +1133,13 @@ export class Environment {
     const fog = new THREE.Color(src.fogColor);
     const skyTop = new THREE.Color(src.skyTop);
     const skyBottom = new THREE.Color(src.skyBottom);
-    const ground = new THREE.Color(src.skyBottom).lerp(fog, 0.45).multiplyScalar(0.8);
-    const line = ground.clone().multiplyScalar(0.72);
+    // 夜色 pass: the floor must read in the dark. Lift the ground a touch and
+    // make the grid lines a BRIGHT per-tier neon (cloudHex) instead of a dim
+    // shade of the ground — a synthwave neon grid so the player sees the path.
+    const ground = new THREE.Color(src.skyBottom).lerp(fog, 0.35).multiplyScalar(0.92);
+    const line = new THREE.Color(src.cloudHex).multiplyScalar(0.85);
     const hemiSky = skyTop.clone();
-    const hemiGround = ground.clone().multiplyScalar(0.9);
+    const hemiGround = ground.clone();
     return {
       fog,
       skyTop,
