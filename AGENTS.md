@@ -36,8 +36,13 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 2. 換內容:`tiers.js`(7 階主題)、`monument.js`(終點建物)、`landmarks/`、`collectibles/`、
    `archetypes/t0–t6.js`(70 chunk 幾何)、`narration.js`、`locale.js`、`ending.js`、
    `cityData.js`/`cityMap.js`(SHOP/ZONES/PLACEMENTS/water/GOAL_POS/DEV_STARTS)。
-3. 在 `src/packs/manifest.js` 城市登錄表加一筆;`active.js` 會自動可選。
+3. 在 `src/packs/manifest.js` 城市登錄表加一筆(`{ id, displayName, tagline, status }`,`status:'ready'` 才可玩、`'soon'` 在選單顯示「即將推出」);`active.js` 會自動可選,**縣市選單**(`src/ui/citySelect.js`)也會自動長出對應卡片。
 4. 寫測試(鏡射 `src/packs/<city>/*.test.js`),含 no-Tokyo/no-kana 守衛。
+
+### 選城市(`?city=` + 縣市選單)
+- 玩家選城市走 **`src/ui/citySelect.js`** 的 `#city-select` overlay(夜市霓虹風,卡片由 `manifest.js` 的 `CITIES` 渲染)。
+- 進站決策(`src/main.js` boot):**網址 `?city=` 最優先** → 否則讀 `localStorage` 的 `rf_city` 直接進該城市 → 都沒有(首次造訪)才跳選單。選城市 = `rf_city` 寫入 + 用新的 `?city=` 重新載入(引擎在載入時烘 active pack,**無執行期熱抽換**)。
+- **城市感字串**:`document.title`、標題頁副標(`title.subtitle`)、結算頁標題(`win.title`/`win.subtitle`)在 `main.js` boot 時從 `activePack.locale.t()` 覆寫 —— index.html 的硬寫值是 taipei 預設,別在那裡改死城市名,改 pack 的 `locale.js`。
 
 ## 驗證關卡(動完必過)
 - `npm run build` 過、`npx vitest run` 全綠。
