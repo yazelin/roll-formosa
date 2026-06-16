@@ -94,6 +94,7 @@ const GOAL_POS = activePack.cityMap.GOAL_POS; // goal monument real-meter pose (
 import { bus, EVT } from '../core/events.js';
 import { easeInOutCubic, clamp01, lerp } from '../core/mathUtils.js';
 import { MONUMENT_HEIGHT_M } from './goalTower.js';
+import { ribbonQuads } from './waterRibbon.js';
 
 /** @typedef {import('../types.js').BallState} BallState */
 /** @typedef {import('../types.js').TierUpEvent} TierUpEvent */
@@ -129,11 +130,15 @@ const QUAY_COLOR = 0x767e8a;
 const QUAY_H_M = 3.0;
 const QUAY_W_M = 6.0;
 /**
- * Pack-driven water definition. Reads activePack.cityMap.water (shape:
- * { color, yM, rects: [{x0,x1,z0,z1},...], name }). Falls back to undefined
- * (no water drawn) if the pack omits it. The old hardcoded bay
- * constants (BAY_SOUTH / BAY_EAST / WATER_COLOR / WATER_Y_M = 0x2a4a6e /
- * 0.3) are intentionally removed — they lived only in the legacy pack era.
+ * Pack-driven water definition. Reads activePack.cityMap.water in one of two
+ * backward-compatible shapes:
+ *   - centerline ribbon: { color, yM, width, centerline:[{x,z},...], quay?, name }
+ *     (a curving/angled river — built via ribbonQuads), or
+ *   - legacy axis-aligned rects: { color, yM, rects:[{x0,x1,z0,z1},...], name }.
+ * Falls back to undefined (no water drawn) if the pack omits it. Set
+ * `quay:false` to suppress the shoreline wall. The old hardcoded bay constants
+ * (BAY_SOUTH / BAY_EAST / WATER_COLOR / WATER_Y_M = 0x2a4a6e / 0.3) are
+ * intentionally removed — they lived only in the legacy pack era.
  */
 const PACK_WATER = activePack.cityMap.water !== undefined
   ? activePack.cityMap.water
@@ -584,19 +589,35 @@ export class Environment {
     this._bayWater = null;
     /** @type {THREE.Mesh|null} */
     this._bayQuay = null;
-    if (PACK_WATER !== null && PACK_WATER.rects.length > 0) {
+    const _hasCenterline = PACK_WATER !== null && PACK_WATER.centerline?.length >= 2;
+    const _hasRects = PACK_WATER !== null && PACK_WATER.rects?.length > 0;
+    if (_hasCenterline || _hasRects) {
       const yM = PACK_WATER.yM;
-      const rects = PACK_WATER.rects;
-      // One merged water quad covering all pack rects (2 tris per rect).
-      const waterVerts = new Float32Array(rects.length * 6 * 3);
-      let vi = 0;
-      for (const r of rects) {
-        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
-        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
-        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
-        waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
-        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
-        waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+      // One merged water quad. Either a centerline+width ribbon (curving river,
+      // 6 verts/segment) or the legacy axis-aligned rects (6 verts/rect). The
+      // ribbon helper returns y=0; we stamp the pack's water plane height (yM)
+      // into every vertex's Y here.
+      let waterVerts;
+      if (_hasCenterline) {
+        const tri = ribbonQuads(PACK_WATER.centerline, PACK_WATER.width);
+        waterVerts = new Float32Array(tri.length);
+        for (let i = 0; i < tri.length; i += 3) {
+          waterVerts[i] = tri[i];
+          waterVerts[i + 1] = yM;     // ribbon helper leaves y=0; set water height
+          waterVerts[i + 2] = tri[i + 2];
+        }
+      } else {
+        const rects = PACK_WATER.rects;
+        waterVerts = new Float32Array(rects.length * 6 * 3);
+        let vi = 0;
+        for (const r of rects) {
+          waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+          waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+          waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+          waterVerts[vi++] = r.x0; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+          waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z1;
+          waterVerts[vi++] = r.x1; waterVerts[vi++] = yM; waterVerts[vi++] = r.z0;
+        }
       }
       const waterGeo = new THREE.BufferGeometry();
       waterGeo.setAttribute('position', new THREE.BufferAttribute(waterVerts, 3));
@@ -608,32 +629,62 @@ export class Environment {
       this._bayWater.frustumCulled = false;
       this._bay.add(this._bayWater);
 
-      // Quay wall: one merged box strip along the first rect's inner edge
-      // (the edge closest to the play area) and the second rect's inner edge
-      // if it exists. Keeps the draw-call count at +1 (same budget as the bay water).
+      // Quay wall: one merged box strip along the shoreline edge closest to the
+      // play area. Keeps the draw-call count at +1 (same budget as the bay
+      // water). Skipped when the pack opts out (water.quay === false).
       const quayGeos = [];
-      for (let i = 0; i < Math.min(rects.length, 2); i++) {
-        const r = rects[i];
-        // For each rect use the edge with the smaller absolute z (inner edge).
-        const innerZ = Math.abs(r.z0) <= Math.abs(r.z1) ? r.z0 : r.z1;
-        const edgeBox = new THREE.BoxGeometry(r.x1 - r.x0, QUAY_H_M, QUAY_W_M);
-        edgeBox.translate(
-          (r.x0 + r.x1) / 2,
-          QUAY_H_M / 2,
-          innerZ - Math.sign(innerZ - (r.z0 + r.z1) / 2) * QUAY_W_M / 2
-        );
-        quayGeos.push(edgeBox);
+      if (PACK_WATER.quay !== false) {
+        if (_hasCenterline) {
+          // Centerline mode: a strip along the near bank of the FIRST segment
+          // (the bank with the smaller absolute z — the edge facing the play
+          // area). One box, axis-aligned to that segment, offset to the bank.
+          const cl = PACK_WATER.centerline;
+          const a = cl[0];
+          const b = cl[1];
+          let dx = b.x - a.x;
+          let dz = b.z - a.z;
+          const len = Math.hypot(dx, dz) || 1;
+          dx /= len; dz /= len;
+          const h = PACK_WATER.width / 2;
+          // Two candidate banks; pick the one nearer the play centre (|z| smaller).
+          const bankSign = Math.abs(a.z + dx * h) <= Math.abs(a.z - dx * h) ? 1 : -1;
+          // Bank-line midpoint and orientation along the segment.
+          const px = -dz * h * bankSign;
+          const pz = dx * h * bankSign;
+          const midX = (a.x + b.x) / 2 + px;
+          const midZ = (a.z + b.z) / 2 + pz;
+          const edgeBox = new THREE.BoxGeometry(len, QUAY_H_M, QUAY_W_M);
+          edgeBox.rotateY(Math.atan2(-dz, dx));
+          edgeBox.translate(midX, QUAY_H_M / 2, midZ);
+          quayGeos.push(edgeBox);
+        } else {
+          const rects = PACK_WATER.rects;
+          for (let i = 0; i < Math.min(rects.length, 2); i++) {
+            const r = rects[i];
+            // For each rect use the edge with the smaller absolute z (inner edge).
+            const innerZ = Math.abs(r.z0) <= Math.abs(r.z1) ? r.z0 : r.z1;
+            const edgeBox = new THREE.BoxGeometry(r.x1 - r.x0, QUAY_H_M, QUAY_W_M);
+            edgeBox.translate(
+              (r.x0 + r.x1) / 2,
+              QUAY_H_M / 2,
+              innerZ - Math.sign(innerZ - (r.z0 + r.z1) / 2) * QUAY_W_M / 2
+            );
+            quayGeos.push(edgeBox);
+          }
+        }
       }
-      const quayGeo = quayGeos.length === 1
-        ? quayGeos[0]
-        : mergeGeometries(quayGeos, false);
-      if (quayGeos.length > 1) quayGeos.forEach((g) => g.dispose());
-      this._bayQuay = new THREE.Mesh(
-        quayGeo,
-        new THREE.MeshLambertMaterial({ color: QUAY_COLOR })
-      );
-      this._bayQuay.frustumCulled = false;
-      this._bay.add(this._bayQuay);
+      if (quayGeos.length > 0) {
+        const quayGeo = quayGeos.length === 1
+          ? quayGeos[0]
+          : mergeGeometries(quayGeos, false);
+        if (quayGeos.length > 1) quayGeos.forEach((g) => g.dispose());
+        this._bayQuay = new THREE.Mesh(
+          quayGeo,
+          new THREE.MeshLambertMaterial({ color: QUAY_COLOR })
+        );
+        this._bayQuay.frustumCulled = false;
+        this._bay.add(this._bayQuay);
+      }
     }
     this._bay.scale.setScalar(1 / this._ws);
     scene.add(this._bay);
