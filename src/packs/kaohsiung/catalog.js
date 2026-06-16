@@ -206,6 +206,10 @@ for (const { code, col } of _KAOHSIUNG_COLLECTIBLES) {
     yOffset: _yOffset,
     upright: true,
     collisionScale: 1.0,
+    // Curated singleton (spawnWeight 0, placed not mass-rolled) — uses the
+    // 600-tri hero budget like landmarks. Several 高雄 collectibles are richer
+    // than the 350 chunk cap; the EXTRA pools size buffers by actual verts.
+    heroTriCap: HERO_TRI_CAP,
     buildGeometry: col.buildGeometry.bind(col),
     extraCode: code,
     sizeClass: 'collectible-small',

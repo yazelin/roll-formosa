@@ -94,6 +94,21 @@ describe('kaohsiung catalog surface', () => {
     expect(CATALOG['cihou_fort']).toBeDefined();
   });
 
+  it('EVERY CATALOG geometry (chunk + EXTRA collectibles/landmarks) is within its declared tri cap', () => {
+    // Mirrors geometryFactory.js: cap = heroTriCap (if set, <=600) else 350.
+    // That assert is DEV-only + stripped from prod, so without this test an
+    // over-cap collectible/landmark ships fine in prod yet CRASHES the dev boot
+    // (`npm run dev`). This guard catches it in `npm test`.
+    for (const id of Object.keys(CATALOG)) {
+      const arch = CATALOG[id];
+      const geo = buildNormalized(arch);
+      const cap = arch.heroTriCap !== undefined ? arch.heroTriCap : ARCHETYPE_TRI_CAP;
+      expect(cap, `${id} heroTriCap must be <= ${HERO_TRI_CAP}`).toBeLessThanOrEqual(HERO_TRI_CAP);
+      expect(triCount(geo), `${id} over tri cap (${triCount(geo)} > ${cap})`).toBeLessThanOrEqual(cap);
+      geo.dispose();
+    }
+  });
+
   it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Japanese kana)', () => {
     expect(DISPLAY_NAME_BY_CODE.length).toBe(99);
     // EVERY code (0..98) is non-empty AND contains no Japanese kana (zero Tokyo).
