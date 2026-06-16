@@ -36,6 +36,10 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 2. 換內容:`tiers.js`(7 階主題)、`monument.js`(終點建物)、`landmarks/`、`collectibles/`、
    `archetypes/t0–t6.js`(70 chunk 幾何)、`narration.js`、`locale.js`、`ending.js`、
    `cityData.js`/`cityMap.js`(SHOP/ZONES/PLACEMENTS/water/GOAL_POS/DEV_STARTS)。
+   也放一張 `public/assets/title/skyline-<id>.webp`(標題頁霓虹天際線剪影,透明背景;
+   `main.js` 依 active pack id 自動切換,缺檔自動退回 `skyline-taipei.webp`)。
+   注意:curated 收藏(collectibles)若幾何 > 350 tris 要在 `catalog.js` 設
+   `heroTriCap: HERO_TRI_CAP`(同地標),否則 DEV boot 會被 geometryFactory 擋。
 3. 在 `src/packs/manifest.js` 城市登錄表加一筆(`{ id, displayName, tagline, status }`,`status:'ready'` 才可玩、`'soon'` 在選單顯示「即將推出」);`active.js` 會自動可選,**縣市選單**(`src/ui/citySelect.js`)也會自動長出對應卡片。
 4. 寫測試(鏡射 `src/packs/<city>/*.test.js`),含 no-Tokyo/no-kana 守衛。
 

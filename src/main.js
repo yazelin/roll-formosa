@@ -133,6 +133,21 @@ import { Onboarding } from './game/onboarding.js'; // opening parts guide
  * into the finale via the same setEarthView hook. */
 import { EndingView } from './render/endingView.js'; // pack-driven island reveal
 
+/* City-aware chrome, EARLY (before the geometry boot) so the title never even
+   briefly flashes the taipei default skyline/title when a non-taipei city is
+   active. The full chrome pass below (§3) re-confirms these + wires the rest. */
+{
+  const _name = typeof activePack.displayName === 'string' ? activePack.displayName : '';
+  if (_name) document.title = `Roll Formosa — 捲遍全${_name}`;
+  const _sky = `/assets/title/skyline-${activePack.id}.webp`;
+  for (const _img of document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img')) {
+    _img.addEventListener('error', () => {
+      if (!_img.src.endsWith('skyline-taipei.webp')) _img.src = '/assets/title/skyline-taipei.webp';
+    }, { once: true });
+    _img.src = _sky;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Game state machine                                                  */
 /* ------------------------------------------------------------------ */
@@ -391,6 +406,20 @@ const _packT = activePack.locale && typeof activePack.locale.t === 'function'
     winTitleEl.appendChild(document.createTextNode(winTitle));
     winTitleEl.appendChild(document.createElement('br'));
     winTitleEl.appendChild(document.createTextNode(winSub));
+  }
+}
+
+/* City-aware title skyline: swap both the sharp + bloom layers to
+   /assets/title/skyline-<id>.webp so 高雄 shows the 高雄 skyline, not 台北.
+   onerror keeps the taipei default if a city ships without a skyline asset. */
+{
+  const skylineSrc = `/assets/title/skyline-${activePack.id}.webp`;
+  const imgs = document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img');
+  for (const img of imgs) {
+    img.addEventListener('error', () => {
+      if (!img.src.endsWith('skyline-taipei.webp')) img.src = '/assets/title/skyline-taipei.webp';
+    }, { once: true });
+    img.src = skylineSrc;
   }
 }
 
