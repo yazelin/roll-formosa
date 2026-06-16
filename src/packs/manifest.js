@@ -3,8 +3,8 @@
  * and active.js). status: 'ready' = playable; 'soon' = greyed "即將推出".
  */
 export const CITIES = Object.freeze([
-  Object.freeze({ id: 'taipei',    displayName: '台北', status: 'ready' }),
-  Object.freeze({ id: 'kaohsiung', displayName: '高雄', status: 'ready' }),
+  Object.freeze({ id: 'taipei',    displayName: '台北', tagline: '101 終點',   status: 'ready' }),
+  Object.freeze({ id: 'kaohsiung', displayName: '高雄', tagline: '85 大樓終點', status: 'ready' }),
 ]);
 
 export const DEFAULT_CITY = 'taipei';

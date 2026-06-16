@@ -94,6 +94,7 @@ import { Effects } from './render/effects.js';
 import { Sfx } from './audio/sfx.js';
 import { Hud } from './ui/hud.js';
 import { Screens } from './ui/screens.js';
+import { showCitySelect, hideCitySelect } from './ui/citySelect.js'; // §3 縣市選單
 
 /* ---- v2 modules (all streams landed) -------------------------------- */
 import { Finale } from './game/finale.js'; // Stream A (v3: re-themed in place)
@@ -351,6 +352,77 @@ const sfx = new Sfx(bus, initialMuted);
 const bgm = new Bgm(bus, initialMuted);
 const hud = new Hud(bus, collection); // collection = collect-popup thumbnails
 const screens = new Screens(bus, worldSeed, collection); // result grid + X text
+
+/* ------------------------------------------------------------------ */
+/* §3 縣市選單 (city-select) — city-aware chrome + first-load selector  */
+/* + 換城市 affordance. The active pack is baked at load (active.js);   */
+/* switching = reload with a new ?city= (citySelect.js owns that).      */
+/* ------------------------------------------------------------------ */
+
+/* zh-TW locale t() from the active pack (mirrors screens.js); the generic
+   fallback keeps booting if a pack ever ships without a locale. */
+const _packT = activePack.locale && typeof activePack.locale.t === 'function'
+  ? activePack.locale.t.bind(activePack.locale)
+  : () => null;
+
+/* City-aware <title> + visible subtitles so 高雄 never reads "捲遍全台北".
+   The index.html strings are hardcoded to taipei; overwrite from the active
+   pack here. document.title falls back to a generic Roll Formosa line. */
+{
+  const cityName = typeof activePack.displayName === 'string' ? activePack.displayName : '';
+  document.title = cityName
+    ? `Roll Formosa — 捲遍全${cityName}`
+    : 'Roll Formosa';
+  // Title-screen subtitle (zh / en) and the win-screen title + subtitle come
+  // from the pack locale (title.subtitle / win.title / win.subtitle) — both
+  // packs author them per-city. Defensive: only write when the key resolves.
+  const titleSub = _packT('title.subtitle');
+  const subEl = document.querySelector('#title-overlay .game-subtitle');
+  if (subEl !== null && typeof titleSub === 'string' && titleSub[0] !== '⚠') {
+    subEl.textContent = titleSub;
+  }
+  const winTitle = _packT('win.title');
+  const winSub = _packT('win.subtitle');
+  const winTitleEl = document.querySelector('#win-overlay .game-title');
+  if (winTitleEl !== null
+      && typeof winTitle === 'string' && winTitle[0] !== '⚠'
+      && typeof winSub === 'string' && winSub[0] !== '⚠') {
+    winTitleEl.textContent = ''; // rebuild the two-line zh<br>en title
+    winTitleEl.appendChild(document.createTextNode(winTitle));
+    winTitleEl.appendChild(document.createElement('br'));
+    winTitleEl.appendChild(document.createTextNode(winSub));
+  }
+}
+
+/* 換城市 affordance — title + result-screen buttons re-open the selector. */
+{
+  const changeBtn = document.getElementById('change-city-button');
+  const resultChangeBtn = document.getElementById('result-change-city-button');
+  if (changeBtn !== null) changeBtn.addEventListener('click', showCitySelect);
+  if (resultChangeBtn !== null) resultChangeBtn.addEventListener('click', showCitySelect);
+}
+
+/* First-load selector (precedence, never traps a returning player):
+ *   1. explicit ?city= in the URL  -> straight into that city (skip selector)
+ *   2. else stored rf_city         -> straight into the resolved city
+ *   3. else (first-ever visit)     -> show the selector to choose
+ * The engine already resolved/baked the pack (active.js); this only decides
+ * whether to surface the selector before the title screen. */
+{
+  let hasCityParam = false;
+  let hasStored = false;
+  try {
+    hasCityParam = new URLSearchParams(window.location.search).has('city');
+  } catch (_) { /* exotic env — treat as no param */ }
+  try {
+    hasStored = window.localStorage && !!localStorage.getItem('rf_city');
+  } catch (_) { /* blocked storage — treat as not stored */ }
+  if (!hasCityParam && !hasStored) {
+    showCitySelect(); // over the title overlay; a card reloads into that city
+  } else {
+    hideCitySelect(); // explicit/stored choice — go straight in
+  }
+}
 
 /* v3 finale chain: GoalTowerView (Stream A, replaces v2 MoonView) + backdrop. */
 const goalTower = new GoalTowerView(renderer.scene, scaleMgr);

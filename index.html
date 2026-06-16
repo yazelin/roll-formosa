@@ -1023,6 +1023,92 @@
       box-shadow:0 0 0 2px rgba(255,255,255,.25) inset, 0 0 20px rgba(255,42,120,.6); }
     #win-overlay .btn.btn-secondary { background:rgba(8,4,22,.55); color:#dff6ff;
       border:1px solid rgba(0,221,255,.5); box-shadow:0 0 14px rgba(0,221,255,.28); }
+
+    /* ============ 夜市霓虹 — 縣市選單 (city-select) ============ */
+    #city-select {
+      font-family: 'Noto Sans TC', 'Avenir Next', system-ui, sans-serif;
+      gap: clamp(12px, 2.6vh, 22px);
+      background:
+        radial-gradient(760px 460px at 16% 20%, rgba(255,42,120,.18), transparent 62%),
+        radial-gradient(760px 460px at 84% 24%, rgba(0,221,255,.15), transparent 62%),
+        radial-gradient(1300px 760px at 50% 128%, rgba(255,150,38,.20), transparent 60%),
+        linear-gradient(180deg, #06030e 0%, #0b0724 50%, #120a30 100%);
+    }
+    #city-select .cs-title {
+      font-family:'Bungee', sans-serif; font-weight:400;
+      font-size: clamp(34px, 9vw, 80px); line-height:.98; letter-spacing:.01em;
+      background:none; -webkit-text-fill-color:#fff; color:#fff;
+      text-shadow: 0 0 4px #fff, 0 0 16px #00e0ff, 0 0 36px #00e0ff, 0 0 72px rgba(0,221,255,.5);
+    }
+    #city-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 220px));
+      gap: clamp(12px, 3vw, 22px);
+      width: 100%;
+      max-width: 480px;
+      justify-content: center;
+    }
+    /* one neon card per city — reuses the title's lit-sign vocabulary. */
+    .city-card {
+      pointer-events: auto;
+      font: inherit;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px;
+      min-height: 132px;
+      padding: 18px 14px;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(12,6,30,.82), rgba(7,4,20,.82));
+      border: 1.5px solid rgba(255,42,120,.6);
+      box-shadow: 0 0 18px rgba(255,42,120,.32), inset 0 0 16px rgba(255,42,120,.08);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+    }
+    .city-card:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: rgba(255,42,120,.95);
+      box-shadow: 0 0 30px rgba(255,42,120,.6), inset 0 0 18px rgba(255,42,120,.14);
+    }
+    .city-card:active { transform: translateY(0) scale(0.98); }
+    .city-card-name {
+      font-family:'Bungee', sans-serif; font-weight:400;
+      font-size: clamp(28px, 7vw, 46px); line-height:1; letter-spacing:.02em;
+      text-shadow: 0 0 4px #fff, 0 0 14px #ff2a78, 0 0 30px #ff2a78;
+    }
+    .city-card-tag {
+      font-size: clamp(12px, 2.2vw, 15px);
+      letter-spacing:.08em;
+      color: #7ef3ff;
+      text-shadow: 0 0 8px rgba(0,224,255,.5);
+    }
+    /* greyed "即將推出" card — dim cyan, not clickable. */
+    .city-card-soon {
+      cursor: default;
+      opacity: .5;
+      border-color: rgba(120,140,190,.4);
+      box-shadow: none;
+    }
+    .city-card-soon:hover { transform:none; border-color: rgba(120,140,190,.4); box-shadow:none; }
+    .city-card-soon .city-card-name { color:#aab3d0; text-shadow:none; }
+    .city-card-soon .city-card-tag { color:#7c84a8; text-shadow:none; }
+
+    /* 換城市 affordance — small neon-cyan pill on the title + result screens. */
+    #change-city-button, #result-change-city-button {
+      font-size: 14px;
+      min-height: 44px; /* tap-target floor */
+      padding: 8px 18px;
+      letter-spacing: 0.08em;
+      background: rgba(8,4,22,.55);
+      color: #dff6ff;
+      border: 1px solid rgba(0,221,255,.5);
+      box-shadow: 0 0 14px rgba(0,221,255,.28);
+    }
+    @media (max-width: 360px) {
+      #city-grid { grid-template-columns: 1fr; max-width: 280px; }
+    }
+    @media (prefers-reduced-motion:reduce){ #city-select .city-card{ transition:none; } }
   </style>
 </head>
 <body>
@@ -1108,6 +1194,8 @@
     <button id="start-button" class="btn" type="button">開始 / START</button>
     <!-- v3: bear mascot commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
     <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true"><img class="donack-toggle-face" src="/assets/donack/idle-0.webp" alt="月牙(台灣黑熊)" width="30" height="30" /><span id="donack-toggle-label">月牙 ON</span></button>
+    <!-- 換城市: re-open the city-select overlay (main.js wires showCitySelect). -->
+    <button id="change-city-button" class="btn btn-secondary" type="button">換城市 / CITY</button>
     <div class="key-hints" id="key-hints">
       <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>移動 / Move</span>
       <span><kbd>Shift</kbd>加速 / Boost</span>
@@ -1117,6 +1205,17 @@
     </div>
     <p id="title-best-line" class="hidden">個人最佳：<span id="title-best-value">—</span></p>
     <p class="seed-line">從 2cm 圖釘，一路到 508m 台北 101 — From a 2cm pushpin to Taipei 101.</p>
+  </div>
+
+  <!-- ============ City-select overlay (縣市選單) ============ -->
+  <!-- Hidden by default; main.js shows it on a first-ever load (no ?city= and
+       no stored rf_city), and the 換城市 buttons re-open it. ui/citySelect.js
+       fills #city-grid from manifest.js CITIES and owns show/hide. -->
+  <div id="city-select" class="overlay hidden">
+    <span class="ny-kicker">選擇縣市 · CHOOSE A CITY</span>
+    <h1 class="game-title cs-title">捲哪一座<br />城市？</h1>
+    <p class="game-subtitle">從 2cm 圖釘滾到城市地標 / Roll a 2cm pushpin into a city's landmark.</p>
+    <div id="city-grid"></div>
   </div>
 
   <!-- ============ Win / result overlay (hidden until game:win) ============ -->
@@ -1158,6 +1257,8 @@
     <div class="result-buttons">
       <button id="post-x-button" class="btn" type="button">X 分享 / POST</button>
       <button id="restart-button" class="btn btn-secondary" type="button">再來一次 / ROLL AGAIN</button>
+      <!-- 換城市: re-open the city-select overlay (main.js wires showCitySelect). -->
+      <button id="result-change-city-button" class="btn btn-secondary" type="button">換城市 / CITY</button>
     </div>
   </div>
 
