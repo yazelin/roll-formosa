@@ -1,7 +1,8 @@
 /**
- * @file packs/taipei/tiers.js — Roll Formosa Taipei pack: the 7-tier scale
- * ladder (圖釘 2 cm → 台北 101). Pack-scoped re-theme of the engine's legacy
- * tier table. The engine reads tiers via the active pack (src/packs/active.js),
+ * @file packs/kaohsiung/tiers.js — Roll Formosa Kaohsiung pack: the 7-tier scale
+ * ladder (圖釘 2 cm → 高雄 85 大樓). Pack-scoped re-theme of the engine's legacy
+ * tier table, themed as a PORT-CITY progression up the 鹽埕 / 港邊 / 亞洲新灣區
+ * skyline. The engine reads tiers via the active pack (src/packs/active.js),
  * NOT via config/tiers.js — but RESCALE_S / ARCH_PER_TIER stay engine constants
  * there; this pack imports ARCH_PER_TIER only for its self-check.
  *
@@ -9,17 +10,18 @@
  * palette, HUD label, bgm, celebration. Absorbability/camera/fog/speed/despawn
  * stay continuous functions of ball radius (tuning.js) and NEVER read tierIndex.
  *
- * archetypeIds[10] per tier are the FROZEN CONTRACT with packs/taipei/catalog.js
+ * archetypeIds[10] per tier are the FROZEN CONTRACT with packs/kaohsiung/catalog.js
  * (Part 5): slots [0..7] absorbable, slots [8..9] repeatable CHUNK LANDMARKS.
- * The named singleton landmarks (龍山寺 / 101 …) are NOT here — they live in
- * packs/taipei/landmarks.js + cityMap.js (curated EXTRA code space).
+ * The named singleton landmarks (鼓山 / 85 …) are NOT here — they live in
+ * packs/kaohsiung/landmarks.js + cityMap.js (curated EXTRA code space).
  *
  * Band edges (enterTrueRadius) + cellSizeSim/loadRadiusSim/objectsPerChunk are
  * kept identical to the engine baseline so the engine's worst-case fog/load
  * floor dev-assert passes untouched.
  *
- * Palette progression: 暖燈柑仔店 (T0) → 黃昏夜市 (T1) → 傍晚騎樓 (T2) →
- * 暮色機車海藍紫 (T3) → 街燈初上 (T4) → 暮色金紫 (T5) → 信義夜空 (T6).
+ * Palette progression (港都黃昏): 暖燈柑仔店 (T0) → 六合夜市黃昏 (T1) →
+ * 鹽埕騎樓傍晚 (T2) → 暮色機車海＋港邊藍 (T3) → 鹽埕街屋暮色 (T4) →
+ * 港區金紫 (T5) → 亞洲新灣區夜空 (T6).
  */
 
 import { RESCALE_S, ARCH_PER_TIER } from '../../config/tiers.js';
@@ -40,14 +42,14 @@ export { RESCALE_S, ARCH_PER_TIER };
 export const TIERS = [
   {
     index: 0,
-    name: '柑仔店桌頭', // 圖釘/文具桌頭 — drives HUD #tier-label
+    name: '鹽埕柑仔店桌頭', // 圖釘/文具桌頭 — drives HUD #tier-label
     enterTrueRadius: 0.02,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 瓶蓋, 糖果, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'bottle_cap', 'candy', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 鹹酸甜, 尪仔標, 鉛筆, 鈕扣
+      'marble', 'eraser', 'pushpin', 'soda_cap', 'preserved_fruit', 'ngiauimia_card', 'pencil', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -64,147 +66,147 @@ export const TIERS = [
   },
   {
     index: 1,
-    name: '夜市',
+    name: '六合夜市',
     enterTrueRadius: 0.10,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 養樂多, 寶特瓶, 檳榔, 香, 金紙, 滷味夾, 紅白塑膠袋, 胡椒餅
-      'yakult', 'pet_bottle', 'betel_nut', 'incense_stick', 'joss_paper', 'luwei_tongs', 'redwhite_bag', 'pepper_bun',
-      // chunk landmarks: 攤車燈籠, 彈珠台
-      'stall_lantern', 'pinball_table',
+      // 木瓜牛奶, 烤魷魚, 鹽水雞, 香腸, 海產攤碗, 木瓜牛奶杯, 烤玉米, 黑輪串
+      'papaya_milk', 'grilled_squid', 'salt_chicken', 'sausage', 'seafood_bowl', 'milk_cup', 'grilled_corn', 'oden_skewer',
+      // chunk landmarks: 夜市拱門, 攤車
+      'night_market_arch', 'stall',
     ],
-    fogColor: 0xe2cbb0, // 黃昏夜市暖霧
-    skyTop: 0xd8b894,
-    skyBottom: 0xf4e0c2,
+    fogColor: 0xe6cda8, // 六合夜市黃昏暖霧
+    skyTop: 0xddb98a,
+    skyBottom: 0xf6e2c0,
     sunDir: [0.40, 0.50, 0.28],
     sunIntensity: 0.7,
     moonDir: [-0.42, 0.42, -0.81],
     moonAngSize: 0.022,
     starIntensity: 0.05,
     cloudDensity: 0.20,
-    cloudHex: 0xf3dcc0,
+    cloudHex: 0xf4dcbc,
   },
   {
     index: 2,
-    name: '騎樓',
+    name: '鹽埕騎樓',
     enterTrueRadius: 0.50,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 電鍋, 瓦斯桶, 三角錐, 消防栓, 招財貓, YouBike樁
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'youbike_dock',
-      // chunk landmarks: 攤販推車, 廟前香爐
-      'vendor_cart', 'temple_incense_burner',
+      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 招財貓, 鐵馬樁
+      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'bike_dock',
+      // chunk landmarks: 鹽埕推車, 廟前香爐
+      'salt_vendor_cart', 'temple_incense_burner',
     ],
-    fogColor: 0xcdb9b0, // 傍晚騎樓 灰粉
-    skyTop: 0xb89488,
-    skyBottom: 0xe6cdbd,
+    fogColor: 0xd2bba9, // 鹽埕騎樓傍晚 灰粉
+    skyTop: 0xbf977f,
+    skyBottom: 0xe9cfba,
     sunDir: [0.30, 0.42, 0.26],
     sunIntensity: 0.85,
     moonDir: [-0.38, 0.45, -0.81],
     moonAngSize: 0.028,
     starIntensity: 0.10,
     cloudDensity: 0.30,
-    cloudHex: 0xe8d2c4,
+    cloudHex: 0xead3bf,
   },
   {
     index: 3,
-    name: '機車海',
+    name: '機車海＋港邊',
     enterTrueRadius: 2.5,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 霓虹招牌, 鐵捲門, 路樹, 棚架, 石獅
-      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'roll_shutter', 'street_tree', 'awning_frame', 'stone_lion',
-      // chunk landmarks: 夜市拱門, 廟前牌樓
-      'night_market_arch', 'temple_pailou',
+      // 機車, 小貨車, 貨櫃, 鐵捲門, 繫纜柱, 漁網捲, 港邊棕櫚, 石獅
+      'scooter', 'mini_truck', 'shipping_container', 'roll_shutter', 'mooring_bollard', 'fishing_net_roll', 'harbor_palm', 'stone_lion',
+      // chunk landmarks: 龍門吊車, 漁港牌樓
+      'gantry_crane', 'fishport_pailou',
     ],
-    fogColor: 0xb6a3b0, // 暮色街道 藍紫起調
-    skyTop: 0x8c7a9c,
-    skyBottom: 0xd2bcc8,
+    fogColor: 0xa7a3b8, // 暮色機車海＋港邊藍起調
+    skyTop: 0x7a7ba0,
+    skyBottom: 0xc6bcce,
     sunDir: [0.10, 0.34, 0.22],
     sunIntensity: 0.9,
     moonDir: [-0.34, 0.48, -0.81],
     moonAngSize: 0.035,
     starIntensity: 0.15,
     cloudDensity: 0.34,
-    cloudHex: 0xd8c4d0,
+    cloudHex: 0xcdc4d6,
   },
   {
     index: 4,
-    name: '萬華街屋與廟',
+    name: '鹽埕街屋與廟',
     enterTrueRadius: 12,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 公寓街屋量體, 宮廟量體
-      'streethouse_mass', 'temple_mass',
+      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
+      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // chunk landmarks: 鹽埕街屋量體, 宮廟量體
+      'saltfield_streethouse_mass', 'temple_mass',
     ],
-    fogColor: 0x9c8fae, // 街燈初上 藍紫
-    skyTop: 0x6a5f8c,
-    skyBottom: 0xb8a6c8,
+    fogColor: 0x968ba6, // 鹽埕街屋暮色 藍紫
+    skyTop: 0x645a82,
+    skyBottom: 0xb3a3c2,
     sunDir: [-0.10, 0.30, 0.30],
     sunIntensity: 0.85,
     moonDir: [-0.32, 0.50, -0.81],
     moonAngSize: 0.046,
     starIntensity: 0.25,
     cloudDensity: 0.34,
-    cloudHex: 0xc2b0d2,
+    cloudHex: 0xbeacce,
   },
   {
     index: 5,
-    name: '商業文教區',
+    name: '港區與商業',
     enterTrueRadius: 60,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 百貨, 捷運高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'department_store', 'metro_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 商辦塔樓, 百貨量體
-      'commercial_tower', 'department_mass',
+      // 商辦大樓, 港倉, 輕軌高架, 跨港天橋, 停車塔, 港區看板, 玻璃帷幕街屋, 銀行
+      'office_tower', 'port_warehouse', 'lrt_viaduct', 'harbor_bridge', 'parking_tower', 'port_billboard', 'glass_curtain_house', 'bank',
+      // chunk landmarks: 港邊商辦塔, 港倉量體
+      'waterfront_office_tower', 'warehouse_mass',
     ],
-    fogColor: 0xb59bb0, // 暮色金紫 (golden hour 偏夜)
-    skyTop: 0x8a6f9e,
-    skyBottom: 0xe2b89a,
+    fogColor: 0xb098ac, // 港區金紫 (golden hour 偏夜)
+    skyTop: 0x856b9a,
+    skyBottom: 0xe0b694,
     sunDir: [-0.55, 0.20, 0.42],
-    sunIntensity: 1.0, // 低斜暮陽
+    sunIntensity: 1.0, // 低斜暮陽映海面
     moonDir: [-0.30, 0.52, -0.80],
     moonAngSize: 0.055,
     starIntensity: 0.35,
     cloudDensity: 0.30,
-    cloudHex: 0xe0b894,
+    cloudHex: 0xddb48e,
   },
   {
     index: 6,
-    name: '信義天際線',
+    name: '亞洲新灣區天際線',
     enterTrueRadius: 300,
     cellSizeSim: 32,
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 其他摩天樓, 巨型廣告牆, 商辦塔, 空橋, 屋頂機房, 街區量體
-      'glass_highrise', 'cross_bridge', 'other_skyscraper', 'giant_ad_wall', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
+      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 屋頂機房, 灣區量體
+      'glass_highrise', 'exhibition_hall', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'music_center', 'rooftop_plant_room', 'bayarea_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
-    fogColor: 0x4a3f6e, // 信義夜空 深藍紫 (the finale band)
-    skyTop: 0x1c1a44,
-    skyBottom: 0x6e5a96,
+    fogColor: 0x3f3a66, // 亞洲新灣區夜空 深藍紫 (the finale band)
+    skyTop: 0x181a40,
+    skyBottom: 0x62568e,
     sunDir: [-0.70, 0.08, 0.40],
-    sunIntensity: 0.30, // 入夜 — dimmed; 101 點燈接手
+    sunIntensity: 0.30, // 入夜 — dimmed; 85 大樓點燈接手
     moonDir: [-0.26, 0.56, -0.79],
     moonAngSize: 0.062,
     starIntensity: 0.6,
     cloudDensity: 0,
-    cloudHex: 0x4a3f6e,
+    cloudHex: 0x3f3a66,
   },
 ];
 
@@ -220,9 +222,9 @@ export const TIERS = [
  */
 export function validateTiersStructure() {
   const assert = (cond, msg) => {
-    if (!cond) throw new Error(`[taipei tiers] ${msg}`);
+    if (!cond) throw new Error(`[kaohsiung tiers] ${msg}`);
   };
-  assert(TIERS.length === 7, 'exactly 7 tiers (圖釘→101, x5 ladder)');
+  assert(TIERS.length === 7, 'exactly 7 tiers (圖釘→85, x5 ladder)');
   const seen = new Set();
   for (let t = 0; t < TIERS.length; t++) {
     const tier = TIERS[t];
@@ -243,7 +245,7 @@ export function validateTiersStructure() {
     }
 
     /* Sky/fog authoring guards (relocated from the engine's old config/tiers.js
-       — they now validate the SHIPPING Taipei tier params, not dead legacy data).
+       — they now validate the SHIPPING Kaohsiung tier params, not dead legacy data).
        Worst-case worldScale fog/load floor: the fog wall must hide the spawn-in
        edge EVEN WHERE the real-meter floors bind (ws_t = (START_RADIUS_M /
        SIM_RADIUS_MIN) * 5^t at reference simRadius 1). */
