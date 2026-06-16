@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0c14" />
-  <title>Roll Formosa — 捲啊捲，捲遍全台北。</title>
+  <title>Roll Formosa — 滾·福爾摩沙</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23ff2a78' stroke='%2300e0ff' stroke-width='2.5'/%3E%3C/svg%3E" />
 
   <!-- SEO / social. NOTE: absolute URLs assume the GitHub Pages deploy at
@@ -1186,15 +1186,36 @@
       <span class="ny-lantern opt" style="right:16%;animation-delay:-2.6s;"></span>
       <span class="ny-lantern" style="left:31%;animation-delay:-3.5s;"></span>
             <div class="ny-skyline" aria-hidden="true">
-        <!-- src is the taipei default; main.js swaps both to skyline-<city>.webp per the active pack. -->
+        <!-- taipei default; swapped to skyline-<city>.webp by the inline script
+             below (pre-paint, so no taipei flash on reload) + re-confirmed by main.js. -->
         <img class="ny-skyline-glow" src="/assets/title/skyline-taipei.webp" alt="" />
         <img class="ny-skyline-img" src="/assets/title/skyline-taipei.webp" alt="城市天際線" />
       </div>
+      <script>
+        /* Pre-paint city chrome: swap the skyline src + document.title to the
+           resolved city BEFORE the title screen paints, so reloading 高雄 never
+           flashes 台北. Runs synchronously during HTML parse (before main.js's
+           ~950KB bundle loads). Keep the city ids/names in sync with
+           src/packs/manifest.js + the pack displayNames. */
+        (function () {
+          try {
+            var c = new URLSearchParams(location.search).get('city')
+              || (window.localStorage && localStorage.getItem('rf_city')) || 'taipei';
+            if (c !== 'taipei' && c !== 'kaohsiung') c = 'taipei';
+            var imgs = document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img');
+            for (var i = 0; i < imgs.length; i++) {
+              imgs[i].src = imgs[i].src.replace(/skyline-[a-z0-9_]+\.webp/i, 'skyline-' + c + '.webp');
+            }
+            var names = { taipei: '台北', kaohsiung: '高雄' };
+            if (names[c]) document.title = 'Roll Formosa — 捲遍全' + names[c];
+          } catch (e) { /* fall back to the taipei HTML defaults + main.js swap */ }
+        })();
+      </script>
       <div class="ny-grain"></div>
     </div>
     <span class="ny-kicker">夜市 · NIGHT MARKET</span>
     <h1 class="game-title">ROLL<br />FORMOSA</h1>
-    <p class="game-subtitle">捲啊捲，捲遍全台北。 / Roll up all of Taipei.</p>
+    <p class="game-subtitle">捲啊捲，捲遍這座城市。 / Roll up the whole city.</p>
     <button id="start-button" class="btn" type="button">開始 / START</button>
     <!-- v3: bear mascot commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
     <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true"><img class="donack-toggle-face" src="/assets/donack/idle-0.webp" alt="月牙(台灣黑熊)" width="30" height="30" /><span id="donack-toggle-label">月牙 ON</span></button>
