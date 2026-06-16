@@ -135,16 +135,19 @@ import { EndingView } from './render/endingView.js'; // pack-driven island revea
 
 /* City-aware chrome, EARLY (before the geometry boot) so the title never even
    briefly flashes the taipei default skyline/title when a non-taipei city is
-   active. The full chrome pass below (§3) re-confirms these + wires the rest. */
+   active. Swap ONLY the city filename in each skyline img's existing src — the
+   HTML default (skyline-taipei.webp) is already base-resolved by Vite, so this
+   stays correct under the GitHub Pages /roll-formosa/ subpath (a hardcoded
+   '/assets/...' would 404 there — Vite rewrites HTML/CSS asset paths but NOT
+   runtime JS strings). onerror falls back to the original taipei src. */
 {
   const _name = typeof activePack.displayName === 'string' ? activePack.displayName : '';
   if (_name) document.title = `Roll Formosa — 捲遍全${_name}`;
-  const _sky = `/assets/title/skyline-${activePack.id}.webp`;
+  const _id = activePack.id;
   for (const _img of document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img')) {
-    _img.addEventListener('error', () => {
-      if (!_img.src.endsWith('skyline-taipei.webp')) _img.src = '/assets/title/skyline-taipei.webp';
-    }, { once: true });
-    _img.src = _sky;
+    const _orig = _img.src; // Vite-resolved taipei default — base-correct in dev AND on the subpath
+    _img.addEventListener('error', () => { if (_img.src !== _orig) _img.src = _orig; }, { once: true });
+    _img.src = _orig.replace(/skyline-[a-z0-9_]+\.webp/i, `skyline-${_id}.webp`);
   }
 }
 
@@ -409,19 +412,8 @@ const _packT = activePack.locale && typeof activePack.locale.t === 'function'
   }
 }
 
-/* City-aware title skyline: swap both the sharp + bloom layers to
-   /assets/title/skyline-<id>.webp so 高雄 shows the 高雄 skyline, not 台北.
-   onerror keeps the taipei default if a city ships without a skyline asset. */
-{
-  const skylineSrc = `/assets/title/skyline-${activePack.id}.webp`;
-  const imgs = document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img');
-  for (const img of imgs) {
-    img.addEventListener('error', () => {
-      if (!img.src.endsWith('skyline-taipei.webp')) img.src = '/assets/title/skyline-taipei.webp';
-    }, { once: true });
-    img.src = skylineSrc;
-  }
-}
+/* (The city-aware title skyline is swapped EARLY, before the geometry boot —
+   see the early chrome block above — so it isn't repeated here.) */
 
 /* 換城市 affordance — title + result-screen buttons re-open the selector. */
 {
