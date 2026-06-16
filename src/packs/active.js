@@ -1,6 +1,13 @@
 /**
- * @file active.js — THE single active StagePack the engine reads.
- * P3: flipped to taipei pack (zh-TW shell, the legacy simulation data as stub).
- * P4 (tiers), P5 (catalog), P6 (cityMap/landmarks) replace the stubs.
+ * @file active.js — the engine's single content seam. Statically imports every
+ * city pack and synchronously exports the one chosen by ?city= / localStorage
+ * (see manifest.js). Switching city = reload with a new ?city (no runtime swap,
+ * which the "load-time baked activePack" reads in the engine cannot support).
  */
-export { activePack, default } from './taipei/index.js';
+import { activePack as taipei } from './taipei/index.js';
+import { activePack as kaohsiung } from './kaohsiung/index.js';
+import { resolveCityId } from './manifest.js';
+
+const PACKS = { taipei, kaohsiung };
+export const activePack = PACKS[resolveCityId()] || taipei;
+export default activePack;
