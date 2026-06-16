@@ -19,9 +19,10 @@
  * kept identical to the engine baseline so the engine's worst-case fog/load
  * floor dev-assert passes untouched.
  *
- * Palette progression (港都黃昏): 暖燈柑仔店 (T0) → 六合夜市黃昏 (T1) →
- * 鹽埕騎樓傍晚 (T2) → 暮色機車海＋港邊藍 (T3) → 鹽埕街屋暮色 (T4) →
- * 港區金紫 (T5) → 亞洲新灣區夜空 (T6).
+ * Palette (搖滾·福爾摩沙 夜色 pass): all-night neon arc 夜市→夜店 — 暖夜市攤燈
+ * (T0/T1, 鹽埕/六合) → 漸冷霓虹紫 (T2-T4) → 冷電光夜店藍 (T5/T6, 亞洲新灣區電城).
+ * Color fields are IDENTICAL to packs/taipei/tiers.js (shared night palette);
+ * object rim glows the per-tier cloudHex accent.
  */
 
 import { RESCALE_S, ARCH_PER_TIER } from '../../config/tiers.js';
@@ -53,16 +54,16 @@ export const TIERS = [
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
-    fogColor: 0xe7d9bf, // 暖色柑仔店燈霧
-    skyTop: 0xf0ddb4,
-    skyBottom: 0xfff3dd,
+    fogColor: 0x3a2616, // 暖色柑仔店燈霧
+    skyTop: 0x180d06,
+    skyBottom: 0x5e3414,
     sunDir: [0.50, 0.62, 0.30],
-    sunIntensity: 0.5, // 無頂室內的軟燈光
+    sunIntensity: 0.55, // 無頂室內的軟燈光
     moonDir: [-0.45, 0.40, -0.80],
     moonAngSize: 0.018,
-    starIntensity: 0,
+    starIntensity: 0.10,
     cloudDensity: 0.10,
-    cloudHex: 0xfff1d8,
+    cloudHex: 0xffb050,
   },
   {
     index: 1,
@@ -77,16 +78,16 @@ export const TIERS = [
       // chunk landmarks: 夜市拱門, 攤車
       'night_market_arch', 'stall',
     ],
-    fogColor: 0xe6cda8, // 六合夜市黃昏暖霧
-    skyTop: 0xddb98a,
-    skyBottom: 0xf6e2c0,
+    fogColor: 0x3e2026, // 六合夜市黃昏暖霧
+    skyTop: 0x1c0f14,
+    skyBottom: 0x6e2c44,
     sunDir: [0.40, 0.50, 0.28],
-    sunIntensity: 0.7,
+    sunIntensity: 0.55,
     moonDir: [-0.42, 0.42, -0.81],
     moonAngSize: 0.022,
-    starIntensity: 0.05,
+    starIntensity: 0.16,
     cloudDensity: 0.20,
-    cloudHex: 0xf4dcbc,
+    cloudHex: 0xff7e54,
   },
   {
     index: 2,
@@ -101,16 +102,16 @@ export const TIERS = [
       // chunk landmarks: 鹽埕推車, 廟前香爐
       'salt_vendor_cart', 'temple_incense_burner',
     ],
-    fogColor: 0xd2bba9, // 鹽埕騎樓傍晚 灰粉
-    skyTop: 0xbf977f,
-    skyBottom: 0xe9cfba,
+    fogColor: 0x341e34, // 鹽埕騎樓傍晚 灰粉
+    skyTop: 0x180c1a,
+    skyBottom: 0x5c2c58,
     sunDir: [0.30, 0.42, 0.26],
-    sunIntensity: 0.85,
+    sunIntensity: 0.55,
     moonDir: [-0.38, 0.45, -0.81],
     moonAngSize: 0.028,
-    starIntensity: 0.10,
+    starIntensity: 0.22,
     cloudDensity: 0.30,
-    cloudHex: 0xead3bf,
+    cloudHex: 0xcc5aa8,
   },
   {
     index: 3,
@@ -125,16 +126,16 @@ export const TIERS = [
       // chunk landmarks: 龍門吊車, 漁港牌樓
       'gantry_crane', 'fishport_pailou',
     ],
-    fogColor: 0xa7a3b8, // 暮色機車海＋港邊藍起調
-    skyTop: 0x7a7ba0,
-    skyBottom: 0xc6bcce,
+    fogColor: 0x2a1c3e, // 暮色機車海＋港邊藍起調
+    skyTop: 0x130c24,
+    skyBottom: 0x48287a,
     sunDir: [0.10, 0.34, 0.22],
-    sunIntensity: 0.9,
+    sunIntensity: 0.55,
     moonDir: [-0.34, 0.48, -0.81],
     moonAngSize: 0.035,
-    starIntensity: 0.15,
+    starIntensity: 0.30,
     cloudDensity: 0.34,
-    cloudHex: 0xcdc4d6,
+    cloudHex: 0x9850e0,
   },
   {
     index: 4,
@@ -149,16 +150,16 @@ export const TIERS = [
       // chunk landmarks: 鹽埕街屋量體, 宮廟量體
       'saltfield_streethouse_mass', 'temple_mass',
     ],
-    fogColor: 0x968ba6, // 鹽埕街屋暮色 藍紫
-    skyTop: 0x645a82,
-    skyBottom: 0xb3a3c2,
+    fogColor: 0x201a44, // 鹽埕街屋暮色 藍紫
+    skyTop: 0x0e0c26,
+    skyBottom: 0x382c88,
     sunDir: [-0.10, 0.30, 0.30],
-    sunIntensity: 0.85,
+    sunIntensity: 0.55,
     moonDir: [-0.32, 0.50, -0.81],
     moonAngSize: 0.046,
-    starIntensity: 0.25,
+    starIntensity: 0.38,
     cloudDensity: 0.34,
-    cloudHex: 0xbeacce,
+    cloudHex: 0x6858f0,
   },
   {
     index: 5,
@@ -173,16 +174,16 @@ export const TIERS = [
       // chunk landmarks: 港邊商辦塔, 港倉量體
       'waterfront_office_tower', 'warehouse_mass',
     ],
-    fogColor: 0xb098ac, // 港區金紫 (golden hour 偏夜)
-    skyTop: 0x856b9a,
-    skyBottom: 0xe0b694,
+    fogColor: 0x1c1e48, // 港區金紫 (golden hour 偏夜)
+    skyTop: 0x16163a,
+    skyBottom: 0x3a3ab8,
     sunDir: [-0.55, 0.20, 0.42],
-    sunIntensity: 1.0, // 低斜暮陽映海面
+    sunIntensity: 0.60, // 低斜暮陽映海面
     moonDir: [-0.30, 0.52, -0.80],
     moonAngSize: 0.055,
-    starIntensity: 0.35,
+    starIntensity: 0.46,
     cloudDensity: 0.30,
-    cloudHex: 0xddb48e,
+    cloudHex: 0x4262ff,
   },
   {
     index: 6,
@@ -197,16 +198,16 @@ export const TIERS = [
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
-    fogColor: 0x3f3a66, // 亞洲新灣區夜空 深藍紫 (the finale band)
-    skyTop: 0x181a40,
-    skyBottom: 0x62568e,
+    fogColor: 0x18183e, // 亞洲新灣區夜空 深藍紫 (the finale band)
+    skyTop: 0x121238,
+    skyBottom: 0x3030aa,
     sunDir: [-0.70, 0.08, 0.40],
-    sunIntensity: 0.30, // 入夜 — dimmed; 85 大樓點燈接手
+    sunIntensity: 0.55, // 入夜 — dimmed; 85 大樓點燈接手
     moonDir: [-0.26, 0.56, -0.79],
     moonAngSize: 0.062,
-    starIntensity: 0.6,
+    starIntensity: 0.60,
     cloudDensity: 0,
-    cloudHex: 0x3f3a66,
+    cloudHex: 0x3a52ff,
   },
 ];
 

@@ -18,8 +18,10 @@
  * kept identical to the engine baseline so the engine's worst-case fog/load
  * floor dev-assert passes untouched.
  *
- * Palette progression: 暖燈柑仔店 (T0) → 黃昏夜市 (T1) → 傍晚騎樓 (T2) →
- * 暮色機車海藍紫 (T3) → 街燈初上 (T4) → 暮色金紫 (T5) → 信義夜空 (T6).
+ * Palette (搖滾·福爾摩沙 夜色 pass): all-night neon arc 夜市→夜店 — 暖夜市攤燈
+ * (T0/T1) → 漸冷霓虹紫 (T2-T4) → 冷電光夜店藍 (T5/T6, 信義電城). Shared by
+ * every pack (identical color fields per tier); object rim glows the per-tier
+ * cloudHex accent (main.js setRimTint + tuning RIM_K).
  */
 
 import { RESCALE_S, ARCH_PER_TIER } from '../../config/tiers.js';
@@ -51,16 +53,16 @@ export const TIERS = [
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
-    fogColor: 0xe7d9bf, // 暖色柑仔店燈霧
-    skyTop: 0xf0ddb4,
-    skyBottom: 0xfff3dd,
+    fogColor: 0x3a2616, // T0 暖夜市攤燈 (搖滾·福爾摩沙 夜市→夜店 夜色 pass)
+    skyTop: 0x180d06,
+    skyBottom: 0x5e3414,
     sunDir: [0.50, 0.62, 0.30],
-    sunIntensity: 0.5, // 無頂室內的軟燈光
+    sunIntensity: 0.55, // 暖攤燈(夜色但物件仍看得清)
     moonDir: [-0.45, 0.40, -0.80],
     moonAngSize: 0.018,
-    starIntensity: 0,
+    starIntensity: 0.10,
     cloudDensity: 0.10,
-    cloudHex: 0xfff1d8,
+    cloudHex: 0xffb050,
   },
   {
     index: 1,
@@ -75,16 +77,16 @@ export const TIERS = [
       // chunk landmarks: 攤車燈籠, 彈珠台
       'stall_lantern', 'pinball_table',
     ],
-    fogColor: 0xe2cbb0, // 黃昏夜市暖霧
-    skyTop: 0xd8b894,
-    skyBottom: 0xf4e0c2,
+    fogColor: 0x3e2026, // T1 熱鬧夜市霓虹(暖+第一道霓虹)
+    skyTop: 0x1c0f14,
+    skyBottom: 0x6e2c44,
     sunDir: [0.40, 0.50, 0.28],
-    sunIntensity: 0.7,
+    sunIntensity: 0.55,
     moonDir: [-0.42, 0.42, -0.81],
     moonAngSize: 0.022,
-    starIntensity: 0.05,
+    starIntensity: 0.16,
     cloudDensity: 0.20,
-    cloudHex: 0xf3dcc0,
+    cloudHex: 0xff7e54,
   },
   {
     index: 2,
@@ -99,16 +101,16 @@ export const TIERS = [
       // chunk landmarks: 攤販推車, 廟前香爐
       'vendor_cart', 'temple_incense_burner',
     ],
-    fogColor: 0xcdb9b0, // 傍晚騎樓 灰粉
-    skyTop: 0xb89488,
-    skyBottom: 0xe6cdbd,
+    fogColor: 0x341e34, // T2 騎樓霓虹漸冷(紫洋紅上)
+    skyTop: 0x180c1a,
+    skyBottom: 0x5c2c58,
     sunDir: [0.30, 0.42, 0.26],
-    sunIntensity: 0.85,
+    sunIntensity: 0.55,
     moonDir: [-0.38, 0.45, -0.81],
     moonAngSize: 0.028,
-    starIntensity: 0.10,
+    starIntensity: 0.22,
     cloudDensity: 0.30,
-    cloudHex: 0xe8d2c4,
+    cloudHex: 0xcc5aa8,
   },
   {
     index: 3,
@@ -123,16 +125,16 @@ export const TIERS = [
       // chunk landmarks: 夜市拱門, 廟前牌樓
       'night_market_arch', 'temple_pailou',
     ],
-    fogColor: 0xb6a3b0, // 暮色街道 藍紫起調
-    skyTop: 0x8c7a9c,
-    skyBottom: 0xd2bcc8,
+    fogColor: 0x2a1c3e, // T3 機車海街頭電光(紫)
+    skyTop: 0x130c24,
+    skyBottom: 0x48287a,
     sunDir: [0.10, 0.34, 0.22],
-    sunIntensity: 0.9,
+    sunIntensity: 0.55,
     moonDir: [-0.34, 0.48, -0.81],
     moonAngSize: 0.035,
-    starIntensity: 0.15,
+    starIntensity: 0.30,
     cloudDensity: 0.34,
-    cloudHex: 0xd8c4d0,
+    cloudHex: 0x9850e0,
   },
   {
     index: 4,
@@ -147,16 +149,16 @@ export const TIERS = [
       // chunk landmarks: 公寓街屋量體, 宮廟量體
       'streethouse_mass', 'temple_mass',
     ],
-    fogColor: 0x9c8fae, // 街燈初上 藍紫
-    skyTop: 0x6a5f8c,
-    skyBottom: 0xb8a6c8,
+    fogColor: 0x201a44, // T4 街屋廟埕藍紫(轉冷)
+    skyTop: 0x0e0c26,
+    skyBottom: 0x382c88,
     sunDir: [-0.10, 0.30, 0.30],
-    sunIntensity: 0.85,
+    sunIntensity: 0.55,
     moonDir: [-0.32, 0.50, -0.81],
     moonAngSize: 0.046,
-    starIntensity: 0.25,
+    starIntensity: 0.38,
     cloudDensity: 0.34,
-    cloudHex: 0xc2b0d2,
+    cloudHex: 0x6858f0,
   },
   {
     index: 5,
@@ -171,16 +173,16 @@ export const TIERS = [
       // chunk landmarks: 商辦塔樓, 百貨量體
       'commercial_tower', 'department_mass',
     ],
-    fogColor: 0xb59bb0, // 暮色金紫 (golden hour 偏夜)
-    skyTop: 0x8a6f9e,
-    skyBottom: 0xe2b89a,
+    fogColor: 0x1c1e48, // T5 夜店電光藍(俱樂部)
+    skyTop: 0x16163a,
+    skyBottom: 0x3a3ab8,
     sunDir: [-0.55, 0.20, 0.42],
-    sunIntensity: 1.0, // 低斜暮陽
+    sunIntensity: 0.60,
     moonDir: [-0.30, 0.52, -0.80],
     moonAngSize: 0.055,
-    starIntensity: 0.35,
+    starIntensity: 0.46,
     cloudDensity: 0.30,
-    cloudHex: 0xe0b894,
+    cloudHex: 0x4262ff,
   },
   {
     index: 6,
@@ -195,16 +197,16 @@ export const TIERS = [
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
-    fogColor: 0x4a3f6e, // 信義夜空 深藍紫 (the finale band)
-    skyTop: 0x1c1a44,
-    skyBottom: 0x6e5a96,
+    fogColor: 0x18183e, // T6 巔峰夜店電城(信義電光天際,101 接手)
+    skyTop: 0x121238,
+    skyBottom: 0x3030aa,
     sunDir: [-0.70, 0.08, 0.40],
-    sunIntensity: 0.30, // 入夜 — dimmed; 101 點燈接手
+    sunIntensity: 0.55, // 入夜 — 城市霓虹接手
     moonDir: [-0.26, 0.56, -0.79],
     moonAngSize: 0.062,
-    starIntensity: 0.6,
+    starIntensity: 0.60,
     cloudDensity: 0,
-    cloudHex: 0x4a3f6e,
+    cloudHex: 0x3a52ff,
   },
 ];
 

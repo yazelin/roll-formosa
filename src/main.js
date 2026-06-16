@@ -268,8 +268,8 @@ if (import.meta.env && import.meta.env.DEV) {
  * every TIER_UP crossfade start (any sky-ish hex works per design); the
  * immediate-palette sites (boot, resetWorld, devTeleport, ?r= dev start)
  * call setRimTint alongside env.setTierPaletteImmediate below. */
-bus.on(EVT.TIER_UP, (p) => setRimTint(TIERS[p.tierIndex].skyTop));
-setRimTint(TIERS[scaleMgr.tierIndex].skyTop); // boot palette (tier 0)
+bus.on(EVT.TIER_UP, (p) => setRimTint(TIERS[p.tierIndex].cloudHex));
+setRimTint(TIERS[scaleMgr.tierIndex].cloudHex); // boot palette (tier 0)
 
 /* Absorb (Stream C): stamps AbsorbEvent.archetypeCode/collectibleId (via
  * curated.collectibleIdFor) BEFORE store.free. Emits only — construction
@@ -595,7 +595,7 @@ function resetWorld() {
   collection.resetRun(); // clears foundThisRun; the album mask persists
   onboarding.reset(); // v5: rearm the opening parts guide (endingView needs no
   // entry here — finale.reset() above already calls endingView.hide())
-  setRimTint(TIERS[0].skyTop); // v4 rim — env self-resets its palette to tier 0
+  setRimTint(TIERS[0].cloudHex); // v4 rim — env self-resets its palette to tier 0
   simOriginX = 0; // real->sim bridge follows the fresh origin/scale
   simOriginZ = 0;
   spawner.preloadStartArea(ballPhys.state.pos, scaleMgr.tierIndex, ballPhys.state.radiusSim);
@@ -716,7 +716,7 @@ function devTeleportTo(xRealM, zRealM, rM) {
   scaleMgr.maybeTierUp(ballPhys.state, store, hashes, instances, cameraRig, env);
   scaleMgr.maybeRebase(ballPhys.state, store, hashes, instances, cameraRig, env, spawner); // one forced pass
   env.setTierPaletteImmediate(scaleMgr.tierIndex);
-  setRimTint(TIERS[scaleMgr.tierIndex].skyTop); // v4 rim follows the palette snap
+  setRimTint(TIERS[scaleMgr.tierIndex].cloudHex); // v4 rim follows the palette snap
   backdrop.setProfileImmediate(scaleMgr.tierIndex);
   spawner.preloadStartArea(ballPhys.state.pos, scaleMgr.tierIndex, ballPhys.state.radiusSim);
   // forceScan() above only SCHEDULED the full pass — run it now with the
@@ -754,7 +754,7 @@ if (devAtName === null || !devTeleport(devAtName, startRadiusM !== null ? startR
       devTier++;
     }
     env.setTierPaletteImmediate(devTier);
-    setRimTint(TIERS[devTier].skyTop); // v4 rim follows the palette snap
+    setRimTint(TIERS[devTier].cloudHex); // v4 rim follows the palette snap
     backdrop.setProfileImmediate(devTier); // skip the profile crossfade too
   }
   spawner.preloadStartArea(ballPhys.state.pos, scaleMgr.tierIndex, ballPhys.state.radiusSim);
