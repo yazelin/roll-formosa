@@ -4,7 +4,7 @@
  *
  * COL_PAPAYA_MILK — 木瓜牛奶 (papaya milk), the signature drink of 高雄牛乳大王
  * (Kaohsiung's beloved "Milk King" stand). Silhouette: a round, pot-bellied
- * clear glass cup — fatter than a boba cup, bulging at the belly and pulling
+ * clear glass cup — fatter than a bubble-tea cup, bulging at the belly and pulling
  * back to a narrow base — brimming with creamy pale-yellow papaya milk, topped
  * by a domed dollop of froth and a fat straw poking out at a jaunty angle.
  * Small and hand-held; the round belly is what tells it apart from a milk-tea

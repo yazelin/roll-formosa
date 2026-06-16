@@ -88,7 +88,7 @@ describe('kaohsiung catalog surface', () => {
     }
     // Kaohsiung collectibles + landmarks resolve. (The 高雄85 goal monument is
     // rendered separately by goalTower.js — code 93 holds 旗后炮台 — so the goal
-    // id is NOT in CATALOG, exactly like taipei101 in the Taipei pack.)
+    // id is NOT in CATALOG, the same way the goal tower is excluded in taipei.)
     expect(CATALOG['black_bear']).toBeDefined();
     expect(CATALOG['meinong_umbrella']).toBeDefined();
     expect(CATALOG['cihou_fort']).toBeDefined();
