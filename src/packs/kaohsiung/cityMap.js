@@ -12,11 +12,11 @@
  * Override list:
  *   - LANDMARKS   → native Taipei 9 entries (8 curated + 101 goal)
  *   - PLACEMENTS  → cityData base placements + the 8 Taipei landmark placements
- *   - GOAL_POS    → TAIPEI101_POS (same as P6a)
+ *   - GOAL_POS    → KAOHSIUNG85_POS (reuses the legacy goal anchor)
  *   - DEV_STARTS  → Taipei-themed teleport keys (same as P6a)
  */
 
-import { TAIPEI101_POS } from './monument.js';
+import { KAOHSIUNG85_POS } from './monument.js';
 import { ABSORB_RATIO } from '../../config/tuning.js';
 
 // Import the 8 curated landmark geometry descriptors for position/color/name.
@@ -28,7 +28,7 @@ import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
 import { NM_CKS } from './landmarks/cks_memorial.js';
 import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
 import { NM_ARENA } from './landmarks/arena.js';
-import { NM_TAIPEI101 } from './landmarks/taipei101.js';
+import { NM_KAOHSIUNG85 } from './landmarks/kaohsiung85.js';
 
 // Re-export the pack-owned baked layout (cityData.js). The engine consumes
 // SHOP (terrain colliders) + bandAllowedAt (spawn gating); MAP_BOUNDS is the
@@ -205,10 +205,10 @@ export const LANDMARKS = Object.freeze([
     isGoal: false,
   },
   {
-    landmarkId: NM_TAIPEI101.landmarkId,    // 8 — GOAL
-    name: NM_TAIPEI101.name,
-    nameJa: NM_TAIPEI101.name,
-    x: TAIPEI101_POS.x, z: TAIPEI101_POS.z,
+    landmarkId: NM_KAOHSIUNG85.landmarkId,    // 8 — GOAL
+    name: NM_KAOHSIUNG85.name,
+    nameJa: NM_KAOHSIUNG85.name,
+    x: KAOHSIUNG85_POS.x, z: KAOHSIUNG85_POS.z,
     dioramaR: 420,
     collisionScale: 0.5,
     sizeReal: 508,
@@ -298,10 +298,10 @@ export const water = Object.freeze({
 /* ================================================================== */
 
 /**
- * Goal monument real-meter position (台北101 world anchor).
+ * Goal monument real-meter position (高雄85大樓 world anchor).
  * Preserves existing engine imports (terrain.js, goalTower.js use GOAL_POS).
  */
-export const GOAL_POS = TAIPEI101_POS;
+export const GOAL_POS = KAOHSIUNG85_POS;
 
 /**
  * Dev teleport starts (?at=name&r=meters; main.js devTeleport).
