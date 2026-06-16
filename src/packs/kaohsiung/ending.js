@@ -1,7 +1,7 @@
 /**
- * @file taipei/ending.js — Pack-driven Formosa-island reveal definition.
+ * @file kaohsiung/ending.js — Pack-driven Formosa-island reveal definition.
  *
- * Exported as `ending` on the Taipei StagePack. Consumed by
+ * Exported as `ending` on the Kaohsiung StagePack. Consumed by
  * render/endingView.js to build the win-cinematic island view:
  *   - A stylized Taiwan ("番薯" sweet-potato) island polygon in the XZ plane.
  *   - City pin list with lit/dim states.
@@ -60,18 +60,18 @@ export const TAIWAN_OUTLINE = [
 
 /**
  * City pins. x/z normalized same as TAIWAN_OUTLINE.
- * `lit: true` = bright glow (Taipei, pack is unlocked);
+ * `lit: true` = bright glow (高雄, this pack is unlocked — the southern beacon);
  * `lit: false` = dim dot ("coming soon").
  */
 export const CITIES = [
-  { name: '台北', x:  0.02, z: -0.87, lit: true  }, // Taipei — north, lit
+  { name: '台北', x:  0.02, z: -0.87, lit: false }, // Taipei — north
   { name: '基隆', x:  0.12, z: -0.88, lit: false }, // Keelung
   { name: '桃園', x: -0.22, z: -0.72, lit: false }, // Taoyuan
   { name: '新竹', x: -0.38, z: -0.54, lit: false }, // Hsinchu
   { name: '台中', x: -0.46, z: -0.12, lit: false }, // Taichung
   { name: '嘉義', x: -0.52,  z: 0.20, lit: false }, // Chiayi
   { name: '台南', x: -0.52,  z: 0.36, lit: false }, // Tainan
-  { name: '高雄', x: -0.44,  z: 0.50, lit: false }, // Kaohsiung
+  { name: '高雄', x: -0.44,  z: 0.50, lit: true  }, // Kaohsiung — south, lit
   { name: '花蓮', x:  0.44, z: -0.38, lit: false }, // Hualien (east coast)
 ];
 
@@ -83,7 +83,7 @@ export const COLORS = {
   islandEmissive: 0x2a5c2a,
   /** Ocean floor (background plane around the island). */
   ocean: 0x061420,
-  /** Lit city glow — warm amber (Taipei beacon). */
+  /** Lit city glow — warm amber (高雄 southern beacon). */
   cityLit: 0xffd060,
   /** Lit city halo / bloom tint. */
   cityLitGlow: 0xff9a20,

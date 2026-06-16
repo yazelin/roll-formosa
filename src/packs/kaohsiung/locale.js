@@ -1,5 +1,5 @@
 /**
- * @file locale.js — zh-TW string table for the Taipei pack.
+ * @file locale.js — zh-TW string table for the Kaohsiung pack.
  *
  * Keys are stable identifiers. Missing keys return a visible '⚠[key]' fallback
  * so a typo is immediately surfaced in the UI without crashing.
@@ -20,8 +20,8 @@
 const TABLE = {
   // ---- HUD toasts ----
   'hud.rareFound':    '發現稀有！+5000',
-  'hud.goalCall':     '台北 101 在呼喚你…！',
-  'hud.goalGuide':    '朝台北 101 前進！',
+  'hud.goalCall':     '高雄 85 大樓在呼喚你…！',
+  'hud.goalGuide':    '朝高雄 85 大樓前進！',
   /** hud.landmark is a function: (nameZh) => string */
   'hud.landmark':     (name) => `「${name}」捲進來了！`,
   /** hud.collect is a function: (found, total) => string */
@@ -29,7 +29,7 @@ const TABLE = {
 
   // ---- Screens — share / best lines ----
   'screens.shareText':    (timeStr, rank, score, found, total) =>
-    `🗼Roll Formosa 台北捲完了！\n⏱${timeStr}／RANK ${rank}／⭐${score}\n🏯稀有 ${found}/${total} 收藏`,
+    `🗼Roll Formosa 高雄捲完了！\n⏱${timeStr}／RANK ${rank}／⭐${score}\n🏯稀有 ${found}/${total} 收藏`,
   'screens.bestTime':     (timeStr, rank) => `最佳時間 ${timeStr} (RANK ${rank})`,
   'screens.bestScore':    (score) => `最高分 ${score}`,
   'screens.personalBest': (line) => `個人最佳：${line}`,
@@ -47,14 +47,14 @@ const TABLE = {
   'donack.off': '月牙 OFF',
 
   // ---- Title screen ----
-  'title.subtitle':    '捲啊捲，捲遍全台北。 / Roll up all of Taipei.',
+  'title.subtitle':    '捲啊捲，捲遍全高雄。 / Roll up all of Kaohsiung.',
   'title.start':       '開始 / START',
-  'title.seedLine':    '從 2cm 圖釘，一路到 508m 台北 101 — From a 2cm pushpin to Taipei 101.',
+  'title.seedLine':    '從 2cm 圖釘，一路到 378m 高雄 85 大樓 — From a 2cm pushpin to the 85 Sky Tower.',
   'title.personalBest': '個人最佳：',
 
   // ---- Win overlay ----
-  'win.title':         '台北，全部捲走了！',
-  'win.subtitle':      'YOU ROLLED UP TAIPEI',
+  'win.title':         '高雄，全部捲走了！',
+  'win.subtitle':      'YOU ROLLED UP KAOHSIUNG',
   'win.labelTime':     '⏱ 時間 / TIME',
   'win.labelScore':    '⭐ 分數 / SCORE',
   'win.labelSize':     '📏 最終大小 / SIZE',
