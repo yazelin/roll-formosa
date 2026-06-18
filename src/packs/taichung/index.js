@@ -53,8 +53,8 @@ import { NM_GAOMEI_WETLAND } from './landmarks/gaomei_wetland.js';
  */
 const extraIds = [
   // indices 0..11 — codes 70..81: Taipei collectibles (P7)
-  'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-  'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
+  'black_bear', 'boba', 'sun_cake', 'miyahara_icecream', 'dajia_taro', 'da_changbao',
+  'mayi_soup', 'jiguang_chicken', 'dongquan_sauce', 'taichung_rouyuan', 'fengyuan_paigu', 'tetrapod',
   // indices 12..19 — codes 82..89: Taipei landmark ids (P6b)
   NM_TAICHUNG_STATION.id,        // 82 北門(承恩門)
   NM_MIYAHARA.id,      // 83 龍山寺

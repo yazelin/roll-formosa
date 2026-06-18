@@ -56,8 +56,8 @@ describe('taichung pack', () => {
     expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(taipeiChunkIds);
     // P7: collectible codes 70..81 are Taipei collectible ids.
     expect(activePack.archetypeIdByCode.slice(70, 82)).toEqual([
-      'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-      'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
+      'black_bear', 'boba', 'sun_cake', 'miyahara_icecream', 'dajia_taro', 'da_changbao',
+      'mayi_soup', 'jiguang_chicken', 'dongquan_sauce', 'taichung_rouyuan', 'fengyuan_paigu', 'tetrapod',
     ]);
     // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
     expect(activePack.archetypeIdByCode[82]).toBe('taichung_station');
