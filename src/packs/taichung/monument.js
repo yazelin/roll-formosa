@@ -1,37 +1,31 @@
 /**
- * @file packs/taipei/monument.js — Taipei 101 goal monument descriptor (P6a).
+ * @file packs/taichung/monument.js — 台中之鑽 goal monument descriptor.
  *
  * Exposes the goalMonument shape consumed by:
  *   - render/goalTower.js (GoalTowerView) — buildGeometry + pos
  *   - world/terrain.js   — pos + baseRadiusM (permanent base collider)
  *   - game/finale.js     — pos + winToast
- *   - activePack         — via taipei/index.js goalMonument field
+ *   - activePack         — via taichung/index.js goalMonument field
  *
- * TAIPEI101_POS reuses the legacy goal-monument world position (749, -252)
- * for P6a — the Taipei city map will author a new anchor in P6b; for now the
- * goal stands at the same map location so all existing finale/terrain math
- * continues to work without a city-map rewrite.
- *
- * goal constants retune (101 = 508 m real vs the legacy 634 m monument):
- *   goalRadiusM  = 420 m  (same GOAL_RADIUS_M — dramatic approach unchanged)
- *   baseRadiusM  = 72 m   (101 base ~58 m real, bumped for game feel;
- *                           MONUMENT_BASE_R_M 90 m scaled by 508/634 ≈ 72 m)
- *
- * winToast (spec §5.3 R13 bear-cheer zh-TW string; no 跨年煙火 per R13).
+ * SCALE NOTE: the goal tower's in-game height (MONUMENT_HEIGHT_M = 508) and the
+ * win-arm radius (GOAL_RADIUS_M = 420) are ENGINE constants (goalTower.js /
+ * tuning.js), identical for every city — so 台中之鑽 plays at the same proven
+ * pacing as 台北101 / 高雄85. The real "225 m" is lore (carried in the name /
+ * dioramaRHint), exactly like 高雄85's "378 m". MONUMENT_POS reuses the shared
+ * goal-monument world anchor; baseRadiusM keeps the tuned 72 m goal collider.
  */
 
-import { NM_TAIPEI101 } from './landmarks/taipei101.js';
+import { NM_TAICHUNG_DIAMOND } from './landmarks/taichung_diamond.js';
 
-/** Taipei 101 game-world position (REAL meters, origin = ball start).
- *  P6a: reuses the legacy goal-monument world anchor; P6b will update to real Xinyi coords. */
-export const TAIPEI101_POS = Object.freeze({ x: 749, z: -252 });
+/** 台中之鑽 game-world position (REAL meters, origin = ball start). Reuses the
+ *  shared goal-monument anchor so finale/terrain math is unchanged. */
+export const MONUMENT_POS = Object.freeze({ x: 749, z: -252 });
 
-/** 台北101 base radius in REAL meters (game feel; scales from the legacy 90 m
- *  monument by real-height ratio 508/634 ≈ 0.80 → 72 m).  */
-export const TAIPEI101_BASE_R_M = 72;
+/** Goal base radius in REAL meters (tuned goal-collider feel, shared value). */
+export const MONUMENT_BASE_R_M = 72;
 
 /**
- * Goal monument descriptor for the Taipei pack.
+ * Goal monument descriptor for the Taichung pack.
  *
  * @type {{
  *   buildGeometry: (rng: object) => THREE.BufferGeometry,
@@ -43,20 +37,20 @@ export const TAIPEI101_BASE_R_M = 72;
  * }}
  */
 export const goalMonument = Object.freeze({
-  /** Build the 101 tower mesh (unit-sphere normalized, ≤600 tris). */
-  buildGeometry: NM_TAIPEI101.buildGeometry,
+  /** Build the 台中之鑽 mesh (unit-sphere normalized, ≤600 tris). */
+  buildGeometry: NM_TAICHUNG_DIAMOND.buildGeometry,
   /** Fixed real-meter world position (origin = ball start). */
-  pos: TAIPEI101_POS,
+  pos: MONUMENT_POS,
   /** Display name (zh-TW). */
-  name: '台北101',
+  name: '台中之鑽',
   /** GOAL_RADIUS_M equivalent — approach arms at this trueRadius (m). */
   goalRadiusM: 420,
   /** GOAL_CALL_RADIUS_M equivalent — CALLED toast fires at this trueRadius (m). */
   callRadiusM: 380,
   /** Permanent base circle collider radius (REAL meters). */
-  baseRadiusM: TAIPEI101_BASE_R_M,
-  /** Bear-cheer win toast (spec §5.3, R13; zh-TW, no 跨年煙火 per R13). */
-  winToast: '滾完台北101！月牙陪你登頂！',
+  baseRadiusM: MONUMENT_BASE_R_M,
+  /** Bear-cheer win toast (zh-TW). */
+  winToast: '滾完台中之鑽！月牙陪你登頂！',
 });
 
 export default goalMonument;

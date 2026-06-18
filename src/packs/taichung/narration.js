@@ -180,13 +180,13 @@ export const DONACK_LINES = Object.freeze({
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_taipei101: Object.freeze({
-    text: '台北101！508 公尺，風阻尼球重達 660 噸，要巻進去嗎',
+    text: '台中之鑽！225 公尺，台中第一高樓，要捲進去嗎',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
 
   /* ---- goal call ---- */
   goal_call: Object.freeze({
-    text: '台北101 在呼喚你，月牙幫你加油！',
+    text: '台中之鑽在呼喚你，月牙幫你加油！',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
 
@@ -250,7 +250,7 @@ export const DONACK_LINES = Object.freeze({
 
   /* ---- finale / result ---- */
   goal_contact: Object.freeze({
-    text: '滾完台北101！月牙陪你登頂！',
+    text: '滾完台中之鑽！月牙陪你登頂！',
     priority: 3, expression: 'speaking', once: true, phase: 'cinematic',
   }),
   ascension: Object.freeze({
