@@ -12,11 +12,11 @@
  * Override list:
  *   - LANDMARKS   → native Taipei 9 entries (8 curated + 101 goal)
  *   - PLACEMENTS  → cityData base placements + the 8 Taipei landmark placements
- *   - GOAL_POS    → TAIPEI101_POS (same as P6a)
+ *   - GOAL_POS    → MONUMENT_POS (same as P6a)
  *   - DEV_STARTS  → Taipei-themed teleport keys (same as P6a)
  */
 
-import { TAIPEI101_POS } from './monument.js';
+import { MONUMENT_POS } from './monument.js';
 import { ABSORB_RATIO } from '../../config/tuning.js';
 
 // Import the 8 curated landmark geometry descriptors for position/color/name.
@@ -28,7 +28,7 @@ import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
 import { NM_CKS } from './landmarks/cks_memorial.js';
 import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
 import { NM_ARENA } from './landmarks/arena.js';
-import { NM_TAIPEI101 } from './landmarks/taipei101.js';
+import { NM_TAICHUNG_DIAMOND } from './landmarks/taichung_diamond.js';
 
 // Re-export the pack-owned baked layout (cityData.js). The engine consumes
 // SHOP (terrain colliders) + bandAllowedAt (spawn gating); MAP_BOUNDS is the
@@ -205,10 +205,10 @@ export const LANDMARKS = Object.freeze([
     isGoal: false,
   },
   {
-    landmarkId: NM_TAIPEI101.landmarkId,    // 8 — GOAL
-    name: NM_TAIPEI101.name,
-    nameJa: NM_TAIPEI101.name,
-    x: TAIPEI101_POS.x, z: TAIPEI101_POS.z,
+    landmarkId: NM_TAICHUNG_DIAMOND.landmarkId,    // 8 — GOAL
+    name: NM_TAICHUNG_DIAMOND.name,
+    nameJa: NM_TAICHUNG_DIAMOND.name,
+    x: MONUMENT_POS.x, z: MONUMENT_POS.z,
     dioramaR: 420,
     collisionScale: 0.5,
     sizeReal: 508,
@@ -301,7 +301,7 @@ export const water = Object.freeze({
  * Goal monument real-meter position (台北101 world anchor).
  * Preserves existing engine imports (terrain.js, goalTower.js use GOAL_POS).
  */
-export const GOAL_POS = TAIPEI101_POS;
+export const GOAL_POS = MONUMENT_POS;
 
 /**
  * Dev teleport starts (?at=name&r=meters; main.js devTeleport).
