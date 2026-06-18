@@ -60,14 +60,14 @@ describe('taichung pack', () => {
       'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
     ]);
     // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
-    expect(activePack.archetypeIdByCode[82]).toBe('beimen');
-    expect(activePack.archetypeIdByCode[83]).toBe('longshan_temple');
-    expect(activePack.archetypeIdByCode[84]).toBe('ximen_redhouse');
-    expect(activePack.archetypeIdByCode[85]).toBe('grand_hotel');
-    expect(activePack.archetypeIdByCode[86]).toBe('presidential_office');
-    expect(activePack.archetypeIdByCode[87]).toBe('cks_memorial');
-    expect(activePack.archetypeIdByCode[88]).toBe('liberty_square_arch');
-    expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
+    expect(activePack.archetypeIdByCode[82]).toBe('taichung_station');
+    expect(activePack.archetypeIdByCode[83]).toBe('miyahara');
+    expect(activePack.archetypeIdByCode[84]).toBe('opera_house');
+    expect(activePack.archetypeIdByCode[85]).toBe('rainbow_village');
+    expect(activePack.archetypeIdByCode[86]).toBe('civic_tower');
+    expect(activePack.archetypeIdByCode[87]).toBe('wanhe_temple');
+    expect(activePack.archetypeIdByCode[88]).toBe('yizhong_arch');
+    expect(activePack.archetypeIdByCode[89]).toBe('gaomei_wetland');
     // DE-TOKYO: codes 90..93 are Taipei extended landmarks.
     expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual([
       'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',

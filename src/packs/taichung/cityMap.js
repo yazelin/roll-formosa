@@ -20,14 +20,14 @@ import { MONUMENT_POS } from './monument.js';
 import { ABSORB_RATIO } from '../../config/tuning.js';
 
 // Import the 8 curated landmark geometry descriptors for position/color/name.
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+import { NM_TAICHUNG_STATION } from './landmarks/taichung_station.js';
+import { NM_MIYAHARA } from './landmarks/miyahara.js';
+import { NM_OPERA_HOUSE } from './landmarks/opera_house.js';
+import { NM_RAINBOW_VILLAGE } from './landmarks/rainbow_village.js';
+import { NM_CIVIC_TOWER } from './landmarks/civic_tower.js';
+import { NM_WANHE_TEMPLE } from './landmarks/wanhe_temple.js';
+import { NM_YIZHONG_ARCH } from './landmarks/yizhong_arch.js';
+import { NM_GAOMEI_WETLAND } from './landmarks/gaomei_wetland.js';
 import { NM_TAICHUNG_DIAMOND } from './landmarks/taichung_diamond.js';
 
 // Re-export the pack-owned baked layout (cityData.js). The engine consumes
@@ -101,107 +101,107 @@ const CODE_ARENA        = 89;
  */
 export const LANDMARKS = Object.freeze([
   {
-    landmarkId: NM_BEIMEN.landmarkId,       // 0
-    name: NM_BEIMEN.name,
-    nameJa: NM_BEIMEN.name,                 // nameJa alias for curated.js compat
+    landmarkId: NM_TAICHUNG_STATION.landmarkId,       // 0
+    name: NM_TAICHUNG_STATION.name,
+    nameJa: NM_TAICHUNG_STATION.name,                 // nameJa alias for curated.js compat
     x: POS.beimen.x,  z: POS.beimen.z,
     dioramaR: 11,
     collisionScale: 1.0,
     sizeReal: 13,
     archetypeCode: CODE_BEIMEN,
     naturalBand: 3,
-    colorHex: NM_BEIMEN.colorHex,
+    colorHex: NM_TAICHUNG_STATION.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_LONGSHAN.landmarkId,     // 1
-    name: NM_LONGSHAN.name,
-    nameJa: NM_LONGSHAN.name,
+    landmarkId: NM_MIYAHARA.landmarkId,     // 1
+    name: NM_MIYAHARA.name,
+    nameJa: NM_MIYAHARA.name,
     x: POS.longshan.x, z: POS.longshan.z,
     dioramaR: 28,
     collisionScale: 0.9,
     sizeReal: 56,
     archetypeCode: CODE_LONGSHAN,
     naturalBand: 3,
-    colorHex: NM_LONGSHAN.colorHex,
+    colorHex: NM_MIYAHARA.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_XIMEN.landmarkId,        // 2
-    name: NM_XIMEN.name,
-    nameJa: NM_XIMEN.name,
+    landmarkId: NM_OPERA_HOUSE.landmarkId,        // 2
+    name: NM_OPERA_HOUSE.name,
+    nameJa: NM_OPERA_HOUSE.name,
     x: POS.ximen.x, z: POS.ximen.z,
     dioramaR: 40,
     collisionScale: 0.9,
     sizeReal: 48,
     archetypeCode: CODE_XIMEN,
     naturalBand: 3,
-    colorHex: NM_XIMEN.colorHex,
+    colorHex: NM_OPERA_HOUSE.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_GRAND_HOTEL.landmarkId,  // 3
-    name: NM_GRAND_HOTEL.name,
-    nameJa: NM_GRAND_HOTEL.name,
+    landmarkId: NM_RAINBOW_VILLAGE.landmarkId,  // 3
+    name: NM_RAINBOW_VILLAGE.name,
+    nameJa: NM_RAINBOW_VILLAGE.name,
     x: POS.grand_hotel.x, z: POS.grand_hotel.z,
     dioramaR: 60,
     collisionScale: 0.9,
     sizeReal: 110,
     archetypeCode: CODE_GRAND_HOTEL,
     naturalBand: 4,
-    colorHex: NM_GRAND_HOTEL.colorHex,
+    colorHex: NM_RAINBOW_VILLAGE.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_PRESIDENTIAL.landmarkId, // 4
-    name: NM_PRESIDENTIAL.name,
-    nameJa: NM_PRESIDENTIAL.name,
+    landmarkId: NM_CIVIC_TOWER.landmarkId, // 4
+    name: NM_CIVIC_TOWER.name,
+    nameJa: NM_CIVIC_TOWER.name,
     x: POS.presidential.x, z: POS.presidential.z,
     dioramaR: 85,
     collisionScale: 0.7,
     sizeReal: 140,
     archetypeCode: CODE_PRESIDENTIAL,
     naturalBand: 4,
-    colorHex: NM_PRESIDENTIAL.colorHex,
+    colorHex: NM_CIVIC_TOWER.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_CKS.landmarkId,          // 5
-    name: NM_CKS.name,
-    nameJa: NM_CKS.name,
+    landmarkId: NM_WANHE_TEMPLE.landmarkId,          // 5
+    name: NM_WANHE_TEMPLE.name,
+    nameJa: NM_WANHE_TEMPLE.name,
     x: POS.cks_memorial.x, z: POS.cks_memorial.z,
     dioramaR: 115,
     collisionScale: 0.8,
     sizeReal: 200,
     archetypeCode: CODE_CKS,
     naturalBand: 5,
-    colorHex: NM_CKS.colorHex,
+    colorHex: NM_WANHE_TEMPLE.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_LIBERTY_ARCH.landmarkId, // 6
-    name: NM_LIBERTY_ARCH.name,
-    nameJa: NM_LIBERTY_ARCH.name,
+    landmarkId: NM_YIZHONG_ARCH.landmarkId, // 6
+    name: NM_YIZHONG_ARCH.name,
+    nameJa: NM_YIZHONG_ARCH.name,
     x: POS.liberty_arch.x, z: POS.liberty_arch.z,
     dioramaR: 150,
     collisionScale: 0.7,
     sizeReal: 250,
     archetypeCode: CODE_LIBERTY_ARCH,
     naturalBand: 5,
-    colorHex: NM_LIBERTY_ARCH.colorHex,
+    colorHex: NM_YIZHONG_ARCH.colorHex,
     isGoal: false,
   },
   {
-    landmarkId: NM_ARENA.landmarkId,        // 7
-    name: NM_ARENA.name,
-    nameJa: NM_ARENA.name,
+    landmarkId: NM_GAOMEI_WETLAND.landmarkId,        // 7
+    name: NM_GAOMEI_WETLAND.name,
+    nameJa: NM_GAOMEI_WETLAND.name,
     x: POS.arena.x, z: POS.arena.z,
     dioramaR: 190,
     collisionScale: 0.85,
     sizeReal: 240,
     archetypeCode: CODE_ARENA,
     naturalBand: 5,
-    colorHex: NM_ARENA.colorHex,
+    colorHex: NM_GAOMEI_WETLAND.colorHex,
     isGoal: false,
   },
   {

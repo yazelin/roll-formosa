@@ -35,14 +35,14 @@ import { ending } from './ending.js';
 // P6b: Taipei replaces EXTRA codes 82..89 (legacy landmark ids at indices 12..19)
 // with Taipei landmark ids. Collectible codes 70..81 (indices 0..11) and codes
 // 90..93 (indices 20..23) remain frozen placeholder ids.
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+import { NM_TAICHUNG_STATION } from './landmarks/taichung_station.js';
+import { NM_MIYAHARA } from './landmarks/miyahara.js';
+import { NM_OPERA_HOUSE } from './landmarks/opera_house.js';
+import { NM_RAINBOW_VILLAGE } from './landmarks/rainbow_village.js';
+import { NM_CIVIC_TOWER } from './landmarks/civic_tower.js';
+import { NM_WANHE_TEMPLE } from './landmarks/wanhe_temple.js';
+import { NM_YIZHONG_ARCH } from './landmarks/yizhong_arch.js';
+import { NM_GAOMEI_WETLAND } from './landmarks/gaomei_wetland.js';
 
 /**
  * EXTRA id order for the Taipei pack.
@@ -56,14 +56,14 @@ const extraIds = [
   'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
   'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
   // indices 12..19 — codes 82..89: Taipei landmark ids (P6b)
-  NM_BEIMEN.id,        // 82 北門(承恩門)
-  NM_LONGSHAN.id,      // 83 龍山寺
-  NM_XIMEN.id,         // 84 西門紅樓
-  NM_GRAND_HOTEL.id,   // 85 圓山大飯店
-  NM_PRESIDENTIAL.id,  // 86 總統府
-  NM_CKS.id,           // 87 中正紀念堂
-  NM_LIBERTY_ARCH.id,  // 88 自由廣場牌樓
-  NM_ARENA.id,         // 89 小巨蛋
+  NM_TAICHUNG_STATION.id,        // 82 北門(承恩門)
+  NM_MIYAHARA.id,      // 83 龍山寺
+  NM_OPERA_HOUSE.id,         // 84 西門紅樓
+  NM_RAINBOW_VILLAGE.id,   // 85 圓山大飯店
+  NM_CIVIC_TOWER.id,  // 86 總統府
+  NM_WANHE_TEMPLE.id,           // 87 中正紀念堂
+  NM_YIZHONG_ARCH.id,  // 88 自由廣場牌樓
+  NM_GAOMEI_WETLAND.id,         // 89 小巨蛋
   // indices 20..23 — codes 90..93: Taipei extended landmarks (de-Tokyo)
   'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
   // v5 codes 94..98 — 94 媽祖; 95..98 Taipei extended landmarks (de-Tokyo)

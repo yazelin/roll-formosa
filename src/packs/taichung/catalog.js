@@ -32,14 +32,14 @@ import { HERO_TRI_CAP } from '../../config/tuning.js';
 import { EXTRA_CODE_BASE } from '../../world/objects.js';
 
 // P6b: 8 curated Taipei landmark geometry descriptors (codes 82..89).
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+import { NM_TAICHUNG_STATION } from './landmarks/taichung_station.js';
+import { NM_MIYAHARA } from './landmarks/miyahara.js';
+import { NM_OPERA_HOUSE } from './landmarks/opera_house.js';
+import { NM_RAINBOW_VILLAGE } from './landmarks/rainbow_village.js';
+import { NM_CIVIC_TOWER } from './landmarks/civic_tower.js';
+import { NM_WANHE_TEMPLE } from './landmarks/wanhe_temple.js';
+import { NM_YIZHONG_ARCH } from './landmarks/yizhong_arch.js';
+import { NM_GAOMEI_WETLAND } from './landmarks/gaomei_wetland.js';
 
 // P7: 13 Taipei collectible (rare album) geometries (codes 70..81 + 94).
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
@@ -109,14 +109,14 @@ for (const arch of _allTierArchetypes) {
  *   82 mid, 83 mid, 84 mid, 85 large, 86 mid, 87 large, 88 large, 89 large.
  */
 const _TAIPEI_LANDMARKS = [
-  { code: 82, nm: NM_BEIMEN,        sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 83, nm: NM_LONGSHAN,      sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 84, nm: NM_XIMEN,         sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 85, nm: NM_GRAND_HOTEL,   sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
-  { code: 86, nm: NM_PRESIDENTIAL,  sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
-  { code: 87, nm: NM_CKS,           sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 88, nm: NM_LIBERTY_ARCH,  sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 89, nm: NM_ARENA,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 82, nm: NM_TAICHUNG_STATION,        sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 83, nm: NM_MIYAHARA,      sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 84, nm: NM_OPERA_HOUSE,         sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 85, nm: NM_RAINBOW_VILLAGE,   sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
+  { code: 86, nm: NM_CIVIC_TOWER,  sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
+  { code: 87, nm: NM_WANHE_TEMPLE,           sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 88, nm: NM_YIZHONG_ARCH,  sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 89, nm: NM_GAOMEI_WETLAND,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
 ];
 
 /**
