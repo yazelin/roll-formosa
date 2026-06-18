@@ -65,9 +65,9 @@ const extraIds = [
   NM_YIZHONG_ARCH.id,  // 88 自由廣場牌樓
   NM_GAOMEI_WETLAND.id,         // 89 小巨蛋
   // indices 20..23 — codes 90..93: Taipei extended landmarks (de-Tokyo)
-  'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
+  'luce_chapel', 'lake_pavilion', 'sjss_village', 'caowu_path',
   // v5 codes 94..98 — 94 媽祖; 95..98 Taipei extended landmarks (de-Tokyo)
-  'mazu', 'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
+  'mazu', 'lecheng_temple', 'zhenlan_temple', 'lihpao_wheel', 'prefectural_hall',
 ];
 
 // Collectible album id -> index in extraIds (legacy rule preserved).
