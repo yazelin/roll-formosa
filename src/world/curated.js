@@ -796,9 +796,15 @@ export class CuratedSpawner {
    */
   _restY(pi, objR, invWS) {
     let ySurf = this._ySurf[pi];
-    if ((this._pflags[pi] & PF_ELEVATED) !== 0 && this._released) {
-      ySurf *= 1 - (this._dropT < RELEASE_FADE_S ? this._dropT / RELEASE_FADE_S : 1);
-    }
+    // Elevated shelf items sit at ySurf only while their supporting shop shell
+    // exists — but that shell is release-gated (hidden until the ball reaches
+    // SHOP_TERRAIN_RELEASE_M, 4 m). Floating them at shelf height before then
+    // read as objects suspended in mid-air for the whole early/mid game, with
+    // no visible shelf. Keep them GROUNDED throughout: there is no visible
+    // shelf to rest on at any point, so the old release y-drop (full→0) would
+    // only make them pop UP to shelf height at release before falling. ySurf
+    // is left intact for any other consumer; only the rest height is grounded.
+    if ((this._pflags[pi] & PF_ELEVATED) !== 0) ySurf = 0;
     const code = this._code[pi];
     const yOff = this._yOffByCode[code] || 0;
     return ySurf * invWS + objR * (1 + yOff) * this._yK[pi];
