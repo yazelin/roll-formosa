@@ -32,7 +32,14 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 **Code 結構**:99 個 code(0–69 chunk = 7 tier × 10、70–93 EXTRA、94–98 v5)。全域 `world/objects.js` 是**中性 placeholder**(`chunk_N`/`extra_N`/`v5_N`);每個 pack 用自己的 `archetypeIdByCode` 覆蓋全部 99 個。引擎拿內容**一律走 active pack**,從不靠全域字串。
 
 ## 怎麼加一座城市
-1. `cp -r src/packs/taipei src/packs/<city>`,改 `id`/`displayName`/`seeds`(四字 ASCII hex,需與其他城市不同)。
+
+> **完整 SOP + 雷區 + skyline prompt 配方 → [`docs/ADD-A-CITY.md`](docs/ADD-A-CITY.md)。**
+> 引導式流程 → skill `add-city`。一鍵起骨架 → `node scripts/new-city.mjs <id> <displayName> <tagline>`。
+> 動手前先讀 SOP 的 Phase 0(開規格)+ 文化正確性鐵則(別借別城市招牌、旁白用在地語感)。
+
+濃縮版:
+
+1. `node scripts/new-city.mjs <id> <displayName> <tagline>`(自動 `cp -r taipei`、改 `id`/`displayName`/`seeds`、登錄 manifest 為 `'soon'`)。
 2. 換內容:`tiers.js`(7 階主題)、`monument.js`(終點建物)、`landmarks/`、`collectibles/`、
    `archetypes/t0–t6.js`(70 chunk 幾何)、`narration.js`、`locale.js`、`ending.js`、
    `cityData.js`/`cityMap.js`(SHOP/ZONES/PLACEMENTS/water/GOAL_POS/DEV_STARTS)。
