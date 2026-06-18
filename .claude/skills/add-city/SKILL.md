@@ -47,6 +47,12 @@ collectibles, archetypes t0–t6, narration, locale, cityMap/cityData, ending).
 **Rewrite the copied `*.test.js` expectations** — they still assert taipei's
 values and will fail until updated. Geometry is all code; the engine is untouched.
 
+For each landmark/collectible/monument geometry, DON'T blind-write: (1) look up
+the real form, (2) crib `src/packs/taipei/landmarks/*.js` patterns, (3) **review
+the result** in the geometry gallery — `npm run dev`, then
+`node scripts/headless-check.mjs "http://localhost:<port>/preview.html?city=<id>" /tmp/g.png`
+(self-contained headless chrome, no MCP) and open the PNG. Not silhouette-right → fix → re-shoot.
+
 ## Phase 3 — Skyline asset (the only hand-made file)
 
 Make `public/assets/title/skyline-<id>.webp` via the `codex-imagegen` skill
