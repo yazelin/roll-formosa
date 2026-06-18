@@ -5,3 +5,4 @@ dist/
 .wrangler/
 .claude/*
 !.claude/skills/
+tmp/

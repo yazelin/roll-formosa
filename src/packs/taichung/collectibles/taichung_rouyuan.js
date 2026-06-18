@@ -55,10 +55,10 @@ export const COL_TAICHUNG_ROUYUAN = {
     //     shallow plastic dish. A slight taper (rTop > rBot) lifts the rim so it
     //     reads as a plate with a raised edge, not a flat coin. Vertical gradient
     //     deeper toward the rim. Highest segment count (main round read). ---
-    parts.push(cyl(1.9, 1.74, 0.34, 22, PLATE_LO, { y: 0.17, hex2: PLATE }));
+    parts.push(cyl(1.9, 1.74, 0.34, 14, PLATE_LO, { y: 0.17, hex2: PLATE }));
     // Inset well: a slightly smaller, lighter disc sunk into the plate so the
     //     two dumplings appear to sit in a shallow bowl, not on a flat top.
-    parts.push(cyl(1.5, 1.62, 0.16, 16, PLATE, { y: 0.3, hex2: PLATE }));
+    parts.push(cyl(1.5, 1.62, 0.16, 12, PLATE, { y: 0.3, hex2: PLATE }));
 
     // --- TWO ROU-YUAN: plump, slightly-flattened glossy domes sitting side by
     //     side in the well. Each is a sphere squashed in Y (sy < 1) so it reads
@@ -67,13 +67,13 @@ export const COL_TAICHUNG_ROUYUAN = {
     //     lean nudges them a hair apart so the pair isn't a mirror clone. ---
     parts.push(
       sph(0.72, skin, {
-        ws: 9, hs: 6, sx: 1.04, sy: 0.6, sz: 1.0,
+        ws: 7, hs: 5, sx: 1.04, sy: 0.6, sz: 1.0,
         x: -0.62, y: 0.5, rz: lean, hex2: SKIN_HI,
       }),
     );
     parts.push(
       sph(0.72, skin, {
-        ws: 9, hs: 6, sx: 1.04, sy: 0.6, sz: 1.0,
+        ws: 7, hs: 5, sx: 1.04, sy: 0.6, sz: 1.0,
         x: 0.62, y: 0.52, rz: -lean, hex2: SKIN_HI,
       }),
     );
@@ -81,8 +81,8 @@ export const COL_TAICHUNG_ROUYUAN = {
     // --- SAUCE DRIZZLE: a short, thin reddish-orange patch laid over the top of
     //     each dumpling — a flattened low disc (rTop < rBot) hugging the dome so
     //     it reads as a stroke of sauce, the signature 醬汁 over the rou-yuan. ---
-    parts.push(cyl(0.34, 0.5, 0.08, 12, SAUCE, { x: -0.6, y: 0.82, hex2: SAUCE }));
-    parts.push(cyl(0.34, 0.5, 0.08, 12, SAUCE, { x: 0.64, y: 0.84, hex2: SAUCE }));
+    parts.push(cyl(0.34, 0.5, 0.08, 8, SAUCE, { x: -0.6, y: 0.82, hex2: SAUCE }));
+    parts.push(cyl(0.34, 0.5, 0.08, 8, SAUCE, { x: 0.64, y: 0.84, hex2: SAUCE }));
 
     return finish(parts);
   },
