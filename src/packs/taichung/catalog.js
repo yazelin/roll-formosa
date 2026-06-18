@@ -44,16 +44,16 @@ import { NM_GAOMEI_WETLAND } from './landmarks/gaomei_wetland.js';
 // P7: 13 Taipei collectible (rare album) geometries (codes 70..81 + 94).
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_BOBA } from './collectibles/boba.js';
-import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
-import { COL_GUABAO } from './collectibles/gua_bao.js';
-import { COL_XLB } from './collectibles/xiaolongbao.js';
-import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
-import { COL_SANTAIZI } from './collectibles/santaizi.js';
-import { COL_PUPPET } from './collectibles/budaixi.js';
-import { COL_YOUBIKE } from './collectibles/youbike.js';
-import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
-import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
-import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
+import { COL_SUN_CAKE } from './collectibles/sun_cake.js';
+import { COL_MIYAHARA_ICECREAM } from './collectibles/miyahara_icecream.js';
+import { COL_DAJIA_TARO } from './collectibles/dajia_taro.js';
+import { COL_DA_CHANGBAO } from './collectibles/da_changbao.js';
+import { COL_MAYI_SOUP } from './collectibles/mayi_soup.js';
+import { COL_JIGUANG_CHICKEN } from './collectibles/jiguang_chicken.js';
+import { COL_DONGQUAN_SAUCE } from './collectibles/dongquan_sauce.js';
+import { COL_TAICHUNG_ROUYUAN } from './collectibles/taichung_rouyuan.js';
+import { COL_FENGYUAN_PAIGU } from './collectibles/fengyuan_paigu.js';
+import { COL_TETRAPOD } from './collectibles/tetrapod.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
 // DE-TOKYO: 8 Taipei extended landmarks replace the leftover EXTRA slots (codes 90-93 + 95-98).
@@ -184,16 +184,16 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_LANDMARKS) {
 const _TAIPEI_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
   { code: 71, col: COL_BOBA },
-  { code: 72, col: COL_CHICKEN },
-  { code: 73, col: COL_GUABAO },
-  { code: 74, col: COL_XLB },
-  { code: 75, col: COL_PINEAPPLE },
-  { code: 76, col: COL_SANTAIZI },
-  { code: 77, col: COL_PUPPET },
-  { code: 78, col: COL_YOUBIKE },
-  { code: 79, col: COL_PRES_TROPHY },
-  { code: 80, col: COL_GONDOLA },
-  { code: 81, col: COL_BIGCHICKEN },
+  { code: 72, col: COL_SUN_CAKE },
+  { code: 73, col: COL_MIYAHARA_ICECREAM },
+  { code: 74, col: COL_DAJIA_TARO },
+  { code: 75, col: COL_DA_CHANGBAO },
+  { code: 76, col: COL_MAYI_SOUP },
+  { code: 77, col: COL_JIGUANG_CHICKEN },
+  { code: 78, col: COL_DONGQUAN_SAUCE },
+  { code: 79, col: COL_TAICHUNG_ROUYUAN },
+  { code: 80, col: COL_FENGYUAN_PAIGU },
+  { code: 81, col: COL_TETRAPOD },
   { code: 94, col: COL_MAZU },
 ];
 for (const { code, col } of _TAIPEI_COLLECTIBLES) {
