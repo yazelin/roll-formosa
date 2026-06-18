@@ -58,8 +58,8 @@ CLI 會:`cp -r src/packs/taipei src/packs/<id>` → 改 `id`/`displayName`/`seed
 |---|---|
 | `tiers.js` | 7 階關名 + 每階 10 個 `archetypeIds`(slots 0–7 可滾、8/9 chunk 地標)+ 調色 |
 | `monument.js` | 終點建物幾何 + 位置常數 |
-| `landmarks/` | 8 個 curated 單例地標(幾何) |
-| `collectibles/` | 13 個收藏品(幾何) |
+| `landmarks/` | 8 個 curated 單例地標(幾何;**先查真實外形**) |
+| `collectibles/` | 13 個收藏品(幾何;**先查真實外形**) |
 | `archetypes/t0–t6.js` | 70 個 chunk 幾何(每階 10);curated 收藏 >350 tris 要設 `heroTriCap` |
 | `narration.js` | 月牙旁白(在地語感) |
 | `locale.js` | zh-TW 字串(關名/分享文字/結算等);`donack.on/off` 已是「月牙·導遊」 |
@@ -68,6 +68,24 @@ CLI 會:`cp -r src/packs/taipei src/packs/<id>` → 改 `id`/`displayName`/`seed
 | `*.test.js` | **改期望值**(tier 名陣列、locale 等)—— CLI 複製來的還是台北的,會紅 |
 
 幾何全是**程式碼**(無模型檔)。引擎一行不用改。
+
+### 寫幾何:先調查 → 拼 → 看 → 改(別盲寫)
+
+每個地標/收藏動手前:
+
+1. **查真實外形**(查圖/已知造型)+ 想好用哪幾個基本量體(box/cyl/sph)拼出可辨識的剪影 —— 不是憑印象亂湊。
+2. **參考現有寫法**:`src/packs/taipei/landmarks/*.js`、`collectibles/*.js` 是範本(`geomHelpers` 詞彙、`finish()` 會 merge→recenter→正規化到 unit sphere、`<=600` / `heroTriCap` tris)。
+3. **看長怎樣**(這步以前 SOP 沒寫,別跳):用幾何預覽藝廊看每件的剪影,不像就改。
+
+```bash
+npm run dev   # 起 dev server(記下 port,通常 5173/5174)
+# 截整個 pack 的幾何藝廊(monument + 地標 + 收藏),0 console error 代表全部 build 成功
+node scripts/headless-check.mjs "http://localhost:<port>/preview.html?city=<id>" /tmp/geom.png
+```
+
+`preview.html` 自動列出 `?city=<id>` 的所有幾何、加標籤、慢慢轉。`headless-check.mjs`
+**自帶 headless chrome(swiftshader),不依賴任何 MCP** —— 輸出 PNG 直接開來看,
+不像就回去改 `buildGeometry`、重截。也可直接在瀏覽器開 `/preview.html?city=<id>` 即時轉著看。
 
 ---
 

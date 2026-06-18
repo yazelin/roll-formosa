@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geometry Preview — Roll Formosa</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0e0e1a; overflow: hidden;
+      font-family: system-ui, "Noto Sans TC", sans-serif; }
+    #title { position: absolute; top: 8px; left: 12px; color: #cdd6ee; font-size: 13px;
+      letter-spacing: 0.04em; z-index: 10; }
+    #title b { color: #7fd0ff; }
+    .lbl { color: #e6ecff; font-size: 12px; text-align: center; white-space: nowrap;
+      text-shadow: 0 1px 3px #000, 0 0 6px #000; pointer-events: none; }
+    .lbl .id { display: block; color: #8aa3c0; font-size: 10px; }
+    .lbl .kind-monument { color: #ffd86b; }
+  </style>
+</head>
+<body>
+  <!-- DEV-only geometry gallery: renders every landmark + collectible + the goal
+       monument of ?city=<id> in a lit grid, so each hand-built geometry can be
+       eyeballed (and headless-screenshotted) without playing the whole game.
+       Not part of the production build. -->
+  <div id="title">Geometry Preview — loading…</div>
+  <script type="module" src="/src/preview.js"></script>
+</body>
+</html>
