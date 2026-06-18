@@ -101,6 +101,13 @@ import { ribbonQuads } from './waterRibbon.js';
 
 /** Minor grid cell size = GRID_CELL_K * radiusVisualSim (ball diameter reads well). */
 const GRID_CELL_K = 2.0;
+/** Grid lines fade out over tier progress (cosmetic): full grid through
+ *  GRID_FADE_START_TIER, gone by GRID_FADE_END_TIER. The grid cell is tied to
+ *  ball radius (seamlessness law), which reads as a useful speed cue while
+ *  small but as a "treadmill" once huge — so fade it out late-game. Driven by
+ *  worldScale (≈tierIndex), so it is continuous and rescale-invariant. */
+const GRID_FADE_START_TIER = 2.0;
+const GRID_FADE_END_TIER = 5.0;
 /** Ground plane extent (sim units). World coords stay within ~±2048 (rebase at 1500). */
 const GROUND_SIZE = 4096;
 /** Sky dome radius (sim units) — inside the camera far plane (4000). */
@@ -195,6 +202,7 @@ uniform float uFogNear;
 uniform float uFogFar;
 uniform float uCell;
 uniform vec2 uGridOrigin;
+uniform float uGridFade;
 varying vec3 vWorldPos;
 varying float vFogDepth;
 
@@ -207,7 +215,7 @@ void main() {
   vec2 p = (vWorldPos.xz + uGridOrigin) / uCell;
   float minor = gridLine(p);
   float major = gridLine(p / 5.0);
-  vec3 col = mix(uGroundColor, uLineColor, max(minor * 0.40, major * 0.75));
+  vec3 col = mix(uGroundColor, uLineColor, max(minor * 0.22, major * 0.65) * uGridFade);
   // Linear fog — EXACTLY THREE.Fog's factor so ground matches the Lambert objects.
   float fogF = clamp((vFogDepth - uFogNear) / (uFogFar - uFogNear), 0.0, 1.0);
   gl_FragColor = vec4(mix(col, uFogColor, fogF), 1.0);
@@ -480,7 +488,7 @@ export class Environment {
 
     /* --- lights (no shadow maps — the blob shadow reads better at every scale) --- */
     /** @type {THREE.HemisphereLight} */
-    this.hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 1.15);
+    this.hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 1.8);
     this.hemiLight.color = this._cHemiSky;
     this.hemiLight.groundColor = this._cHemiGround;
     scene.add(this.hemiLight);
@@ -503,6 +511,7 @@ export class Environment {
       uFogFar: { value: 100 },
       uCell: { value: GRID_CELL_K },
       uGridOrigin: { value: new THREE.Vector2(0, 0) },
+      uGridFade: { value: 1 },
     };
     const groundMat = new THREE.ShaderMaterial({
       uniforms: this._groundUniforms,
@@ -739,6 +748,13 @@ export class Environment {
     gu.uFogNear.value = this.fog.near;
     gu.uFogFar.value = this.fog.far;
     gu.uCell.value = GRID_CELL_K * rv;
+
+    // Grid fade-out by overall progress (worldScale ≈ tierIndex): full grid
+    // early (speed cue while small), gone late (no "treadmill" once huge).
+    const prog = Math.log(this._ws / BOOT_WORLD_SCALE) / Math.log(5);
+    gu.uGridFade.value = clamp01(
+      (GRID_FADE_END_TIER - prog) / (GRID_FADE_END_TIER - GRID_FADE_START_TIER)
+    );
 
     // v3 bay group: real-meter geometry mapped into the current sim frame
     // (sim = real / ws - shift). Cheap scalar writes every frame; exact on

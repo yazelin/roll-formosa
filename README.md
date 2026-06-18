@@ -51,6 +51,16 @@ npm test         # vitest
 
 純靜態(Vite build,`base: './'`)。內附 `.github/workflows/deploy.yml`,推上 `main` 即自動 build + 發佈到 GitHub Pages(已上線:https://yazelin.github.io/roll-formosa/ )。
 
+## 作者與支持
+
+由 **林亞澤 Yaze Lin** 開發。覺得好玩,歡迎分享給朋友,或請我喝杯咖啡。
+
+- 原始碼 GitHub:<https://github.com/yazelin/roll-formosa>
+- Facebook:<https://www.facebook.com/yaze.lin.gm>
+- Buy Me a Coffee:<https://buymeacoffee.com/yazelin>
+
+遊戲結算頁可一鍵把成績分享到 **LINE / Threads / X / Facebook**。
+
 ## 致謝與授權
 
 - Fork 自 [`aieo-product/fableDemoGame`](https://github.com/aieo-product/fableDemoGame)("Fable Katamari",MIT),保留其無縫縮放引擎;**移除了原版的真實東京 OpenStreetMap 圖層**,改為純程序化台北 + 手作地標,因此本專案**不附帶、也不依賴任何 OSM 資料**。

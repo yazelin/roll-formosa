@@ -43,8 +43,8 @@ const TABLE = {
   'hints.dash':   '衝刺 / Dash',
 
   // ---- 月牙 (mascot) toggle ----
-  'donack.on':  '月牙 ON',
-  'donack.off': '月牙 OFF',
+  'donack.on':  '月牙·導遊 ON',
+  'donack.off': '月牙·導遊 OFF',
 
   // ---- Title screen ----
   'title.subtitle':    '捲啊捲，捲遍全台北。 / Roll up all of Taipei.',

@@ -74,7 +74,7 @@ const DISPLAY_NAME_BY_CODE = /** @type {string[]} */ (
    (a landmark statue). collection.js boot-asserts every displayed id resolves. */
 
 /** Share target shown in the post + the intent text (live deployment). */
-const SHARE_URL = 'https://fable-katamari.pages.dev';
+const SHARE_URL = 'https://yazelin.github.io/roll-formosa/';
 /**
  * X web intent endpoint. twitter.com/intent/tweet is the most battle-tested
  * variant: it works logged-out, survives the x.com redirect, and is the URL
@@ -82,6 +82,19 @@ const SHARE_URL = 'https://fable-katamari.pages.dev';
  * was observed erroring in production on some sessions/devices).
  */
 const X_INTENT = 'https://twitter.com/intent/tweet';
+/**
+ * Per-platform share-intent URL builders (zh-TW 社群擴散:LINE/Threads/X/FB).
+ * LINE/Threads carry no separate url param, so SHARE_URL is appended into the
+ * text; X uses the dedicated url+hashtags params; FB's sharer takes only the
+ * url (the OG card supplies title/image). Each receives the raw 成績 text.
+ */
+const _enc = encodeURIComponent;
+const SHARE_INTENTS = {
+  line: (text) => `https://line.me/R/share?text=${_enc(text + '\n' + SHARE_URL)}`,
+  threads: (text) => `https://www.threads.net/intent/post?text=${_enc(text + '\n' + SHARE_URL)}`,
+  x: (text) => `${X_INTENT}?text=${_enc(text)}&url=${_enc(SHARE_URL)}&hashtags=${_enc('RollFormosa')}`,
+  facebook: () => `https://www.facebook.com/sharer/sharer.php?u=${_enc(SHARE_URL)}`,
+};
 /** Staged reveal cues (ms) — match the index.html comment + sfx rank thud (+1.6s). */
 const CUE_TIME_MS = 0;
 const CUE_SCORE_MS = 400;
@@ -152,7 +165,7 @@ export class Screens {
     this._badgeEl = /** @type {HTMLElement} */ (document.getElementById('new-record-badge'));
     this._bestEl = /** @type {HTMLElement} */ (document.getElementById('result-best'));
     this._seedLineEl = /** @type {HTMLElement} */ (document.getElementById('result-seed'));
-    this._postXBtn = /** @type {HTMLButtonElement} */ (document.getElementById('post-x-button'));
+    this._shareRow = /** @type {HTMLElement|null} */ (this._winEl.querySelector('.share-row'));
     this._buttonsEl = /** @type {HTMLElement} */ (
       this._winEl.querySelector('.result-buttons')
     );
@@ -178,8 +191,9 @@ export class Screens {
      * @type {GoalEvent|null}
      */
     this._goal = null;
-    /** Prebuilt X intent URL (built once per goal, never from the DOM). */
-    this._xUrl = '';
+    /** Raw 成績 share text (built once per goal, never from the DOM);
+     *  per-platform intent URLs are derived from it at click time. */
+    this._shareText = '';
 
     /* --- staged reveal timers / rAF --- */
     /** @type {ReturnType<typeof setTimeout>[]} */
@@ -200,7 +214,7 @@ export class Screens {
     /* --- prebound listeners --- */
     this._onStartClick = this._onStartClick.bind(this);
     this._onRestartClick = this._onRestartClick.bind(this);
-    this._onPostXClick = this._onPostXClick.bind(this);
+    this._onShareClick = this._onShareClick.bind(this);
     this._onDonackToggleClick = this._onDonackToggleClick.bind(this);
     this._onGameStart = this._onGameStart.bind(this);
     this._onGameReset = this._onGameReset.bind(this);
@@ -211,7 +225,7 @@ export class Screens {
 
     this._startBtn.addEventListener('click', this._onStartClick);
     this._restartBtn.addEventListener('click', this._onRestartClick);
-    this._postXBtn.addEventListener('click', this._onPostXClick);
+    if (this._shareRow !== null) this._shareRow.addEventListener('click', this._onShareClick);
     if (this._donackToggleBtn !== null) {
       this._donackToggleBtn.addEventListener('click', this._onDonackToggleClick);
       this._renderDonackToggle();
@@ -226,7 +240,7 @@ export class Screens {
     if (hints !== null && typeof window !== 'undefined' && 'ontouchstart' in window) {
       hints.innerHTML =
         `<span><kbd>${_t('hints.drag')}</kbd>${_t('hints.move')}</span>` +
-        `<span><kbd>${_t('hints.two')}</kbd>${_t('hints.boost')}</span>` +
+        `<span><kbd>BOOST</kbd>${_t('hints.boost')}</span>` +
         `<span><kbd>DASH</kbd>${_t('hints.dash')}</span>`;
     }
 
@@ -270,14 +284,31 @@ export class Screens {
   }
 
   /**
-   * share on X — synchronous inside the click gesture. window.open WITHOUT
-   * 'noopener' so null reliably means "blocked / webview" -> same-tab
-   * fallback via location.href (accepted result-screen abandonment).
+   * Delegated share-row click — resolve the tapped platform from data-share
+   * and open its intent. (Single listener on .share-row; ignores gaps.)
+   * @param {MouseEvent} e
    */
-  _onPostXClick() {
-    if (this._xUrl === '') return;
-    const w = window.open(this._xUrl, '_blank');
-    if (w === null) location.href = this._xUrl;
+  _onShareClick(e) {
+    const btn = /** @type {HTMLElement|null} */ (
+      /** @type {HTMLElement} */ (e.target).closest('.share-btn')
+    );
+    if (btn === null) return;
+    this._openShare(btn.dataset.share || '');
+  }
+
+  /**
+   * Open one platform's share intent — synchronous inside the click gesture.
+   * window.open WITHOUT 'noopener' so null reliably means "blocked / webview"
+   * -> same-tab fallback via location.href (accepted result-screen abandon).
+   * @param {string} platform 'line' | 'threads' | 'x' | 'facebook'
+   */
+  _openShare(platform) {
+    if (this._shareText === '') return;
+    const build = SHARE_INTENTS[platform];
+    if (build === undefined) return;
+    const url = build(this._shareText);
+    const w = window.open(url, '_blank');
+    if (w === null) location.href = url;
   }
 
   /**
@@ -317,7 +348,7 @@ export class Screens {
     this._titleEl.classList.add('hidden');
     this._winEl.classList.add('hidden');
     this._goal = null;
-    this._xUrl = '';
+    this._shareText = '';
   }
 
   /** 'game:reset' — back to the title screen (refresh personal best). */
@@ -346,7 +377,7 @@ export class Screens {
       newRecordScore: p.newRecordScore === true,
       collectFound: typeof p.collectFound === 'number' ? p.collectFound : 0,
     };
-    this._xUrl = this._buildXUrl(this._goal);
+    this._shareText = this._buildShareText(this._goal);
   }
 
   /**
@@ -602,23 +633,15 @@ export class Screens {
   }
 
   /**
-   * Build the X web-intent URL from a goal COPY (v3 text template,
-   * DESIGN-V3.md feedback — ~150/280 weighted chars; the #FableKatamari
-   * tag rides the existing `hashtags=` param, NOT the text, so it is never
-   * doubled).
+   * Build the raw 成績 share text from a goal COPY (time/rank/score/collection,
+   * v3 template). Platform-specific URL assembly (link param vs inline link,
+   * hashtags) lives in SHARE_INTENTS — this is just the human text.
    * @param {GoalEvent} g
    * @returns {string}
    */
-  _buildXUrl(g) {
-    // SAME battle-tested mechanism as v2: time/rank/score/collection in
-    // `text`, hashtag via `hashtags=`, link via `url=` (separate params
-    // avoid encoding pitfalls and let X count the URL at its fixed weight).
+  _buildShareText(g) {
     const scoreFmt = _numFmt !== null ? _numFmt.format(g.score) : String(g.score);
-    const text = _t('screens.shareText',
+    return _t('screens.shareText',
       formatTime(g.timeS), g.rank, scoreFmt, g.collectFound, COLLECT_TOTAL);
-    return X_INTENT +
-      '?text=' + encodeURIComponent(text) +
-      '&url=' + encodeURIComponent(SHARE_URL) +
-      '&hashtags=' + encodeURIComponent('RollFormosa');
   }
 }
