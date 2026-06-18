@@ -46,8 +46,16 @@ for (const [path, mod] of Object.entries(COL)) {
   if (d) items.push({ kind: 'collectible', id: d.id || path, name: d.name || '', build: d.buildGeometry });
 }
 
-document.getElementById('title').innerHTML =
-  `Geometry Preview — <b>${city}</b> · ${items.length} 件(GOAL monument + 地標 + 收藏)· 灰=monument/landmark, 全部 unit-normalized`;
+// Optional close-up: ?item=<id-or-name-substring> renders just the match(es), large.
+const want = new URLSearchParams(location.search).get('item');
+if (want) {
+  const keep = items.filter((it) => it.id === want || it.id.includes(want) || (it.name && it.name.includes(want)));
+  if (keep.length) { items.length = 0; items.push(...keep); }
+}
+
+document.getElementById('title').innerHTML = want
+  ? `Geometry Preview — <b>${city}</b> · close-up: <b>${want}</b> (${items.length})`
+  : `Geometry Preview — <b>${city}</b> · ${items.length} 件(GOAL monument + 地標 + 收藏)· 全部 unit-normalized`;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0e1a);
