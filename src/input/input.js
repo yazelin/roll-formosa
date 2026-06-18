@@ -58,6 +58,8 @@ export class Input {
     // -- v2 edge latches -------------------------------------------------
     /** @type {boolean} Dash request (Space keydown / #dash-button pointerdown); consumed by read(). */
     this._dashLatch = false;
+    /** @type {boolean} Held-boost from #boost-button (touch Shift); true while pressed. */
+    this._btnBoost = false;
     /** @type {boolean} Mute toggle request ('M' keyup); consumed by takeMuteToggle(). */
     this._muteLatch = false;
 
@@ -117,6 +119,25 @@ export class Input {
       }
     }
 
+    // -- held boost button (#boost-button — touch Shift; HELD, not a latch) --
+    /** @type {HTMLElement|null} */
+    this._boostBtn = null;
+    this._onBoostDown = this._handleBoostDown.bind(this);
+    this._onBoostUp = this._handleBoostUp.bind(this);
+    if (typeof document !== 'undefined') {
+      const bbtn = document.getElementById('boost-button');
+      if (bbtn !== null) {
+        // Also a <button> -> excluded from the joystick/touch-count path.
+        bbtn.addEventListener('pointerdown', this._onBoostDown);
+        // pointerup/cancel + lostpointercapture cover finger-lift, slide-off
+        // and OS interruptions so boost can never get stuck on.
+        bbtn.addEventListener('pointerup', this._onBoostUp);
+        bbtn.addEventListener('pointercancel', this._onBoostUp);
+        bbtn.addEventListener('lostpointercapture', this._onBoostUp);
+        this._boostBtn = bbtn;
+      }
+    }
+
     // Bound handlers (kept for dispose()).
     this._onKeyDown = this._handleKeyDown.bind(this);
     this._onKeyUp = this._handleKeyUp.bind(this);
@@ -165,7 +186,7 @@ export class Input {
     }
     it.x = x;
     it.y = y;
-    it.boost = this._kBoost || this._touchCount >= 2;
+    it.boost = this._kBoost || this._btnBoost || this._touchCount >= 2;
     // v2: dash edge latch — true for exactly this one read, then consumed.
     it.dash = this._dashLatch;
     this._dashLatch = false;
@@ -207,6 +228,13 @@ export class Input {
     if (this._dashBtn !== null) {
       this._dashBtn.removeEventListener('pointerdown', this._onDashPointerDown);
       this._dashBtn = null;
+    }
+    if (this._boostBtn !== null) {
+      this._boostBtn.removeEventListener('pointerdown', this._onBoostDown);
+      this._boostBtn.removeEventListener('pointerup', this._onBoostUp);
+      this._boostBtn.removeEventListener('pointercancel', this._onBoostUp);
+      this._boostBtn.removeEventListener('lostpointercapture', this._onBoostUp);
+      this._boostBtn = null;
     }
     const t = this._target;
     t.removeEventListener('keydown', this._onKeyDown);
@@ -297,6 +325,8 @@ export class Input {
   _handleBlur() {
     this._kUp = this._kDown = this._kLeft = this._kRight = this._kBoost = false;
     this._dashLatch = false;
+    this._btnBoost = false;
+    if (this._boostBtn !== null) this._boostBtn.classList.remove('held');
     this._muteLatch = false;
     this._joyId = -1;
     this._joyX = this._joyY = 0;
@@ -314,6 +344,29 @@ export class Input {
   _handleDashPointerDown(e) {
     this._dashLatch = true;
     if (e.cancelable) e.preventDefault();
+  }
+
+  /**
+   * #boost-button pointerdown — HELD boost on (touch Shift). setPointerCapture
+   * so the matching pointerup fires on the button even if the finger slides
+   * off; preventDefault stops the compat mouse event / focus ring.
+   * @param {PointerEvent} e
+   */
+  _handleBoostDown(e) {
+    this._btnBoost = true;
+    if (this._boostBtn !== null) {
+      this._boostBtn.classList.add('held');
+      if (typeof this._boostBtn.setPointerCapture === 'function') {
+        try { this._boostBtn.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+      }
+    }
+    if (e.cancelable) e.preventDefault();
+  }
+
+  /** #boost-button pointerup/cancel/lostcapture — HELD boost off. */
+  _handleBoostUp() {
+    this._btnBoost = false;
+    if (this._boostBtn !== null) this._boostBtn.classList.remove('held');
   }
 
   /* ---------------------------------------------------------------- */

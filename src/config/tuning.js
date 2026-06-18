@@ -127,7 +127,7 @@ export const DENSITY_K_V3 = 0.45;
  *  multipliers. Bands 2-3 keep 0.45 (the Akiba ramp needs supply); bands 4-6
  *  drop to 0.2 — paired with the growthKForObjR normalization below this is
  *  what keeps the 12m->420m half of the run inside the 5-8 min target. */
-export const DENSITY_K_BY_BAND = Object.freeze([0.45, 0.45, 0.3, 0.3, 0.2, 0.2, 0.15]);
+export const DENSITY_K_BY_BAND = Object.freeze([0.45, 0.45, 0.4, 0.4, 0.3, 0.3, 0.22]);
 /** @param {number} band Chunk band 0..6. @returns {number} Density multiplier. */
 export function densityKForBand(band) {
   return band >= 0 && band < DENSITY_K_BY_BAND.length ? DENSITY_K_BY_BAND[band] : DENSITY_K_V3;
