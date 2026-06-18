@@ -1,11 +1,11 @@
 /**
- * @file packs/taipei/narration.js — 月牙 (Formosan black bear) narration table
- * for the Taipei pack.
+ * @file packs/taichung/narration.js — 月牙 (Formosan black bear) narration table
+ * for the Taichung pack.
  *
- * Mirrors the exact data shape of src/config/donackLines.js but with
- * zh-TW Taipei content authored for 月牙's voice: warm, friendly, slightly
- * playful; drops Taipei trivia and cheers the player on.  No Japanese, no
- * legacy references.
+ * Mirrors the exact data shape of src/config/donackLines.js but with zh-TW
+ * Taichung content in 月牙's voice: warm, friendly, a touch playful; drops
+ * Taichung trivia + local in-jokes (東泉/逢甲/一中/大甲媽…) and cheers the
+ * player on. 華語 for mood (distinct from 高雄's 台語). No Japanese kana.
  *
  * Line shape (frozen contract, same as config/donackLines.js):
  *   { text:string, priority:0|1|2|3,
@@ -15,31 +15,27 @@
  * Lookup maps (consumed by ui/donack.js when it reads activePack.narration):
  *   DONACK_LINES          id -> line
  *   TIER_UP_LINE_IDS      tierIndex -> id  (index 0 unused)
- *   LANDMARK_LINE_IDS     landmarkId -> id (0=北門..8=台北101/goal)
+ *   LANDMARK_LINE_IDS     landmarkId -> id (0=台中車站..8=台中之鑽/goal)
  *   COLLECT_LINE_IDS      collectibleId -> id (0..12)
  *   FIRST_LINE_BY_CODE    archetypeCode -> id
- *   DUAL_COLLECTIBLE_ID   (none in Taipei — export 'no-dual' sentinel -1)
- *   DUAL_LANDMARK_ID      (-1: donack.js skips landmark if id === DUAL_LANDMARK_ID)
+ *   DUAL_COLLECTIBLE_ID / DUAL_LANDMARK_ID  (-1: no dual-tagged pair)
  *
- * Taipei collectible album (P7 canonical list, ids 0-12):
- *   0 台灣黑熊  1 珍奶  2 雞排  3 刈包  4 小籠包  5 鳳梨酥
- *   6 電音三太子  7 布袋戲偶  8 YouBike  9 總統府  10 貓空纜車
- *   11 士林大雞排  12 媽祖
+ * Taichung collectible album (ids 0-12):
+ *   0 台灣黑熊  1 珍奶  2 太陽餅  3 宮原冰  4 大甲芋頭  5 大腸包小腸
+ *   6 麻薏湯  7 繼光香香雞  8 東泉辣椒醬  9 台中肉圓  10 豐原排骨酥麵
+ *   11 消波塊  12 大甲媽
  *
- * Taipei landmark order (landmarkId = array index in cityMap.LANDMARKS):
- *   0 北門  1 龍山寺  2 西門紅樓  3 圓山大飯店  4 總統府
- *   5 中正紀念堂  6 自由廣場牌樓  7 小巨蛋  8 台北101 (goal)
+ * Taichung landmark order (landmarkId = array index in cityMap.LANDMARKS):
+ *   0 台中車站  1 宮原眼科  2 國家歌劇院  3 彩虹眷村  4 七期市政大樓
+ *   5 萬和宮  6 一中商圈  7 高美濕地  8 台中之鑽 (goal)
+ *   (the extended landmarks, codes 90-98, are EXTRA scenery — no bespoke line.)
  *
- * First-absorb archetype codes (Taipei tier layout, code = tier*10 + slot):
- *   T0 = 0-9  (彈珠/橡皮擦/圖釘/瓶蓋/糖果/尪仔標/鉛筆/鈕扣 + chunk lm)
- *   T1 = 10-19 (養樂多/寶特瓶/檳榔/香/金紙/滷味夾/紅白袋/胡椒餅 + chunk lm)
- *   T2 = 20-29 (紅塑膠椅/安全帽/電鍋/瓦斯桶/三角錐/消防栓/招財貓/YouBike + chunk lm)
- *   T3 = 30-39 (機車/小貨車/變電箱/霓虹招牌/鐵捲門/路樹/棚架/石獅 + chunk lm)
- *   T4 = 40-49 (透天厝/鐵皮屋/公寓/超商/公車/垃圾車/加油站/騎樓柱 + chunk lm)
- *   T5 = 50-59 (商辦大樓/百貨/捷運高架/天橋/停車塔/巨型看板/玻璃帷幕街屋/銀行 + chunk lm)
- *   T6 = 60-69 (玻璃帷幕高樓/跨橋/其他摩天樓/巨型廣告牆/商辦塔/空橋/屋頂機房/街區量體 + chunk lm)
+ * First-absorb archetype codes (code = tier*10 + slot; chunk archetypes are the
+ * pan-Taiwan street objects shared with the engine layout):
+ *   T0 桌頭小物 / T1 逢甲夜市 / T2 一中騎樓 / T3 台灣大道車流(機車) /
+ *   T4 南屯街屋與廟 / T5 七期商業 / T6 七期天際線
  *
- * Id contract: append-only.  Never reuse or rename existing ids.
+ * Id contract: append-only. Never reuse or rename existing ids.
  * Static data only — zero runtime allocation beyond module init.
  */
 
@@ -48,41 +44,41 @@
 const PLAY = 'play';
 
 /**
- * The 月牙 Taipei narration table.
+ * The 月牙 Taichung narration table.
  * @type {Readonly<Record<string, Readonly<DonackLine>>>}
  */
 export const DONACK_LINES = Object.freeze({
 
   /* ---- run start ---- */
   start: Object.freeze({
-    text: '從迪化街出發！光的箭頭指著下一個目標，跟上囉',
+    text: '從中區老街出發！光的箭頭指著下一站，跟上月牙囉',
     priority: 2, expression: 'idle', once: true, phase: PLAY,
   }),
 
   /* ---- tier-ups (index via TIER_UP_LINE_IDS[tierIndex]) ---- */
   // tier0 is the starting tier — no tier-up INTO tier 0; index 0 slot left ''
   tier1: Object.freeze({
-    text: '進夜市了！燈光一亮，台灣的夜生活才剛開始',
+    text: '逢甲夜市到了！全台最大的夜市，從吃到玩一條龍',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier2: Object.freeze({
-    text: '騎樓時代！騎樓連著騎樓，台灣城市的專利',
+    text: '一中商圈騎樓！學生的地盤，吃喝玩樂樣樣有',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier3: Object.freeze({
-    text: '機車海出現了！這才是台北的日常交通工具',
+    text: '台灣大道車流出現了！台中的大動脈，公車機車一起跑',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier4: Object.freeze({
-    text: '整排萬華街屋和廟都進肚子了，感覺好澎湃',
+    text: '整排南屯老街和廟都進肚子了，犁頭店的古早味',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier5: Object.freeze({
-    text: '進入商業文教區！銀行、百貨、捷運高架，全都是你的',
+    text: '進入七期商業區！豪宅、百貨、綠園道，台中的精華都在這',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier6: Object.freeze({
-    text: '信義天際線！101 就在前面等著你了',
+    text: '七期天際線！台中之鑽就在前面等著你了',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
 
@@ -104,11 +100,11 @@ export const DONACK_LINES = Object.freeze({
     priority: 1, expression: 'idle', once: true, phase: PLAY,
   }),
   first_scooter: Object.freeze({
-    text: '機車來了！台灣每兩個人就有一台，這很正常',
+    text: '機車來了！台中路寬機車多，綠燈一亮就是一片車陣',
     priority: 1, expression: 'idle', once: true, phase: PLAY,
   }),
   first_bus: Object.freeze({
-    text: '公車吞進去了！司機大哥不用再開了',
+    text: '公車吞進去了！台灣大道上的運將大哥不用再開了',
     priority: 1, expression: 'idle', once: true, phase: PLAY,
   }),
   first_building: Object.freeze({
@@ -116,7 +112,7 @@ export const DONACK_LINES = Object.freeze({
     priority: 1, expression: 'happy', once: true, phase: PLAY,
   }),
   first_tower: Object.freeze({
-    text: '摩天樓！台北的天際線現在是你的了',
+    text: '摩天樓！台中的天際線現在是你的了',
     priority: 1, expression: 'happy', once: true, phase: PLAY,
   }),
 
@@ -148,35 +144,35 @@ export const DONACK_LINES = Object.freeze({
 
   /* ---- landmark trivia (index via LANDMARK_LINE_IDS[landmarkId]) ---- */
   lm_beimen: Object.freeze({
-    text: '北門！清朝留下來的城門，全台北保存最完整的一座',
+    text: '台中車站！1917 年的紅磚巴洛克老站，國定古蹟，新舊站三代同堂',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_longshan: Object.freeze({
-    text: '龍山寺！求籤、拜月老、聞香，三件事一次搞定',
+    text: '宮原眼科！日治眼科改成的冰淇淋名店，紅磚立面超好拍',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_ximen: Object.freeze({
-    text: '西門紅樓！日治時代的八角市場，現在是文創和展演的場地',
+    text: '國家歌劇院！伊東豊雄的曲牆，整棟幾乎沒有直角的「聲音涵洞」',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_grand_hotel: Object.freeze({
-    text: '圓山大飯店！宮殿式屋頂下藏著六十幾年的外交故事',
+    text: '彩虹眷村！彩虹爺爺一筆一筆畫出來的，硬是救下了整個眷村',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_presidential: Object.freeze({
-    text: '總統府！日治時代的總督府，牆上的紅磚到現在還是一樣紅',
+    text: '台中市政府！七期的玻璃量體，新市政中心就坐落在這',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_cks: Object.freeze({
-    text: '中正紀念堂！衛兵交接每整點一次，看過的都說讚',
+    text: '萬和宮！南屯三百多年的媽祖廟，犁頭店的信仰中心',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_liberty_arch: Object.freeze({
-    text: '自由廣場牌樓！這四個字是 2007 年才改的，你知道嗎',
+    text: '一中商圈！台中學生的美食天堂，從早吃到晚都不膩',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_arena: Object.freeze({
-    text: '小巨蛋！一萬五千個座位，很多明星的台灣初登場就在這裡',
+    text: '高美濕地！夕陽配大風車，木棧道一路走到海中央',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_taipei101: Object.freeze({
@@ -200,51 +196,51 @@ export const DONACK_LINES = Object.freeze({
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_boba: Object.freeze({
-    text: '珍珠奶茶！台灣之光，全世界都在排隊的那種',
+    text: '珍珠奶茶！台中春水堂發明的，台灣之光就是從這裡開始',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_chicken_chop: Object.freeze({
-    text: '雞排！比臉還大的那種，夜市必點，月牙也很愛',
+    text: '太陽餅！台中第一伴手禮，層層酥皮裡其實沒有太陽',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_gua_bao: Object.freeze({
-    text: '刈包！花生粉、香菜、滷肉，台灣版漢堡的正確打開方式',
+    text: '宮原眼科冰淇淋！口味多到挑不完，排隊也要吃上一支',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_xiaolongbao: Object.freeze({
-    text: '小籠包！一口湯汁噴出來才算及格，慢慢吃別急',
+    text: '大甲芋頭！鬆綿香甜，芋頭控的最愛，做冰做酥都好吃',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_pineapple_cake: Object.freeze({
-    text: '鳳梨酥！到台北手信第一名，帶回去送人絕對不會錯',
+    text: '大腸包小腸！糯米腸夾烤香腸，逢甲夜市的經典組合',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_electronic_prince: Object.freeze({
-    text: '電音三太子！鋼鐵神像配電音，廟會最強 DJ 登場',
+    text: '麻薏湯！台中限定的消暑湯品，墨綠色喝起來滿滿古早味',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_puppet: Object.freeze({
-    text: '布袋戲偶！台灣傳統工藝，每個指偶都有自己的江湖',
+    text: '繼光香香雞！台中繼光街起家的鹽酥雞，香香的最涮嘴',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_youbike: Object.freeze({
-    text: 'YouBike！台北最受歡迎的短程代步，騎去捷運站剛剛好',
+    text: '東泉辣椒醬！台中人的本命辣醬，炒麵、肉圓什麼都要加',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_pres_office: Object.freeze({
-    text: '總統府收藏品！紅磚建築在陽光下特別好看，摺進相簿了',
+    text: '台中肉圓！皮 Q 餡實淋上紅醬，台中人的下午點心',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_gondola: Object.freeze({
-    text: '貓空纜車！從木柵坐上去，整個台北盆地都在腳下',
+    text: '豐原排骨酥麵！廟東夜市的招牌，炸排骨配湯麵超滿足',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_shihlin_chicken: Object.freeze({
-    text: '士林大雞排！比一般還要大上一倍，超值是台灣夜市的精神',
+    text: '消波塊！海邊的混凝土四腳獸，台灣海岸線的守護者',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   col_mazu: Object.freeze({
-    text: '媽祖！台灣最多信眾的神明，繞境一走就是好幾天',
+    text: '大甲媽！大甲鎮瀾宮的媽祖，每年遶境九天八夜萬人空巷',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
 
@@ -254,7 +250,7 @@ export const DONACK_LINES = Object.freeze({
     priority: 3, expression: 'speaking', once: true, phase: 'cinematic',
   }),
   ascension: Object.freeze({
-    text: '哇…從這麼高的地方看台北，燈光漂亮得像星星',
+    text: '哇…從這麼高的地方看台中，燈火漂亮得像星星',
     priority: 3, expression: 'speaking', once: true, phase: 'cinematic',
   }),
   result: Object.freeze({
@@ -269,7 +265,6 @@ export const DONACK_LINES = Object.freeze({
 
 /**
  * TierUpEvent.tierIndex -> line id (index 0 unused — no tier-up INTO tier 0).
- * 7-tier Taipei table.
  * @type {ReadonlyArray<string>}
  */
 export const TIER_UP_LINE_IDS = Object.freeze([
@@ -278,68 +273,59 @@ export const TIER_UP_LINE_IDS = Object.freeze([
 
 /**
  * LandmarkEvent.landmarkId (0..8, strictly increasing dioramaR order per
- * cityMap.LANDMARKS) -> line id.
- * Taipei has no DUAL-tagged landmark: all 9 slots have bespoke lines.
+ * cityMap.LANDMARKS) -> line id. Keys are historical (lm_beimen…); the TEXT is
+ * the Taichung landmark at that slot. The goal slot (8) reuses lm_taipei101.
  * @type {ReadonlyArray<string>}
  */
 export const LANDMARK_LINE_IDS = Object.freeze([
-  'lm_beimen',       // 0 北門(承恩門)
-  'lm_longshan',     // 1 龍山寺
-  'lm_ximen',        // 2 西門紅樓
-  'lm_grand_hotel',  // 3 圓山大飯店
-  'lm_presidential', // 4 總統府
-  'lm_cks',          // 5 中正紀念堂
-  'lm_liberty_arch', // 6 自由廣場牌樓
-  'lm_arena',        // 7 小巨蛋
-  'lm_taipei101',    // 8 台北101 (goal — also fires on absorb if ever triggered)
+  'lm_beimen',       // 0 台中車站
+  'lm_longshan',     // 1 宮原眼科
+  'lm_ximen',        // 2 國家歌劇院
+  'lm_grand_hotel',  // 3 彩虹眷村
+  'lm_presidential', // 4 七期市政大樓
+  'lm_cks',          // 5 萬和宮
+  'lm_liberty_arch', // 6 一中商圈
+  'lm_arena',        // 7 高美濕地
+  'lm_taipei101',    // 8 台中之鑽 (goal — also fires on absorb if ever triggered)
 ]);
 
 /**
- * CollectEvent.collectibleId (0..12, Taipei canonical P7 album) -> line id.
- * Unknown future ids fall back to 'col_generic'.
+ * CollectEvent.collectibleId (0..12) -> line id. Keys are historical; the TEXT
+ * is the Taichung album item at that id. Unknown ids fall back to 'col_generic'.
  * @type {ReadonlyArray<string>}
  */
 export const COLLECT_LINE_IDS = Object.freeze([
   'col_bear',             //  0 台灣黑熊
   'col_boba',             //  1 珍奶
-  'col_chicken_chop',     //  2 雞排
-  'col_gua_bao',          //  3 刈包
-  'col_xiaolongbao',      //  4 小籠包
-  'col_pineapple_cake',   //  5 鳳梨酥
-  'col_electronic_prince',//  6 電音三太子
-  'col_puppet',           //  7 布袋戲偶
-  'col_youbike',          //  8 YouBike
-  'col_pres_office',      //  9 總統府
-  'col_gondola',          // 10 貓空纜車
-  'col_shihlin_chicken',  // 11 士林大雞排
-  'col_mazu',             // 12 媽祖
+  'col_chicken_chop',     //  2 太陽餅
+  'col_gua_bao',          //  3 宮原冰
+  'col_xiaolongbao',      //  4 大甲芋頭
+  'col_pineapple_cake',   //  5 大腸包小腸
+  'col_electronic_prince',//  6 麻薏湯
+  'col_puppet',           //  7 繼光香香雞
+  'col_youbike',          //  8 東泉辣椒醬
+  'col_pres_office',      //  9 台中肉圓
+  'col_gondola',          // 10 豐原排骨酥麵
+  'col_shihlin_chicken',  // 11 消波塊
+  'col_mazu',             // 12 大甲媽
 ]);
 
 /**
- * Taipei has no DUAL-tagged collectible/landmark pair.
- * DUAL_COLLECTIBLE_ID = -1 (sentinel: donack.js skips LANDMARK if
- * p.landmarkId === DUAL_LANDMARK_ID; -1 never matches a real id).
+ * No DUAL-tagged collectible/landmark pair (sentinel -1 never matches).
  */
 export const DUAL_COLLECTIBLE_ID = -1;
 export const DUAL_LANDMARK_ID = -1;
 
 /**
  * First-absorb-per-category: ScoreEvent.archetypeCode -> line id.
- * Taipei codes: code = tier*10 + slot (same formula as the legacy engine).
- *   T0 (0-7): small everyday items — marble triggers 'first_marble'
- *   T1 (10-19): 夜市 consumables — betel_nut (code 12) triggers 'first_betelnut'
- *   T2 (20-29): 騎樓 objects — red_plastic_chair (20), rice_cooker (22)
- *   T3 (30-39): 機車海 — scooter (30)
- *   T4 (40-49): 萬華街屋 — city_bus (44) first_bus; townhouse(40) first_building
- *   T5 (50-59): 商業文教 — office_tower (50) first_tower
- *   T6 (60-69): 信義天際線 — glass_highrise (60) first_tower (shared)
+ * code = tier*10 + slot (chunk archetypes are the pan-Taiwan street objects).
  * @type {Readonly<Record<number, string>>}
  */
 export const FIRST_LINE_BY_CODE = Object.freeze({
-  // T0: small items trigger generic marble quip (codes 0-7)
+  // T0: small items trigger the generic marble quip (codes 0-7)
   0: 'first_marble', 1: 'first_marble', 2: 'first_marble', 3: 'first_marble',
   4: 'first_marble', 5: 'first_marble', 6: 'first_marble', 7: 'first_marble',
-  // T1: 夜市 — betel_nut (slot 2 = code 12) gets own line; others share marble category
+  // T1: 夜市 — betel_nut (slot 2 = code 12) gets own line; others share marble
   10: 'first_marble', 11: 'first_marble', 12: 'first_betelnut',
   13: 'first_marble', 14: 'first_marble', 15: 'first_marble',
   16: 'first_marble', 17: 'first_marble',
@@ -347,11 +333,11 @@ export const FIRST_LINE_BY_CODE = Object.freeze({
   20: 'first_chair', 21: 'first_chair', 22: 'first_ricecooker',
   23: 'first_chair', 24: 'first_chair', 25: 'first_chair',
   26: 'first_chair', 27: 'first_chair',
-  // T3: 機車海 — scooter (30) gets own line; rest share scooter category
+  // T3: 台灣大道車流 — scooter (30) gets own line; rest share scooter category
   30: 'first_scooter', 31: 'first_scooter', 32: 'first_scooter',
   33: 'first_scooter', 34: 'first_scooter', 35: 'first_scooter',
   36: 'first_scooter', 37: 'first_scooter',
-  // T4: 萬華 buildings — bus (44) gets own line; rest are 'first_building'
+  // T4: 南屯街屋 — bus (44) gets own line; rest are 'first_building'
   40: 'first_building', 41: 'first_building', 42: 'first_building',
   43: 'first_building', 44: 'first_bus', 45: 'first_building',
   46: 'first_building', 47: 'first_building',
