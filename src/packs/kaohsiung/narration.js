@@ -63,7 +63,7 @@ export const DONACK_LINES = Object.freeze({
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier3: Object.freeze({
-    text: '機車海加港邊出現了！這才是高雄人的日常',
+    text: '哈瑪星港邊出現了！這才是高雄人的日常',
     priority: 2, expression: 'happy', once: true, phase: PLAY,
   }),
   tier4: Object.freeze({
@@ -322,7 +322,7 @@ export const DUAL_LANDMARK_ID = -1;
  *   T0 (0-7): small everyday items — marble triggers 'first_marble'
  *   T1 (10-19): 夜市 consumables — betel_nut (code 12) triggers 'first_betelnut'
  *   T2 (20-29): 騎樓 objects — red_plastic_chair (20), rice_cooker (22)
- *   T3 (30-39): 機車海 — scooter (30)
+ *   T3 (30-39): 哈瑪星港邊 — scooter (30)
  *   T4 (40-49): 鹽埕街屋 — city_bus (44) first_bus; townhouse(40) first_building
  *   T5 (50-59): 港區/商業 — office_tower (50) first_tower
  *   T6 (60-69): 灣區天際線 — glass_highrise (60) first_tower (shared)
@@ -340,7 +340,7 @@ export const FIRST_LINE_BY_CODE = Object.freeze({
   20: 'first_chair', 21: 'first_chair', 22: 'first_ricecooker',
   23: 'first_chair', 24: 'first_chair', 25: 'first_chair',
   26: 'first_chair', 27: 'first_chair',
-  // T3: 機車海 — scooter (30) gets own line; rest share scooter category
+  // T3: 哈瑪星港邊 — scooter (30) gets own line; rest share scooter category
   30: 'first_scooter', 31: 'first_scooter', 32: 'first_scooter',
   33: 'first_scooter', 34: 'first_scooter', 35: 'first_scooter',
   36: 'first_scooter', 37: 'first_scooter',

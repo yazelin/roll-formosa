@@ -1,6 +1,6 @@
 /**
  * @file packs/kaohsiung/archetypes/t3.js — Roll Formosa Kaohsiung pack, Tier 3
- * (機車海＋港邊 / scooter-sea + harbour edge). 10 ArchetypeDefs in the FROZEN
+ * (哈瑪星港邊 / scooter-sea + harbour edge). 10 ArchetypeDefs in the FROZEN
  * slot order declared by tiers.js T3.archetypeIds. Size band 0.5–2.5 m.
  *
  * Built ONLY with the engine geometry vocabulary (geomHelpers.js): every
@@ -9,9 +9,9 @@
  * (cyl/sph radial segs kept at 6–10). rng() drives only small cosmetic
  * variation, never structure (determinism).
  *
- * Palette mood: 暮色機車海＋港邊藍 (dusk scooter sea, harbour-blue onset) — but
+ * Palette mood: 暮色哈瑪星港邊藍 (dusk scooter sea, harbour-blue onset) — but
  * each object keeps its own true-to-life 高雄/港都 colors so it stays legible:
- * 機車海的車陣、鹽埕鐵捲門、港邊的貨櫃 / 繫纜柱 / 漁網 / 棕櫚 / 龍門吊車 / 漁港牌樓.
+ * 港邊的機車陣、鹽埕鐵捲門、港邊的貨櫃 / 繫纜柱 / 漁網 / 棕櫚 / 龍門吊車 / 漁港牌樓.
  *
  * Slots [0..7] absorbable street/harbour objects; slots [8..9]
  * (龍門吊車 / 漁港牌樓) are repeatable CHUNK LANDMARKS (lower spawnWeight, bigger).

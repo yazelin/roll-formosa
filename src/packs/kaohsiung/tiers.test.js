@@ -41,7 +41,7 @@ describe('kaohsiung tier ladder', () => {
   });
 
   it('has zh-TW (non-Japanese, non-ASCII) tier names', () => {
-    const expected = ['鹽埕柑仔店桌頭', '六合夜市', '鹽埕騎樓', '機車海＋港邊', '鹽埕街屋與廟', '港區與商業', '亞洲新灣區天際線'];
+    const expected = ['鹽埕柑仔店桌頭', '六合夜市', '鹽埕騎樓', '哈瑪星港邊', '鹽埕街屋與廟', '港區與商業', '亞洲新灣區天際線'];
     expect(TIERS.map((t) => t.name)).toEqual(expected);
     const kana = /[぀-ゟ゠-ヿ]/;
     TIERS.forEach((t, i) => expect(kana.test(t.name), `tier ${i} name has kana`).toBe(false));

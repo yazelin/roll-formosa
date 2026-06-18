@@ -316,7 +316,7 @@ export const DEV_STARTS = Object.freeze({
   shop:          Object.freeze({ x: 0,    z: 0,     r: 0.02 }),
   /** 六合夜市 night-market strip. */
   'liuhe-market': Object.freeze({ x: 60,   z: -80,   r: 0.5  }),
-  /** 機車海 scooter-sea band (mid-map density ramp). */
+  /** 哈瑪星港邊 scooter-sea band (mid-map density ramp). */
   'scooter-sea': Object.freeze({ x: 100,  z: 300,   r: 30   }),
   /** 港邊 / 駁二 harbour district (west). */
   port:          Object.freeze({ x: -300, z: 540,   r: 120  }),

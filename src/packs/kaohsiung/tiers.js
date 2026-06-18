@@ -115,7 +115,7 @@ export const TIERS = [
   },
   {
     index: 3,
-    name: '機車海＋港邊',
+    name: '哈瑪星港邊',
     enterTrueRadius: 2.5,
     cellSizeSim: 32,
     loadRadiusSim: 96,
@@ -126,7 +126,7 @@ export const TIERS = [
       // chunk landmarks: 龍門吊車, 漁港牌樓
       'gantry_crane', 'fishport_pailou',
     ],
-    fogColor: 0x2a1c3e, // 暮色機車海＋港邊藍起調
+    fogColor: 0x2a1c3e, // 暮色哈瑪星港邊藍起調
     skyTop: 0x130c24,
     skyBottom: 0x48287a,
     sunDir: [0.10, 0.34, 0.22],

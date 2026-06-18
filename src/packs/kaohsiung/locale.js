@@ -12,7 +12,7 @@
  *   import { t } from './locale.js';
  *   t('hud.rareFound')               // (ja) rare-found +5000  -> '發現稀有！+5000'
  *   t('hud.goalCall')                // goal toast
- *   t('hud.landmark', '龍山寺')      // landmark absorbed toast
+ *   t('hud.landmark', '駁二')        // landmark absorbed toast
  *   t('hud.collect', 3, 13)          // collection count label
  */
 
