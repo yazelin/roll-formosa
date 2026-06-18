@@ -3,4 +3,5 @@ dist/
 .DS_Store
 .env
 .wrangler/
-.claude/
+.claude/*
+!.claude/skills/
