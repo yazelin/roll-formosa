@@ -30,16 +30,18 @@ const ARCH = import.meta.glob('./packs/*/archetypes/*.js', { eager: true });
 const TIERMOD = import.meta.glob('./packs/*/tiers.js', { eager: true });
 
 /* ---- layout constants (tuned against headless screenshots) ---- */
-const COLS = 6; // items per row — narrow rows keep each object readably large
 const SP = 2.8; // x spacing between objects
 const ROWGAP = 3.0; // z spacing between rows in a section
 const HEAD_GAP = 2.4; // depth a section header occupies before its first row
 const SECTION_GAP = 1.8; // extra depth between sections
 const BASE_Z = 8; // world z of the nearest band (camera looks here)
-const CX = ((COLS - 1) * SP) / 2; // x-centre of every row
 const VISIBLE_DEPTH = 11; // ~how much depth fits on screen (for scroll clamp)
-const FOG_NEAR = 18, FOG_FAR = 44; // fade far bands into the dark; scroll brings them forward
-const LABEL_NEAR = 18, LABEL_FAR = 40; // DOM labels can't fog — distance-fade them to match
+// Columns adapt to viewport so a narrow phone keeps objects big (more scroll) instead
+// of cramming a wide row that overflows the screen edges.
+function pickCols() { return innerWidth < 560 ? 3 : innerWidth < 900 ? 4 : 6; }
+let COLS = pickCols();
+let CX = ((COLS - 1) * SP) / 2; // x-centre of every row (recomputed when COLS changes)
+let labelNear = 18, labelFar = 40; // label-fade distances (set by frameCamera to match fog)
 
 /* ---- query params ---- */
 const params = new URLSearchParams(location.search);
@@ -123,7 +125,7 @@ function sectionsOf(model) {
 /* ================================ scene ================================ */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0b0b16);
-scene.fog = new THREE.Fog(0x0b0b16, FOG_NEAR, FOG_FAR); // distant bands melt into the dark
+scene.fog = new THREE.Fog(0x0b0b16, 20, 50); // distant bands melt into the dark (near/far set by frameCamera)
 scene.add(new THREE.HemisphereLight(0xffffff, 0x445588, 1.7));
 const dir = new THREE.DirectionalLight(0xffffff, 1.85);
 dir.position.set(5, 9, 6);
@@ -144,10 +146,24 @@ labelRenderer.domElement.style.cssText = 'position:absolute;top:0;left:0;pointer
 document.body.appendChild(labelRenderer.domElement);
 
 const cam = new THREE.PerspectiveCamera(46, innerWidth / innerHeight, 0.1, 2000);
-const CAM_POS = new THREE.Vector3(CX, 7.5, 16);
 const CAM_LOOK = new THREE.Vector3(CX, 0, 3);
-cam.position.copy(CAM_POS);
-cam.lookAt(CAM_LOOK);
+const CAM_DIR = new THREE.Vector3(0, 0.5, 0.87).normalize(); // up + back from the look point
+// Position the camera so the row WIDTH always fits the viewport (portrait pulls further
+// back), and scale fog + label-fade to that distance so a narrow phone isn't all fog.
+function frameCamera() {
+  cam.aspect = innerWidth / innerHeight;
+  cam.updateProjectionMatrix();
+  CAM_LOOK.x = CX;
+  const vHalf = (cam.fov * Math.PI) / 360; // (fov/2) in radians
+  const fitHalfW = ((COLS - 1) * SP) / 2 + 1.4; // half the row width + object margin
+  const dist = Math.max(14, fitHalfW / (Math.tan(vHalf) * cam.aspect));
+  cam.position.copy(CAM_LOOK).addScaledVector(CAM_DIR, dist);
+  cam.lookAt(CAM_LOOK);
+  scene.fog.near = dist + 4;
+  scene.fog.far = dist + 30;
+  labelNear = dist + 4;
+  labelFar = dist + 26;
+}
 
 let galleryGroup = null; // current city's meshes + labels
 let spinners = []; // meshes to turntable
@@ -363,10 +379,11 @@ addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFocus(); });
 
 /* ---- resize ---- */
 addEventListener('resize', () => {
-  cam.aspect = innerWidth / innerHeight;
-  cam.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
   labelRenderer.setSize(innerWidth, innerHeight);
+  const c = pickCols();
+  if (c !== COLS) { COLS = c; CX = ((COLS - 1) * SP) / 2; render(city); } // re-lay out for the new width
+  frameCamera();
 });
 
 /* ---- loop ---- */
@@ -384,7 +401,7 @@ function loop() {
     if (focusItem) { o.element.style.opacity = '0'; continue; }
     _v.set(o.position.x, o.position.y, o.position.z + sz);
     const d = cam.position.distanceTo(_v);
-    const op = d <= LABEL_NEAR ? 1 : d >= LABEL_FAR ? 0 : 1 - (d - LABEL_NEAR) / (LABEL_FAR - LABEL_NEAR);
+    const op = d <= labelNear ? 1 : d >= labelFar ? 0 : 1 - (d - labelNear) / (labelFar - labelNear);
     o.element.style.opacity = op.toFixed(2);
   }
   renderer.render(scene, cam);
@@ -392,4 +409,5 @@ function loop() {
 }
 
 render(city);
+frameCamera();
 loop();

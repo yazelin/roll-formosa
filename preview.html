@@ -89,9 +89,14 @@
     #sc-focus-close:hover { border-color: var(--c-cyan); color: #fff; }
 
     @media (max-width: 600px) {
+      #sc-top { gap: 6px 8px; padding: 8px 10px; }
       #sc-kicker { font-size: 11px; } #sc-header { font-size: 11px; }
-      .sc-pill { font-size: 13px; padding: 6px 12px; }
+      /* pills drop to their own full-width centred row so they're never pushed off-screen */
+      #sc-cities { margin-left: 0; width: 100%; justify-content: center; }
+      .sc-pill { font-size: 13px; padding: 6px 14px; }
       .sc-band { font-size: 14px; } .lbl { font-size: 11px; }
+      #sc-hint { font-size: 11px; bottom: 10px; }
+      #sc-focus-card { padding: 12px 20px; } #sc-focus-name { font-size: 19px; }
     }
   </style>
 </head>
