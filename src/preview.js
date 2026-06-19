@@ -139,6 +139,9 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
+// Own the touch gesture: without this the browser hijacks the drag after ~10px to
+// pan/zoom the page and fires pointercancel, so drag-scroll "sticks" on mobile.
+renderer.domElement.style.touchAction = 'none';
 
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(innerWidth, innerHeight);
@@ -336,6 +339,7 @@ renderer.domElement.addEventListener('pointerup', (e) => {
   down = null;
   if (tap) tryFocus(e.clientX, e.clientY);
 });
+renderer.domElement.addEventListener('pointercancel', () => { down = null; });
 
 /* ---- click-to-focus ---- */
 const ray = new THREE.Raycaster();
