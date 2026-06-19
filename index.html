@@ -708,6 +708,15 @@
       margin: 0 4px;
     }
     #result-rares { color: #ffd84a; }
+    /* 金色稀有 = the FLAG_RARE gold-object count (distinct from the 13-item
+       collection album above). Gold label + a small glowing gold dot so players
+       don't read it as "14 of the 13 collectibles". */
+    .rare-label { color: #ffd84a; }
+    .rare-dot {
+      display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%;
+      background: #ffd84a; box-shadow: 0 0 5px #ffd84a; margin-right: 0.32em;
+      vertical-align: baseline; position: relative; top: 0.02em;
+    }
     /* rank stamp — scale 3 -> 1 bounce + white flash (screens.js adds .stamp) */
     #result-rank-wrap {
       position: relative;
@@ -1367,7 +1376,7 @@
       </div>
       <div class="result-row" id="result-detail">
         <span>捲入 <span id="result-absorbed" class="result-num">0</span> 個 ·
-          稀有 <span id="result-rares" class="result-num">0</span> 個</span>
+          <span class="rare-label"><span class="rare-dot"></span>金色稀有 <span id="result-rares" class="result-num">0</span> 個</span></span>
       </div>
     </div>
     <div id="result-rank-wrap">
