@@ -65,3 +65,5 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 ## 目錄地圖
 - `src/main.js` 引擎入口;`src/world/` 物理/地形/spawner;`src/render/` 渲染;
   `src/packs/<city>/` 城市內容;`src/config/tuning.js`/`tiers.js` 引擎常數。
+- `preview.html` + `src/preview.js`:玩家可見的**物件圖鑑**(Vite 第二入口,見 `vite.config.js`;
+  標題畫面「物件圖鑑」鈕進入,可切城市/捲動/點物件放大;同時是 dev 幾何藝廊 `?kind`/`?item`)。

@@ -581,6 +581,9 @@
     }
     .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 36px rgba(255, 190, 80, 0.5); }
     .btn:active { transform: translateY(0) scale(0.98); }
+    /* the 物件圖鑑 entry is an <a> styled as a button — kill the link underline + box it */
+    a.btn { text-decoration: none; display: inline-block; text-align: center; }
+    .title-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .btn.btn-secondary {
       color: #eef0f8;
       background: rgba(255, 255, 255, 0.08);
@@ -1318,8 +1321,12 @@
     <!-- v3: bear mascot commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
     <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true"><img class="donack-toggle-face" src="/assets/donack/idle-0.webp" alt="月牙(台灣黑熊)" width="30" height="30" /><span id="donack-toggle-label">月牙·導遊 ON</span></button>
     <p class="donack-hint">邊玩邊介紹在地 / Your local guide</p>
-    <!-- 換城市: re-open the city-select overlay (main.js wires showCitySelect). -->
-    <button id="change-city-button" class="btn btn-secondary" type="button">換城市 / CITY</button>
+    <!-- 換城市 + 物件圖鑑 share one row so the gallery entry adds no vertical height. -->
+    <div class="title-actions">
+      <button id="change-city-button" class="btn btn-secondary" type="button">換城市 / CITY</button>
+      <!-- main.js sets href to preview.html?city=<current>. -->
+      <a id="showcase-button" class="btn btn-secondary" href="./preview.html">物件圖鑑 / GALLERY</a>
+    </div>
     <div class="key-hints" id="key-hints">
       <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>移動 / Move</span>
       <span><kbd>Shift</kbd>加速 / Boost</span>

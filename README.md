@@ -49,7 +49,7 @@ npm test         # vitest
 
 ### 加城市 / 開發工具
 - **加一座城市**:`node scripts/new-city.mjs <id> <displayName> <tagline>` 起骨架,完整 SOP 見 [`docs/ADD-A-CITY.md`](docs/ADD-A-CITY.md)。
-- **幾何預覽藝廊**(看某城市的**全部** 3D 物件 — 地標 / 收藏 / 終點 / 70 個街頭物):開 `/preview.html?city=<id>`,`&kind=chunk` 只看街頭物、`&item=<id>` 單件放大。
+- **物件圖鑑 / 幾何藝廊**(玩家可見 —— 標題畫面「物件圖鑑」鈕進入;同時是 dev 幾何檢視工具):某城市的**全部** 3D 物件分區展示(終點 / 地標 / 收藏 / 70 街頭物),可切城市、捲動瀏覽、點物件放大。`/preview.html?city=<id>`;dev 用 `&kind=chunk` 篩一類、`&item=<id>` 放大。隨遊戲一起 build(Vite 第二入口)。
 - **在地化檢查**:`node scripts/check-city.mjs <id>` —— chunk 街頭物還是台北的會 FAIL。
 - **無頭驗證**:`node scripts/headless-check.mjs <url> out.png`(自帶 headless chrome,輸出截圖)。
 

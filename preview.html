@@ -2,30 +2,125 @@
 <html lang="zh-TW">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Geometry Preview — Roll Formosa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>物件圖鑑 — Roll Formosa</title>
+  <meta name="description" content="搖滾·福爾摩沙 物件圖鑑 — 看看每座城市裡有哪些可以滾的物件。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@500;700;900&display=swap" />
   <style>
-    html, body { margin: 0; height: 100%; background: #0e0e1a; overflow: hidden;
-      font-family: system-ui, "Noto Sans TC", sans-serif; }
-    #title { position: absolute; top: 8px; left: 12px; color: #cdd6ee; font-size: 13px;
-      letter-spacing: 0.04em; z-index: 10; }
-    #title b { color: #7fd0ff; }
+    :root {
+      --c-cyan: #00e0ff; --c-pink: #ff2a78; --c-gold: #ffd86b;
+      --c-green: #8fe0a0; --c-blue: #9db4d8; --c-bg: #0b0b16;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--c-bg); overflow: hidden;
+      font-family: "Noto Sans TC", system-ui, sans-serif; color: #e6ecff;
+      -webkit-tap-highlight-color: transparent; }
+    canvas { display: block; }
+
+    /* ---- top chrome ---- */
+    #sc-top { position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0));
+      padding-left: calc(16px + env(safe-area-inset-left, 0));
+      background: linear-gradient(#0b0b16ee, #0b0b1600); pointer-events: none; }
+    #sc-top > * { pointer-events: auto; }
+    #sc-back { text-decoration: none; color: #cdd6ee; font-size: 14px; font-weight: 700;
+      padding: 7px 14px; border-radius: 999px; letter-spacing: .04em;
+      border: 1px solid #ffffff22; background: #ffffff0d; white-space: nowrap; }
+    #sc-back:hover { border-color: var(--c-cyan); color: #fff; box-shadow: 0 0 16px #00e0ff55; }
+    #sc-title-wrap { display: flex; flex-direction: column; line-height: 1.15; }
+    #sc-kicker { font-family: "Bungee", sans-serif; font-size: 13px; letter-spacing: .14em;
+      color: var(--c-cyan); text-shadow: 0 0 12px #00e0ff77; }
+    #sc-header { font-size: 12px; color: #9fb0d0; letter-spacing: .03em; margin-top: 2px; }
+    #sc-header b { color: #fff; }
+    #sc-header .sc-scale { color: var(--c-gold); }
+
+    /* ---- city switcher pills ---- */
+    #sc-cities { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+    .sc-pill { font-family: inherit; font-size: 14px; font-weight: 700; color: #cdd6ee;
+      padding: 7px 16px; border-radius: 999px; cursor: pointer; letter-spacing: .04em;
+      border: 1px solid #ffffff22; background: #ffffff0d; transition: all .15s; white-space: nowrap; }
+    .sc-pill:hover { border-color: var(--c-pink); color: #fff; }
+    .sc-pill.active { color: #0b0b16; background: var(--c-pink); border-color: var(--c-pink);
+      box-shadow: 0 0 20px #ff2a7866; }
+    .sc-pill.soon { opacity: .55; }
+    .sc-pill.soon::after { content: " · 即將推出"; font-size: 11px; opacity: .8; }
+
+    /* ---- per-object label ---- */
     .lbl { color: #e6ecff; font-size: 12px; text-align: center; white-space: nowrap;
-      text-shadow: 0 1px 3px #000, 0 0 6px #000; pointer-events: none; }
-    .lbl .id { display: block; color: #8aa3c0; font-size: 10px; }
-    .lbl .kind-monument { color: #ffd86b; }
-    .lbl .kind-landmark { color: #8fe0a0; }
-    .lbl .kind-collectible { color: #ff9ec4; }
-    .lbl .kind-chunk { color: #9db4d8; }
+      text-shadow: 0 1px 3px #000, 0 0 6px #000; pointer-events: none; user-select: none; }
+    .lbl.kind-monument { color: var(--c-gold); }
+    .lbl.kind-landmark { color: var(--c-green); }
+    .lbl.kind-collectible { color: var(--c-pink); }
+    .lbl.kind-chunk { color: var(--c-blue); }
+
+    /* ---- section band header ---- */
+    .sc-band { white-space: nowrap; pointer-events: none; user-select: none;
+      font-weight: 900; font-size: 16px; letter-spacing: .04em;
+      text-shadow: 0 1px 4px #000, 0 0 10px #000; }
+    .sc-band .n { font-size: 12px; font-weight: 700; margin-left: 8px; opacity: .8;
+      padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; }
+    .sc-band.kind-monument { color: var(--c-gold); }
+    .sc-band.kind-landmark { color: var(--c-green); }
+    .sc-band.kind-collectible { color: var(--c-pink); }
+    .sc-band.kind-chunk { color: var(--c-blue); }
+
+    /* ---- scroll hint ---- */
+    #sc-hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+      z-index: 15; font-size: 12px; color: #8aa0c8; letter-spacing: .06em; pointer-events: none;
+      background: #0b0b1699; padding: 6px 14px; border-radius: 999px; border: 1px solid #ffffff14;
+      transition: opacity .4s; }
+
+    /* ---- focus overlay ---- */
+    #sc-focus { position: fixed; inset: 0; z-index: 30; display: flex;
+      align-items: flex-end; justify-content: center; pointer-events: none; }
+    #sc-focus.hidden { display: none; }
+    #sc-focus-card { pointer-events: auto; margin-bottom: 6vh; text-align: center;
+      background: #11111fdd; border: 1px solid #ffffff1f; border-radius: 16px;
+      padding: 14px 26px; backdrop-filter: blur(6px); box-shadow: 0 10px 40px #000a; }
+    #sc-focus-name { font-family: "Bungee", "Noto Sans TC", sans-serif; font-size: 22px;
+      color: #fff; letter-spacing: .03em; }
+    #sc-focus-meta { font-size: 13px; color: #9fb0d0; margin-top: 4px; letter-spacing: .04em; }
+    #sc-focus-close { margin-top: 12px; font-family: inherit; font-size: 13px; font-weight: 700;
+      color: #cdd6ee; cursor: pointer; padding: 6px 18px; border-radius: 999px;
+      border: 1px solid #ffffff22; background: #ffffff0d; }
+    #sc-focus-close:hover { border-color: var(--c-cyan); color: #fff; }
+
+    @media (max-width: 600px) {
+      #sc-kicker { font-size: 11px; } #sc-header { font-size: 11px; }
+      .sc-pill { font-size: 13px; padding: 6px 12px; }
+      .sc-band { font-size: 14px; } .lbl { font-size: 11px; }
+    }
   </style>
 </head>
 <body>
-  <!-- DEV-only geometry gallery: renders every object of ?city=<id> in a lit grid —
-       goal monument + landmarks + collectibles + the 70 chunk street objects (t0–t6) —
-       so each hand-built geometry can be eyeballed (and headless-screenshotted)
-       without playing the whole game. ?kind=chunk|landmark|collectible|monument
-       narrows to one kind; ?item=<id> close-up. Not part of the production build. -->
-  <div id="title">Geometry Preview — loading…</div>
+  <!-- 物件圖鑑 (Object Showcase): a player-facing, sectioned 3D catalogue of EVERY
+       object in ?city=<id> — goal monument + landmarks + collectibles + the 70 chunk
+       street objects (grouped by tier). City switcher (in-page, no reload), header
+       with count + scale, click an object to focus it. Reached from the title-screen
+       「物件圖鑑」 button. Dev affordances kept: ?kind=<kind> narrows, ?item=<id> close-up.
+       Built as a 2nd Vite entry, so it ships to GitHub Pages alongside the game. -->
+  <div id="sc-top">
+    <a id="sc-back" href="./index.html">← 返回</a>
+    <div id="sc-title-wrap">
+      <span id="sc-kicker">物件圖鑑</span>
+      <span id="sc-header">載入中…</span>
+    </div>
+    <div id="sc-cities"></div>
+  </div>
+
+  <div id="sc-hint">滾動 / 拖曳瀏覽 · 點物件放大</div>
+
+  <div id="sc-focus" class="hidden">
+    <div id="sc-focus-card">
+      <div id="sc-focus-name"></div>
+      <div id="sc-focus-meta"></div>
+      <button id="sc-focus-close" type="button">關閉 / CLOSE</button>
+    </div>
+  </div>
+
   <script type="module" src="/src/preview.js"></script>
 </body>
 </html>
