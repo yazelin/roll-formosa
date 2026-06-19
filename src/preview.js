@@ -21,6 +21,7 @@ const city = new URLSearchParams(location.search).get('city') || 'taipei';
 const LM = import.meta.glob('./packs/*/landmarks/*.js', { eager: true });
 const COL = import.meta.glob('./packs/*/collectibles/*.js', { eager: true });
 const MON = import.meta.glob('./packs/*/monument.js', { eager: true });
+const ARCH = import.meta.glob('./packs/*/archetypes/*.js', { eager: true }); // 70 chunk 街頭小物 (t0–t6)
 
 /** Pull the {id,name,buildGeometry} descriptor out of a module (named or default). */
 function descOf(mod) {
@@ -45,6 +46,26 @@ for (const [path, mod] of Object.entries(COL)) {
   const d = descOf(mod);
   if (d) items.push({ kind: 'collectible', id: d.id || path, name: d.name || '', build: d.buildGeometry });
 }
+// Chunk archetypes: each t0–t6.js exports an ARRAY of 10 ArchetypeDefs (the street
+// objects the player actually rolls up). These are the bulk of a city and the
+// thing most easily left as taipei's — so the gallery must show them too.
+for (const [path, mod] of Object.entries(ARCH)) {
+  if (!inCity(path)) continue;
+  const arr = Array.isArray(mod.default) ? mod.default : Object.values(mod).find((v) => Array.isArray(v));
+  if (!Array.isArray(arr)) continue;
+  for (const a of arr) {
+    if (a && typeof a.buildGeometry === 'function') {
+      items.push({ kind: 'chunk', id: a.id || path, name: a.displayName || a.name || '', build: a.buildGeometry });
+    }
+  }
+}
+
+// Optional kind filter: ?kind=chunk|landmark|collectible|monument narrows to one kind.
+const kind = new URLSearchParams(location.search).get('kind');
+if (kind) {
+  const keep = items.filter((it) => it.kind === kind);
+  if (keep.length) { items.length = 0; items.push(...keep); }
+}
 
 // Optional close-up: ?item=<id-or-name-substring> renders just the match(es), large.
 const want = new URLSearchParams(location.search).get('item');
@@ -55,7 +76,7 @@ if (want) {
 
 document.getElementById('title').innerHTML = want
   ? `Geometry Preview — <b>${city}</b> · close-up: <b>${want}</b> (${items.length})`
-  : `Geometry Preview — <b>${city}</b> · ${items.length} 件(GOAL monument + 地標 + 收藏)· 全部 unit-normalized`;
+  : `Geometry Preview — <b>${city}</b>${kind ? ` · kind=<b>${kind}</b>` : ''} · ${items.length} 件(monument + 地標 + 收藏 + 70 chunk 街頭物)· 全部 unit-normalized`;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0e1a);

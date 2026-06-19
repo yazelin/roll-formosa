@@ -47,6 +47,12 @@ npm run build    # 靜態輸出到 dist/
 npm test         # vitest
 ```
 
+### 加城市 / 開發工具
+- **加一座城市**:`node scripts/new-city.mjs <id> <displayName> <tagline>` 起骨架,完整 SOP 見 [`docs/ADD-A-CITY.md`](docs/ADD-A-CITY.md)。
+- **幾何預覽藝廊**(看某城市的**全部** 3D 物件 — 地標 / 收藏 / 終點 / 70 個街頭物):開 `/preview.html?city=<id>`,`&kind=chunk` 只看街頭物、`&item=<id>` 單件放大。
+- **在地化檢查**:`node scripts/check-city.mjs <id>` —— chunk 街頭物還是台北的會 FAIL。
+- **無頭驗證**:`node scripts/headless-check.mjs <url> out.png`(自帶 headless chrome,輸出截圖)。
+
 ## 部署
 
 純靜態(Vite build,`base: './'`)。內附 `.github/workflows/deploy.yml`,推上 `main` 即自動 build + 發佈到 GitHub Pages(已上線:https://yazelin.github.io/roll-formosa/ )。

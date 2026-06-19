@@ -41,7 +41,7 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 
 1. `node scripts/new-city.mjs <id> <displayName> <tagline>`(自動 `cp -r taipei`、改 `id`/`displayName`/`seeds`、登錄 manifest 為 `'soon'`)。
 2. 換內容:`tiers.js`(7 階主題)、`monument.js`(終點建物)、`landmarks/`、`collectibles/`、
-   `archetypes/t0–t6.js`(70 chunk 幾何)、`narration.js`、`locale.js`、`ending.js`、
+   `archetypes/t0–t6.js`(70 chunk 幾何,**內容要在地化、別留台北的**;`check-city.mjs` 會擋)、`narration.js`、`locale.js`、`ending.js`、
    `cityData.js`/`cityMap.js`(SHOP/ZONES/PLACEMENTS/water/GOAL_POS/DEV_STARTS)。
    也放一張 `public/assets/title/skyline-<id>.webp`(標題頁霓虹天際線剪影,透明背景;
    `main.js` 依 active pack id 自動切換,缺檔自動退回 `skyline-taipei.webp`)。
@@ -57,7 +57,9 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 
 ## 驗證關卡(動完必過)
 - `npm run build` 過、`npx vitest run` 全綠。
+- `node scripts/check-city.mjs <city>` → chunk 街頭物整包還是台北的(>=60/70 同台北)會 FAIL。
 - `node scripts/headless-check.mjs http://localhost:4173/?city=<city> /tmp/x.png` → 0 console error、tier 標籤正確。
+- 幾何看長相:`/preview.html?city=<city>`(全部物件,`&kind=chunk` 篩街頭物)。
 - pack:`validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
 
 ## 目錄地圖

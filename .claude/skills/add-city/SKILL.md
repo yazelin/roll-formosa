@@ -46,14 +46,18 @@ taipei). Content is still taipei's.
 
 Swap each file per docs/ADD-A-CITY.md Phase 2 (tiers, monument, landmarks,
 collectibles, archetypes t0–t6, narration, locale, cityMap/cityData, ending).
-**Rewrite the copied `*.test.js` expectations** — they still assert taipei's
-values and will fail until updated. Geometry is all code; the engine is untouched.
+**The 70 chunk archetypes (t0–t6) are CONTENT, not a copy step** — they are the
+street objects the player actually rolls up, so localize them (keep the pan-Taiwan
+generics, swap the city-specific slots); `scripts/check-city.mjs <id>` FAILS if they
+stay taipei's. **Rewrite the copied `*.test.js` expectations** — they still assert
+taipei's values and will fail until updated. Geometry is all code; the engine is untouched.
 
-For each landmark/collectible/monument geometry, DON'T blind-write: (1) look up
-the real form, (2) crib `src/packs/taipei/landmarks/*.js` patterns, (3) **review
-the result** in the geometry gallery — `npm run dev`, then
+For each landmark / collectible / monument / **chunk** geometry, DON'T blind-write:
+(1) look up the real form, (2) crib `src/packs/taipei/{landmarks,collectibles,archetypes}/*.js`
+patterns, (3) **review the result** in the geometry gallery — `npm run dev`, then
 `node scripts/headless-check.mjs "http://localhost:<port>/preview.html?city=<id>" /tmp/g.png`
-(self-contained headless chrome, no MCP) and open the PNG. Not silhouette-right → fix → re-shoot.
+(shows ALL objects incl chunks; `&kind=chunk` narrows; self-contained headless chrome, no MCP).
+Not silhouette-right → fix → re-shoot.
 
 ## Phase 3 — Skyline asset (the only hand-made file)
 
@@ -66,15 +70,17 @@ silhouette of this city's landmarks). MISSING ⇒ the title silently shows the
 
 ```bash
 npm run build && npx vitest run
+node scripts/check-city.mjs <id>   # FAILS if chunk objects are still taipei's (>=60/70)
 node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png
 npm run dev   # NOT prod preview (DEV-only asserts). Eyeball:
               #  - objects sit on the ground (no floating)
               #  - skyline + title/result strings are THIS city
 ```
 
-The headless-check's "0 console errors" is load-bearing: geometry tri-cap
-overruns (collectible 350 / hero `HERO_TRI_CAP`) and buildGeometry throws are
-RUNTIME asserts — `build` + `vitest` pass them; only an actual boot catches them.
+The headless-check's "0 console errors" is load-bearing: buildGeometry throws and
+collectible/landmark tri-cap overruns (350 / hero `HERO_TRI_CAP`) are RUNTIME asserts
+that `build` misses — only a boot catches them. (Chunk t0–t6 tri-caps ARE checked by
+`catalog.test` in vitest.)
 
 When all green: flip manifest `'soon'` → `'ready'`, and update README's
 playable-cities list. Only then is it playable.

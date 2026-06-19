@@ -14,13 +14,17 @@
       text-shadow: 0 1px 3px #000, 0 0 6px #000; pointer-events: none; }
     .lbl .id { display: block; color: #8aa3c0; font-size: 10px; }
     .lbl .kind-monument { color: #ffd86b; }
+    .lbl .kind-landmark { color: #8fe0a0; }
+    .lbl .kind-collectible { color: #ff9ec4; }
+    .lbl .kind-chunk { color: #9db4d8; }
   </style>
 </head>
 <body>
-  <!-- DEV-only geometry gallery: renders every landmark + collectible + the goal
-       monument of ?city=<id> in a lit grid, so each hand-built geometry can be
-       eyeballed (and headless-screenshotted) without playing the whole game.
-       Not part of the production build. -->
+  <!-- DEV-only geometry gallery: renders every object of ?city=<id> in a lit grid —
+       goal monument + landmarks + collectibles + the 70 chunk street objects (t0–t6) —
+       so each hand-built geometry can be eyeballed (and headless-screenshotted)
+       without playing the whole game. ?kind=chunk|landmark|collectible|monument
+       narrows to one kind; ?item=<id> close-up. Not part of the production build. -->
   <div id="title">Geometry Preview — loading…</div>
   <script type="module" src="/src/preview.js"></script>
 </body>
