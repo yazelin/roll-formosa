@@ -37,8 +37,10 @@ Cultural rules (these caused real bugs):
 node scripts/new-city.mjs <id> <displayName> <tagline>
 ```
 
-Creates `src/packs/<id>/` (a taipei copy with id/displayName/seeds rewritten)
-and registers it `status:'soon'` in manifest.js. Content is still taipei's.
+Creates `src/packs/<id>/` (a taipei copy with id/displayName/seeds rewritten),
+registers it `status:'soon'` in manifest.js, AND wires the static import +
+PACKS entry in active.js (without that, `?city=<id>` silently falls back to
+taipei). Content is still taipei's.
 
 ## Phase 2 — Content
 
@@ -69,6 +71,10 @@ npm run dev   # NOT prod preview (DEV-only asserts). Eyeball:
               #  - objects sit on the ground (no floating)
               #  - skyline + title/result strings are THIS city
 ```
+
+The headless-check's "0 console errors" is load-bearing: geometry tri-cap
+overruns (collectible 350 / hero `HERO_TRI_CAP`) and buildGeometry throws are
+RUNTIME asserts — `build` + `vitest` pass them; only an actual boot catches them.
 
 When all green: flip manifest `'soon'` → `'ready'`, and update README's
 playable-cities list. Only then is it playable.

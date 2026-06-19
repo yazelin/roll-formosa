@@ -9,7 +9,8 @@
  *   1. cp -r src/packs/taipei src/packs/<id>
  *   2. rewrite <id>/index.js: id, displayName, seeds (derived from id)
  *   3. register a `status:'soon'` entry in src/packs/manifest.js
- *   4. print the TODO list (content + skyline + verify) → docs/ADD-A-CITY.md
+ *   4. wire active.js: static `import` + PACKS entry (else ?city=<id> → taipei)
+ *   5. print the TODO list (content + skyline + verify) → docs/ADD-A-CITY.md
  *
  * Everything else (geometry, tiers, narration, collectibles, tests, the
  * skyline webp) is content work — see docs/ADD-A-CITY.md.
@@ -66,9 +67,25 @@ if (man.includes(`id: '${id}'`)) die(`manifest.js already lists '${id}'`);
 man = man.replace(/(\n)(\]\);)/, `\n${entry}$2`);
 writeFileSync(manPath, man);
 
+// 4) wire active.js — it STATICALLY imports each pack into PACKS; without this
+//    ?city=<id> silently falls back to taipei even though manifest lists it.
+const actPath = join(ROOT, 'src/packs/active.js');
+let act = readFileSync(actPath, 'utf8');
+if (!act.includes(`'./${id}/index.js'`)) {
+  const before = act;
+  act = act.replace(
+    /(import \{ resolveCityId \} from '\.\/manifest\.js';)/,
+    `import { activePack as ${id} } from './${id}/index.js';\n$1`
+  );
+  act = act.replace(/(const PACKS = \{[^}]*?)\s*\}/, `$1, ${id} }`);
+  if (act === before) die('active.js: expected import/PACKS patterns not found — template changed?');
+  writeFileSync(actPath, act);
+}
+
 console.log(`
 [new-city] scaffolded src/packs/${id}/  (seeds primary=${hex(primary)} v5=${hex(v5)})
 [new-city] manifest.js: '${id}' added as status:'soon' (not playable until you finish + verify)
+[new-city] active.js: '${id}' imported into PACKS (so ?city=${id} resolves)
 
 NEXT — see docs/ADD-A-CITY.md:
   Phase 2  swap content: tiers / monument / landmarks / collectibles /
