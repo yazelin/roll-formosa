@@ -46,7 +46,9 @@ CLI 會:`cp -r src/packs/taipei src/packs/<id>` → 改 `id`/`displayName`/`seed
 
 ## Phase 1 — 下發包(scaffold)
 
-跑上面的 CLI。完成後 `src/packs/<id>/` 是台北的複本、`manifest.js` 多一筆 `'soon'`。
+跑上面的 CLI。完成後 `src/packs/<id>/` 是台北的複本、`manifest.js` 多一筆 `'soon'`、
+`active.js` 也補上 `import` + `PACKS` 那筆(**這步非做不可** —— `active.js` 是靜態 import 各 pack,
+漏了的話 `?city=<id>` 會默默 fallback 回台北。CLI 已自動處理;手動加城市時別忘)。
 
 ---
 
@@ -123,6 +125,9 @@ node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png   # 
 ```
 
 - pack `validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
+- **headless-check 的「0 console error」非跑不可** —— 幾何的 tri cap(收藏 350 / hero `HERO_TRI_CAP`)
+  與 buildGeometry 錯誤是**執行期** assert,`npm run build` 跟 `npx vitest run` 都不會抓到,
+  只有實際 boot(headless-check 或瀏覽器)才會炸。藝廊截圖也會在 console 報這類錯。
 - **`npm run dev` 親眼看**(不是 prod preview —— 有 DEV-only assert);兩件事要確認:
   - 物件貼地、不懸空(curated 抬高物件要落地)。
   - skyline 是這座城市的、標題/結算字串是這座城市的。
@@ -133,6 +138,8 @@ node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png   # 
 
 ## 速查:會踩的雷
 
+- `active.js` 沒補 import/PACKS → `?city=<id>` 默默 fallback 台北(CLI 已自動;手動加城市別漏)(Phase 1)。
+- 幾何超 tri cap(收藏 350 / hero `HERO_TRI_CAP`)→ **執行期**才炸,build+vitest 會綠騙過你,一定要跑 headless-check / 進遊戲(Phase 4)。
 - skyline 沒做 → silent 顯示台北(Phase 3)。
 - 複製來的 `*.test.js` 期望值沒改 → 測試紅(Phase 2)。
 - 借了別城市的招牌典故(機車海…)→ 文化錯(Phase 0)。
