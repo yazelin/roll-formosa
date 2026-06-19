@@ -73,21 +73,23 @@ CLI 會:`cp -r src/packs/taipei src/packs/<id>` → 改 `id`/`displayName`/`seed
 
 ### 寫幾何:先調查 → 拼 → 看 → 改(別盲寫)
 
-每個地標/收藏動手前:
+每個地標 / 收藏 / **chunk 街頭物**動手前:
 
 1. **查真實外形**(查圖/已知造型)+ 想好用哪幾個基本量體(box/cyl/sph)拼出可辨識的剪影 —— 不是憑印象亂湊。
-2. **參考現有寫法**:`src/packs/taipei/landmarks/*.js`、`collectibles/*.js` 是範本(`geomHelpers` 詞彙、`finish()` 會 merge→recenter→正規化到 unit sphere、`<=600` / `heroTriCap` tris)。
-3. **看長怎樣**(這步以前 SOP 沒寫,別跳):用幾何預覽藝廊看每件的剪影,不像就改。
+2. **參考現有寫法**:`src/packs/taipei/{landmarks,collectibles,archetypes}/*.js` 是範本(`geomHelpers` 詞彙、`finish()` 會 merge→recenter→正規化到 unit sphere;收藏/地標 `<=600` heroTriCap、chunk `<=350` tris)。
+3. **看長怎樣**(別跳):用幾何預覽藝廊看每件的剪影,不像就改。藝廊**含 70 個 chunk 街頭物**(不只地標/收藏),顏色標籤分類。
 
 ```bash
 npm run dev   # 起 dev server(記下 port,通常 5173/5174)
-# 截整個 pack 的幾何藝廊(monument + 地標 + 收藏),0 console error 代表全部 build 成功
+# 截整個 pack 的幾何藝廊(monument + 地標 + 收藏 + 70 chunk),0 console error = 全部 build 成功
 node scripts/headless-check.mjs "http://localhost:<port>/preview.html?city=<id>" /tmp/geom.png
+# 只看 70 個 chunk 街頭物(確認都換成在地的、不是台北的剪影):
+node scripts/headless-check.mjs "http://localhost:<port>/preview.html?city=<id>&kind=chunk" /tmp/chunk.png
 ```
 
-`preview.html` 自動列出 `?city=<id>` 的所有幾何、加標籤、慢慢轉。`headless-check.mjs`
-**自帶 headless chrome(swiftshader),不依賴任何 MCP** —— 輸出 PNG 直接開來看,
-不像就回去改 `buildGeometry`、重截。也可直接在瀏覽器開 `/preview.html?city=<id>` 即時轉著看。
+`preview.html` 自動列出 `?city=<id>` 的**所有**幾何(monument/地標/收藏/chunk),慢慢轉;
+`?kind=chunk|landmark|collectible` 篩一類、`?item=<id>` 單件放大。`headless-check.mjs`
+**自帶 headless chrome(swiftshader),不依賴任何 MCP** —— 輸出 PNG 直接開來看,不像就回去改 `buildGeometry`、重截。
 
 ---
 
@@ -121,13 +123,16 @@ strip. Aspect ratio ~3:1, crisp vector-like neon edges, dark interior fill.
 ```bash
 npm run build                                  # 過
 npx vitest run                                 # 全綠(含你改過的 *.test.js)
+node scripts/check-city.mjs <id>               # chunk 物件還是台北的會 FAIL(>=60/70 同台北)
 node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png   # 0 console error、tier 標籤正確
 ```
 
 - pack `validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
-- **headless-check 的「0 console error」非跑不可** —— 幾何的 tri cap(收藏 350 / hero `HERO_TRI_CAP`)
-  與 buildGeometry 錯誤是**執行期** assert,`npm run build` 跟 `npx vitest run` 都不會抓到,
-  只有實際 boot(headless-check 或瀏覽器)才會炸。藝廊截圖也會在 console 報這類錯。
+- **`check-city.mjs` 要 OK** —— 它比對這座城市的 70 個 chunk id 與台北,整包照抄(>=60/70 同台北)就 FAIL。
+  別把它的「保留 N 個泛台灣通用物」當壞事(高雄 37/70、台中 44/70 都正常);它擋的是**整包沒換**。
+- **headless-check 的「0 console error」非跑不可** —— buildGeometry 錯誤與**收藏/地標**的 tri cap(350 / hero `HERO_TRI_CAP`)
+  是**執行期** assert,`npm run build` 不會抓;只有實際 boot(headless-check / 藝廊 / 瀏覽器)才會炸。
+  (**chunk(t0–t6)的 ≤350 由 `catalog.test` 在 vitest 就驗**,不靠 boot;收藏/地標才是執行期那種。)藝廊截圖也會在 console 報 build 錯。
 - **`npm run dev` 親眼看**(不是 prod preview —— 有 DEV-only assert);兩件事要確認:
   - 物件貼地、不懸空(curated 抬高物件要落地)。
   - skyline 是這座城市的、標題/結算字串是這座城市的。
