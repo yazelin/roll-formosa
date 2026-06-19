@@ -413,9 +413,11 @@ export class Input {
     if (!this._touchUiEnabled) return;
     this._touchCount = this._countGameTouches(e);
     if (this._joyId !== -1) return;
-    // Ignore touches that begin on UI controls (title/win buttons).
+    // Ignore touches that begin on UI controls — <button> AND links (<a href>, e.g.
+    // the 物件圖鑑 entry + footer icons) — so a tap navigates/acts instead of being
+    // eaten by the joystick's preventDefault() below (this killed link taps on mobile).
     const tgt = /** @type {Element|null} */ (e.changedTouches[0].target);
-    if (tgt !== null && typeof tgt.closest === 'function' && tgt.closest('button') !== null) return;
+    if (tgt !== null && typeof tgt.closest === 'function' && tgt.closest('button, a[href]') !== null) return;
     const t = e.changedTouches[0];
     this._joyId = t.identifier;
     this._joyAnchorX = t.clientX;
