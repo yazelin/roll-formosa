@@ -1053,6 +1053,10 @@
     }
     #title-overlay #start-button:hover { box-shadow: 0 0 0 2px rgba(255,255,255,.4) inset, 0 0 34px rgba(255,42,120,.95), 0 12px 40px rgba(255,42,120,.55); }
     #title-overlay #donack-toggle { background: rgba(8,4,22,.55); border:1px solid rgba(0,221,255,.5); box-shadow:0 0 14px rgba(0,221,255,.28); color:#dff6ff; }
+    /* 換城市 + 物件圖鑑: the plain .btn-secondary reads as "disabled" on the neon scene —
+       give them an active neon border + glow so they clearly invite a click. */
+    #title-overlay .title-actions .btn.btn-secondary { background: rgba(0,221,255,.12); border:1px solid rgba(0,221,255,.55); box-shadow:0 0 14px rgba(0,221,255,.3); color:#e6fbff; }
+    #title-overlay .title-actions .btn.btn-secondary:hover { background: rgba(0,221,255,.2); box-shadow:0 0 24px rgba(0,221,255,.55); }
     #title-overlay .donack-toggle-face { box-shadow: 0 0 0 2px #00e0ff, 0 0 12px rgba(0,224,255,.7); }
     #title-overlay .key-hints { color:#d6def0; text-shadow:0 1px 3px rgba(0,0,0,.85); }
     #title-overlay .key-hints kbd { color:#eafaff; background:rgba(6,12,30,.82); border-color:rgba(0,221,255,.65); text-shadow:none; }
