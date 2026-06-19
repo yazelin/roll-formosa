@@ -1,7 +1,7 @@
 /**
- * @file packs/taipei/archetypes/t3.js — Roll Formosa Taipei pack, Tier 3
- * (機車海 / scooter-sea street). 10 ArchetypeDefs in the FROZEN slot order
- * declared by tiers.js T3.archetypeIds. Size band 0.5–2.5 m.
+ * @file packs/taichung/archetypes/t3.js — Roll Formosa Taichung pack, Tier 3
+ * (台灣大道車流 / Taiwan Boulevard arterial). 10 ArchetypeDefs in the FROZEN
+ * slot order declared by tiers.js T3.archetypeIds. Size band 0.5–2.5 m.
  *
  * Built ONLY with the engine geometry vocabulary (geomHelpers.js): every
  * buildGeometry returns finish([...painted primitives]) — merged, recentered,
@@ -9,8 +9,12 @@
  * (cyl/sph radial segs kept at 6–10). rng() drives only small cosmetic
  * variation, never structure (determinism).
  *
- * Palette mood: 暮色機車海 藍紫起調 (dusk street, blue-purple onset) — but each
- * object keeps its own true-to-life Taipei street colors so it stays legible.
+ * Palette mood: 暮色林蔭大道 藍紫起調 (dusk boulevard, blue-purple onset) — but
+ * each object keeps its own true-to-life Taichung street colors so it stays
+ * legible. Taiwan Boulevard reads as a wide tree-lined arterial with a transit
+ * lane (BRT-style 市公車), not a scooter sea: kept the 機車/小貨車 generics and
+ * the boulevard-native 變電箱/霓虹招牌/路樹, and swapped the shopfront/stall/
+ * temple-lion props for 候車亭 / 天橋 / 市公車.
  *
  * Slots [0..7] absorbable street objects; slots [8..9] (夜市拱門 / 廟前牌樓)
  * are repeatable CHUNK LANDMARKS (lower spawnWeight, bigger).
@@ -179,42 +183,53 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 4 ── 鐵捲門 roll-up shutter (shopfront) ────────────────────────────── */
+  /* 4 ── 公車候車亭 bus shelter (Taiwan Boulevard transit stop) ────────── */
   {
-    id: 'roll_shutter',
-    displayName: '鐵捲門',
+    id: 'bus_shelter',
+    displayName: '公車候車亭',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.8,
-    radiusJitter: 0.13,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xa9adb6, 0x7c818c, 0x5a5e68, 0xc9ccd2, 0x3a3d46],
-    yOffset: -0.3,
+    palette: [0x6d7079, 0xbcd6e6, 0x2f6db0, 0xe8e8ee, 0x3a3d46, 0xfff04a],
+    yOffset: -0.32,
     upright: true,
-    collisionScale: 0.7,
+    collisionScale: 0.66,
     buildGeometry(rng) {
-      const metal = rng() < 0.5 ? 0xa9adb6 : 0xb0a878; // grey or beige shutter
+      const trim = rng() < 0.5 ? 0x2f6db0 : 0x39908a; // blue or teal civic trim
+      const glass = 0xbcd6e6;
+      const post = 0x6d7079;
       const parts = [];
-      // side frame channels
-      parts.push(box(0.14, 2.4, 0.14, 0x5a5e68, { x: -1.3, y: 1.2 }));
-      parts.push(box(0.14, 2.4, 0.14, 0x5a5e68, { x: 1.3, y: 1.2 }));
-      // shutter face = stack of horizontal slats (alternating shade)
-      const slats = 11;
-      for (let i = 0; i < slats; i++) {
-        const y = 0.25 + i * 0.2;
-        const shade = i % 2 === 0 ? metal : 0x7c818c;
-        parts.push(box(2.5, 0.18, 0.08, shade, { x: 0, y, z: 0 }));
+      // kerb plinth the shelter stands on
+      parts.push(box(2.6, 0.16, 1.0, 0x8c8a82, { x: 0, y: 0.08 }));
+      // four corner posts
+      const legs = [[-1.15, 0.4], [1.15, 0.4], [-1.15, -0.4], [1.15, -0.4]];
+      for (const [lx, lz] of legs) {
+        parts.push(cyl(0.07, 0.07, 1.9, 6, post, { x: lx, y: 1.1, z: lz }));
       }
-      // roll housing box on top
-      parts.push(box(2.7, 0.4, 0.34, 0x3a3d46, { x: 0, y: 2.5 }));
-      parts.push(cyl(0.18, 0.18, 2.5, 8, 0x4a4e58, { x: 0, y: 2.5, rz: HALF_PI }));
-      // bottom rail
-      parts.push(box(2.6, 0.16, 0.14, 0x3a3d46, { x: 0, y: 0.12 }));
+      // rear glass wall + side glass panels (tinted, see-through look)
+      parts.push(box(2.5, 1.5, 0.06, glass, { x: 0, y: 1.05, z: -0.46 }));
+      parts.push(box(0.06, 1.5, 0.86, glass, { x: -1.18, y: 1.05 }));
+      parts.push(box(0.06, 1.5, 0.86, glass, { x: 1.18, y: 1.05 }));
+      // glass mullion frames
+      parts.push(box(2.5, 0.08, 0.08, 0x3a3d46, { x: 0, y: 1.78, z: -0.46 }));
+      parts.push(box(2.5, 0.08, 0.08, 0x3a3d46, { x: 0, y: 0.34, z: -0.46 }));
+      // waiting bench
+      parts.push(box(2.0, 0.1, 0.34, 0x3a3d46, { x: 0, y: 0.62, z: -0.28 }));
+      parts.push(box(2.0, 0.34, 0.06, 0x3a3d46, { x: 0, y: 0.86, z: -0.42 }));
+      // flat cantilever roof slab + colored fascia band
+      parts.push(box(2.8, 0.12, 1.2, 0xe8e8ee, { x: 0, y: 2.06 }));
+      parts.push(box(2.84, 0.16, 0.1, trim, { x: 0, y: 2.0, z: 0.6 }));
+      // route-info totem pole at one end (illuminated panel)
+      parts.push(cyl(0.06, 0.06, 2.4, 6, post, { x: 1.45, y: 1.2 }));
+      parts.push(box(0.1, 0.7, 0.42, trim, { x: 1.45, y: 2.2 }));
+      parts.push(box(0.04, 0.5, 0.3, 0xfff04a, { x: 1.51, y: 2.2 })); // glowing schedule
       return finish(parts);
     },
   },
 
-  /* 5 ── 路樹 street tree (trimmed boulevard tree) ─────────────────────── */
+  /* 5 ── 路樹 street tree (林蔭大道 boulevard tree) ────────────────────── */
   {
     id: 'street_tree',
     displayName: '路樹',
@@ -251,78 +266,88 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 6 ── 棚架 awning frame (street-stall canopy frame + tarp) ──────────── */
+  /* 6 ── 天橋 pedestrian footbridge (Taiwan Boulevard overpass) ────────── */
   {
-    id: 'awning_frame',
-    displayName: '棚架',
+    id: 'footbridge',
+    displayName: '天橋',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.7,
-    radiusJitter: 0.16,
+    radiusNominal: 2.3,
+    radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0x9aa0ac, 0xc4203a, 0xe8e8ee, 0x2f6db0, 0x6d7079],
-    yOffset: -0.43,
+    palette: [0x9aa0ac, 0x6d7079, 0xc9ccd2, 0x55585f, 0x2f6db0],
+    yOffset: -0.46,
     upright: true,
-    collisionScale: 0.66,
+    collisionScale: 0.62,
     buildGeometry(rng) {
-      const tarp = rng() < 0.5 ? 0xc4203a : 0x2f6db0; // red or blue striped tarp
+      const deck = 0x9aa0ac;
+      const rail = rng() < 0.5 ? 0x2f6db0 : 0xc4203a; // blue or red painted railing
+      const pier = 0x6d7079;
       const parts = [];
-      const post = 0x9aa0ac;
-      // 4 corner posts
-      const legs = [[-1.1, 1.1], [1.1, 1.1], [-1.1, -1.1], [1.1, -1.1]];
-      for (const [lx, lz] of legs) {
-        parts.push(cyl(0.06, 0.06, 2.0, 6, post, { x: lx, y: 1.0, z: lz }));
+      // two support piers
+      parts.push(box(0.34, 1.8, 0.55, pier, { x: -1.6, y: 0.9, hex2: 0x55585f }));
+      parts.push(box(0.34, 1.8, 0.55, pier, { x: 1.6, y: 0.9, hex2: 0x55585f }));
+      // pier footings
+      parts.push(box(0.6, 0.18, 0.8, 0x55585f, { x: -1.6, y: 0.09 }));
+      parts.push(box(0.6, 0.18, 0.8, 0x55585f, { x: 1.6, y: 0.09 }));
+      // span deck + underside girder
+      parts.push(box(4.4, 0.18, 0.85, deck, { x: 0, y: 1.92 }));
+      parts.push(box(4.0, 0.16, 0.5, 0x55585f, { x: 0, y: 1.76 }));
+      // side railings (top rail + mid rail + uprights), both sides
+      const railSide = (rz) => {
+        parts.push(box(4.2, 0.07, 0.07, rail, { x: 0, y: 2.34, z: rz }));
+        parts.push(box(4.2, 0.05, 0.05, rail, { x: 0, y: 2.12, z: rz }));
+        for (let i = 0; i < 7; i++) {
+          const ux = -1.8 + i * 0.6;
+          parts.push(box(0.05, 0.42, 0.05, 0xc9ccd2, { x: ux, y: 2.22, z: rz }));
+        }
+      };
+      railSide(0.4);
+      railSide(-0.4);
+      // stair flight descending at one end (stepped boxes)
+      for (let i = 0; i < 4; i++) {
+        parts.push(box(0.5, 0.12, 0.85, deck, { x: 2.35 + i * 0.42, y: 1.7 - i * 0.42 }));
       }
-      // top frame rails
-      parts.push(box(2.32, 0.08, 0.08, 0x6d7079, { x: 0, y: 2.0, z: 1.1 }));
-      parts.push(box(2.32, 0.08, 0.08, 0x6d7079, { x: 0, y: 2.0, z: -1.1 }));
-      parts.push(box(0.08, 0.08, 2.32, 0x6d7079, { x: -1.1, y: 2.0 }));
-      parts.push(box(0.08, 0.08, 2.32, 0x6d7079, { x: 1.1, y: 2.0 }));
-      // pitched tarp roof — two slabs meeting at a low ridge
-      parts.push(box(2.5, 0.05, 1.35, tarp, { x: 0, y: 2.22, z: 0.62, rx: -0.28 }));
-      parts.push(box(2.5, 0.05, 1.35, 0xe8e8ee, { x: 0, y: 2.22, z: -0.62, rx: 0.28 }));
-      // ridge cap
-      parts.push(box(2.5, 0.06, 0.1, tarp, { x: 0, y: 2.42 }));
       return finish(parts);
     },
   },
 
-  /* 7 ── 石獅 stone guardian lion (temple-gate shishi) ─────────────────── */
+  /* 7 ── 台中市公車 city bus (BRT-style boulevard transit) ─────────────── */
   {
-    id: 'stone_lion',
-    displayName: '石獅',
+    id: 'taichung_bus',
+    displayName: '台中市公車',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.0,
-    radiusJitter: 0.13,
+    radiusNominal: 2.3,
+    radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xb9b3a4, 0x9c9686, 0xd8d3c5, 0x6e6a5e, 0xc4203a],
-    yOffset: -0.16,
+    palette: [0x2f6db0, 0xe8eaef, 0x1a2330, 0x14151f, 0xd6dae0, 0xfff04a],
+    yOffset: -0.5,
     upright: true,
-    collisionScale: 0.72,
+    collisionScale: 0.78,
     buildGeometry(rng) {
-      const stone = 0xb9b3a4;
-      const stone2 = 0xd8d3c5;
+      const livery = rng() < 0.5 ? 0x2f6db0 : 0x3a8f6e; // blue or green city livery
       const parts = [];
-      // plinth base
-      parts.push(box(0.9, 0.4, 0.7, 0x9c9686, { x: 0, y: 0.2, hex2: 0x6e6a5e }));
-      // haunches / seated body
-      parts.push(box(0.6, 0.7, 0.55, stone, { x: 0.1, y: 0.72, hex2: stone2 }));
-      // chest rising to head
-      parts.push(box(0.55, 0.6, 0.5, stone, { x: -0.18, y: 1.0, hex2: stone2 }));
-      // head
-      parts.push(sph(0.34, stone, { x: -0.3, y: 1.5, ws: 7, hs: 5, hex2: stone2 }));
-      // curled mane (icosphere collar) + brow ridges
-      parts.push(sph(0.4, 0x9c9686, { x: -0.18, y: 1.42, ws: 7, hs: 4 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: 0.16, ws: 5, hs: 3 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: -0.16, ws: 5, hs: 3 }));
-      // front legs
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: 0.2 }));
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: -0.2 }));
-      // paws on a ball (left) — the lion's embroidered ball
-      parts.push(sph(0.16, 0xc4203a, { x: -0.5, y: 0.32, z: 0.2, ws: 6, hs: 4 }));
-      // tail
-      parts.push(sph(0.22, stone2, { x: 0.42, y: 1.05, ws: 6, hs: 4 }));
+      // long body shell (gradient to a lighter roof)
+      parts.push(box(3.0, 1.1, 1.0, livery, { x: 0, y: 0.95, hex2: 0xe8eaef }));
+      // pale lower skirt band
+      parts.push(box(3.0, 0.3, 1.02, 0xe8eaef, { x: 0, y: 0.5 }));
+      // roof cap
+      parts.push(box(2.7, 0.16, 0.9, 0xd6dae0, { x: 0, y: 1.56 }));
+      // window band (both sides) — strip of tinted glass
+      parts.push(box(2.5, 0.34, 0.04, 0x1a2330, { x: 0.1, y: 1.15, z: 0.5 }));
+      parts.push(box(2.5, 0.34, 0.04, 0x1a2330, { x: 0.1, y: 1.15, z: -0.5 }));
+      // windshield + front face
+      parts.push(box(0.06, 0.5, 0.92, 0x1a2330, { x: -1.5, y: 1.15 }));
+      // boarding door (front-right) darker recessed panel
+      parts.push(box(0.05, 0.7, 0.34, 0x14151f, { x: -1.5, y: 0.78, z: 0.28 }));
+      // headlights + destination sign
+      parts.push(box(0.05, 0.12, 0.16, 0xfff2cc, { x: -1.52, y: 0.6, z: 0.34 }));
+      parts.push(box(0.05, 0.12, 0.16, 0xfff2cc, { x: -1.52, y: 0.6, z: -0.34 }));
+      parts.push(box(0.05, 0.18, 0.6, 0xfff04a, { x: -1.52, y: 1.5 })); // route LED
+      // 4 wheels
+      const wheel = (wx, wz) => cyl(0.3, 0.3, 0.16, 10, 0x14151f, { x: wx, y: 0.3, z: wz, rx: HALF_PI });
+      parts.push(wheel(-1.0, 0.5), wheel(-1.0, -0.5), wheel(1.0, 0.5), wheel(1.0, -0.5));
       return finish(parts);
     },
   },

@@ -1,10 +1,16 @@
 /**
- * @file packs/taipei/archetypes/t1.js — T1 夜市攤頭 (night-market stall items).
+ * @file packs/taichung/archetypes/t1.js — T1 逢甲夜市攤頭 (Fengjia night-market stall items).
  *
- * Tier 1 of the Roll Formosa Taipei ladder (夜市, enterTrueRadius 0.10 m).
- * 10 ArchetypeDefs in the FROZEN id order from packs/taipei/tiers.js:
+ * Tier 1 of the Roll Formosa Taichung ladder (逢甲夜市, 全台最大夜市).
+ * 10 ArchetypeDefs in the FROZEN id order from packs/taichung/tiers.js:
  *   slots [0..7] absorbable night-market小物 (spawnWeight 1.0),
- *   slots [8..9] repeatable CHUNK LANDMARKS (攤車燈籠 / 彈珠台, spawnWeight ~0.3).
+ *   slots [8..9] repeatable CHUNK LANDMARKS (飲料杯塔 / 大腸香腸烤台, spawnWeight ~0.3).
+ *
+ * Localized for 逢甲: keeps the pan-Taiwan generics any 夜市 has (養樂多 / 寶特瓶
+ * 飲料、滷味夾、紅白塑膠袋), swaps the food slots to 逢甲 signatures —
+ * 章魚小丸子 / 雞蛋糕 / 可麗餅 / 起司馬鈴薯, and re-themes both chunk landmarks to
+ * Fengjia stall props (a giant drink cup and a sausage grill cart). Deliberately
+ * avoids the curated collectibles 大腸包小腸 / 珍奶.
  *
  * Built ONLY with the engine geometry vocabulary (geomHelpers.js): primitives
  * are authored in convenient LOCAL units, then finish() merges, recenters and
@@ -82,81 +88,111 @@ export const T1_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] 檳榔 — fresh green betel nut: glossy oval with a pale tip */
+  /* [2] 章魚小丸子 — takoyaki: browned dough ball drizzled with sauce + bonito */
   /* ---------------------------------------------------------------- */
   {
-    id: 'betel_nut',
-    displayName: '檳榔',
+    id: 'takoyaki',
+    displayName: '章魚小丸子',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.05,
-    radiusJitter: 0.2,
+    radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x5a8a2e, 0x6fa238, 0x4a7a26, 0xc8d49a, 0x86b04a],
-    yOffset: -0.0002,
+    palette: [0xc8853a, 0xb0712a, 0x6a3a1e, 0xe8c060, 0xd8c8a8],
+    yOffset: -0.1999,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      return finish([
-        sph(0.62, 0x6fa238, { ws: 9, hs: 7, sy: 1.5, y: 0.62, hex2: 0x5a8a2e }), // green ovoid
-        cone(0.26, 0.34, 8, 0xc8d49a, { y: 1.42 }), // pale stem tip
-        sph(0.18, 0x4a7a26, { ws: 6, hs: 4, y: 0.08 }), // darker base nub
-      ]);
+      const parts = [
+        // browned dough ball (slightly squashed)
+        sph(0.86, 0xc8853a, { ws: 9, hs: 7, sy: 0.92, y: 0.82, hex2: 0xe0a04a }),
+        cyl(0.5, 0.62, 0.18, 8, 0xb0712a, { y: 0.1 }), // crisped underside
+        // dark brown takoyaki-sauce zig-zag (two crossing bars on top)
+        box(1.5, 0.08, 0.16, 0x6a3a1e, { ry: 0.5, y: 1.46 }),
+        box(1.5, 0.08, 0.16, 0x6a3a1e, { ry: -0.5, y: 1.5 }),
+        // pale mayo stripe
+        box(1.3, 0.06, 0.1, 0xf0e8d0, { ry: 0.1, y: 1.56 }),
+      ];
+      // bonito flakes fluttering on the crown (deterministic ring)
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * PI * 2;
+        parts.push(
+          box(0.22, 0.04, 0.14, 0xd8b078, {
+            x: Math.cos(a) * 0.34,
+            y: 1.62 + (i % 2) * 0.06,
+            z: Math.sin(a) * 0.34,
+            rz: 0.3,
+          })
+        );
+      }
+      return finish(parts);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] 香 — single thin incense stick: red shaft, glowing ember tip */
+  /* [3] 雞蛋糕 — egg cake: little golden castella puffs joined in a cluster */
   /* ---------------------------------------------------------------- */
   {
-    id: 'incense_stick',
-    displayName: '香',
+    id: 'egg_cake',
+    displayName: '雞蛋糕',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.06,
-    radiusJitter: 0.18,
+    radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xb8302a, 0x8a4a2a, 0xd8a23a, 0xe6c060, 0x6a3a1e],
-    yOffset: -0.0008,
-    upright: true,
-    collisionScale: 0.55,
+    palette: [0xf0c468, 0xe0a840, 0xf6dca0, 0xd89a30, 0xc88828],
+    yOffset: -0.6441,
+    upright: false,
+    collisionScale: 0.82,
     buildGeometry(rng) {
-      return finish([
-        cyl(0.05, 0.05, 2.7, 6, 0xb8302a, { y: 0.0 }), // red bamboo stick
-        cyl(0.07, 0.06, 0.9, 6, 0x8a4a2a, { y: -1.0 }), // incense-paste lower coat
-        cyl(0.085, 0.085, 0.12, 6, 0x6a3a1e, { y: 1.32 }), // burnt char band
-        sph(0.1, 0xe6c060, { ws: 6, hs: 4, y: 1.46 }), // glowing ember tip
-      ]);
+      const parts = [];
+      // four conjoined golden puffs in a 2x2 cluster
+      const spots = [
+        [-0.55, -0.55],
+        [0.55, -0.55],
+        [-0.55, 0.55],
+        [0.55, 0.55],
+      ];
+      for (let i = 0; i < spots.length; i++) {
+        const [px, pz] = spots[i];
+        // domed top
+        parts.push(
+          sph(0.66, 0xf0c468, { ws: 7, hs: 4, sy: 0.72, x: px, y: 0.62, z: pz, thetaLen: PI * 0.6, hex2: 0xf6dca0 })
+        );
+        // browned base
+        parts.push(cyl(0.5, 0.62, 0.36, 6, 0xe0a840, { x: px, y: 0.2, z: pz, hex2: 0xd89a30 }));
+      }
+      return finish(parts);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [4] 金紙 — stack of joss paper: cream sheets, central gold-foil square */
+  /* [4] 可麗餅 — crepe cone: rolled crispy crepe in a paper sleeve */
   /* ---------------------------------------------------------------- */
   {
-    id: 'joss_paper',
-    displayName: '金紙',
+    id: 'crepe_cone',
+    displayName: '可麗餅',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.08,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8c468, 0xf0deb0, 0xd8a83a, 0xc89a2e, 0xf4e8c8],
-    yOffset: -0.5589,
+    palette: [0xe8c884, 0xd8a850, 0xf4eee0, 0xb86a3a, 0x8a4a2a],
+    yOffset: -0.0809,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      const parts = [];
-      // stacked cream sheets, faint layering via alternating tints
-      for (let i = 0; i < 7; i++) {
-        const tint = i % 2 === 0 ? 0xf0deb0 : 0xe8d8a8;
-        parts.push(box(1.5, 0.12, 1.1, tint, { y: 0.06 + i * 0.12 }));
-      }
-      // central gold-foil square on the top sheet
-      parts.push(box(0.62, 0.04, 0.62, 0xe8c468, { y: 0.9, hex2: 0xd8a83a }));
-      // red ledger stripe along one edge
-      parts.push(box(0.16, 0.86, 1.12, 0xc24028, { x: -0.67, y: 0.43 }));
-      return finish(parts);
+      return finish([
+        // crispy folded crepe body — wide open mouth tapering to a point
+        cone(0.7, 2.4, 8, 0xe8c884, { y: 0.0, hex2: 0xd8a850 }),
+        // browned crisp seam down one side
+        box(0.1, 2.3, 0.14, 0xb86a3a, { x: 0.42, y: 0.0, rz: 0.18 }),
+        // white paper sleeve at the bottom third
+        cyl(0.4, 0.24, 0.9, 8, 0xf4eee0, { y: -0.78, hex2: 0xeae2d0 }),
+        // filling peeking out the top (cream swirl)
+        sph(0.34, 0xf4eee0, { ws: 7, hs: 5, sy: 1.2, y: 1.32 }),
+        sph(0.2, 0x8a4a2a, { ws: 6, hs: 4, x: 0.12, y: 1.5 }), // chocolate dab
+      ]);
     },
   },
 
@@ -224,122 +260,112 @@ export const T1_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] 胡椒餅 — pepper bun: round sesame-crusted baked bun */
+  /* [7] 起司馬鈴薯 — cheese potato: split baked spud oozing molten cheese */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pepper_bun',
-    displayName: '胡椒餅',
+    id: 'cheese_potato',
+    displayName: '起司馬鈴薯',
     tier: 1,
     naturalBand: 1,
-    radiusNominal: 0.06,
+    radiusNominal: 0.07,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc88a4a, 0xb87838, 0xe0b070, 0xa66828, 0xf0e8d0],
-    yOffset: -0.4474,
+    palette: [0xb88a4a, 0xa6783a, 0xf0d060, 0xe8b840, 0x8a5a28],
+    yOffset: -0.2859,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // domed baked top, flatter bottom
-        sph(0.92, 0xc88a4a, { ws: 10, hs: 6, sy: 0.62, y: 0.55, thetaLen: PI * 0.62, hex2: 0xe0b070 }),
-        cyl(0.92, 0.86, 0.34, 10, 0xb87838, { y: 0.17 }), // crusty side wall
-        cyl(0.86, 0.86, 0.08, 10, 0xa66828, { y: 0.02 }), // browned base
+        // baked potato body, slightly oval
+        sph(0.92, 0xb88a4a, { ws: 9, hs: 6, sy: 0.66, y: 0.6, hex2: 0xa6783a }),
+        cyl(0.78, 0.7, 0.2, 9, 0x8a5a28, { y: 0.12 }), // browned underside
+        // split-open cheese filling mounded in the middle
+        sph(0.66, 0xf0d060, { ws: 8, hs: 5, sy: 0.7, y: 0.96, thetaLen: PI * 0.62, hex2: 0xe8b840 }),
+        box(1.3, 0.16, 0.5, 0xf0d060, { y: 0.92 }), // cheese spilling along the cut
       ];
-      // scattered sesame seeds on the dome (deterministic ring)
-      const seeds = 9;
-      for (let i = 0; i < seeds; i++) {
-        const a = (i / seeds) * PI * 2;
-        const r = 0.42 + (i % 2) * 0.22;
-        parts.push(
-          sph(0.07, 0xf0e8d0, { ws: 4, hs: 3, x: Math.cos(a) * r, y: 0.72 - (i % 3) * 0.05, z: Math.sin(a) * r })
-        );
+      // cheese drips down the sides (deterministic)
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * PI * 2;
+        parts.push(cyl(0.06, 0.1, 0.4, 5, 0xf0d060, { x: Math.cos(a) * 0.66, y: 0.6, z: Math.sin(a) * 0.66 }));
       }
       return finish(parts);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [8] CHUNK LANDMARK — 攤車燈籠 stall-cart paper lantern on a pole */
+  /* [8] CHUNK LANDMARK — 飲料杯塔 oversized stall drink cup with dome lid + straw */
   /* ---------------------------------------------------------------- */
   {
-    id: 'stall_lantern',
-    displayName: '攤車燈籠',
+    id: 'drink_cup_tower',
+    displayName: '飲料杯塔',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.22,
     radiusJitter: 0.14,
     spawnWeight: 0.3,
-    palette: [0xd8302a, 0xe85a3a, 0xf0c040, 0xc02824, 0x3a2a22],
-    yOffset: -0.0238,
+    palette: [0xeef2f4, 0xd6e2e8, 0xe85a3a, 0xc8d6da, 0xf6c038],
+    yOffset: -0.0346,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
       const parts = [
-        // top & bottom wooden caps
-        cyl(0.34, 0.34, 0.16, 8, 0x3a2a22, { y: 1.78 }),
-        cyl(0.34, 0.34, 0.16, 8, 0x3a2a22, { y: 0.42 }),
-        // bulbous red lantern body (stacked discs make the barrel curve)
-        cyl(0.5, 0.4, 0.34, 8, 0xd8302a, { y: 0.6, hex2: 0xe85a3a }),
-        cyl(0.66, 0.5, 0.3, 8, 0xe85a3a, { y: 0.9 }),
-        cyl(0.66, 0.66, 0.3, 8, 0xe85a3a, { y: 1.18 }),
-        cyl(0.5, 0.66, 0.3, 8, 0xe85a3a, { y: 1.46 }),
-        cyl(0.4, 0.5, 0.2, 8, 0xd8302a, { y: 1.66, hex2: 0xc02824 }),
-        // gold trim rings
-        cyl(0.67, 0.67, 0.05, 8, 0xf0c040, { y: 1.04, open: true }),
-        cyl(0.67, 0.67, 0.05, 8, 0xf0c040, { y: 1.32, open: true }),
-        // tassel hanging below
-        cyl(0.06, 0.06, 0.2, 6, 0xf0c040, { y: 0.24 }),
-        cone(0.12, 0.3, 6, 0xf0c040, { y: 0.0 }),
-        // mounting pole rising from the cart
-        cyl(0.09, 0.09, 1.2, 6, 0x3a2a22, { y: -0.6 }),
+        // clear plastic cup, tapering to a narrow base
+        cyl(0.7, 0.46, 1.8, 10, 0xeef2f4, { y: 0.7, hex2: 0xd6e2e8 }),
+        // drink fill line (orange-ish tea)
+        cyl(0.66, 0.5, 1.1, 10, 0xf6c038, { y: 0.5, open: true, hex2: 0xe89a30 }),
+        // rim ring
+        cyl(0.72, 0.72, 0.08, 10, 0xc8d6da, { y: 1.6, open: true }),
+        // domed lid
+        sph(0.72, 0xeef2f4, { ws: 10, hs: 5, sy: 0.6, y: 1.62, thetaLen: PI * 0.55 }),
+        cyl(0.72, 0.7, 0.12, 10, 0xc8d6da, { y: 1.66 }), // lid skirt
+        // fat red straw poking through the dome at an angle
+        cyl(0.13, 0.13, 1.8, 6, 0xe85a3a, { x: 0.18, y: 2.3, rz: 0.18 }),
+        cyl(0.14, 0.14, 0.2, 6, 0xc8442e, { x: 0.32, y: 3.05, rz: 0.18 }), // bevelled straw tip
       ];
       return finish(parts);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [9] CHUNK LANDMARK — 彈珠台 slanted wooden pinball board with pegs */
+  /* [9] CHUNK LANDMARK — 大腸香腸烤台 sausage grill cart: skewered links over coals */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pinball_table',
-    displayName: '彈珠台',
+    id: 'sausage_grill',
+    displayName: '大腸香腸烤台',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.24,
     radiusJitter: 0.14,
     spawnWeight: 0.3,
-    palette: [0xb5712f, 0xcf8b3f, 0x9a5a24, 0xe0b85a, 0xd83a34],
-    yOffset: -0.5306,
+    palette: [0x8a4a32, 0xa6562e, 0x3a2a22, 0xd87a3a, 0xc8c4be],
+    yOffset: -0.4480,
     upright: true,
     collisionScale: 0.72,
     buildGeometry(rng) {
       const parts = [
-        // slanted board: tilted around x so the far edge lifts
-        box(2.0, 0.16, 2.6, 0xcf8b3f, { rx: -0.32, y: 0.6, hex2: 0xe0b85a }),
-        // raised wooden side rails
-        box(0.16, 0.34, 2.7, 0x9a5a24, { rx: -0.32, x: -1.0, y: 0.72 }),
-        box(0.16, 0.34, 2.7, 0x9a5a24, { rx: -0.32, x: 1.0, y: 0.72 }),
-        box(2.16, 0.34, 0.16, 0x9a5a24, { rx: -0.32, y: 1.32, z: -1.28 }), // top rail
-        box(2.16, 0.28, 0.16, 0xb5712f, { rx: -0.32, y: 0.04, z: 1.28 }), // bottom lip
-        // four stubby legs
-        cyl(0.12, 0.12, 0.7, 5, 0x9a5a24, { x: -0.86, y: 0.0, z: 0.9 }),
-        cyl(0.12, 0.12, 1.1, 5, 0x9a5a24, { x: -0.86, y: 0.2, z: -0.9 }),
-        cyl(0.12, 0.12, 0.7, 5, 0x9a5a24, { x: 0.86, y: 0.0, z: 0.9 }),
-        cyl(0.12, 0.12, 1.1, 5, 0x9a5a24, { x: 0.86, y: 0.2, z: -0.9 }),
+        // grill box body (steel cart top holding the coals)
+        box(2.6, 0.5, 1.3, 0xc8c4be, { y: 0.7, hex2: 0xb0aca6 }),
+        box(2.7, 0.16, 1.4, 0x8a9098, { y: 0.46 }), // base lip
+        // glowing charcoal bed inside
+        box(2.3, 0.12, 1.0, 0xd87a3a, { y: 0.96, hex2: 0xe8a040 }),
+        // grill grate bars across the top
       ];
-      // grid of brass pegs on the playfield (deterministic lattice)
-      for (let r = 0; r < 3; r++) {
-        for (let c = 0; c < 3; c++) {
-          const px = -0.6 + c * 0.6;
-          const pz = -0.6 + r * 0.6;
-          // raise pegs along the tilt so they sit on the board surface
-          const py = 0.78 + (-pz) * 0.33;
-          parts.push(cyl(0.06, 0.06, 0.18, 4, 0xe0b85a, { rx: -0.32, x: px, y: py, z: pz }));
-        }
+      for (let i = 0; i < 4; i++) {
+        parts.push(cyl(0.04, 0.04, 1.1, 3, 0x3a2a22, { rx: HALF_PI, x: -0.85 + i * 0.55, y: 1.04 }));
       }
-      // a couple of marbles resting at the low end
-      parts.push(sph(0.12, 0xd83a34, { ws: 5, hs: 3, x: -0.3, y: 0.5, z: 1.0 }));
-      parts.push(sph(0.12, 0xcfe6e2, { ws: 5, hs: 3, x: 0.35, y: 0.5, z: 1.0 }));
+      // four fat browned sausages resting on the grate (flat-capped cyls)
+      const sausageHex = [0xa6562e, 0x8a4a32, 0xb85a30, 0x9a5028];
+      for (let i = 0; i < 4; i++) {
+        const px = -0.78 + i * 0.52;
+        parts.push(
+          cyl(0.18, 0.18, 1.0, 6, sausageHex[i], { rx: HALF_PI, x: px, y: 1.14, hex2: 0xd87a3a })
+        );
+      }
+      // four stubby cart legs
+      parts.push(cyl(0.14, 0.14, 0.9, 4, 0x3a2a22, { x: -1.1, y: 0.0, z: 0.5 }));
+      parts.push(cyl(0.14, 0.14, 0.9, 4, 0x3a2a22, { x: 1.1, y: 0.0, z: 0.5 }));
+      parts.push(cyl(0.14, 0.14, 0.9, 4, 0x3a2a22, { x: -1.1, y: 0.0, z: -0.5 }));
+      parts.push(cyl(0.14, 0.14, 0.9, 4, 0x3a2a22, { x: 1.1, y: 0.0, z: -0.5 }));
       return finish(parts);
     },
   },

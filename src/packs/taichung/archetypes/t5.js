@@ -1,18 +1,23 @@
 /**
- * @file archetypes/t5.js — Taipei pack T5 「商業文教區」chunk archetypes.
+ * @file packs/taichung/archetypes/t5.js — T5 「七期·草悟道商業」chunk archetypes.
  *
- * Tier 5 (naturalBand 5) of the 7-tier ladder: the commercial / civic
- * district scale band (radiusNominal 12–60 m real). Eight absorbable
- * archetypes (slots 0–7, spawnWeight 1.0) plus two repeatable CHUNK
- * LANDMARKS (slots 8–9, spawnWeight ~0.3). ids are the FROZEN CONTRACT
- * declared in packs/taipei/tiers.js — spelling must NOT drift.
+ * Tier 5 (naturalBand 5) of the Roll Formosa Taichung ladder: the commercial /
+ * civic district scale band (radiusNominal 12–60 m real). Eight absorbable
+ * archetypes (slots 0–7, spawnWeight 1.0) plus two repeatable CHUNK LANDMARKS
+ * (slots 8–9, spawnWeight ~0.3). ids are the FROZEN CONTRACT declared in
+ * packs/taichung/tiers.js — spelling must NOT drift.
  *
- * Every buildGeometry(rng) returns ONE merged, vertex-colored
- * BufferGeometry built only from the geomHelpers vocabulary, normalized by
- * finish() to a UNIT bounding sphere (radius 1.0). Tri budget <= 350 — keep
- * cyl/sph radial segment counts low (6–10). rng() (0..1) is used only for
- * small deterministic variation (lit window bands, sign tints), never for
- * structure.
+ * Taichung re-theme of the Taipei commercial tier: 商辦大樓 / 玻璃帷幕街屋 /
+ * 商辦塔樓 / 百貨量體 / 停車塔 / 銀行 / 巨型看板 stay as pan-Taiwan commercial
+ * generics, but the district's signature 七期·草悟道 flavour replaces three
+ * slots — 勤美綠園道 (green植生牆 retail), 捷運綠線高架 (Taichung MRT Green
+ * Line), 草悟道綠廊樹 (Calligraphy Greenway tree-lined corridor).
+ *
+ * Every buildGeometry(rng) returns ONE merged, vertex-colored BufferGeometry
+ * built only from the geomHelpers vocabulary, normalized by finish() to a UNIT
+ * bounding sphere (radius 1.0). Tri budget <= 350 — keep cyl/sph radial segment
+ * counts low (6–10). rng() (0..1) is used only for small deterministic
+ * variation (lit window bands, sign/leaf tints), never for structure.
  *
  * Palette = 4–5 hex tints (catalog.test enforces 4–6). Bodies meant to be
  * tinted per-instance are baked near-white (0xffffff) so instanceColor reads
@@ -70,59 +75,68 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 百貨 department_store ------------------------------ */
+  /* ---- slot 1: 勤美綠園道 green_facade_mall ----------------------- */
   {
-    id: 'department_store',
-    displayName: '百貨',
+    id: 'green_facade_mall',
+    displayName: '勤美綠園道',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 28,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc8b8a0, 0xe8dcc8, 0x8a7a64, 0xb84a3a, 0xf0e8d8],
-    yOffset: -0.38,
+    palette: [0x3f7a4a, 0x6fb05a, 0xcfe6c0, 0x2e3a44, 0xe8f2dc],
+    yOffset: -0.27,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Broad stone block with a glass display podium + a big vertical brand band.
+      // Calligraphy-Greenway green-wall department block: a broad mass whose
+      // street facade is a living vertical garden (植生牆) over a glass podium.
       const parts = [
-        box(4.4, 4.6, 3.4, 0xffffff, { y: 2.5 }), // main stone mass (tinted)
-        box(4.5, 0.3, 3.5, 0x9a8a72, { y: 4.95 }), // cornice cap
-        // glass podium (ground 2 floors) wrapping the front
+        box(4.4, 4.6, 3.4, 0xffffff, { y: 2.5 }), // main mass (tinted)
+        box(4.5, 0.3, 3.5, 0x6a8a5a, { y: 4.95 }), // planted cornice cap
+        // glass display podium (ground 2 floors)
         box(4.6, 1.5, 0.4, 0x2b3640, { y: 0.95, z: 1.7 }), // dark glass frame
-        box(4.2, 1.2, 0.06, 0xb9c8da, { y: 0.95, z: 1.92 }), // bright display glass
-        // entrance canopy
-        box(2.0, 0.18, 1.0, 0xb84a3a, { y: 1.9, z: 2.0 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: -0.8, y: 1.0, z: 2.4 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: 0.8, y: 1.0, z: 2.4 }),
-        // vertical brand band on the corner
-        box(0.5, 3.6, 0.12, 0xb84a3a, { x: -2.15, y: 2.9, z: 1.66 }),
-        box(0.34, 3.2, 0.06, 0xf0e0c8, { x: -2.15, y: 2.9, z: 1.73 }),
+        box(4.2, 1.2, 0.06, 0xbcd0c4, { y: 0.95, z: 1.92 }), // bright display glass
+        // entrance canopy (planted edge)
+        box(2.0, 0.18, 1.0, 0x3f7a4a, { y: 1.9, z: 2.0 }),
+        cyl(0.08, 0.08, 1.7, 6, 0x6a7a5a, { x: -0.8, y: 1.0, z: 2.4 }),
+        cyl(0.08, 0.08, 1.7, 6, 0x6a7a5a, { x: 0.8, y: 1.0, z: 2.4 }),
+        // signature living vertical-garden panel on the upper facade
+        box(4.0, 2.6, 0.16, 0x2e3a30, { y: 3.5, z: 1.66 }), // green-wall backing
       ];
-      // a row of square clerestory windows along the upper facade
-      for (let i = 0; i < 6; i++) {
-        const lit = rng() < 0.5 ? 0xfff0c8 : 0x6a7280;
-        parts.push(box(0.42, 0.5, 0.05, lit, { x: -1.7 + i * 0.68, y: 4.0, z: 1.72 }));
+      // grid of foliage tufts forming the植生牆 (deterministic green mosaic)
+      const leaf = [0x4f9a4a, 0x6fb05a, 0x3f7a4a, 0x88c46a];
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 5; c++) {
+          const hex = leaf[(r + c + (rng() < 0.3 ? 1 : 0)) % 4];
+          parts.push(box(0.74, 0.78, 0.1, hex, {
+            x: -1.7 + c * 0.85, y: 2.7 + r * 0.84, z: 1.76,
+          }));
+        }
       }
+      // a small rooftop tree finishing the garden block
+      parts.push(cyl(0.07, 0.09, 0.5, 6, 0x6a513a, { x: 1.4, y: 5.4 }));
+      parts.push(ico(0.6, 0, 0x4f9a4a, { x: 1.4, y: 5.95 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 2: 捷運高架 metro_viaduct ----------------------------- */
+  /* ---- slot 2: 捷運綠線高架 mrt_green_viaduct ---------------------- */
   {
-    id: 'metro_viaduct',
-    displayName: '捷運高架',
+    id: 'mrt_green_viaduct',
+    displayName: '捷運綠線高架',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 40,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xb0b6be, 0x8a9098, 0xd0d4da, 0x6a7078, 0x3a6ca8],
+    palette: [0xb0b6be, 0x8a9098, 0xd0d4da, 0x6a7078, 0x3f9a52],
     yOffset: -0.49,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // Elevated rail: a long box girder deck on twin Y-piers + a train car.
+      // Taichung MRT Green Line: long box-girder deck on twin piers + a
+      // green-liveried train car (the city's signature 綠線 metro).
       const parts = [
         // continuous deck girder (long along X)
         box(9.0, 0.7, 1.8, 0xffffff, { y: 3.4 }), // deck (tinted concrete)
@@ -135,58 +149,52 @@ export const T5_ARCHETYPES = [
         parts.push(cyl(0.55, 0.7, 3.1, 6, 0xc2c6cc, { x, y: 1.55 }));
         parts.push(box(1.5, 0.4, 1.9, 0xb0b6be, { x, y: 3.05 })); // pier cap
       }
-      // a train car sitting on the deck
+      // a green-line train car sitting on the deck
       parts.push(box(4.2, 1.1, 1.2, 0xffffff, { y: 4.35 })); // car body (tinted)
       parts.push(box(4.24, 0.36, 0.06, 0x2e3a48, { y: 4.55, z: 0.62 })); // window strip
       parts.push(box(4.24, 0.36, 0.06, 0x2e3a48, { y: 4.55, z: -0.62 })); // window strip
-      parts.push(box(4.3, 0.18, 1.24, 0x3a6ca8, { y: 4.95 })); // brand stripe / roof trim
+      parts.push(box(4.3, 0.2, 1.24, 0x3f9a52, { y: 4.78 })); // green-line livery stripe
+      parts.push(box(4.3, 0.18, 1.24, 0x2f7a40, { y: 4.95 })); // roof trim (deeper green)
       return finish(parts);
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 草悟道綠廊樹 greenway_tree ------------------------- */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'greenway_tree',
+    displayName: '草悟道綠廊樹',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 16,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
-    yOffset: -0.57,
+    palette: [0x4f9a4a, 0x6a513a, 0x3f7a3f, 0x88c46a, 0x9aa0a8],
+    yOffset: -0.14,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.55,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
+      // A boulevard tree of the Calligraphy Greenway (草悟道綠廊): tall trunk,
+      // layered ico canopy, with a circular planter ring + a bench at its foot.
       const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
+        // planter base ring + soil
+        cyl(1.5, 1.6, 0.4, 8, 0x9aa0a8, { y: 0.2 }), // stone planter rim
+        cyl(1.3, 1.3, 0.22, 8, 0x5a4a36, { y: 0.34 }), // soil
+        // trunk
+        cyl(0.26, 0.36, 3.4, 6, 0x6a513a, { y: 2.0 }),
+        // a couple of low branches
+        cyl(0.1, 0.14, 1.2, 5, 0x6a513a, { x: 0.5, y: 2.9, rz: -0.9 }),
+        cyl(0.1, 0.14, 1.1, 5, 0x6a513a, { x: -0.45, y: 3.2, rz: 1.0 }),
       ];
-      // railing posts (sparse) + canopy supports
-      for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
-      }
-      // twin stair / lift towers at the ends
-      for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
-          }));
-        }
+      // layered canopy (3 ico blobs, slight rng tint per layer)
+      const green = [0x4f9a4a, 0x3f7a3f, 0x6aae54];
+      parts.push(ico(1.55, 0, green[0], { y: 4.2 }));
+      parts.push(ico(1.2, 0, green[1], { x: 0.7, y: 4.9 }));
+      parts.push(ico(1.15, 0, rng() < 0.5 ? green[2] : 0x88c46a, { x: -0.7, y: 4.7 }));
+      // a wooden boulevard bench at the foot (the greenway's seating)
+      parts.push(box(2.0, 0.12, 0.5, 0x7a5a3a, { x: 0, y: 0.7, z: 1.7 })); // seat
+      parts.push(box(2.0, 0.5, 0.1, 0x6a4d30, { x: 0, y: 0.95, z: 1.92 })); // backrest
+      for (const bx of [-0.8, 0.8]) {
+        parts.push(box(0.12, 0.5, 0.12, 0x5a5a5a, { x: bx, y: 0.45, z: 1.7 })); // legs
       }
       return finish(parts);
     },

@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 瓶蓋, 糖果, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'bottle_cap', 'candy', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 尪仔標, 鉛筆, 鈕扣
+      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'ngiauimia_card', 'pencil', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -72,10 +72,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 養樂多, 寶特瓶, 檳榔, 香, 金紙, 滷味夾, 紅白塑膠袋, 胡椒餅
-      'yakult', 'pet_bottle', 'betel_nut', 'incense_stick', 'joss_paper', 'luwei_tongs', 'redwhite_bag', 'pepper_bun',
-      // chunk landmarks: 攤車燈籠, 彈珠台
-      'stall_lantern', 'pinball_table',
+      // 養樂多, 寶特瓶, 章魚小丸子, 雞蛋糕, 可麗餅, 滷味夾, 紅白塑膠袋, 起司馬鈴薯
+      'yakult', 'pet_bottle', 'takoyaki', 'egg_cake', 'crepe_cone', 'luwei_tongs', 'redwhite_bag', 'cheese_potato',
+      // chunk landmarks: 飲料杯塔, 大腸香腸烤台
+      'drink_cup_tower', 'sausage_grill',
     ],
     fogColor: 0x3e2026, // T1 熱鬧夜市霓虹(暖+第一道霓虹)
     skyTop: 0x1c0f14,
@@ -96,10 +96,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 電鍋, 瓦斯桶, 三角錐, 消防栓, 招財貓, YouBike樁
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'youbike_dock',
-      // chunk landmarks: 攤販推車, 廟前香爐
-      'vendor_cart', 'temple_incense_burner',
+      // 紅塑膠椅, 安全帽, 電鍋, 瓦斯桶, 三角錐, 消防栓, 立式燈箱招牌, 手搖飲大杯
+      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lightbox_sign', 'bubble_tea_cup',
+      // chunk landmarks: 一中街攤車, 騎樓柱招牌
+      'yizhong_snack_cart', 'arcade_pillar_signs',
     ],
     fogColor: 0x341e34, // T2 騎樓霓虹漸冷(紫洋紅上)
     skyTop: 0x180c1a,
@@ -120,12 +120,12 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 霓虹招牌, 鐵捲門, 路樹, 棚架, 石獅
-      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'roll_shutter', 'street_tree', 'awning_frame', 'stone_lion',
+      // 機車, 小貨車, 變電箱, 霓虹招牌, 公車候車亭, 路樹, 天橋, 台中市公車
+      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'bus_shelter', 'street_tree', 'footbridge', 'taichung_bus',
       // chunk landmarks: 夜市拱門, 廟前牌樓
       'night_market_arch', 'temple_pailou',
     ],
-    fogColor: 0x2a1c3e, // T3 機車海街頭電光(紫)
+    fogColor: 0x2a1c3e, // T3 林蔭大道街頭電光(紫)
     skyTop: 0x130c24,
     skyBottom: 0x48287a,
     sunDir: [0.10, 0.34, 0.22],
@@ -144,10 +144,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 公寓街屋量體, 宮廟量體
-      'streethouse_mass', 'temple_mass',
+      // 透天厝, 老街街屋, 公寓, 超商, 公車, 打鐵爐, 廟前金爐, 廟埕戲台
+      'townhouse', 'oldstreet_shophouse', 'apartment', 'convenience_store', 'city_bus', 'blacksmith_forge', 'temple_gold_furnace', 'temple_opera_stage',
+      // chunk landmarks: 老街街屋量體, 萬和宮量體
+      'oldstreet_row_mass', 'wanhe_temple_mass',
     ],
     fogColor: 0x201a44, // T4 街屋廟埕藍紫(轉冷)
     skyTop: 0x0e0c26,
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 百貨, 捷運高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'department_store', 'metro_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 商辦塔樓, 百貨量體
       'commercial_tower', 'department_mass',
     ],
@@ -192,8 +192,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 其他摩天樓, 巨型廣告牆, 商辦塔, 空橋, 屋頂機房, 街區量體
-      'glass_highrise', 'cross_bridge', 'other_skyscraper', 'giant_ad_wall', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
+      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 空橋, 屋頂機房, 街區量體
+      'glass_highrise', 'cross_bridge', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

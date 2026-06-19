@@ -1,18 +1,30 @@
 /**
- * @file packs/taipei/archetypes/t2.js — Roll Formosa Taipei pack, TIER 2 「騎樓邊」.
+ * @file packs/taichung/archetypes/t2.js — T2 一中商圈騎樓 (Yizhong shopping-district arcade).
  *
- * The 10 arcade-sidewalk (騎樓) rollable archetypes, authored in the FROZEN id
- * order of tiers.js T2.archetypeIds (slots [0..7] absorbable, slots [8..9] are
- * the repeatable CHUNK LANDMARKS — vendor_cart / temple_incense_burner — at
- * spawnWeight ~0.3 and ~2.5-4x the largest absorbable radius).
+ * Tier 2 of the Roll Formosa Taichung ladder (一中商圈, the student-packed
+ * arcade beside 台中一中). 10 ArchetypeDefs in the FROZEN id order from
+ * packs/taichung/tiers.js T2.archetypeIds:
+ *   slots [0..7] absorbable arcade/street 小物 (spawnWeight 1.0),
+ *   slots [8..9] repeatable CHUNK LANDMARKS (一中街攤車 / 騎樓柱招牌, spawnWeight ~0.3).
  *
- * Size band: radiusNominal 0.25–1.2 m. Every buildGeometry(rng) returns ONE
- * merged, vertex-colored BufferGeometry built ONLY from the engine geometry
- * vocabulary (geomHelpers.js: box/cyl/cone/sph/ico/torus + paint/xf + finish)
- * and normalized by finish() to a UNIT bounding sphere (radius 1). Tri budget
- * <= 350 per archetype (kept low via small radial segment counts, 6-10).
+ * Localized for 一中商圈: keeps the pan-Taiwan generics ANY Taiwan arcade /
+ * street has (紅塑膠椅 / 安全帽 / 電鍋 / 瓦斯桶 / 三角錐 / 消防栓 — slots [0..5]
+ * are copied verbatim from the Taipei template, they need no change), and
+ * swaps slots [6..9] to 一中 signatures — a freestanding 立式燈箱招牌, an
+ * oversized 手搖飲大杯, and re-themes both chunk landmarks to a 一中街攤車
+ * (snack vendor cart) and a 騎樓柱招牌 (arcade pillar plastered with shop
+ * signs). Deliberately avoids the curated collectible 珍奶 — the big drink cup
+ * here is a generic 手搖飲 cup, not the named bubble-tea collectible.
  *
- * rng() is used ONLY for tiny deterministic-friendly nudges, never structure.
+ * Built ONLY with the engine geometry vocabulary (geomHelpers.js): primitives
+ * are authored in convenient LOCAL units, then finish() merges, recenters and
+ * normalizes every geometry to a UNIT bounding sphere (radius 1.0). yOffset is
+ * measured as (-1 - minY) on the normalized geometry so ground-sitting objects
+ * rest on y=0. Each buildGeometry stays well under the 350-triangle cap by
+ * keeping cyl/sph/cone radial segments at ~6-10.
+ *
+ * Size band: radiusNominal 0.25–1.2 m. rng() is used ONLY for tiny
+ * deterministic-friendly nudges, never structure.
  */
 
 import {
@@ -23,7 +35,7 @@ import {
 
 /** @type {Archetype[]} */
 export const T2_ARCHETYPES = [
-  /* ---- slot 0 ---- 紅塑膠椅 — the ubiquitous stackable red night-market stool/chair */
+  /* ---- slot 0 ---- 紅塑膠椅 — the ubiquitous stackable red night-market stool/chair (pan-Taiwan) */
   {
     id: 'red_plastic_chair',
     displayName: '紅塑膠椅',
@@ -55,7 +67,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell */
+  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell (pan-Taiwan) */
   {
     id: 'helmet',
     displayName: '安全帽',
@@ -85,7 +97,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob (pan-Taiwan) */
   {
     id: 'rice_cooker',
     displayName: '電鍋',
@@ -118,7 +130,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3 ---- 瓦斯桶 — the steel LPG cylinder chained outside every eatery */
+  /* ---- slot 3 ---- 瓦斯桶 — the steel LPG cylinder chained outside every eatery (pan-Taiwan) */
   {
     id: 'gas_cylinder',
     displayName: '瓦斯桶',
@@ -149,7 +161,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4 ---- 三角錐 — orange traffic cone, the eternal road-side territory marker */
+  /* ---- slot 4 ---- 三角錐 — orange traffic cone, the eternal road-side territory marker (pan-Taiwan) */
   {
     id: 'traffic_cone',
     displayName: '三角錐',
@@ -178,7 +190,7 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant with side outlets + bonnet cap */
+  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant with side outlets + bonnet cap (pan-Taiwan) */
   {
     id: 'fire_hydrant',
     displayName: '消防栓',
@@ -214,161 +226,165 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat (招財貓), seated with raised paw */
+  /* ---- slot 6 ---- 立式燈箱招牌 — freestanding vertical illuminated lightbox advertising a shop */
   {
-    id: 'lucky_cat',
-    displayName: '招財貓',
+    id: 'lightbox_sign',
+    displayName: '立式燈箱招牌',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.4,
+    radiusJitter: 0.14,
+    spawnWeight: 1.0,
+    palette: [0xf4f1e8, 0xe23a2c, 0x2a55a8, 0xf6c038, 0x303338],
+    yOffset: -0.073,
+    upright: true,
+    collisionScale: 0.62,
+    buildGeometry(rng) {
+      const glow = 0xffffff; // glowing acrylic face, tinted bright
+      const frame = 0x2a2c30; // dark aluminium frame (tint-resistant)
+      return finish([
+        // weighted base slab so it stands on the pavement
+        box(0.7, 0.16, 0.5, frame, { y: 0.08 }),
+        // upright support post behind the box
+        cyl(0.07, 0.08, 1.7, 6, frame, { y: 0.95, z: -0.18 }),
+        // tall glowing lightbox body (the bright acrylic panel)
+        box(0.84, 1.5, 0.22, glow, { y: 1.55, hex2: 0xf6e8c0 }),
+        // dark frame trim — top + bottom rails of the box
+        box(0.92, 0.1, 0.28, frame, { y: 2.34 }),
+        box(0.92, 0.1, 0.28, frame, { y: 0.78 }),
+        // a coloured menu/headline band across the glowing face
+        box(0.78, 0.34, 0.04, 0xe23a2c, { y: 2.0, z: 0.13 }),
+        // a second accent strip lower down (price/特價 banner)
+        box(0.78, 0.2, 0.04, 0x2a55a8, { y: 1.2, z: 0.13 }),
+        // little side bracket clamping the box to the post
+        box(0.12, 0.3, 0.12, frame, { y: 1.55, z: -0.06 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 7 ---- 手搖飲大杯 — oversized hand-shaken tea cup: dome lid, fat straw, pearls at the bottom */
+  {
+    id: 'bubble_tea_cup',
+    displayName: '手搖飲大杯',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
-    radiusJitter: 0.14,
+    radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
-    yOffset: -0.195,
+    palette: [0xeef2f4, 0xd6c4a8, 0x3a2a20, 0xc8442e, 0xc8d6da],
+    yOffset: -0.048,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.72,
     buildGeometry(rng) {
-      const white = 0xffffff; // porcelain body, tinted
-      return finish([
-        // seated body (rounded, slightly tapered)
-        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
-        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
-        // head
-        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
-        // two ears
-        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
-        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
-        // raised beckoning paw (front-left, up)
-        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
-        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
-        // resting paw
-        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
-        // gold bib / coin collar (tint-resistant gold)
-        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
-        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }), // koban coin
-        // red collar bell
-        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
-      ]);
+      const cup = 0xeef2f4; // clear plastic cup wall
+      const pearl = 0x3a2a20; // dark tapioca pearls (tint-resistant brown)
+      const parts = [
+        // clear plastic cup wall, tapering to a narrower base
+        cyl(0.66, 0.5, 1.7, 9, cup, { y: 0.85, hex2: 0xdfe6ea }),
+        // milk-tea fill (warm tan), shown as an inner open band
+        cyl(0.62, 0.5, 1.0, 9, 0xd6c4a8, { y: 0.5, open: true, hex2: 0xc8b290 }),
+        // rim ring at the top
+        cyl(0.68, 0.68, 0.08, 9, 0xc8d6da, { y: 1.7, open: true }),
+        // domed sealed lid (the heat-pressed film dome)
+        sph(0.68, cup, { ws: 9, hs: 4, sy: 0.62, y: 1.72, thetaLen: PI * 0.55 }),
+        // lid skirt gripping the rim
+        cyl(0.68, 0.66, 0.12, 9, 0xc8d6da, { y: 1.74 }),
+        // fat straw poking through the dome at an angle
+        cyl(0.13, 0.13, 1.7, 6, 0xc8442e, { x: 0.16, y: 2.3, rz: 0.16 }),
+      ];
+      // tapioca pearls clustered at the bottom of the cup (deterministic ring + center)
+      parts.push(ico(0.16, 0, pearl, { y: 0.18, x: 0.0, z: 0.0 }));
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * PI * 2;
+        parts.push(
+          ico(0.15, 0, pearl, { x: Math.cos(a) * 0.26, y: 0.16, z: Math.sin(a) * 0.26 })
+        );
+      }
+      return finish(parts);
     },
   },
 
-  /* ---- slot 7 ---- YouBike樁柱 — the orange dock post + slot rail of a YouBike station */
+  /* ---- slot 8 (CHUNK LANDMARK) ---- 一中街攤車 — wheeled snack vendor cart w/ parasol canopy + counter snacks */
   {
-    id: 'youbike_dock',
-    displayName: 'YouBike樁柱',
+    id: 'yizhong_snack_cart',
+    displayName: '一中街攤車',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.55,
-    radiusJitter: 0.12,
-    spawnWeight: 1.0,
-    palette: [0xf26a1f, 0xff7a28, 0x303338, 0xd8d8d4, 0xe05a18],
-    yOffset: -0.210,
-    upright: true,
-    collisionScale: 0.7,
-    buildGeometry(rng) {
-      const orange = 0xffffff; // tinted orange housing
-      const dark = 0x2a2c30;
-      return finish([
-        // base plate bolted to pavement
-        box(0.7, 0.12, 1.6, dark, { y: 0.06 }),
-        // angled wheel-slot rail running forward
-        box(0.24, 0.5, 1.5, 0x4a4d52, { y: 0.35, z: 0.1 }),
-        box(0.1, 0.7, 1.5, 0x6a6d72, { y: 0.6, z: 0.1 }), // upright guide fin
-        // dock terminal post
-        cyl(0.18, 0.22, 1.7, 8, orange, { y: 1.05, z: -0.55 }),
-        // info/payment head (tilted panel)
-        box(0.5, 0.6, 0.18, orange, { y: 2.0, z: -0.5, rx: 0.25 }),
-        box(0.4, 0.46, 0.04, 0x202225, { y: 2.0, z: -0.38, rx: 0.25 }), // dark screen
-        // small reader bump
-        cyl(0.08, 0.1, 0.08, 6, 0xf0c020, { y: 1.7, z: -0.36 }),
-      ]);
-    },
-  },
-
-  /* ---- slot 8 (CHUNK LANDMARK) ---- 攤販推車 — wheeled street vendor cart w/ awning + lamp */
-  {
-    id: 'vendor_cart',
-    displayName: '攤販推車',
-    tier: 2,
-    naturalBand: 2,
-    radiusNominal: 1.8,
-    radiusJitter: 0.12,
+    radiusNominal: 0.22,
+    radiusJitter: 0.13,
     spawnWeight: 0.3,
-    palette: [0xd83026, 0xe0a050, 0xc94f46, 0x9a8a78, 0xead8b0],
-    yOffset: -0.369,
+    palette: [0xe04a2e, 0xf6c038, 0xc8c4be, 0x9a7a52, 0xeae2d0],
+    yOffset: -0.138,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const cart = 0xffffff; // tinted body
-      const wood = 0x9a7a52;
-      return finish([
+      const wood = 0x9a7a52; // wooden cart cabinet
+      const canopy = 0xe04a2e; // bright parasol canopy (tint)
+      const parts = [
         // cart body cabinet
-        box(2.0, 1.0, 1.1, wood, { y: 0.75 }),
-        // counter / stainless top
-        box(2.15, 0.1, 1.25, 0xd8dce2, { y: 1.3 }),
-        // glass display upstand at back
-        box(2.0, 0.5, 0.06, 0xbfd8e0, { y: 1.6, z: -0.55 }),
-        // front face panel (signboard, tint)
-        box(2.0, 0.5, 0.06, cart, { y: 0.7, z: 0.56 }),
-        // four roof posts
-        cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: 0.45 }),
-        cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: 0.45 }),
-        cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: -0.45 }),
-        cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: -0.45 }),
-        // striped awning roof (tint), slightly peaked
-        box(2.4, 0.12, 1.5, cart, { y: 2.6, rx: 0.0 }),
-        // valance strip hanging off the awning front
-        box(2.4, 0.28, 0.06, 0xe0a050, { y: 2.42, z: 0.74 }),
-        // hanging lamp
-        sph(0.2, 0xffd06a, { ws: 6, hs: 4, x: 0.7, y: 2.3, z: 0.5 }),
+        box(2.0, 1.0, 1.05, wood, { y: 0.75, hex2: 0x8a6a44 }),
+        // stainless counter top
+        box(2.15, 0.1, 1.2, 0xc8c4be, { y: 1.32 }),
+        // front signboard panel on the cabinet face
+        box(1.7, 0.44, 0.06, 0xf6c038, { y: 0.72, z: 0.54 }),
+        // four canopy posts rising from the corners
+        cyl(0.05, 0.05, 1.3, 5, wood, { x: -0.85, y: 2.0, z: 0.42 }),
+        cyl(0.05, 0.05, 1.3, 5, wood, { x: 0.85, y: 2.0, z: 0.42 }),
+        cyl(0.05, 0.05, 1.3, 5, wood, { x: -0.85, y: 2.0, z: -0.42 }),
+        cyl(0.05, 0.05, 1.3, 5, wood, { x: 0.85, y: 2.0, z: -0.42 }),
+        // octagonal parasol canopy peaked over the cart
+        cone(1.55, 0.7, 8, canopy, { y: 3.0, hex2: 0xc83a22 }),
+        // canopy valance fringe hanging off the front edge
+        box(2.5, 0.26, 0.05, 0xf6c038, { y: 2.7, z: 0.86 }),
         // two cart wheels (sideways cylinders)
         cyl(0.34, 0.34, 0.16, 8, 0x2e3138, { rx: HALF_PI, x: -0.85, y: 0.34, z: 0 }),
         cyl(0.34, 0.34, 0.16, 8, 0x2e3138, { rx: HALF_PI, x: 0.85, y: 0.34, z: 0 }),
-        // push handle
-        cyl(0.05, 0.05, 1.0, 5, wood, { rz: HALF_PI, x: 1.2, y: 1.1, rx: 0.2 }),
-      ]);
+        // push handle off the back
+        cyl(0.05, 0.05, 0.9, 5, wood, { rz: HALF_PI, x: -1.18, y: 1.15, rx: 0.2 }),
+      ];
+      // a few snack items lined up on the counter (skewered balls / fried bites)
+      const snackHex = [0xd87a3a, 0xe8b840, 0xb86a3a];
+      for (let i = 0; i < 3; i++) {
+        parts.push(ico(0.2, 0, snackHex[i], { x: -0.5 + i * 0.5, y: 1.55, z: 0.2 }));
+      }
+      return finish(parts);
     },
   },
 
-  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐(鼎) — the bronze temple incense burner / ding */
+  /* ---- slot 9 (CHUNK LANDMARK) ---- 騎樓柱招牌 — arcade structural pillar plastered with stacked shop signboards */
   {
-    id: 'temple_incense_burner',
-    displayName: '廟前香爐(鼎)',
+    id: 'arcade_pillar_signs',
+    displayName: '騎樓柱招牌',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 1.5,
+    radiusNominal: 0.24,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0x9a7b3a, 0xb89048, 0x7a5e2a, 0xc8a050, 0x6a4e22],
-    yOffset: -0.215,
+    palette: [0xd8d2c4, 0xe23a2c, 0x2a55a8, 0xf6c038, 0x2e8a6a],
+    yOffset: -0.046,
     upright: true,
-    collisionScale: 0.85,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      const bronze = 0xffffff; // tinted aged-bronze
+      const pillar = 0xd8d2c4; // tiled concrete arcade column (tint)
+      const dark = 0x2a2c30;
       return finish([
-        // round cauldron belly
-        sph(1.0, bronze, { ws: 8, hs: 4, y: 1.0, hex2: 0xead8b0 }),
-        // rim band of the bowl
-        cyl(1.02, 1.02, 0.2, 8, 0x8a6a30, { y: 1.6, open: true }),
-        // ash fill (sand) inside the rim (top disc only, low-tri)
-        cyl(0.92, 0.92, 0.1, 8, 0xc8b89a, { y: 1.62, open: true }),
-        // three short legs (tripod ding)
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, z: 0.7 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: -0.6, z: -0.4 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: 0.6, z: -0.4 }),
-        // two upright loop handles at the rim
-        torus(0.28, 0.07, 4, 5, bronze, { x: -1.0, y: 1.7 }),
-        torus(0.28, 0.07, 4, 5, bronze, { x: 1.0, y: 1.7 }),
-        // dragon-pillar uprights flanking the bowl
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: -1.05, y: 1.0 }),
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: 1.05, y: 1.0 }),
-        // small pagoda-roof finial on top
-        cone(0.5, 0.5, 6, 0xc83020, { y: 2.0 }),
-        cyl(0.06, 0.06, 0.3, 5, 0xf0c020, { y: 2.35 }),
-        // a few incense sticks poking out of the ash
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.2, z: 0.1 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: -0.18, z: 0.2 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.0, z: -0.2 }),
+        // base plinth of the column
+        box(0.86, 0.2, 0.86, dark, { y: 0.1 }),
+        // main structural pillar (square arcade column)
+        box(0.62, 3.4, 0.62, pillar, { y: 1.95, hex2: 0xc4beae }),
+        // capital at the top where it meets the arcade ceiling
+        box(0.84, 0.22, 0.84, dark, { y: 3.78 }),
+        // stacked shop signboards climbing the front face (different shops)
+        box(0.78, 0.42, 0.1, 0xe23a2c, { y: 1.1, z: 0.34 }),
+        box(0.78, 0.42, 0.1, 0xf6c038, { y: 1.62, z: 0.34 }),
+        box(0.78, 0.42, 0.1, 0x2a55a8, { y: 2.14, z: 0.34 }),
+        box(0.78, 0.42, 0.1, 0x2e8a6a, { y: 2.66, z: 0.34 }),
+        box(0.78, 0.42, 0.1, 0xe23a2c, { y: 3.18, z: 0.34 }),
+        // a couple of perpendicular projecting lightbox blades off the side
+        box(0.1, 0.5, 0.7, 0xf4f1e8, { x: 0.36, y: 1.9, z: 0.0 }),
+        box(0.1, 0.5, 0.7, 0xf4f1e8, { x: -0.36, y: 2.9, z: 0.0 }),
+        // a banner sign wrapping the other face
+        box(0.66, 0.5, 0.08, 0x2a55a8, { y: 2.4, z: -0.34 }),
       ]);
     },
   },
