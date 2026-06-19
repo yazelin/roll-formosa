@@ -421,6 +421,10 @@ const _packT = activePack.locale && typeof activePack.locale.t === 'function'
   const resultChangeBtn = document.getElementById('result-change-city-button');
   if (changeBtn !== null) changeBtn.addEventListener('click', showCitySelect);
   if (resultChangeBtn !== null) resultChangeBtn.addEventListener('click', showCitySelect);
+  // 物件圖鑑 — open the showcase pre-pointed at the current city (the <a> falls
+  // back to ./preview.html → taipei if this never runs).
+  const showcaseBtn = document.getElementById('showcase-button');
+  if (showcaseBtn !== null) showcaseBtn.setAttribute('href', `./preview.html?city=${activePack.id}`);
 }
 
 /* First-load selector (precedence, never traps a returning player):
