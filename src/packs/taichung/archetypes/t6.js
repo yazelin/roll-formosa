@@ -1,11 +1,14 @@
 /**
- * @file packs/taipei/archetypes/t6.js — Roll Formosa Taipei pack, Tier 6.
+ * @file packs/taichung/archetypes/t6.js — Roll Formosa Taichung pack, Tier 6.
  *
- * T6 — 信義天際線 (Xinyi night skyline). The finale band: glass curtain-wall
- * highrises, business towers, cross-street skybridges and rooftop mech rooms
- * lit against the 信義夜空 deep blue-violet sky. Ten ArchetypeDefs, authored in
- * the FROZEN tier order (tiers.js T6.archetypeIds) — slots [0..7] absorbable,
- * slots [8..9] repeatable chunk landmarks (lower spawnWeight).
+ * T6 — 七期天際線 (Xitun 7th-Redevelopment-Zone skyline). The finale band:
+ * glass curtain-wall highrises, cross-street skybridges and rooftop mech rooms
+ * lit against the deep blue-violet night, with two 台中-flavoured swaps — the
+ * 七期商辦塔 (glossy corner-cut office tower) and the 七期豪宅塔 (slim luxury
+ * residential tower with stacked balcony bands), the silhouettes that define the
+ * 七期 luxury-tower district. Ten ArchetypeDefs, authored in the FROZEN tier
+ * order (tiers.js T6.archetypeIds) — slots [0..7] absorbable, slots [8..9]
+ * repeatable chunk landmarks (lower spawnWeight).
  *
  * Built ONLY with the engine geometry vocabulary (geomHelpers.js): the math is
  * an engine red line. finish() merges → recenters → normalizes to a UNIT
@@ -14,7 +17,7 @@
  *
  * Contract (catalog.test.js): tier === naturalBand === 6, palette 4-6 tints,
  * -1.01 < yOffset <= 0.5, 0 < collisionScale <= 1, <= 350 triangles each.
- * Size band: 60-300 m radiusNominal (Xinyi skyscraper scale).
+ * Size band: 60-300 m radiusNominal (七期 skyscraper scale).
  */
 
 import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
@@ -89,27 +92,30 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 其他摩天樓 other skyscraper --------------------------- */
+  /* ---- slot 2: 七期商辦塔 Xitun office tower (台中 swap) ---------------- */
   {
-    id: 'other_skyscraper',
-    displayName: '其他摩天樓',
+    id: 'xitun_office_tower',
+    displayName: '七期商辦塔',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 190,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
+    palette: [0x2e4a66, 0x3e6488, 0x6aa0c4, 0xbfe2f0, 0xffe0a0],
     yOffset: -0.046,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic Xinyi peer.
+      // A glossy curtain-wall office tower with a chamfered corner and a brightly
+      // lit double-height sky-lobby band — the polished 七期 商辦 silhouette.
       return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block (setback)
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
+        towerBanded(1.2, 4.0, 1.2, 14, 0x2a4460, 0x6aa0c4, 0xffe0a0, rng, { y: 2.0 }), // main glass shaft
+        cyl(0.62, 0.62, 4.0, 4, 0x356088, 0x8ec4e0, { y: 2.0, ry: 0.785 }), // chamfered glossy corner column (4-seg = diamond)
+        box(1.32, 0.34, 1.32, 0xffe6a0, { y: 2.55 }), // lit sky-lobby band (mid)
+        box(1.26, 0.16, 1.26, 0x4a6e90, { y: 3.95 }), // upper transfer-floor band
+        box(0.9, 0.5, 0.9, 0x2e5070, { y: 4.3, hex2: 0x6aa0c4 }), // glass crown box
+        box(0.46, 0.16, 0.46, 0x9aa6b4, { y: 4.63 }), // crown cap
+        cyl(0.03, 0.03, 0.85, 6, 0xcdd4dc, { y: 5.1 }), // slim antenna
       ]);
     },
   },
@@ -146,30 +152,37 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 商辦塔 business tower ---------------------------------- */
+  /* ---- slot 4: 七期豪宅塔 Xitun luxury residential tower (台中 swap) --- */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'xitun_luxury_tower',
+    displayName: '七期豪宅塔',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 140,
+    radiusNominal: 150,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
+    palette: [0x3a4a5e, 0x556d86, 0x88aac4, 0xd6c79a, 0xffe6b0],
     yOffset: -0.191,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
-      return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
-      ]);
+      // Slim luxury residential tower: a landscaped granite podium, a glass shaft
+      // ringed by stacked balcony slabs, and a sculpted glass crown — the 七期
+      // 豪宅 look (think 寶輝/聯聚-style towers without naming a real one).
+      const parts = [
+        box(1.7, 0.5, 1.7, 0xc8c2b6, { y: 0.25, hex2: 0xd6d0c4 }), // landscaped granite podium
+        box(1.86, 0.12, 1.86, 0x8a9488, { y: 0.5 }), // podium garden rim (planters)
+        towerBanded(1.0, 3.6, 1.0, 12, 0x344458, 0x88aac4, 0xffe6b0, rng, { y: 2.4 }), // residential glass shaft
+      ];
+      // stacked cantilevered balcony slabs every ~3 floors (warm stone tone)
+      for (let i = 0; i < 5; i++) {
+        const by = 1.05 + i * 0.66;
+        parts.push(box(1.22, 0.07, 1.22, 0xd6c79a, { y: by })); // balcony slab
+        parts.push(box(1.22, 0.16, 0.04, 0xb6a880, { y: by + 0.1, z: 0.61 })); // balcony glass rail (front)
+      }
+      parts.push(box(0.86, 0.6, 0.86, 0x3a5670, { y: 4.4, hex2: 0x9fd0e4 })); // sculpted glass crown
+      parts.push(box(0.5, 0.18, 0.5, 0x7e8a98, { y: 4.78 })); // rooftop sky-pool / mech cap
+      return finish(parts);
     },
   },
 
@@ -281,7 +294,7 @@ export const T6_ARCHETYPES = [
     collisionScale: 0.75,
     buildGeometry(rng) {
       // Monumental: a wide multi-level glazed skybridge spanning a street between
-      // two big mixed-use blocks — the signature Xinyi air-corridor.
+      // two big mixed-use blocks — a 七期 air-corridor between luxury towers.
       const parts = [
         towerBanded(1.3, 2.8, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: -2.0, y: 1.4 }), // block A
         towerBanded(1.3, 3.0, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: 2.0, y: 1.5 }), // block B
@@ -316,7 +329,7 @@ export const T6_ARCHETYPES = [
     collisionScale: 0.8,
     buildGeometry(rng) {
       // A tall tower crowned by a dense mechanical/antenna mast head — the kind of
-      // rooftop mech stack that tops Xinyi's tallest service towers.
+      // rooftop mech stack that tops 七期's tallest service towers.
       const parts = [
         towerBanded(1.4, 3.4, 1.4, 11, 0x42505e, 0x8a92a0, 0xe0c860, rng, { y: 1.7 }), // main shaft
         box(1.5, 0.2, 1.5, 0x363c46, { y: 3.5 }), // roof slab

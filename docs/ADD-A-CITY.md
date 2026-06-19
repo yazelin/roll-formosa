@@ -62,7 +62,7 @@ CLI 會:`cp -r src/packs/taipei src/packs/<id>` → 改 `id`/`displayName`/`seed
 | `monument.js` | 終點建物幾何 + 位置常數 |
 | `landmarks/` | 8 個 curated 單例地標(幾何;**先查真實外形**) |
 | `collectibles/` | 13 個收藏品(幾何;**先查真實外形**) |
-| `archetypes/t0–t6.js` | 70 個 chunk 幾何(每階 10);curated 收藏 >350 tris 要設 `heroTriCap` |
+| `archetypes/t0–t6.js` | **70 個 chunk 幾何(每階 10)= 玩家一路滾到的街頭小物,內容要在地化、不是照抄台北**。保留泛台灣通用物(彈珠/寶特瓶/三角錐/紅塑膠椅…),把有地方性的 slot(尤其 8/9 chunk 地標)換成這座城市的版本(參考 `kaohsiung/archetypes/`)。每個 buildGeometry ≤350 tris(`catalog.test` 會擋,不像收藏是執行期才炸) |
 | `narration.js` | 月牙旁白(在地語感) |
 | `locale.js` | zh-TW 字串(關名/分享文字/結算等);`donack.on/off` 已是「月牙·導遊」 |
 | `cityMap.js` / `cityData.js` | `SHOP`/`ZONES`/`PLACEMENTS`/`water`/`GOAL_POS`/`DEV_STARTS`/`bandAllowedAt` |
@@ -143,6 +143,7 @@ node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png   # 
 - skyline 沒做 → silent 顯示台北(Phase 3)。
 - 複製來的 `*.test.js` 期望值沒改 → 測試紅(Phase 2)。
 - 借了別城市的招牌典故(機車海…)→ 文化錯(Phase 0)。
+- **chunk archetypes(t0–t6)照抄台北、沒換成在地小物 → 三都街頭長一樣**(台中這次就中招,70 個全載台北的)。CLI 只負責複製骨架,localize chunk 內容是內容工、不是可選(Phase 2)。
 - 出現日文假名/東京字樣 → no-kana/no-Tokyo 守衛紅。
 - 在 prod preview 驗而非 `npm run dev` → 看不到 DEV assert。
 - 數字憑印象 → 先查。

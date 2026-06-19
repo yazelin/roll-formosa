@@ -1,11 +1,17 @@
 /**
- * @file packs/taipei/archetypes/t4.js — Roll Formosa Taipei pack, TIER 4
- * content: 萬華街屋與廟 (Wanhua shophouses & temple).
+ * @file packs/taichung/archetypes/t4.js — Roll Formosa Taichung pack, TIER 4
+ * content: 南屯老街與廟 (犁頭店 / 萬和宮一帶 — old-street shophouses & temple).
  *
  * The 10 tier-4 ArchetypeDefs (size band 3–12 m REAL). ids are the FROZEN
- * CONTRACT from packs/taipei/tiers.js TIERS[4].archetypeIds — slots [0..7]
+ * CONTRACT from packs/taichung/tiers.js TIERS[4].archetypeIds — slots [0..7]
  * absorbable street structures (spawnWeight 1.0), slots [8..9] repeatable
  * CHUNK LANDMARK masses (spawnWeight ~0.3, ~2.5–3x the tier's largest body).
+ *
+ * Pan-Taiwan generics kept verbatim from the shared street vocabulary
+ * (透天厝 / 公寓 / 超商 / 公車). The 南屯-flavoured slots are localized: the
+ * 犁頭店 brick old-street shophouse, the blacksmith forge that gave 犁頭店 its
+ * name, the temple-court gold-paper furnace + outdoor opera stage of 萬和宮,
+ * and the two chunk masses (連棟紅磚老街屋 row + 萬和宮 temple body).
  *
  * Every buildGeometry(rng) returns ONE merged, vertex-colored BufferGeometry
  * (<= 350 tris) composed of low-segment primitives from geomHelpers.js, then
@@ -60,37 +66,41 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 老街街屋 (犁頭店 single-storey brick old-street house) -- */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'oldstreet_shophouse',
+    displayName: '老街街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.0,
-    radiusJitter: 0.18,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
-    yOffset: -0.42,
+    palette: [0xa84e34, 0xb86a44, 0xc8bca8, 0x7a4a32, 0xd8c8a8],
+    yOffset: -0.4,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
-        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
-        // corrugation ridges suggested by thin batten boxes along the slope
+        // squat red-brick shop body (閩南式紅磚街屋) — warm brick + plaster top band
+        box(2.3, 1.1, 1.6, 0xb05a3a, { y: 0.55, hex2: 0xc06a46 }),
+        box(2.34, 0.22, 1.64, 0xe6dcc6, { y: 1.18 }), // white plaster parapet band (商號匾)
+        box(1.5, 0.16, 0.05, 0xc83828, { y: 1.18, z: 0.84 }), // 老字號 sign plate
+        // low pitched tiled gable roof (紅瓦雙坡) — two leaning slabs
+        box(1.5, 0.08, 1.78, 0x8a3a2a, { rz: 0.2, x: -0.55, y: 1.5 }), // tile slope L
+        box(1.5, 0.08, 1.78, 0x8a3a2a, { rz: -0.2, x: 0.55, y: 1.5 }), // tile slope R
+        box(0.12, 0.12, 1.8, 0x6a4a32, { y: 1.66 }), // ridge beam
+        // 亭仔腳 (arcade) — a covered walk in front on two brick posts
+        box(2.3, 0.14, 0.7, 0xd8c8a8, { y: 1.02, z: 1.0 }), // arcade canopy slab
+        box(0.2, 0.95, 0.2, 0xa84e34, { x: -0.95, y: 0.48, z: 1.28 }), // arcade post L
+        box(0.2, 0.95, 0.2, 0xa84e34, { x: 0.95, y: 0.48, z: 1.28 }), // arcade post R
+        // shopfront — wooden plank board-up + half-door + small window
+        box(1.0, 0.8, 0.05, 0x6a4a30, { x: -0.4, y: 0.5, z: 0.82 }), // wood plank shutter
+        box(0.5, 0.85, 0.06, 0x4a3422, { x: 0.62, y: 0.52, z: 0.82 }), // dark wood door
+        box(0.42, 0.4, 0.05, 0xf0d8a0, { x: -0.4, y: 0.62, z: 0.84 }), // warm interior glow
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
-      }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof (typical 違建 detail)
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
+      // hanging paper lanterns under the arcade (老街攤鋪)
+      parts.push(cyl(0.12, 0.12, 0.22, 7, 0xc83828, { x: -0.55, y: 0.86, z: 1.0 }));
+      parts.push(cyl(0.12, 0.12, 0.22, 7, 0xc83828, { x: 0.55, y: 0.86, z: 1.0 }));
       return finish(parts);
     },
   },
@@ -210,172 +220,174 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 垃圾車 (garbage truck — the musical yellow one) -------- */
+  /* ---- slot 5: 打鐵爐 (犁頭店 blacksmith brick forge + chimney) ------- */
   {
-    id: 'garbage_truck',
-    displayName: '垃圾車',
-    tier: 4,
-    naturalBand: 4,
-    radiusNominal: 6.0,
-    radiusJitter: 0.12,
-    spawnWeight: 1.0,
-    palette: [0xe0c83a, 0xd8b830, 0xe8d048, 0x9aa0aa, 0x6a7078],
-    yOffset: -0.6,
-    upright: true,
-    collisionScale: 0.75,
-    buildGeometry(rng) {
-      const parts = [
-        box(1.0, 0.95, 1.15, 0xffffff, { x: 1.4, y: 0.92, hex2: 0xf4e26a }), // yellow cab (tinted)
-        box(0.9, 0.34, 1.08, 0x28323e, { x: 1.42, y: 1.18 }), // windshield band
-        box(0.06, 0.12, 0.22, 0xffe9a0, { x: 1.92, y: 0.66, z: 0.4 }), // headlight R
-        box(0.06, 0.12, 0.22, 0xffe9a0, { x: 1.92, y: 0.66, z: -0.4 }), // headlight L
-        box(2.3, 1.35, 1.16, 0xffffff, { x: -0.55, y: 1.1, hex2: 0xf0dc58 }), // compactor body (yellow)
-        box(2.34, 0.18, 1.12, 0x9aa0aa, { x: -0.55, y: 0.44 }), // underframe
-        // angled rear loading hopper (sloped tail — defining silhouette)
-        box(0.9, 1.1, 1.18, 0x9aa0aa, { rz: -0.28, x: -1.75, y: 1.0 }),
-        box(0.06, 0.7, 1.0, 0x44484f, { x: -1.95, y: 0.7 }), // rear opening (dark)
-        // hydraulic arm + handrails on the back
-        cyl(0.06, 0.06, 0.9, 6, 0x6a7078, { rz: 0.5, x: -1.4, y: 1.5 }),
-        box(2.0, 0.06, 1.18, 0xd0b830, { x: -0.55, y: 1.78 }), // body roof rib
-        box(0.06, 0.7, 0.6, 0xc83828, { x: 0.78, y: 1.0, z: 0.6 }), // warning chevron stripe
-      ];
-      // 6 wheels (low-seg for tri budget)
-      const wx = [1.35, 1.35, -0.7, -0.7, -1.3, -1.3];
-      const wz = [0.56, -0.56, 0.56, -0.56, 0.56, -0.56];
-      for (let i = 0; i < 6; i++) {
-        parts.push(cyl(0.3, 0.3, 0.22, 7, 0x23262e, { rx: HALF_PI, x: wx[i], z: wz[i], y: 0.3 })); // tire
-      }
-      return finish(parts);
-    },
-  },
-
-  /* ---- slot 6: 加油站 (gas station — canopy + pumps) ------------------ */
-  {
-    id: 'gas_station',
-    displayName: '加油站',
-    tier: 4,
-    naturalBand: 4,
-    radiusNominal: 9.0,
-    radiusJitter: 0.12,
-    spawnWeight: 1.0,
-    palette: [0xeef2f4, 0xc94f46, 0x3a6ea0, 0xe0a83a, 0xd8dce2],
-    yOffset: -0.49,
-    upright: true,
-    collisionScale: 0.8,
-    buildGeometry(rng) {
-      const parts = [
-        // big flat canopy roof on slender columns
-        box(3.4, 0.26, 2.4, 0xffffff, { y: 1.9 }), // canopy slab (tinted white)
-        box(3.46, 0.14, 2.46, 0xc94f46, { y: 2.06 }), // red fascia trim
-        box(3.46, 0.06, 2.46, 0x3a6ea0, { y: 2.14 }), // blue trim stripe
-      ];
-      // 4 support columns
-      const cx = [-1.3, 1.3, -1.3, 1.3];
-      const cz = [0.9, 0.9, -0.9, -0.9];
-      for (let i = 0; i < 4; i++) {
-        parts.push(cyl(0.16, 0.16, 1.8, 7, 0xd8dce2, { x: cx[i], z: cz[i], y: 0.9 }));
-      }
-      // ground island slab
-      parts.push(box(2.2, 0.12, 1.2, 0x9aa0aa, { y: 0.06 }));
-      // 2 fuel pumps (boxy dispensers with hose post)
-      const px = [-0.6, 0.6];
-      for (let i = 0; i < 2; i++) {
-        parts.push(box(0.36, 0.7, 0.5, 0xeef2f4, { x: px[i], y: 0.5 })); // pump body
-        parts.push(box(0.32, 0.22, 0.46, 0x2a3138, { x: px[i], y: 0.78 })); // pump screen (dark)
-        parts.push(box(0.3, 0.06, 0.4, 0xe0a83a, { x: px[i], y: 0.92 })); // pump top cap (amber)
-        parts.push(cyl(0.05, 0.05, 0.5, 6, 0x44484f, { x: px[i] + 0.22, y: 0.5, z: 0.28 })); // hose post
-      }
-      // tall price totem sign at the corner
-      parts.push(cyl(0.1, 0.1, 2.1, 6, 0xbfc4ca, { x: 1.7, z: -0.7, y: 1.05 })); // pole
-      parts.push(box(0.7, 0.8, 0.14, 0xc94f46, { x: 1.7, z: -0.7, y: 2.1 })); // price board
-      parts.push(box(0.6, 0.5, 0.05, 0xfff2c0, { x: 1.7, z: -0.84, y: 2.1 })); // lit price digits
-      return finish(parts);
-    },
-  },
-
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
-  {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'blacksmith_forge',
+    displayName: '打鐵爐',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
-    radiusJitter: 0.15,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
-    yOffset: -0.48,
+    palette: [0x7a4a36, 0x8a3a2a, 0x44484f, 0xc06a2a, 0x9aa0aa],
+    yOffset: -0.46,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // open-fronted brick forge shed (打鐵舖) — soot-stained brick walls
+        box(2.4, 1.2, 1.7, 0x8a4a36, { y: 0.6, hex2: 0x6a3a28 }),
+        box(2.44, 0.16, 1.74, 0x5a3424, { y: 1.24 }), // dark eave band
+        // single-slope tin roof, smoke-darkened
+        box(2.7, 0.1, 1.9, 0x44484f, { rz: 0.14, y: 1.5 }),
+        box(2.7, 0.05, 0.12, 0x2a2c32, { rz: 0.14, y: 1.52, z: 0.92 }), // front eave
+        // the brick hearth/furnace block with glowing fire mouth (爐口)
+        box(0.9, 0.8, 0.8, 0x7a4234, { x: -0.6, y: 0.4, z: 0.4, hex2: 0x5a3022 }),
+        box(0.46, 0.42, 0.05, 0xff7a2a, { x: -0.6, y: 0.42, z: 0.82, hex2: 0xffd060 }), // glowing coals
+        // tall brick chimney venting the forge
+        box(0.44, 1.7, 0.44, 0x7a4234, { x: -0.6, y: 1.45, z: 0.0, hex2: 0x5a3022 }),
+        cyl(0.18, 0.2, 0.24, 6, 0x35373d, { x: -0.6, y: 2.34 }), // chimney cap
+        // the anvil (鐵砧) on a stump out front — the blacksmith's defining tool
+        box(0.18, 0.16, 0.42, 0x2a2c32, { x: 0.7, y: 0.62, z: 0.9 }), // anvil body
+        cyl(0.12, 0.16, 0.4, 7, 0x5a3a24, { x: 0.7, y: 0.34, z: 0.9 }), // wooden stump
+        // a board of plow blades + tools (犁頭 — the namesake of 犁頭店)
+        box(0.06, 0.7, 0.7, 0x6a4a30, { x: 0.95, y: 0.7, z: -0.2 }), // tool board
+        cone(0.16, 0.4, 4, 0x9aa0aa, { rz: HALF_PI, x: 1.04, y: 0.9, z: -0.35 }), // hung plow blade
+        cone(0.14, 0.36, 4, 0x8a9098, { rz: HALF_PI, x: 1.04, y: 0.55, z: -0.05 }), // hung plow blade
+        box(0.05, 0.5, 0.06, 0x35373d, { x: 1.02, y: 0.62, z: 0.2 }), // hung tongs
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
-      }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 8: 公寓街屋量體 (chunk landmark — street-house row mass) --- */
+  /* ---- slot 6: 廟前金爐 (temple-court gold-paper burning furnace) ----- */
   {
-    id: 'streethouse_mass',
-    displayName: '公寓街屋量體',
+    id: 'temple_gold_furnace',
+    displayName: '廟前金爐',
+    tier: 4,
+    naturalBand: 4,
+    radiusNominal: 5.0,
+    radiusJitter: 0.12,
+    spawnWeight: 1.0,
+    palette: [0xc23a26, 0xd2402a, 0xe0a83a, 0xb83422, 0x9aa0aa],
+    yOffset: -0.5,
+    upright: true,
+    collisionScale: 0.8,
+    buildGeometry(rng) {
+      const parts = [
+        // stone base platform on the 廟埕
+        box(1.9, 0.3, 1.9, 0x9aa0aa, { y: 0.15 }),
+        // tapered red-tiled furnace body (爐身) — vermilion with warm interior
+        box(1.4, 1.5, 1.4, 0xffffff, { y: 1.05, hex2: 0xd2402a }),
+        box(1.1, 0.9, 1.1, 0xc23426, { y: 1.7, hex2: 0xb02e22 }), // upper narrower drum
+        // glowing burning mouth where 金紙 goes in (front opening)
+        box(0.6, 0.6, 0.08, 0x2a1410, { y: 0.85, z: 0.72 }), // mouth recess (dark)
+        box(0.5, 0.46, 0.06, 0xff7a2a, { y: 0.84, z: 0.76, hex2: 0xffd060 }), // glowing fire
+        box(0.86, 0.16, 0.06, 0xe0a83a, { y: 1.2, z: 0.72 }), // gold lintel plaque (爐額)
+        // octagon-ish hipped tile roof on the furnace (廟式爐頂) via low-seg cone
+        cone(1.1, 0.7, 8, 0x2e5a3a, { y: 2.3 }), // green-glaze tiled cap
+        box(1.0, 0.1, 1.0, 0xe0a83a, { y: 1.96 }), // golden eave fascia
+        // little upswept ridge ornaments + finial (廟味)
+        box(0.5, 0.1, 0.14, 0xe0a83a, { rz: 0.5, x: -0.5, y: 2.18 }), // ridge tail L
+        box(0.5, 0.1, 0.14, 0xe0a83a, { rz: -0.5, x: 0.5, y: 2.18 }), // ridge tail R
+        sph(0.16, 0xe0a83a, { ws: 6, hs: 4, y: 2.66 }), // 葫蘆 finial
+        cone(0.1, 0.26, 6, 0xe0a83a, { y: 2.86 }),
+        // wisp of smoke (light grey) rising from the roof vent
+        cyl(0.05, 0.07, 0.4, 5, 0xc8ccd2, { y: 3.0 }),
+      ];
+      return finish(parts);
+    },
+  },
+
+  /* ---- slot 7: 廟埕戲台 (萬和宮 outdoor 字姓戲 opera stage) ------------ */
+  {
+    id: 'temple_opera_stage',
+    displayName: '廟埕戲台',
+    tier: 4,
+    naturalBand: 4,
+    radiusNominal: 5.5,
+    radiusJitter: 0.13,
+    spawnWeight: 1.0,
+    palette: [0xc23a26, 0xe0a83a, 0xd2402a, 0x6a4a30, 0xb83422],
+    yOffset: -0.4,
+    upright: true,
+    collisionScale: 0.85,
+    buildGeometry(rng) {
+      const parts = [
+        // raised wooden stage deck (戲台板) on a red skirt
+        box(3.0, 0.5, 2.0, 0xc23426, { y: 0.25, hex2: 0xa02a20 }), // stage skirt (red)
+        box(3.0, 0.16, 2.0, 0x6a4a30, { y: 0.55 }), // wooden stage floor
+        // red backdrop wall at the rear with gold trim (後台屏)
+        box(2.8, 1.3, 0.12, 0xffffff, { y: 1.3, z: -0.8, hex2: 0xd2402a }),
+        box(2.6, 0.2, 0.06, 0xe0a83a, { y: 1.86, z: -0.74 }), // gold top trim
+        box(1.0, 0.5, 0.06, 0x2a1410, { y: 1.0, z: -0.72 }), // dark stage-door opening
+        // four vermilion stage posts holding the canopy
+        cyl(0.12, 0.12, 1.6, 6, 0xc23426, { x: -1.25, z: 0.7, y: 1.4 }),
+        cyl(0.12, 0.12, 1.6, 6, 0xc23426, { x: 1.25, z: 0.7, y: 1.4 }),
+        cyl(0.12, 0.12, 1.6, 6, 0xc23426, { x: -1.25, z: -0.7, y: 1.4 }),
+        cyl(0.12, 0.12, 1.6, 6, 0xc23426, { x: 1.25, z: -0.7, y: 1.4 }),
+        // curved tiled canopy roof (歇山式戲台頂) via low-seg half-cylinder
+        cyl(1.05, 1.05, 3.3, 4, 0x2e5a3a, { theta0: PI, rx: HALF_PI, sy: 0.55, y: 2.3 }),
+        box(3.4, 0.12, 2.3, 0xe0a83a, { y: 2.12 }), // golden eave fascia
+        box(3.1, 0.16, 0.2, 0xc94f46, { y: 2.7 }), // ridge beam
+        // upswept swallow-tail ridge ends (燕尾) — temple-stage silhouette
+        box(0.6, 0.12, 0.18, 0xe0a83a, { rz: 0.5, x: -1.7, y: 2.78 }),
+        box(0.6, 0.12, 0.18, 0xe0a83a, { rz: -0.5, x: 1.7, y: 2.78 }),
+        // a hanging red banner + paper lanterns at the front (酬神戲)
+        box(0.7, 0.5, 0.05, 0xc83828, { y: 1.7, z: 0.74 }), // banner cloth
+        box(0.6, 0.16, 0.05, 0xe0a83a, { y: 1.9, z: 0.76 }), // banner gold header
+      ];
+      parts.push(cyl(0.14, 0.14, 0.28, 7, 0xc83828, { x: -1.0, y: 1.9, z: 0.7 })); // lantern L
+      parts.push(cyl(0.14, 0.14, 0.28, 7, 0xc83828, { x: 1.0, y: 1.9, z: 0.7 })); // lantern R
+      return finish(parts);
+    },
+  },
+
+  /* ---- slot 8: 老街街屋量體 (chunk landmark — 連棟紅磚老街屋 row mass) - */
+  {
+    id: 'oldstreet_row_mass',
+    displayName: '老街街屋量體',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
     radiusJitter: 0.18,
     spawnWeight: 0.3,
-    palette: [0xe2d8c8, 0xc8bca8, 0xd0d8e0, 0xd9c8b0, 0xb8ac98],
-    yOffset: -0.48,
+    palette: [0xa84e34, 0xb86a44, 0xc8bca8, 0x8a3a2a, 0xd8c8a8],
+    yOffset: -0.46,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // a contiguous row of 4 abutting street-houses of varying height (連棟街屋)
+      // a contiguous row of 4 閩南-style brick old-street houses (南屯老街連棟街屋)
       const parts = [];
-      const heights = [2.2, 2.8, 2.4, 3.0];
+      const heights = [1.5, 1.7, 1.5, 1.8];
       const xs = [-2.1, -0.7, 0.7, 2.1];
-      const wallTints = [0xffffff, 0xf0ead8, 0xffffff, 0xf2e6dc];
-      const winTints = [0x44506a, 0x3e4a64, 0x4a5470, 0x40506a];
+      const brickTints = [0xb05a3a, 0xa84e34, 0xb86a46, 0x9a4a32];
       for (let i = 0; i < 4; i++) {
         const h = heights[i];
-        // floors=3 keeps the banded-window read while staying in tri budget
-        parts.push(towerBanded(1.3, h, 1.3, 3, wallTints[i], winTints[i], 0xffd98a, rng, { x: xs[i], y: h / 2 }));
-        parts.push(box(1.36, 0.1, 1.36, 0x8a8f9a, { x: xs[i], y: h + 0.05 })); // roof slab
-        // rooftop water tanks / tin add-on (the chaotic skyline)
-        if (i !== 3) parts.push(cyl(0.2, 0.2, 0.34, 5, 0x3a6ea0, { x: xs[i] - 0.3, y: h + 0.27 }));
-        if (i % 2 === 0) parts.push(box(0.7, 0.4, 0.9, 0xb0563a, { x: xs[i] + 0.2, y: h + 0.25, hex2: 0xc8704a })); // tin penthouse
+        // squat brick body + white plaster 商號 parapet (老街立面)
+        parts.push(box(1.32, h, 1.4, brickTints[i], { x: xs[i], y: h / 2, hex2: 0xc06a46 }));
+        parts.push(box(1.36, 0.2, 1.44, 0xe6dcc6, { x: xs[i], y: h + 0.1 })); // plaster parapet band
+        parts.push(box(0.9, 0.14, 0.05, 0xc83828, { x: xs[i], y: h + 0.04, z: 0.74 })); // 老字號 sign
+        // low red-tile shallow gable cap per house (起伏的紅瓦稜線)
+        parts.push(box(1.4, 0.1, 1.5, 0x8a3a2a, { rz: i % 2 ? 0.12 : -0.12, x: xs[i], y: h + 0.3 }));
       }
-      // continuous 騎樓 colonnade across the whole ground floor front
-      parts.push(box(5.8, 0.24, 1.36, 0xc8bca8, { y: 0.78, z: 0.02 })); // arcade beam
+      // continuous 亭仔腳 (arcade walk) across the whole street front
+      parts.push(box(5.8, 0.18, 0.7, 0xd8c8a8, { y: 1.05, z: 0.62 })); // arcade canopy
       for (let i = 0; i < 5; i++) {
-        parts.push(box(0.3, 0.7, 0.3, 0xd8cdb8, { x: -2.4 + i * 1.2, y: 0.35, z: 0.55 })); // arcade column
+        parts.push(box(0.22, 0.95, 0.22, 0xa84e34, { x: -2.4 + i * 1.2, y: 0.48, z: 0.92 })); // brick post
       }
-      // street-front shop sign band
-      parts.push(box(5.6, 0.2, 0.06, 0xc83828, { y: 0.96, z: 0.7 }));
+      // warm shopfront glows along the walk (the lit old-street row)
+      for (let i = 0; i < 4; i++) {
+        parts.push(box(0.6, 0.34, 0.05, 0xf0d8a0, { x: -2.1 + i * 1.4, y: 0.55, z: 0.68 })); // shop glow
+      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 9: 宮廟量體 (chunk landmark — temple mass, 燕尾脊) -------- */
+  /* ---- slot 9: 萬和宮量體 (chunk landmark — Wanhe temple mass, 燕尾脊) - */
   {
-    id: 'temple_mass',
-    displayName: '宮廟量體',
+    id: 'wanhe_temple_mass',
+    displayName: '萬和宮量體',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,
@@ -389,7 +401,7 @@ export const T4_ARCHETYPES = [
       const parts = [
         // raised stone platform (廟埕台基)
         box(4.2, 0.4, 2.8, 0xb8ac98, { y: 0.2 }),
-        // main hall body — red walls + warm interior glow
+        // main hall body — red walls + warm interior glow (萬和宮正殿)
         box(3.4, 1.3, 2.0, 0xffffff, { y: 1.05, hex2: 0xd2402a }),
         // front vermilion columns (龍柱) of the portico
       ];

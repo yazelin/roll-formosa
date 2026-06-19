@@ -1,9 +1,15 @@
 /**
- * @file packs/taipei/archetypes/t0.js — Roll Formosa Taipei pack, TIER 0
- *   柑仔店桌頭 (corner-store tabletop trinkets), the smallest absorbable band
- *   (radiusNominal 0.01–0.05 m). 10 ArchetypeDefs, ids FROZEN by
- *   packs/taipei/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
+ * @file packs/taichung/archetypes/t0.js — Roll Formosa Taichung pack, TIER 0
+ *   中區老城柑仔店桌頭 (old-town corner-store tabletop trinkets), the smallest
+ *   absorbable band (radiusNominal 0.01–0.05 m). 10 ArchetypeDefs, ids FROZEN by
+ *   packs/taichung/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
  *   slots [8..9] = chunk landmarks 戳戳樂板 / 籤筒, spawnWeight ~0.3).
+ *
+ * Localized from Taipei t0: almost all pan-Taiwan 文具/桌頭 generics are kept
+ * verbatim (彈珠/橡皮擦/圖釘/尪仔標/鉛筆/鈕扣 + 戳戳樂板/籤筒). Two slots are
+ * re-flavoured to 台中中區老雜貨味: the generic soda cap → 黑松汽水蓋 (the
+ * quintessential old-grocery crown cap), and the candy → 王子麵 (Wei Lih's
+ * central-Taiwan snack-noodle brick that kids crush and eat dry at the 桌頭).
  *
  * Authored ONLY with the engine geometry vocabulary (geomHelpers.js):
  * box/cyl/cone/sph/ico/torus + paint/xf + finish (merge → recenter →
@@ -105,62 +111,72 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] bottle_cap 瓶蓋 — shallow crimped soda-bottle cap              */
+  /* [3] heysong_cap 黑松汽水蓋 — TAICHUNG SWAP: crimped HeySong soda    */
+  /*     crown cap (老柑仔店 sarsaparilla brown body + red star face)    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'bottle_cap',
-    displayName: '瓶蓋',
+    id: 'heysong_cap',
+    displayName: '黑松汽水蓋',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.013,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xd83a2e, 0x2f64c8, 0x1f9e4a, 0xf0b429, 0xcfd4da],
-    yOffset: -0.76, // crown sitting flat-down (= -1 - minY of normalized geo)
+    palette: [0x5a2f1a, 0x6e3a20, 0x4f2715, 0x7a4326, 0xc0392b],
+    yOffset: -0.75, // crown sitting flat-down (= -1 - minY of normalized geo)
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        cyl(1.0, 1.0, 0.16, 14, 0xffffff, { y: 0.42 }), // top disc (printed face, tinted)
+        cyl(1.0, 1.0, 0.16, 14, 0xffffff, { y: 0.42 }), // top disc (printed face, tinted sarsaparilla brown)
         cyl(1.04, 1.04, 0.4, 14, 0xffffff, { y: 0.2 }), // crimped skirt (tinted)
-        cyl(0.6, 0.6, 0.06, 12, 0xf2f2f4, { y: 0.51 }), // pale logo medallion
+        cyl(0.62, 0.62, 0.06, 12, 0xc0392b, { y: 0.51 }), // red brand medallion (黑松 red roundel)
+        cyl(0.3, 0.3, 0.07, 10, 0xf4d23a, { y: 0.535 }), // gold inner emblem plate (柑仔店 印象)
       ];
       // crimp teeth around the skirt (low-count ring of tiny boxes)
       const teeth = 12;
       for (let i = 0; i < teeth; i++) {
         const a = (i / teeth) * PI * 2;
-        parts.push(box(0.14, 0.42, 0.1, 0xe8eaee, { x: Math.cos(a) * 1.04, z: Math.sin(a) * 1.04, ry: -a, y: 0.2 }));
+        parts.push(box(0.14, 0.42, 0.1, 0x7a4326, { x: Math.cos(a) * 1.04, z: Math.sin(a) * 1.04, ry: -a, y: 0.2 }));
       }
       return finish(parts);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [4] candy 糖果 — twist-wrap candy (oval body + two pinched ends)    */
+  /* [4] prince_noodle 王子麵 — TAICHUNG SWAP: Wei Lih snack-noodle      */
+  /*     brick (central-TW 柑仔店 staple; yellow noodle slab + wrapper)  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'candy',
-    displayName: '糖果',
+    id: 'prince_noodle',
+    displayName: '王子麵',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.014,
-    radiusJitter: 0.18,
+    radiusNominal: 0.018,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xff6f91, 0xffb347, 0x6fcf97, 0x56ccf2, 0xc792ea],
-    yOffset: -0.49, // resting on its side (= -1 - minY of normalized geo)
+    palette: [0xf2b53a, 0xe8a52c, 0xf6c24e, 0xeeb030],
+    yOffset: -0.73, // brick lying flat on the table (= -1 - minY of normalized geo)
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.84,
     buildGeometry(rng) {
-      return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 7, x: 0.0, sx: 1.25 }), // candy body (tinted, stretched along x)
-        // wrapper stripe band over the body for the classic candy look
-        torus(0.62, 0.16, 6, 10, 0xffffff, { ry: HALF_PI, x: 0.0 }), // tinted stripe ring
-        // twisted wrapper ends: cones fanning outward at each tip
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: -HALF_PI, x: 1.15 }), // right twist
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: HALF_PI, x: -1.15 }), // left twist
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: -HALF_PI, x: 1.55 }), // right twist tip
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: HALF_PI, x: -1.55 }), // left twist tip
-      ]);
+      const parts = [
+        // crinkly fried noodle slab (slightly domed top via two stacked boxes)
+        box(2.0, 0.5, 1.5, 0xffffff, { y: 0.3 }), // noodle brick body (tinted golden)
+        box(1.7, 0.18, 1.2, 0xffffff, { y: 0.62 }), // raised crinkle crown (tinted)
+        // clear cellophane wrapper hint: thin bright edge bands
+        box(2.06, 0.12, 1.56, 0xfff0c4, { y: 0.12 }), // wrapper bottom seam
+        box(2.06, 0.12, 1.56, 0xfff0c4, { y: 0.52 }), // wrapper upper seam
+        // printed label band across the middle (red brand stripe + white panel)
+        box(0.9, 0.56, 1.58, 0xd23b2e, { y: 0.32 }), // red label band
+        box(0.62, 0.34, 1.6, 0xf6f1e4, { y: 0.32 }), // white label panel
+        box(0.34, 0.16, 1.62, 0xf2b53a, { y: 0.32 }), // tiny gold seasoning-pack flash
+      ];
+      // a couple of noodle-texture ridges baked dark on the crown
+      for (let i = -1; i <= 1; i++) {
+        parts.push(box(1.5, 0.06, 0.1, 0xc8902a, { x: 0.0, z: i * 0.34, y: 0.72 }));
+      }
+      return finish(parts);
     },
   },
 

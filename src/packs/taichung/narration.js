@@ -87,8 +87,8 @@ export const DONACK_LINES = Object.freeze({
     text: '彈珠一顆！每顆大滾球都是從小東西開始的',
     priority: 1, expression: 'idle', once: true, phase: PLAY,
   }),
-  first_betelnut: Object.freeze({
-    text: '檳榔！台灣特產，不過月牙可不嚼這個',
+  first_takoyaki: Object.freeze({
+    text: '章魚小丸子！逢甲夜市的排隊小攤，一口一顆，月牙差點連竹籤一起滾走',
     priority: 1, expression: 'idle', once: true, phase: PLAY,
   }),
   first_chair: Object.freeze({
@@ -325,8 +325,8 @@ export const FIRST_LINE_BY_CODE = Object.freeze({
   // T0: small items trigger the generic marble quip (codes 0-7)
   0: 'first_marble', 1: 'first_marble', 2: 'first_marble', 3: 'first_marble',
   4: 'first_marble', 5: 'first_marble', 6: 'first_marble', 7: 'first_marble',
-  // T1: 夜市 — betel_nut (slot 2 = code 12) gets own line; others share marble
-  10: 'first_marble', 11: 'first_marble', 12: 'first_betelnut',
+  // T1: 逢甲夜市 — takoyaki (slot 2 = code 12) gets own line; others share marble
+  10: 'first_marble', 11: 'first_marble', 12: 'first_takoyaki',
   13: 'first_marble', 14: 'first_marble', 15: 'first_marble',
   16: 'first_marble', 17: 'first_marble',
   // T2: 騎樓 — red_plastic_chair (20), rice_cooker (22)
