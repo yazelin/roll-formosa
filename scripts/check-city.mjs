@@ -28,7 +28,7 @@ const id = process.argv[2];
 if (!id) { console.error('usage: node scripts/check-city.mjs <id>'); process.exit(1); }
 if (id === 'taipei') { console.error('[check-city] taipei is the template — nothing to compare'); process.exit(1); }
 
-const FAIL_TOTAL = 60; // >= this many of 70 identical to taipei => essentially un-localized
+const FAIL_TOTAL = 45; // >= this many of 70 identical to taipei => too shallow (floor = 台中 44; aim ~37 高雄). Kept in lockstep with src/packs/localization.test.js
 
 const loadTiers = async (city) => {
   const url = pathToFileURL(join(ROOT, 'src/packs', city, 'tiers.js')).href;
