@@ -56,8 +56,8 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 - **城市感字串**:`document.title`、標題頁副標(`title.subtitle`)、結算頁標題(`win.title`/`win.subtitle`)在 `main.js` boot 時從 `activePack.locale.t()` 覆寫 —— index.html 的硬寫值是 taipei 預設,別在那裡改死城市名,改 pack 的 `locale.js`。
 
 ## 驗證關卡(動完必過)
-- `npm run build` 過、`npx vitest run` 全綠。
-- `node scripts/check-city.mjs <city>` → chunk 街頭物整包還是台北的(>=60/70 同台北)會 FAIL。
+- `npm run build` 過、`npx vitest run` 全綠(含 `src/packs/localization.test.js` —— 每座 ready 城市 chunk 在地化深度自動把關)。
+- `node scripts/check-city.mjs <city>` → chunk 街頭物在地化不夠深會 FAIL。**門檻 = 台中級下限 ≤44/70 同台北**(>=45 即 FAIL;目標 ~37 高雄級)。同一門檻也被上面那支測試強制,所以深度不夠 `npm test` 就紅。
 - `node scripts/headless-check.mjs http://localhost:4173/?city=<city> /tmp/x.png` → 0 console error、tier 標籤正確。
 - 幾何看長相:`/preview.html?city=<city>`(全部物件,`&kind=chunk` 篩街頭物)。
 - pack:`validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
