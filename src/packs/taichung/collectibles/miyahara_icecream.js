@@ -45,7 +45,7 @@ export const COL_MIYAHARA_ICECREAM = {
 
     // ---- Waffle CONE: a slender toasted cone carrying the whole stack ------
     // Narrow + tall so the colourful scoops read as flamboyantly top-heavy.
-    parts.push(cone(0.6, 1.9, 8, CONE, { y: 0.95, hex2: CONE_HI }));
+    parts.push(cone(0.6, 1.9, 8, CONE, { rx: PI, y: 0.95, hex2: CONE_HI }));
     // Crisp rim lip where the cone opens to the first scoop.
     parts.push(cyl(0.62, 0.5, 0.14, 8, CONE_HI, { y: 1.86, hex2: CONE }));
 

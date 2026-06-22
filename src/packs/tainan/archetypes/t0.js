@@ -136,31 +136,41 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [4] candy 糖果 — twist-wrap candy (oval body + two pinched ends)    */
+  /* [4] 蜜餞 — Anping candied dried plum: one wrinkled deep-red plum    */
+  /*     (lumpy squashed sphere, sugary speckles) on a paper wrapper.    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'candy',
-    displayName: '糖果',
+    id: 'preserved_plum',
+    displayName: '蜜餞',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.014,
+    radiusNominal: 0.016,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff6f91, 0xffb347, 0x6fcf97, 0x56ccf2, 0xc792ea],
-    yOffset: -0.49, // resting on its side (= -1 - minY of normalized geo)
+    palette: [0x7a2418, 0x9a3220, 0x5e1a12, 0xc89a6a, 0xe8c89a],
+    yOffset: -0.6053,
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 7, x: 0.0, sx: 1.25 }), // candy body (tinted, stretched along x)
-        // wrapper stripe band over the body for the classic candy look
-        torus(0.62, 0.16, 6, 10, 0xffffff, { ry: HALF_PI, x: 0.0 }), // tinted stripe ring
-        // twisted wrapper ends: cones fanning outward at each tip
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: -HALF_PI, x: 1.15 }), // right twist
-        cone(0.5, 0.7, 8, 0xfff0f4, { rz: HALF_PI, x: -1.15 }), // left twist
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: -HALF_PI, x: 1.55 }), // right twist tip
-        cone(0.34, 0.46, 6, 0xffe2ea, { rz: HALF_PI, x: -1.55 }), // left twist tip
-      ]);
+      const parts = [
+        // thin square paper wrapper underneath
+        box(2.0, 0.06, 2.0, 0xe8c89a, { y: 0.03, hex2: 0xf0dcb8 }),
+        // squashed lumpy plum body (deep red-brown), flattened in y
+        sph(0.96, 0x9a3220, { ws: 10, hs: 7, sy: 0.62, y: 0.62, hex2: 0x7a2418 }),
+        // a darker dimple lobe to make it look wrinkled/lumpy
+        sph(0.42, 0x5e1a12, { ws: 6, hs: 4, sy: 0.6, x: 0.34, y: 0.78, z: -0.2 }),
+        sph(0.34, 0x5e1a12, { ws: 6, hs: 4, sy: 0.6, x: -0.4, y: 0.74, z: 0.22 }),
+      ];
+      // sugary speckles dusted over the plum (deterministic ring)
+      const sugar = 7;
+      for (let i = 0; i < sugar; i++) {
+        const a = (i / sugar) * PI * 2;
+        const r = 0.36 + (i % 2) * 0.22;
+        parts.push(
+          sph(0.07, 0xe8c89a, { ws: 4, hs: 3, x: Math.cos(a) * r, y: 0.82 - (i % 3) * 0.05, z: Math.sin(a) * r })
+        );
+      }
+      return finish(parts);
     },
   },
 
