@@ -258,18 +258,17 @@ export const T1_ARCHETYPES = [
     collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        // bulging body — wider at the bottom where the goods sit
-        sph(0.9, 0xe8e4de, { ws: 8, hs: 5, sy: 0.95, y: 0.78, hex2: 0xf4f0ea }),
-        box(1.5, 0.6, 1.2, 0xe8e4de, { y: 0.36 }), // boxy lumpy contents
-        // red bands (classic 紅白條紋)
-        cyl(0.86, 0.86, 0.2, 8, 0xd83a34, { y: 0.5, open: true }),
-        cyl(0.78, 0.78, 0.16, 8, 0xc23028, { y: 0.92, open: true }),
-        // gathered neck + twist
-        cyl(0.5, 0.78, 0.34, 7, 0xeceae4, { y: 1.34 }),
-        cyl(0.22, 0.22, 0.26, 6, 0xe8e4de, { y: 1.62 }), // knot
-        // two loop handles
-        torus(0.34, 0.07, 4, 6, 0xd83a34, { x: -0.36, y: 1.78, arc: PI }),
-        torus(0.34, 0.07, 4, 6, 0xe8e4de, { x: 0.36, y: 1.78, arc: PI }),
+        // bulging white bag body — fuller at the bottom where the goods sit
+        sph(0.92, 0xf4f0ea, { ws: 8, hs: 6, sy: 1.05, y: 0.64, hex2: 0xe8e4de }),
+        // BOLD red/white horizontal stripes (classic 紅白條紋) — wide bands
+        // standing slightly proud of the body so they read as stripes, not rings
+        cyl(0.97, 1.0, 0.4, 8, 0xd83a34, { y: 0.3, open: true }),
+        cyl(0.99, 0.9, 0.4, 8, 0xd83a34, { y: 0.86, open: true }),
+        // gathered white neck pinching up to the handles
+        cyl(0.4, 0.82, 0.34, 7, 0xf4f0ea, { y: 1.3 }),
+        // two upright red vest-loop handles
+        torus(0.32, 0.09, 5, 6, 0xd83a34, { x: -0.32, y: 1.72, arc: PI }),
+        torus(0.32, 0.09, 5, 6, 0xd83a34, { x: 0.32, y: 1.72, arc: PI }),
       ]);
     },
   },
