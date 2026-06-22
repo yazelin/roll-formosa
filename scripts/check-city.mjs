@@ -66,4 +66,26 @@ if (total >= FAIL_TOTAL || fullTiers >= 5) {
   );
   process.exit(1);
 }
-console.log(`[check-city] OK: '${id}' 的 chunk 物件已在地化(保留 ${total} 個泛台灣通用物,換掉 ${N - total} 個)。\n`);
+/* River guard: a freshly-copied cityMap ships 台北's 基隆河 verbatim. Text-based
+ * (no THREE import) — mirrors src/packs/river-localization.test.js. */
+const { readFileSync } = await import('node:fs');
+const readRiver = (c) => {
+  const src = readFileSync(join(ROOT, 'src/packs', c, 'cityMap.js'), 'utf8');
+  const wb = src.slice(src.indexOf('export const water'));
+  const name = (wb.match(/name:\s*['"]([^'"]+)['"]/) || [])[1] || '';
+  const clBlock = (wb.match(/centerline:\s*Object\.freeze\(\[([\s\S]*?)\]\)/) || [])[1] || '';
+  const pts = [...clBlock.matchAll(/x:\s*(-?\d+(?:\.\d+)?),\s*z:\s*(-?\d+(?:\.\d+)?)/g)]
+    .map((m) => `${m[1]},${m[2]}`).join(' ');
+  return { name, pts };
+};
+const riv = readRiver(id), tpRiv = readRiver('taipei');
+if (riv.name === '基隆河' || riv.pts === tpRiv.pts) {
+  console.error(
+    `[check-city] FAIL: '${id}' 的河還是台北的基隆河(name='${riv.name}'、centerline 同台北)。\n` +
+      `  river 要在地化:改 src/packs/${id}/cityMap.js 的 water(名稱 + centerline + 註解),\n` +
+      `  避開起點(0,0)與終點。參考 src/packs/kaohsiung/cityMap.js 的 愛河。`
+  );
+  process.exit(1);
+}
+
+console.log(`[check-city] OK: '${id}' 的 chunk 物件已在地化(保留 ${total} 個泛台灣通用物,換掉 ${N - total} 個);河='${riv.name}'。\n`);

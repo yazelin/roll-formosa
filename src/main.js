@@ -457,7 +457,7 @@ finale.setEffects(effects);
  * (sky element, fog:false, +3 draws finale-only — ledger worst 71/72).
  * Pack-driven: island shape, city pins, and palette come from activePack.ending.
  * finale.reset() owns hide() via the same setEarthView hook. */
-const endingView = new EndingView(renderer.scene, activePack.ending);
+const endingView = new EndingView(renderer.scene, activePack.ending, activePack.id);
 finale.setEarthView(endingView);
 /* v5 opening onboarding: parts-trail guide (EVT.GOAL_GUIDE kind:'parts').
  * Constructed AFTER the finale (state gate injected); updated at frame-order

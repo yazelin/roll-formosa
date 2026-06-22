@@ -262,34 +262,31 @@ export const PLACEMENTS = [
 /* ================================================================== */
 
 /**
- * 基隆河 river definition for the Taipei pack.
+ * 安平運河 river definition for the Tainan pack.
  *
  * Authored in REAL METERS (same coordinate frame as all cityMap geometry:
- * origin = ball start / 迪化街 shop, +X east, +Z south).
+ * origin = ball start, +X east, +Z south).
  *
- * A 5-point centerline + width (150 m) traces the river's real north→northeast
- * arc as a smooth diagonal ribbon (consumed by environment.js via ribbonQuads),
- * instead of the old 2-rect axis-aligned approximation that rendered a blocky L.
+ * A west→inland canal: anchored at the far-west edge (安平港 direction) and
+ * curving east-southeast toward the city core, as a smooth ribbon (consumed by
+ * environment.js via ribbonQuads). Distinct from 台北 基隆河's northern arc.
  *
  * The centerline stays within MAP_BOUNDS (x:-1800..1800, z:-1800..2000) and
- * clears the shop start (0,0) and the 101 goal (749,-252) — every point is at
- * z ≤ -200 (north of the play area / goal).
+ * clears the shop start (0,0) and the goal (749,-252) — closest approach ~640 m.
  *
- * color: slightly greenish-muddy blue (siltier than open-sea 0x2a4a6e),
- * evoking the river's characteristic turbid look.
- * yM: 0.3 m above ground (same as the old bay water — hides the seam).
+ * color: brackish canal green; yM: 0.3 m above ground (hides the seam).
  */
 export const water = Object.freeze({
   name: '安平運河',
   color: 0x3a5a52,
   yM: 0.3,
-  width: 150,
+  width: 110,
   centerline: Object.freeze([
-    Object.freeze({ x: -200, z: -620 }),
-    Object.freeze({ x:  400, z: -640 }),
-    Object.freeze({ x:  900, z: -560 }),
-    Object.freeze({ x: 1250, z: -420 }),
-    Object.freeze({ x: 1350, z: -200 }),
+    Object.freeze({ x: -1700, z: 200 }),
+    Object.freeze({ x: -1100, z: 400 }),
+    Object.freeze({ x:  -500, z: 560 }),
+    Object.freeze({ x:   100, z: 640 }),
+    Object.freeze({ x:   650, z: 600 }),
   ]),
 });
 

@@ -7,6 +7,10 @@ Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(
 > 加城市一律照 `docs/ADD-A-CITY.md` 全流程(scaffold → 8 地標 + 13 收藏在地化 →
 > archetypes t0–t6 換成在地小物別沿用台北 → finale 終點地標 → 補 active.js →
 > `public/assets/title/skyline-<id>.webp` 天際線剪影)。`npm test` 要綠。
+> **河也要在地化**:`cityMap.js` 的 `water`(名稱 + centerline + 註解)不可留台北基隆河
+> —— 換成這座城市的河/運河/溪,避開起點(0,0)與終點。`river-localization.test.js` 會擋。
+> **結尾(`ending.js`)不要動**:已是共用 `../taiwanEnding.js`,引擎依 active city id 自動
+> 點亮對應燈點。新城市只要 id 有在 `taiwanEnding.js` 的 CITIES 裡就自動正確,別在 pack 裡改它。
 > 每座的「終點地標 / 主題」是創作錨點,doer 照它發揮、不要照搬別城。
 
 ## 待辦城市(由標誌性 + 地理分散排序)

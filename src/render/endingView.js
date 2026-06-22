@@ -37,12 +37,19 @@ import { mulberry32 } from '../core/rng.js';
 /* ---- tunables --------------------------------------------------------- */
 /** Island half-size in sim-space = ISLAND_R_K * ballRadiusSim. The v5 globe
  *  was EARTH_R_K=45; the flat island needs less, feels better at ~32. */
-const ISLAND_R_K = 32;
-/** Camera-to-island gap (in r) at ascension start / end — parallax sink. */
-const ISLAND_GAP0_K = 12;
-const ISLAND_GAP1_K = 30;
+// ponytail: was 32 — far too big to fit the 52° ascension FOV (only the top tip
+// showed → read as a "green triangle"). 11 fits the whole island in frame.
+const ISLAND_R_K = 11;
+/** Island depth below the rising anchor (in r) at ascension start / end. The
+ *  finale camera looks at anchorY - CINE_LOOK_DOWN_K(=6)*r, so the island centre
+ *  must sit near that depth to be framed (was 44..62 r below → off-screen). */
+const ISLAND_GAP0_K = 7;
+const ISLAND_GAP1_K = 13;
 /** Island tilts slightly toward the camera for a birds-eye read. */
-const ISLAND_TILT_RAD = Math.PI * 0.08; // ~14 degrees forward tilt
+// ponytail: was 0.08 (~14°) — too flat for the oblique ~25° ascension camera, so
+// the tall Taiwan foreshortened into a blob. ~58° stands it up to face the camera
+// so the silhouette reads as Taiwan.
+const ISLAND_TILT_RAD = Math.PI * 0.32; // ~58 degrees — face the descending camera
 /** Extrusion depth (sim units relative to r) — gives the flat shape a little
  *  thickness so it catches the ambient light. */
 const EXTRUDE_DEPTH_K = 0.6;
@@ -80,7 +87,7 @@ export class EndingView {
    * @param {THREE.Scene} scene
    * @param {object} ending
    */
-  constructor(scene, ending) {
+  constructor(scene, ending, litCityId = '') {
     /** @type {THREE.Scene} */
     this._scene = scene;
     /** @type {THREE.Group} */
@@ -155,12 +162,15 @@ export class EndingView {
       cPos[i * 3]     = city.x;
       cPos[i * 3 + 1] = 0.02; // just above the island face
       cPos[i * 3 + 2] = city.z;
-      const c = city.lit ? litColor : dimColor;
+      // Engine decides "lit" from the active city id (doer-proof) — falls back
+      // to a per-city `lit` flag if a pack still ships one.
+      const isLit = litCityId ? city.id === litCityId : !!city.lit;
+      const c = isLit ? litColor : dimColor;
       cCol[i * 3]     = c.r;
       cCol[i * 3 + 1] = c.g;
       cCol[i * 3 + 2] = c.b;
       // Lit cities twinkle brightly; dim cities barely flicker.
-      cTwk[i * 2]     = city.lit ? (0.5 + 0.4 * rng()) : (0.05 + 0.05 * rng());
+      cTwk[i * 2]     = isLit ? (0.5 + 0.4 * rng()) : (0.05 + 0.05 * rng());
       cTwk[i * 2 + 1] = rng() * TWO_PI;
     }
     const cityGeo = new THREE.BufferGeometry();
@@ -280,7 +290,7 @@ export class EndingView {
   setAnchor(x, y, z, r) {
     // Island hangs below the rising anchor, same gap law as the globe.
     const gap = ISLAND_GAP0_K + (ISLAND_GAP1_K - ISLAND_GAP0_K) * this._u;
-    const islandY = y - (ISLAND_R_K + gap) * r;
+    const islandY = y - gap * r;
     const islandScale = ISLAND_R_K * r;
 
     this._island.position.set(x, islandY, z);

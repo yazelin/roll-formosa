@@ -262,34 +262,32 @@ export const PLACEMENTS = [
 /* ================================================================== */
 
 /**
- * 基隆河 river definition for the Taipei pack.
+ * 綠川 river definition for the Taichung pack.
  *
  * Authored in REAL METERS (same coordinate frame as all cityMap geometry:
- * origin = ball start / 迪化街 shop, +X east, +Z south).
+ * origin = ball start, +X east, +Z south).
  *
- * A 5-point centerline + width (150 m) traces the river's real north→northeast
- * arc as a smooth diagonal ribbon (consumed by environment.js via ribbonQuads),
- * instead of the old 2-rect axis-aligned approximation that rendered a blocky L.
+ * 綠川 is a downtown Taichung stream running roughly north→south through the old
+ * city — so this is a N-S ribbon on the WEST side of the play area (consumed by
+ * environment.js via ribbonQuads). Distinct from 台北 基隆河's E-W northern arc.
  *
  * The centerline stays within MAP_BOUNDS (x:-1800..1800, z:-1800..2000) and
- * clears the shop start (0,0) and the 101 goal (749,-252) — every point is at
- * z ≤ -200 (north of the play area / goal).
+ * clears the shop start (0,0) and the goal — closest approach ~300 m, well west
+ * of the eastern goal.
  *
- * color: slightly greenish-muddy blue (siltier than open-sea 0x2a4a6e),
- * evoking the river's characteristic turbid look.
- * yM: 0.3 m above ground (same as the old bay water — hides the seam).
+ * color: greenish stream water; yM: 0.3 m above ground (hides the seam).
  */
 export const water = Object.freeze({
-  name: '基隆河',
+  name: '綠川',
   color: 0x3a5a52,
   yM: 0.3,
-  width: 150,
+  width: 90,
   centerline: Object.freeze([
-    Object.freeze({ x: -200, z: -620 }),
-    Object.freeze({ x:  400, z: -640 }),
-    Object.freeze({ x:  900, z: -560 }),
-    Object.freeze({ x: 1250, z: -420 }),
-    Object.freeze({ x: 1350, z: -200 }),
+    Object.freeze({ x: -650, z: -1500 }),
+    Object.freeze({ x: -450, z:  -800 }),
+    Object.freeze({ x: -300, z:  -100 }),
+    Object.freeze({ x: -200, z:   600 }),
+    Object.freeze({ x: -100, z:  1300 }),
   ]),
 });
 
