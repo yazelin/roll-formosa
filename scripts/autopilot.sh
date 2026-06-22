@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Autopilot: 讀 NEXT.md 挑一條 → branch → headless Claude 做 → npm test gate → 開 PR → 停手(人工 merge)。
+#            doer 順手回報 FINDINGS → 開成 autopilot-found issue(燃料自我補充)。
+# ponytail: shell 管 git+test+PR+issue,Claude 只管做事+回報。先筆電手動證機制,跑順再搬常開機器掛 cron。
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+gh label create autopilot --color ededed 2>/dev/null || true
+gh label create autopilot-found --color fbca04 2>/dev/null || true
+
+git fetch -q origin
+git checkout -q main
+git pull -q --ff-only
+
+ITEM=$(grep -m1 -- '- \[ \]' NEXT.md || true)
+[ -z "$ITEM" ] && { echo "NEXT.md backlog 空,結束。"; exit 0; }
+TASK="${ITEM#*] }"
+echo "本次任務: $TASK"
+
+BR="autopilot/$(date +%Y%m%d-%H%M%S)"
+git checkout -q -b "$BR"
+
+OUT=$(claude -p "你是 roll-formosa repo 的 autopilot。先讀 NEXT.md 和 docs/ADD-A-CITY.md。\
+只做這一條 backlog:${ITEM}。嚴守它寫的範圍。可以跑 scaffold/build 等指令,\
+但不要 git commit/push、不要開 PR、不要 merge(外層腳本會處理),不用自己跑 npm test(外層會跑)。\
+做完把 NEXT.md 該行 [ ] 改成 [x]。\
+最後**精確**用這格式輸出(給腳本解析,別多話):\
+第一行 'SUMMARY: <一句你改了什麼>';\
+接著一行 'FINDINGS:';\
+然後每行 '- <做事時順手發現、具體可執行、屬於本 repo 的事項>',最多 3 條,沒有就寫 '- none'。" \
+  --dangerously-skip-permissions 2>&1)
+echo "$OUT"
+
+echo "== gate: npm test =="
+npm test
+
+git add -A
+git commit -q -m "autopilot: $TASK" || { echo "沒有變更,放棄。"; git checkout -q main; exit 0; }
+git push -q -u origin "$BR"
+gh pr create --fill --base main --head "$BR" --label autopilot
+
+# FINDINGS -> issues (上限 3、dedup vs 既有 open autopilot-found)
+mapfile -t EXIST < <(gh issue list --state open --label autopilot-found --json title -q '.[].title' 2>/dev/null || true)
+echo "$OUT" | sed -n '/^FINDINGS:/,$p' | grep -E '^- ' | sed 's/^- //' | grep -vix 'none' | head -3 | while IFS= read -r f; do
+  for e in "${EXIST[@]:-}"; do [ "$e" = "$f" ] && { echo "skip dup: $f"; continue 2; }; done
+  gh issue create --title "$f" --label autopilot-found \
+    --body "autopilot 在做「$TASK」時發現。提案燃料,需人工 triage,核准後才進 NEXT.md。" \
+    && echo "issue 開了: $f"
+done
+
+echo "完成:PR + findings 已處理,等你 review。"
