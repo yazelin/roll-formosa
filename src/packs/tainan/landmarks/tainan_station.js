@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/main_station.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/tainan_station.js — Roll Formosa Tainan pack.
  *
  * 臺南火車站 (Tainan Station) — the 1936 station building. Silhouette: a
  * symmetrical two-storey cream/tan modern block with a flat roof, a central
@@ -26,8 +26,8 @@ const CANOPY = 0xb6a583; // entrance canopy
 const SIGN = 0xb24a36; // sign / clock band accent
 const CLOCK = 0xf0ead8; // clock face
 
-export const NM_STATION = {
-  id: 'main_station',
+export const NM_TAINAN_STATION = {
+  id: 'tainan_station',
   name: '臺南火車站',
   landmarkId: 1,
   dioramaRHint: 70,
@@ -112,4 +112,4 @@ export const NM_STATION = {
   },
 };
 
-export default NM_STATION;
+export default NM_TAINAN_STATION;

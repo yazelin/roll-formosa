@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/ximen.js — Roll Formosa Tainan pack, landmark 2.
+ * @file packs/tainan/landmarks/tainan_confucius.js — Roll Formosa Tainan pack, landmark 2.
  *
  * 臺南孔子廟 (Tainan Confucius Temple), 全臺首學 — the first place of learning in
  * Taiwan. Silhouette: a long, low RED-walled temple hall (大成殿) crowned by a
@@ -48,8 +48,8 @@ function _spurs(out, y, hx, hz, len) {
   }
 }
 
-export const NM_XIMEN = {
-  id: 'ximen_redhouse',
+export const NM_CONFUCIUS = {
+  id: 'tainan_confucius_temple',
   name: '臺南孔廟',
   landmarkId: 2,
   dioramaRHint: 24, // long temple hall footprint radius (m)
@@ -107,4 +107,4 @@ export const NM_XIMEN = {
   },
 };
 
-export default NM_XIMEN;
+export default NM_CONFUCIUS;

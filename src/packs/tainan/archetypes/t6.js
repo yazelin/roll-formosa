@@ -1,9 +1,10 @@
 /**
  * @file packs/taipei/archetypes/t6.js — Roll Formosa Taipei pack, Tier 6.
  *
- * T6 — 信義天際線 (Xinyi night skyline). The finale band: glass curtain-wall
- * highrises, business towers, cross-street skybridges and rooftop mech rooms
- * lit against the 信義夜空 deep blue-violet sky. Ten ArchetypeDefs, authored in
+ * T6 — 安平港天際線 (Anping harbor skyline). The finale band: the Anping
+ * lighthouse, fishing boats, port containers, oyster racks, harbor cranes and
+ * old red-brick warehouses lit against the deep blue-violet night sky, with one
+ * business tower for the skyline. Ten ArchetypeDefs, authored in
  * the FROZEN tier order (tiers.js T6.archetypeIds) — slots [0..7] absorbable,
  * slots [8..9] repeatable chunk landmarks (lower spawnWeight).
  *
@@ -17,131 +18,175 @@
  * Size band: 60-300 m radiusNominal (Xinyi skyscraper scale).
  */
 
-import { box, cyl, cone, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, cone, sph, towerBanded, finish, PI, HALF_PI } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 安平燈塔 Anping lighthouse ----------------------------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'anping_lighthouse',
+    displayName: '安平燈塔',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 180,
+    radiusNominal: 160,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
+    palette: [0xf2f2ee, 0xd83a2c, 0x2a2c34, 0xc8ccd2, 0xffe08a],
     yOffset: -0.04,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.78,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and a vertical mullion seam.
+      // White tapered lighthouse tower with a red lantern gallery, glass light
+      // room and a small light beacon on top.
+      const white = 0xffffff;
       return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.7 }), // glass shaft (cool blue + lit windows)
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
+        // wide base ring / plinth
+        cyl(0.95, 1.05, 0.5, 12, 0xe6e2d8, { y: 0.25 }),
+        // tapered white tower shaft
+        cyl(0.62, 0.9, 3.3, 12, white, { y: 2.0, hex2: 0xf4f4ee }),
+        // red gallery deck near the top
+        cyl(0.82, 0.82, 0.3, 12, 0xd83a2c, { y: 3.75 }),
+        cyl(0.86, 0.86, 0.06, 12, 0x2a2c34, { y: 3.92, open: true }), // dark rail ring
+        // glass light room (lantern)
+        cyl(0.5, 0.5, 0.7, 10, 0xbfe2f0, { y: 4.25, hex2: 0xffe08a }),
+        // red domed cap roof
+        cone(0.58, 0.6, 10, 0xd83a2c, { y: 4.9 }),
+        // little beacon light + finial
+        sph(0.16, 0xffe08a, { ws: 6, hs: 4, y: 5.3 }),
+        cyl(0.03, 0.03, 0.3, 5, 0x2a2c34, { y: 5.55 }),
       ]);
     },
   },
 
-  /* ---- slot 1: 跨橋 cross bridge -------------------------------------- */
+  /* ---- slot 1: 漁船 fishing boat (Anping harbor) --------------------- */
   {
-    id: 'cross_bridge',
-    displayName: '跨橋',
+    id: 'fishing_boat',
+    displayName: '漁船',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 200,
+    radiusNominal: 190,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xb8b0a4, 0xc8c0b4, 0xe05a4a, 0xd8d4cc, 0xffd25a],
-    yOffset: -0.561,
+    palette: [0x2f6db0, 0xe8e4da, 0xd83a2c, 0x3a3f52, 0xf0c040],
+    yOffset: -0.42,
     upright: true,
-    collisionScale: 0.55,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      // Cable-stayed road bridge: two A-pylons, a long deck, fanned stay cables.
+      // A small coastal fishing trawler: hull, wheelhouse cabin, mast with a
+      // boom and a few buoys / antenna. Painted blue hull + white cabin.
+      const hull = 0x2f6db0;
+      const white = 0xe8e4da;
       const parts = [
-        box(4.2, 0.16, 0.9, 0xc4bcb0, { y: 1.2 }), // deck (concrete)
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: 0.42 }), // parapet rail near
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: -0.42 }), // parapet rail far
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: -3.0, y: 0.55 }), // approach pier
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: 3.0, y: 0.55 }), // approach pier
+        // hull body (boxy, slightly tapered bow via an end cone)
+        box(4.0, 0.9, 1.3, hull, { y: 0.75, hex2: 0x255a96 }),
+        cone(0.9, 1.4, 4, hull, { rz: -HALF_PI, x: 2.6, y: 0.75 }), // pointed bow
+        // white waterline / gunwale stripe
+        box(4.2, 0.16, 1.36, white, { y: 1.12 }),
+        box(4.2, 0.1, 1.4, 0xd83a2c, { y: 1.0 }), // red boot stripe
+        // open deck floor
+        box(3.4, 0.08, 1.0, 0xc8b890, { y: 1.22 }),
+        // wheelhouse cabin toward the stern
+        box(1.3, 1.0, 1.0, white, { x: -1.0, y: 1.75, hex2: 0xf2f0e8 }),
+        box(1.0, 0.4, 0.86, 0x2a3138, { x: -1.0, y: 1.95, z: 0.0 }), // dark windows band
+        // cabin roof + small rail
+        box(1.4, 0.12, 1.1, 0x9aa0ac, { x: -1.0, y: 2.3 }),
+        // mast with a boom arm
+        cyl(0.07, 0.08, 2.4, 6, 0xb0b6c0, { x: 0.2, y: 2.4 }),
+        box(1.8, 0.07, 0.07, 0x9aa0ac, { x: 0.6, y: 2.6 }), // boom
+        // pennant flag on the mast
+        box(0.5, 0.3, 0.03, 0xf0c040, { x: 0.45, y: 3.4 }),
+        // a couple of round buoys hung on the side
+        sph(0.24, 0xf0c040, { ws: 6, hs: 4, x: 1.4, y: 1.3, z: 0.7, hex2: 0xff8a3d }),
+        sph(0.22, 0xd83a2c, { ws: 6, hs: 4, x: 0.6, y: 1.3, z: 0.72 }),
       ];
-      // Two A-frame pylons rising from the deck.
-      for (const px of [-1.1, 1.1]) {
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: 0.13, x: px - 0.18, y: 2.15 })); // pylon leg
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: -0.13, x: px + 0.18, y: 2.15 })); // pylon leg
-        parts.push(box(0.5, 0.12, 0.16, 0xe05a4a, { x: px, y: 2.7 })); // pylon crossbeam
-        // fanned stay cables both directions
-        for (let i = 0; i < 3; i++) {
-          const span = 0.55 + i * 0.55;
-          const len = Math.hypot(span, 1.65);
-          const ang = Math.atan2(span, 1.65);
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: ang, x: px - span / 2, y: 2.1 })); // cable left
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: -ang, x: px + span / 2, y: 2.1 })); // cable right
-        }
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 2: 其他摩天樓 other skyscraper --------------------------- */
+  /* ---- slot 2: 貨櫃 shipping containers (stacked at the port) -------- */
   {
-    id: 'other_skyscraper',
-    displayName: '其他摩天樓',
+    id: 'shipping_container',
+    displayName: '貨櫃',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 190,
+    radiusNominal: 170,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
-    yOffset: -0.046,
+    palette: [0xd83a2c, 0x2f8f6a, 0x2f6db0, 0xe0a020, 0x9aa0ac],
+    yOffset: -0.04,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic Xinyi peer.
-      return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block (setback)
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
-      ]);
+      // A neat stack/cluster of corrugated intermodal shipping containers in
+      // mixed harbor colors. One ribbed box, replicated with ridges.
+      const colors = [0xd83a2c, 0x2f8f6a, 0x2f6db0, 0xe0a020, 0x9a3a8a];
+      const parts = [];
+      // each container: a long box + door-end frame + a few corrugation ribs
+      const makeBox = (cx, cy, cz, col) => {
+        parts.push(box(3.2, 0.95, 1.1, col, { x: cx, y: cy, z: cz, hex2: col }));
+        // top & bottom edge rails (darker)
+        parts.push(box(3.24, 0.1, 1.14, 0x2a2c30, { x: cx, y: cy + 0.45, z: cz }));
+        parts.push(box(3.24, 0.1, 1.14, 0x2a2c30, { x: cx, y: cy - 0.45, z: cz }));
+        // door end (corner casting bars)
+        parts.push(box(0.08, 0.95, 1.14, 0x8a8278, { x: cx + 1.6, y: cy, z: cz }));
+        // a few vertical corrugation ribs
+        for (let i = 0; i < 5; i++) {
+          parts.push(box(0.05, 0.85, 1.16, 0x000000, { x: cx - 1.2 + i * 0.6, y: cy, z: cz, hex2: col }));
+        }
+      };
+      // bottom row of two, one stacked on top
+      makeBox(-0.2, 0.5, 0.65, colors[0]);
+      makeBox(0.1, 0.5, -0.65, colors[1]);
+      makeBox(-0.05, 1.5, 0.0, colors[2]);
+      return finish(parts);
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ------------------------------- */
+  /* ---- slot 3: 蚵棚 oyster rack (Anping oyster-farming bamboo trestle) - */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'oyster_rack',
+    displayName: '蚵棚',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 110,
+    radiusNominal: 130,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
-    yOffset: -0.239,
+    palette: [0x9a7a52, 0x7a5a32, 0x6e6a5e, 0xc8b890, 0x4a525c],
+    yOffset: -0.24,
     upright: true,
-    collisionScale: 0.7,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      // A building face turned into a giant LED billboard wall: bright color panels.
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
+      // A bamboo oyster-farming trestle: rows of slanted bamboo legs with
+      // horizontal rails, and strings of oyster shells hanging down.
+      const bamboo = 0x9a7a52;
+      const dark = 0x7a5a32;
+      const shell = 0xc8c2b0;
       const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building (dark)
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard backing frame
+        // top horizontal rails (the rack frame)
+        box(4.2, 0.12, 0.12, dark, { y: 2.0, z: 0.5 }),
+        box(4.2, 0.12, 0.12, dark, { y: 2.0, z: -0.5 }),
+        box(0.12, 0.12, 1.2, dark, { x: -1.9, y: 2.0 }),
+        box(0.12, 0.12, 1.2, dark, { x: 1.9, y: 2.0 }),
       ];
-      // 3 x 4 grid of glowing LED panels on the front face
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 })); // LED panel
+      // slanted A-frame bamboo legs along the length (low seg)
+      const legX = [-1.6, 0.0, 1.6];
+      for (const lx of legX) {
+        parts.push(cyl(0.08, 0.1, 2.3, 5, bamboo, { rz: 0.18, x: lx - 0.2, y: 1.0, z: 0.4 }));
+        parts.push(cyl(0.08, 0.1, 2.3, 5, bamboo, { rz: -0.18, x: lx + 0.2, y: 1.0, z: -0.4 }));
+      }
+      // hanging strings of oyster shells (vertical cords with shell clumps)
+      const cordX = [-1.2, 0.0, 1.2];
+      for (let i = 0; i < cordX.length; i++) {
+        const cx = cordX[i];
+        const cz = (i % 2 ? 0.25 : -0.25);
+        parts.push(box(0.03, 1.5, 0.03, 0x4a525c, { x: cx, y: 1.2, z: cz })); // cord
+        // a few clustered shells down the cord (low seg)
+        for (let s = 0; s < 3; s++) {
+          parts.push(sph(0.15, shell, { ws: 4, hs: 3, sy: 0.6, x: cx, y: 1.6 - s * 0.42, z: cz, hex2: 0xe0dcc8 }));
         }
       }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // ground catwalk
       return finish(parts);
     },
   },
@@ -173,61 +218,84 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 繫船柱 mooring bollards on the wharf ------------------- */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'mooring_bollard',
+    displayName: '繫船柱',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 85,
+    radiusNominal: 80,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
-    yOffset: -0.427,
+    palette: [0x3a3f48, 0x4a525c, 0x6a7280, 0xc8b890, 0xe88030],
+    yOffset: -0.5,
     upright: true,
-    collisionScale: 0.65,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
-      return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
-      ]);
+      // A pair of cast-iron mooring bollards bolted to a concrete wharf edge,
+      // with a thick mooring rope looped between them.
+      const iron = 0x3a3f48;
+      const parts = [
+        // concrete wharf slab
+        box(4.0, 0.5, 1.4, 0xc4bca8, { y: 0.25, hex2: 0xd4ccb8 }),
+        // edge curb stripe (safety)
+        box(4.0, 0.12, 0.2, 0xe88030, { y: 0.55, z: 0.6 }),
+      ];
+      // two bollards (low seg)
+      for (const bx of [-1.1, 1.1]) {
+        parts.push(cyl(0.42, 0.5, 0.2, 7, 0x4a525c, { x: bx, y: 0.6 })); // base flange
+        parts.push(cyl(0.3, 0.34, 1.0, 7, iron, { x: bx, y: 1.15, hex2: 0x4a525c })); // post body
+        parts.push(cyl(0.42, 0.36, 0.3, 7, iron, { x: bx, y: 1.75 })); // mushroom head
+        parts.push(sph(0.42, iron, { ws: 6, hs: 3, thetaLen: HALF_PI, x: bx, y: 1.9 })); // domed cap
+      }
+      // thick rope looped between the two bollards (sag via two slanted segments)
+      parts.push(box(1.4, 0.14, 0.14, 0xc8b890, { rz: 0.3, x: -0.55, y: 1.5, hex2: 0xb0a078 }));
+      parts.push(box(1.4, 0.14, 0.14, 0xc8b890, { rz: -0.3, x: 0.55, y: 1.5, hex2: 0xb0a078 }));
+      // coiled rope heap on the deck
+      parts.push(cyl(0.5, 0.5, 0.18, 8, 0xc8b890, { x: 0.0, y: 0.62, hex2: 0xb0a078 }));
+      parts.push(cyl(0.34, 0.34, 0.18, 7, 0xb0a078, { x: 0.0, y: 0.78 }));
+      return finish(parts);
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 安平倉庫 old red-brick harbor warehouse --------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'harbor_warehouse',
+    displayName: '安平倉庫',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 68,
+    radiusNominal: 90,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
+    palette: [0xa8462c, 0x8a3a24, 0xc8b890, 0x6e6a5e, 0x3a3f48],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
+      // A weathered colonial-era red-brick harbor warehouse (德記洋行 style):
+      // long brick block, arched arcade openings, low gabled tiled roof.
+      const brick = 0xa8462c;
+      const brick2 = 0x8a3a24;
+      const stone = 0xc8b890;
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        // main brick block
+        box(4.2, 2.0, 2.2, brick, { y: 1.0, hex2: brick2 }),
+        // white-stone base plinth
+        box(4.3, 0.4, 2.3, stone, { y: 0.2 }),
+        // stone cornice band near the top
+        box(4.36, 0.2, 2.26, stone, { y: 1.85 }),
+        // low gabled roof (two pitched tile slabs)
+        box(4.4, 0.18, 1.3, 0x6e3a28, { y: 2.3, z: 0.6, rx: -0.32, hex2: 0x8a4a30 }),
+        box(4.4, 0.18, 1.3, 0x6e3a28, { y: 2.3, z: -0.6, rx: 0.32, hex2: 0x8a4a30 }),
+        box(4.4, 0.16, 0.16, 0x5a3020, { y: 2.55 }), // ridge cap
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
+      // arched arcade openings along the front (5 bays)
+      for (let i = 0; i < 5; i++) {
+        const ax = -1.6 + i * 0.8;
+        parts.push(box(0.5, 1.0, 0.12, 0x2a2c30, { x: ax, y: 0.85, z: 1.1 })); // dark doorway
+        parts.push(cyl(0.26, 0.26, 0.12, 6, 0x2a2c30, { x: ax, y: 1.35, z: 1.1, rx: HALF_PI, thetaLen: PI, theta0: 0 })); // arch top
+        parts.push(box(0.62, 0.1, 0.16, stone, { x: ax, y: 1.5, z: 1.12 })); // arch keystone band
+      }
       return finish(parts);
     },
   },

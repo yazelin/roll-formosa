@@ -89,7 +89,7 @@ describe('taipei catalog surface', () => {
     // P7: Taipei collectibles resolve (codes 70 + 94); remaining Tokyo placeholders too.
     expect(CATALOG['black_bear']).toBeDefined();
     expect(CATALOG['mazu']).toBeDefined();
-    expect(CATALOG['palace_museum']).toBeDefined();
+    expect(CATALOG['qigu_salt_mountain']).toBeDefined();
   });
 
   it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Tokyo names left)', () => {

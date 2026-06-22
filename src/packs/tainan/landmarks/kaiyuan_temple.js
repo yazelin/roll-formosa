@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/maokong_station.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/kaiyuan_temple.js — Roll Formosa Tainan pack.
  *
  * 開元寺 (Kaiyuan Temple) — a large 臺南 Buddhist monastery. Silhouette: a wide,
  * grand main hall with a double-eave hip roof (重簷廡殿) of ochre/yellow tile,
@@ -42,8 +42,8 @@ function hipTier(out, w, d, rise, y, flare) {
   out.push(cone(1.0, rise * 0.4, 4, ROOF_L, { sx: w, sz: d, ry: PI / 4, y: y + rise * 0.2 + 0.08, hex2: ROOF }));
 }
 
-export const NM_MK_STATION = {
-  id: 'maokong_station',
+export const NM_KAIYUAN = {
+  id: 'kaiyuan_temple',
   name: '開元寺',
   colorHex: ROOF,
 
@@ -113,4 +113,4 @@ export const NM_MK_STATION = {
   },
 };
 
-export default NM_MK_STATION;
+export default NM_KAIYUAN;

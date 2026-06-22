@@ -20,7 +20,7 @@
  * winToast (spec §5.3 R13 bear-cheer zh-TW string; no 跨年煙火 per R13).
  */
 
-import { NM_TAIPEI101 } from './landmarks/taipei101.js';
+import { NM_HAYASHI } from './landmarks/hayashi_dept.js';
 
 /** Taipei 101 game-world position (REAL meters, origin = ball start).
  *  P6a: reuses the legacy goal-monument world anchor; P6b will update to real Xinyi coords. */
@@ -44,7 +44,7 @@ export const TAIPEI101_BASE_R_M = 72;
  */
 export const goalMonument = Object.freeze({
   /** Build the 101 tower mesh (unit-sphere normalized, ≤600 tris). */
-  buildGeometry: NM_TAIPEI101.buildGeometry,
+  buildGeometry: NM_HAYASHI.buildGeometry,
   /** Fixed real-meter world position (origin = ball start). */
   pos: TAIPEI101_POS,
   /** Display name (zh-TW). */

@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/syshall.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/shennong_street_lm.js — Roll Formosa Tainan pack.
  *
  * 神農街 (Shennong Street) — a preserved Qing-era 老街 in 五條港, lined with narrow
  * two-storey 街屋 (shophouses) standing shoulder to shoulder. Signature read: a
@@ -28,8 +28,8 @@ const DOOR = 0x3a281a; // dark doorway recess
 const LANTERN = 0xc8302a; // red hanging lantern
 const LANTERN_L = 0xe85a48; // lit lantern glow
 
-export const NM_SYSHALL = {
-  id: 'syshall',
+export const NM_SHENNONG_ST = {
+  id: 'shennong_street_lm',
   name: '神農街',
   landmarkId: 4,
   dioramaRHint: 30,
@@ -122,4 +122,4 @@ export const NM_SYSHALL = {
   },
 };
 
-export default NM_SYSHALL;
+export default NM_SHENNONG_ST;

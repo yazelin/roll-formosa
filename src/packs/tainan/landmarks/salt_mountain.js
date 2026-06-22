@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/palace_museum.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/salt_mountain.js — Roll Formosa Tainan pack.
  *
  * 七股鹽山 (Qigu Salt Mountain) — the famous man-made white mountain of salt left
  * on the 七股 salt fields. Silhouette: ONE big, tall, pure-white slightly lumpy
@@ -25,8 +25,8 @@ const STAIR = 0x6d7378; // dark metal staircase
 const SIGN = 0x9c5a36; // small wooden sign post
 const SIGN_BD = 0xe6ddc8; // sign board
 
-export const NM_PALACE = {
-  id: 'palace_museum',
+export const NM_SALT_MTN = {
+  id: 'qigu_salt_mountain',
   name: '七股鹽山',
   landmarkId: 9,
   dioramaRHint: 60,
@@ -80,4 +80,4 @@ export const NM_PALACE = {
   },
 };
 
-export default NM_PALACE;
+export default NM_SALT_MTN;

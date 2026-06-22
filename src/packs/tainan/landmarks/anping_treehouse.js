@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/rainbow_bridge_tp.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/anping_treehouse.js — Roll Formosa Tainan pack.
  *
  * 安平樹屋 (Anping Tree House) — a derelict 19th-century brick warehouse in 安平
  * that has been completely swallowed by a giant 老榕 (banyan). Roofless red-brick
@@ -31,8 +31,8 @@ const FOLIAGE_L = 0x96a560; // sunlit leaf clump
 const FOLIAGE_D = 0x586633; // deep canopy shadow
 const ROOT_C = 0x9c9486; // pale aerial root
 
-export const NM_RAINBOW = {
-  id: 'rainbow_bridge_tp',
+export const NM_TREEHOUSE = {
+  id: 'anping_treehouse',
   name: '安平樹屋',
   landmarkId: 12,
   dioramaRHint: 60,
@@ -110,4 +110,4 @@ export const NM_RAINBOW = {
   },
 };
 
-export default NM_RAINBOW;
+export default NM_TREEHOUSE;

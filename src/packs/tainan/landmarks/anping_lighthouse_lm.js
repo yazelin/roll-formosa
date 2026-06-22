@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/miramar_wheel.js — Roll Formosa Tainan pack, hero LANDMARK.
+ * @file packs/tainan/landmarks/anping_lighthouse_lm.js — Roll Formosa Tainan pack, hero LANDMARK.
  *
  * 安平燈塔 (Anping Lighthouse) — the small white lighthouse marking the 安平 coast.
  * Silhouette: a simple tapered white tower (square-ish, slightly narrowing toward
@@ -26,8 +26,8 @@ const GLASS = 0xbfe2ef; // lamp glazing
 const LAMP = 0xffe08a; // warm lamp glow
 const BASE = 0xc9c4b6; // stone base
 
-export const NM_WHEEL = {
-  id: 'miramar_wheel',
+export const NM_LIGHTHOUSE_LM = {
+  id: 'anping_lighthouse_landmark',
   name: '安平燈塔',
   colorHex: WHITE,
 
@@ -87,4 +87,4 @@ export const NM_WHEEL = {
   },
 };
 
-export default NM_WHEEL;
+export default NM_LIGHTHOUSE_LM;

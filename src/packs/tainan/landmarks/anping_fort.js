@@ -1,7 +1,7 @@
 /**
- * @file packs/tainan/landmarks/presidential.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/anping_fort.js — Roll Formosa Tainan pack.
  *
- * NM_PRESIDENTIAL — 安平古堡 (Anping Fort / Fort Zeelandia). Tainan's oldest
+ * NM_ANPING_FORT — 安平古堡 (Anping Fort / Fort Zeelandia). Tainan's oldest
  * Dutch-era fortress, re-read as a whitewashed silhouette: a square white-walled
  * fort base with a BATTERED (outward-sloping) outer wall, an old red-brick wall
  * fragment surviving at the foot, and the unmistakable WHITE cylindrical lookout
@@ -25,8 +25,8 @@ const BRICK2 = 0x8c4530; // darker brick course
 const RED = 0xc23a2e; // red mast / lighthouse cap tip
 const GREY = 0xb6afa0; // deck / shadow trim
 
-export const NM_PRESIDENTIAL = {
-  id: 'presidential_office',
+export const NM_ANPING_FORT = {
+  id: 'anping_fort',
   name: '安平古堡',
   landmarkId: 4,
   dioramaRHint: 140, // broad fort footprint with one tall corner lookout tower
@@ -77,4 +77,4 @@ export const NM_PRESIDENTIAL = {
   },
 };
 
-export default NM_PRESIDENTIAL;
+export default NM_ANPING_FORT;

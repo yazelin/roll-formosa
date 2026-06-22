@@ -1,7 +1,7 @@
 /**
- * @file packs/tainan/landmarks/cks_memorial.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/golden_castle.js — Roll Formosa Tainan pack.
  *
- * NM_CKS — 億載金城 (Eternal Golden Castle). Taiwan's first Western-style
+ * NM_GOLDEN_CASTLE — 億載金城 (Eternal Golden Castle). Taiwan's first Western-style
  * coastal fort: a low SQUARE earthwork rampart with angled BASTION corners
  * (diamond points jutting from each corner), a red-brick ARCHED gateway in the
  * front wall, grassy green ramparts on top, an old cannon on the wall, and a
@@ -26,8 +26,8 @@ const STONE = 0xcfc7b2; // gate surround / coping
 const IRON = 0x3a3d40; // old iron cannon
 const MOAT = 0x4e8a86; // blue-green moat water
 
-export const NM_CKS = {
-  id: 'cks_memorial',
+export const NM_GOLDEN_CASTLE = {
+  id: 'eternal_golden_castle',
   name: '億載金城',
   landmarkId: 5,
   dioramaRHint: 70, // square bastioned fort, ~ wide low earthwork
@@ -78,4 +78,4 @@ export const NM_CKS = {
   },
 };
 
-export default NM_CKS;
+export default NM_GOLDEN_CASTLE;

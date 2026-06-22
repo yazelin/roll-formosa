@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/grand_hotel.js — Roll Formosa Tainan pack, landmark 3.
+ * @file packs/tainan/landmarks/wu_temple.js — Roll Formosa Tainan pack, landmark 3.
  *
  * 祀典武廟 (Official God-of-War Temple) — landmarkId 3. The iconic image is its
  * long, TALL deep-vermilion FIREWALL / gable wall (山牆) running the length of
@@ -32,8 +32,8 @@ const ROOF_D = 0x2a3631; // roof underside / shadow
 const RIDGE = 0x4a5650; // ridge tile
 const STONE = 0xb0a89a; // doorway lintel / stone trim
 
-export const NM_GRAND_HOTEL = {
-  id: 'grand_hotel',
+export const NM_WU_TEMPLE = {
+  id: 'wu_temple',
   name: '祀典武廟',
   landmarkId: 3,
   dioramaRHint: 60, // long firewall street frontage footprint radius (m)
@@ -113,4 +113,4 @@ export const NM_GRAND_HOTEL = {
   },
 };
 
-export default NM_GRAND_HOTEL;
+export default NM_WU_TEMPLE;

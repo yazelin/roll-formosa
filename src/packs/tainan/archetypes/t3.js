@@ -109,37 +109,44 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 2 ── 變電箱 transformer / pad-mount box ────────────────────────────── */
+  /* 2 ── 老街木招牌 Shennong-St wooden hanging shop sign on a bracket ──── */
   {
-    id: 'transformer_box',
-    displayName: '變電箱',
+    id: 'oldstreet_wood_sign',
+    displayName: '老街木招牌',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 0.7,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x4f7d52, 0x3a5e3c, 0xd8d2a8, 0x2a2c30, 0xb0a060],
+    palette: [0x7a4a24, 0x5e3818, 0xc8a050, 0xb01f2e, 0xe8d8b0],
     yOffset: -0.18,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.62,
     buildGeometry(rng) {
-      const green = 0x4f7d52;
+      const wood = 0x7a4a24; // dark aged wood
+      const dark = 0x5e3818;
+      const gold = 0xc8a050;
       const parts = [];
-      // concrete plinth
-      parts.push(box(1.05, 0.18, 0.85, 0x8c8a82, { x: 0, y: 0.09 }));
-      // main cabinet body (gradient to a darker top)
-      parts.push(box(0.95, 1.5, 0.75, green, { x: 0, y: 0.95, hex2: 0x3a5e3c }));
-      // louver vents (front strips)
-      for (let i = 0; i < 4; i++) {
-        parts.push(box(0.7, 0.06, 0.02, 0x2a2c30, { x: 0, y: 0.55 + i * 0.22, z: 0.385 }));
+      // upright wall post the bracket bolts onto
+      parts.push(box(0.22, 2.4, 0.22, dark, { x: -0.7, y: 1.2, hex2: wood }));
+      // horizontal bracket arm jutting out
+      parts.push(box(1.0, 0.16, 0.16, wood, { x: -0.2, y: 2.1 }));
+      // little diagonal brace under the arm
+      parts.push(box(0.7, 0.1, 0.1, dark, { x: -0.35, y: 1.78, rz: 0.7 }));
+      // two short chains/hooks holding the board
+      parts.push(cyl(0.03, 0.03, 0.34, 5, gold, { x: -0.05, y: 1.86 }));
+      parts.push(cyl(0.03, 0.03, 0.34, 5, gold, { x: 0.5, y: 1.86 }));
+      // tall hanging wooden sign board (calligraphy shop sign)
+      parts.push(box(0.66, 1.4, 0.12, wood, { x: 0.22, y: 1.0, hex2: 0x8a5a30 }));
+      // carved gold frame edge
+      parts.push(box(0.7, 0.1, 0.14, gold, { x: 0.22, y: 1.68 }));
+      parts.push(box(0.7, 0.1, 0.14, gold, { x: 0.22, y: 0.32 }));
+      // red lacquer character panel down the middle
+      parts.push(box(0.32, 1.0, 0.16, 0xb01f2e, { x: 0.22, y: 1.0, hex2: 0x8a1822 }));
+      // three gold "character" blocks suggesting carved text
+      for (let i = 0; i < 3; i++) {
+        parts.push(box(0.2, 0.18, 0.04, gold, { x: 0.22, y: 1.34 - i * 0.34, z: 0.1 }));
       }
-      // hazard plate
-      parts.push(box(0.3, 0.3, 0.02, 0xd8d2a8, { x: 0.28, y: 1.05, z: 0.39 }));
-      // lid / roof lip
-      parts.push(box(1.02, 0.1, 0.82, 0x3a5e3c, { x: 0, y: 1.74 }));
-      // bushing knobs on roof
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: -0.25, y: 1.86 }));
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: 0.25, y: 1.86 }));
       return finish(parts);
     },
   },
@@ -221,115 +228,129 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 5 ── 路樹 street tree (trimmed boulevard tree) ─────────────────────── */
+  /* 5 ── 鳳凰木 flame tree (Tainan's city tree, fiery orange-red bloom) ── */
   {
-    id: 'street_tree',
-    displayName: '路樹',
+    id: 'flame_tree',
+    displayName: '鳳凰木',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 2.2,
+    radiusNominal: 2.4,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x5a3d28, 0x2f6b39, 0x3f8a47, 0x245029, 0x7a5a3a],
+    palette: [0x5a3d28, 0xe0461f, 0xf26a28, 0x2f6b39, 0x7a5a3a],
     yOffset: -0.05,
     upright: true,
     collisionScale: 0.62,
     buildGeometry(rng) {
       const parts = [];
       // trunk
-      parts.push(cyl(0.16, 0.24, 1.4, 7, 0x5a3d28, { x: 0, y: 0.7, hex2: 0x7a5a3a }));
-      // root collar / tree grate ring
-      parts.push(torus(0.4, 0.07, 5, 8, 0x3a3d46, { x: 0, y: 0.04, rx: HALF_PI }));
-      // canopy = clustered low-detail icospheres for a leafy blob
-      const greens = [0x2f6b39, 0x3f8a47, 0x245029];
+      parts.push(cyl(0.18, 0.26, 1.3, 7, 0x5a3d28, { x: 0, y: 0.65, hex2: 0x7a5a3a }));
+      // a couple of spreading branches (flame trees have a wide flat crown)
+      parts.push(cyl(0.1, 0.14, 1.0, 6, 0x6a4a2c, { x: -0.5, y: 1.5, rz: 0.6 }));
+      parts.push(cyl(0.1, 0.14, 1.0, 6, 0x6a4a2c, { x: 0.5, y: 1.5, rz: -0.6 }));
+      // broad, flat-topped canopy of fiery red-orange blossom blobs
+      const fire = [0xe0461f, 0xf26a28, 0xd83518];
       const blobs = [
-        [0, 2.0, 0, 0.95],
-        [0.55, 1.75, 0.2, 0.6],
-        [-0.5, 1.8, -0.25, 0.62],
-        [0.15, 2.45, -0.1, 0.6],
-        [-0.2, 2.2, 0.5, 0.5],
+        [0, 2.1, 0, 1.0],
+        [0.85, 1.95, 0.25, 0.62],
+        [-0.85, 2.0, -0.2, 0.64],
+        [0.3, 2.25, -0.6, 0.58],
+        [-0.35, 2.2, 0.6, 0.56],
+        [0.0, 2.4, 0.0, 0.52],
       ];
       for (let i = 0; i < blobs.length; i++) {
         const [bx, by, bz, br] = blobs[i];
-        const c = greens[i % greens.length];
-        parts.push(sph(br, c, { x: bx, y: by, z: bz, ws: 6, hs: 4, hex2: 0x3f8a47 }));
+        const c = fire[i % fire.length];
+        parts.push(sph(br, c, { x: bx, y: by, z: bz, ws: 6, hs: 4, hex2: 0xf2843a }));
       }
+      // a few green leaf clumps peeking under the blossoms
+      parts.push(sph(0.42, 0x2f6b39, { x: 0.6, y: 1.7, z: -0.3, ws: 5, hs: 3 }));
+      parts.push(sph(0.4, 0x245029, { x: -0.55, y: 1.72, z: 0.34, ws: 5, hs: 3 }));
       return finish(parts);
     },
   },
 
-  /* 6 ── 棚架 awning frame (street-stall canopy frame + tarp) ──────────── */
+  /* 6 ── 老街燈籠串 Shennong-St red lantern string strung across the lane ─ */
   {
-    id: 'awning_frame',
-    displayName: '棚架',
+    id: 'oldstreet_lantern',
+    displayName: '老街燈籠串',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.7,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x9aa0ac, 0xc4203a, 0xe8e8ee, 0x2f6db0, 0x6d7079],
+    palette: [0xb01f2e, 0xe04a2a, 0xf0c040, 0x5e3818, 0x3a2a22],
     yOffset: -0.43,
     upright: true,
-    collisionScale: 0.66,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      const tarp = rng() < 0.5 ? 0xc4203a : 0x2f6db0; // red or blue striped tarp
+      const wood = 0x5e3818;
+      const red = 0xb01f2e;
+      const gold = 0xf0c040;
       const parts = [];
-      const post = 0x9aa0ac;
-      // 4 corner posts
-      const legs = [[-1.1, 1.1], [1.1, 1.1], [-1.1, -1.1], [1.1, -1.1]];
-      for (const [lx, lz] of legs) {
-        parts.push(cyl(0.06, 0.06, 2.0, 6, post, { x: lx, y: 1.0, z: lz }));
+      // two wooden poles either side of the lane
+      parts.push(cyl(0.1, 0.12, 2.6, 6, wood, { x: -1.9, y: 1.3, hex2: 0x7a4a24 }));
+      parts.push(cyl(0.1, 0.12, 2.6, 6, wood, { x: 1.9, y: 1.3, hex2: 0x7a4a24 }));
+      // the strung wire/beam across the top (slight sag look via flat beam)
+      parts.push(box(3.9, 0.06, 0.06, 0x2a1c14, { x: 0, y: 2.5 }));
+      // row of red lanterns hanging from the wire (kept low-tri)
+      const xs = [-1.3, 0.0, 1.3];
+      for (let i = 0; i < xs.length; i++) {
+        const lx = xs[i];
+        const drop = 0.1 + (i % 2) * 0.12; // slight stagger
+        const cy = 2.0 - drop;
+        // cord
+        parts.push(cyl(0.025, 0.025, 0.3, 4, 0x2a1c14, { x: lx, y: cy + 0.42 }));
+        // bulbous lantern body (low seg count)
+        parts.push(sph(0.32, red, { ws: 6, hs: 4, sy: 1.15, x: lx, y: cy, hex2: 0xe04a2a }));
+        // gold top cap + tassel
+        parts.push(cyl(0.13, 0.13, 0.06, 6, gold, { x: lx, y: cy + 0.32 }));
+        parts.push(cone(0.07, 0.16, 5, gold, { x: lx, y: cy - 0.46 }));
       }
-      // top frame rails
-      parts.push(box(2.32, 0.08, 0.08, 0x6d7079, { x: 0, y: 2.0, z: 1.1 }));
-      parts.push(box(2.32, 0.08, 0.08, 0x6d7079, { x: 0, y: 2.0, z: -1.1 }));
-      parts.push(box(0.08, 0.08, 2.32, 0x6d7079, { x: -1.1, y: 2.0 }));
-      parts.push(box(0.08, 0.08, 2.32, 0x6d7079, { x: 1.1, y: 2.0 }));
-      // pitched tarp roof — two slabs meeting at a low ridge
-      parts.push(box(2.5, 0.05, 1.35, tarp, { x: 0, y: 2.22, z: 0.62, rx: -0.28 }));
-      parts.push(box(2.5, 0.05, 1.35, 0xe8e8ee, { x: 0, y: 2.22, z: -0.62, rx: 0.28 }));
-      // ridge cap
-      parts.push(box(2.5, 0.06, 0.1, tarp, { x: 0, y: 2.42 }));
       return finish(parts);
     },
   },
 
-  /* 7 ── 石獅 stone guardian lion (temple-gate shishi) ─────────────────── */
+  /* 7 ── 劍獅門牌 Anping sword-lion door plaque (fierce face biting blade) ─ */
   {
-    id: 'stone_lion',
-    displayName: '石獅',
+    id: 'sword_lion_plaque',
+    displayName: '劍獅門牌',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.0,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xb9b3a4, 0x9c9686, 0xd8d3c5, 0x6e6a5e, 0xc4203a],
+    palette: [0xd8c9a8, 0xc24a30, 0xf0c040, 0x2a2c34, 0xb8b0a2],
     yOffset: -0.16,
     upright: true,
-    collisionScale: 0.72,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      const stone = 0xb9b3a4;
-      const stone2 = 0xd8d3c5;
+      const plaster = 0xd8c9a8; // pale plaster wall
+      const face = 0xc24a30;    // ruddy painted lion face
+      const gold = 0xf0c040;
+      const dark = 0x2a2c34;
       const parts = [];
-      // plinth base
-      parts.push(box(0.9, 0.4, 0.7, 0x9c9686, { x: 0, y: 0.2, hex2: 0x6e6a5e }));
-      // haunches / seated body
-      parts.push(box(0.6, 0.7, 0.55, stone, { x: 0.1, y: 0.72, hex2: stone2 }));
-      // chest rising to head
-      parts.push(box(0.55, 0.6, 0.5, stone, { x: -0.18, y: 1.0, hex2: stone2 }));
-      // head
-      parts.push(sph(0.34, stone, { x: -0.3, y: 1.5, ws: 7, hs: 5, hex2: stone2 }));
-      // curled mane (icosphere collar) + brow ridges
-      parts.push(sph(0.4, 0x9c9686, { x: -0.18, y: 1.42, ws: 7, hs: 4 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: 0.16, ws: 5, hs: 3 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: -0.16, ws: 5, hs: 3 }));
-      // front legs
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: 0.2 }));
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: -0.2 }));
-      // paws on a ball (left) — the lion's embroidered ball
-      parts.push(sph(0.16, 0xc4203a, { x: -0.5, y: 0.32, z: 0.2, ws: 6, hs: 4 }));
-      // tail
-      parts.push(sph(0.22, stone2, { x: 0.42, y: 1.05, ws: 6, hs: 4 }));
+      // small whitewashed wall section the plaque is mounted on
+      parts.push(box(1.7, 1.9, 0.3, plaster, { x: 0, y: 0.95, hex2: 0xe6dcc4 }));
+      // brick coping along the top of the wall
+      parts.push(box(1.8, 0.18, 0.4, 0x9a5a3a, { x: 0, y: 1.96 }));
+      // round lion-face medallion (disc facing forward)
+      parts.push(cyl(0.7, 0.7, 0.16, 10, face, { x: 0, y: 1.15, z: 0.2, rx: HALF_PI, hex2: 0xd85a3a }));
+      // domed lion face
+      parts.push(sph(0.6, face, { x: 0, y: 1.15, z: 0.28, ws: 8, hs: 5, hex2: 0xd85a3a }));
+      // curly mane bumps around the face (8 around)
+      const mane = 8;
+      for (let i = 0; i < mane; i++) {
+        const a = (i / mane) * PI * 2;
+        parts.push(sph(0.16, gold, { x: Math.cos(a) * 0.66, y: 1.15 + Math.sin(a) * 0.66, z: 0.18, ws: 4, hs: 3 }));
+      }
+      // fierce round eyes + nose
+      parts.push(sph(0.11, dark, { x: -0.2, y: 1.26, z: 0.6, ws: 4, hs: 3 }));
+      parts.push(sph(0.11, dark, { x: 0.2, y: 1.26, z: 0.6, ws: 4, hs: 3 }));
+      parts.push(sph(0.1, 0x8a1822, { x: 0, y: 1.08, z: 0.62, ws: 4, hs: 3 }));
+      // the sword clenched across the mouth (diagonal blade + hilt)
+      parts.push(box(1.5, 0.1, 0.1, 0xc8ccd4, { x: 0, y: 0.95, z: 0.62, rz: 0.5 }));
+      parts.push(box(0.3, 0.16, 0.12, gold, { x: -0.56, y: 0.7, z: 0.62, rz: 0.5 })); // hilt guard
       return finish(parts);
     },
   },

@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/longshan.js — Roll Formosa Tainan pack, landmark 1.
+ * @file packs/tainan/landmarks/chihkan_tower.js — Roll Formosa Tainan pack, landmark 1.
  *
  * 赤崁樓 (Chihkan Tower / Fort Provintia). The Dutch-era fort base was rebuilt
  * into a Han Chinese landmark: a tall RED-walled raised brick/stone platform
@@ -86,8 +86,8 @@ function _pavilion(out, cx, baseY, rng) {
   out.push(cone(0.12, 0.24, 6, GOLD, { x: cx, y: r2y + 0.84 }));
 }
 
-export const NM_LONGSHAN = {
-  id: 'longshan_temple',
+export const NM_CHIHKAN = {
+  id: 'chihkan_tower',
   name: '赤崁樓',
   landmarkId: 1,
   dioramaRHint: 28, // raised platform + twin pavilions footprint radius (m)
@@ -114,4 +114,4 @@ export const NM_LONGSHAN = {
   },
 };
 
-export default NM_LONGSHAN;
+export default NM_CHIHKAN;

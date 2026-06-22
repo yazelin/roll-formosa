@@ -1,7 +1,7 @@
 /**
- * @file packs/tainan/landmarks/arena.js — Roll Formosa Tainan pack, hero LANDMARK.
+ * @file packs/tainan/landmarks/chimei_museum.js — Roll Formosa Tainan pack, hero LANDMARK.
  *
- * NM_ARENA — 奇美博物館 (Chimei Museum). A grand neoclassical museum: a long
+ * NM_CHIMEI — 奇美博物館 (Chimei Museum). A grand neoclassical museum: a long
  * symmetric white-marble building with a CENTRAL domed rotunda fronted by a
  * triangular PEDIMENT carried on a colonnade of tall columns, two long
  * symmetric wings — and, IN FRONT, the circular Apollo fountain (a low round
@@ -28,8 +28,8 @@ const WIN = 0x44525c; // dark window glass
 const WATER = 0x6fb4c4; // fountain pool water
 const WATER_HI = 0xa6dceb; // jet / spray highlight
 
-export const NM_ARENA = {
-  id: 'taipei_arena',
+export const NM_CHIMEI = {
+  id: 'chimei_museum',
   name: '奇美博物館',
   landmarkId: 7,
   dioramaRHint: 60, // long symmetric neoclassical hall + forecourt fountain
@@ -92,4 +92,4 @@ export const NM_ARENA = {
   },
 };
 
-export default NM_ARENA;
+export default NM_CHIMEI;

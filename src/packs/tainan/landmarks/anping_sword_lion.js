@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/beimen.js — Roll Formosa Tainan pack, landmark 0.
+ * @file packs/tainan/landmarks/anping_sword_lion.js — Roll Formosa Tainan pack, landmark 0.
  *
  * 安平劍獅 — the Anping sword-lion talisman, a fierce guardian plaque hung over
  * doorways in the old Anping alleys to ward off evil. Silhouette: a square
@@ -35,8 +35,8 @@ const STEEL = 0x9aa4ad; // sword blade
 const STEEL_L = 0xc4ccd2; // blade highlight
 const HILT = 0x6e4a36; // sword hilt timber
 
-export const NM_BEIMEN = {
-  id: 'beimen',
+export const NM_SWORD_LION = {
+  id: 'anping_sword_lion',
   name: '安平劍獅',
   landmarkId: 0,
   dioramaRHint: 11, // a flat wall talisman plaque (integration may rescale)
@@ -111,4 +111,4 @@ export const NM_BEIMEN = {
   },
 };
 
-export default NM_BEIMEN;
+export default NM_SWORD_LION;

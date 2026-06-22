@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/national_theater.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/hele_plaza.js — Roll Formosa Tainan pack.
  *
  * 河樂廣場 (The Spring) — a modern urban lagoon park built where the old 中國城
  * mall was demolished, leaving a shallow rectangular water plaza ringed by
@@ -26,8 +26,8 @@ const TRUNK = 0x6f5436; // small tree trunk
 const LEAF = 0x6a9a4a; // tree foliage
 const LEAF_D = 0x4d7a35; // shaded foliage
 
-export const NM_THEATER = {
-  id: 'national_theater',
+export const NM_HELE = {
+  id: 'hele_plaza',
   name: '河樂廣場',
   landmarkId: 9,
   dioramaRHint: 50,
@@ -92,4 +92,4 @@ export const NM_THEATER = {
   },
 };
 
-export default NM_THEATER;
+export default NM_HELE;

@@ -59,23 +59,23 @@ describe('tainan pack', () => {
       'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
       'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
     ]);
-    // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
-    expect(activePack.archetypeIdByCode[82]).toBe('beimen');
-    expect(activePack.archetypeIdByCode[83]).toBe('longshan_temple');
-    expect(activePack.archetypeIdByCode[84]).toBe('ximen_redhouse');
-    expect(activePack.archetypeIdByCode[85]).toBe('grand_hotel');
-    expect(activePack.archetypeIdByCode[86]).toBe('presidential_office');
-    expect(activePack.archetypeIdByCode[87]).toBe('cks_memorial');
-    expect(activePack.archetypeIdByCode[88]).toBe('liberty_square_arch');
-    expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
-    // DE-TOKYO: codes 90..93 are Taipei extended landmarks.
+    // codes 82..89 are Tainan landmark ids.
+    expect(activePack.archetypeIdByCode[82]).toBe('anping_sword_lion');
+    expect(activePack.archetypeIdByCode[83]).toBe('chihkan_tower');
+    expect(activePack.archetypeIdByCode[84]).toBe('tainan_confucius_temple');
+    expect(activePack.archetypeIdByCode[85]).toBe('wu_temple');
+    expect(activePack.archetypeIdByCode[86]).toBe('anping_fort');
+    expect(activePack.archetypeIdByCode[87]).toBe('eternal_golden_castle');
+    expect(activePack.archetypeIdByCode[88]).toBe('literature_museum');
+    expect(activePack.archetypeIdByCode[89]).toBe('chimei_museum');
+    // codes 90..93 are Tainan extended landmarks.
     expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual([
-      'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
+      'anping_treehouse', 'shennong_street_lm', 'tainan_station', 'qigu_salt_mountain',
     ]);
-    // code 94 媽祖; codes 95..98 Taipei extended landmarks (de-Tokyo).
+    // code 94 媽祖; codes 95..98 Tainan extended landmarks.
     expect(activePack.archetypeIdByCode[94]).toBe('mazu');
     expect(activePack.archetypeIdByCode.slice(95)).toEqual([
-      'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
+      'koxinga_shrine', 'hele_plaza', 'anping_lighthouse_landmark', 'kaiyuan_temple',
     ]);
   });
 

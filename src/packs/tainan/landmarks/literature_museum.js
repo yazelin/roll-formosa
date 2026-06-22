@@ -1,7 +1,7 @@
 /**
- * @file packs/tainan/landmarks/liberty_arch.js — Roll Formosa Tainan pack.
+ * @file packs/tainan/landmarks/literature_museum.js — Roll Formosa Tainan pack.
  *
- * NM_LIBERTY_ARCH — 國立臺灣文學館 (National Museum of Taiwan Literature, the
+ * NM_LIT_MUSEUM — 國立臺灣文學館 (National Museum of Taiwan Literature, the
  * former Tainan State Hall / 原台南州廳). A grand Western Baroque public building:
  * a symmetric cream-stone facade with a CENTRAL projecting entrance bay crowned
  * by a MANSARD dome/cupola, flanked by two symmetric wings carrying rows of
@@ -51,8 +51,8 @@ function wing(cx, w, h, d, wins) {
   return parts;
 }
 
-export const NM_LIBERTY_ARCH = {
-  id: 'liberty_square_arch',
+export const NM_LIT_MUSEUM = {
+  id: 'literature_museum',
   name: '臺灣文學館',
   landmarkId: 6,
   dioramaRHint: 38, // wide symmetric Baroque public hall with a central cupola
@@ -99,4 +99,4 @@ export const NM_LIBERTY_ARCH = {
   },
 };
 
-export default NM_LIBERTY_ARCH;
+export default NM_LIT_MUSEUM;

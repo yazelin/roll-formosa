@@ -275,37 +275,41 @@ export const T1_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] 胡椒餅 — pepper bun: round sesame-crusted baked bun */
+  /* [7] 棺材板 — Tainan coffin toast: thick deep-fried bread box with    */
+  /*     a lifted lid + creamy seafood-chowder filling, on a paper boat.  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pepper_bun',
-    displayName: '胡椒餅',
+    id: 'coffin_toast',
+    displayName: '棺材板',
     tier: 1,
     naturalBand: 1,
-    radiusNominal: 0.06,
+    radiusNominal: 0.07,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc88a4a, 0xb87838, 0xe0b070, 0xa66828, 0xf0e8d0],
-    yOffset: -0.4474,
+    palette: [0xc88a4a, 0xb87838, 0xe8c98a, 0xf0e8d8, 0xd8a45a],
+    yOffset: -0.42,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        // domed baked top, flatter bottom
-        sph(0.92, 0xc88a4a, { ws: 10, hs: 6, sy: 0.62, y: 0.55, thetaLen: PI * 0.62, hex2: 0xe0b070 }),
-        cyl(0.92, 0.86, 0.34, 10, 0xb87838, { y: 0.17 }), // crusty side wall
-        cyl(0.86, 0.86, 0.08, 10, 0xa66828, { y: 0.02 }), // browned base
-      ];
-      // scattered sesame seeds on the dome (deterministic ring)
-      const seeds = 9;
-      for (let i = 0; i < seeds; i++) {
-        const a = (i / seeds) * PI * 2;
-        const r = 0.42 + (i % 2) * 0.22;
-        parts.push(
-          sph(0.07, 0xf0e8d0, { ws: 4, hs: 3, x: Math.cos(a) * r, y: 0.72 - (i % 3) * 0.05, z: Math.sin(a) * r })
-        );
-      }
-      return finish(parts);
+      const crust = 0xc88a4a; // golden deep-fried toast
+      const inside = 0xf2ead4; // pale bread interior
+      const filling = 0xf0e0c0; // creamy chowder filling
+      return finish([
+        // paper boat tray underneath
+        box(2.2, 0.1, 1.5, 0xf0e8d8, { y: 0.05, hex2: 0xe6dcc4 }),
+        // thick fried bread block (the "coffin"), golden crust
+        box(1.9, 0.9, 1.25, crust, { y: 0.6, hex2: 0xd8a45a }),
+        // hollow scoop showing pale bread + creamy filling on top
+        box(1.4, 0.4, 0.9, inside, { y: 1.05 }),
+        // creamy seafood-chowder filling mounded in the scoop
+        sph(0.7, filling, { ws: 8, hs: 4, sy: 0.5, sx: 1.1, y: 1.18, hex2: 0xf6eee0 }),
+        // the lifted bread lid leaning at the back
+        box(1.6, 0.16, 1.1, crust, { y: 1.4, z: -0.45, rx: -0.5, hex2: 0xe8c98a }),
+        // a few diced filling bits (carrot/pea specks)
+        sph(0.1, 0xe07a3a, { ws: 4, hs: 3, x: 0.3, y: 1.3, z: 0.1 }),
+        sph(0.09, 0x4a7a2e, { ws: 4, hs: 3, x: -0.34, y: 1.3, z: 0.16 }),
+        sph(0.09, 0xe07a3a, { ws: 4, hs: 3, x: 0.0, y: 1.32, z: -0.1 }),
+      ]);
     },
   },
 

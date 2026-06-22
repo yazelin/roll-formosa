@@ -72,8 +72,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 蚵仔煎, 地瓜球, 烤香腸, 雞蛋糕, 烤鳥蛋串, 烤杏鮑菇, 紅白塑膠袋, 胡椒餅
-      'oyster_omelette', 'sweet_potato_ball', 'grilled_sausage', 'egg_cake', 'quail_egg_skewer', 'king_oyster_skewer', 'redwhite_bag', 'pepper_bun',
+      // 蚵仔煎, 地瓜球, 烤香腸, 雞蛋糕, 烤鳥蛋串, 烤杏鮑菇, 紅白塑膠袋, 棺材板
+      'oyster_omelette', 'sweet_potato_ball', 'grilled_sausage', 'egg_cake', 'quail_egg_skewer', 'king_oyster_skewer', 'redwhite_bag', 'coffin_toast',
       // chunk landmarks: 攤車燈籠, 花園夜市拱門
       'stall_lantern', 'garden_market_arch',
     ],
@@ -120,8 +120,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 海安路彩繪牆, 鐵捲門, 路樹, 棚架, 石獅
-      'scooter', 'mini_truck', 'transformer_box', 'haian_mural', 'roll_shutter', 'street_tree', 'awning_frame', 'stone_lion',
+      // 機車, 小貨車, 老街木招牌, 海安路彩繪牆, 鐵捲門, 鳳凰木, 老街燈籠串, 劍獅門牌
+      'scooter', 'mini_truck', 'oldstreet_wood_sign', 'haian_mural', 'roll_shutter', 'flame_tree', 'oldstreet_lantern', 'sword_lion_plaque',
       // chunk landmarks: 神農街牌坊, 劍獅柱
       'shennong_arch', 'sword_lion_pillar',
     ],
@@ -192,8 +192,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 其他摩天樓, 巨型廣告牆, 商辦塔, 空橋, 屋頂機房, 安平港吊車
-      'glass_highrise', 'cross_bridge', 'other_skyscraper', 'giant_ad_wall', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'harbor_crane',
+      // 安平燈塔, 漁船, 貨櫃, 蚵棚, 商辦塔, 繫船柱, 安平倉庫, 安平港吊車
+      'anping_lighthouse', 'fishing_boat', 'shipping_container', 'oyster_rack', 'biz_tower', 'mooring_bollard', 'harbor_warehouse', 'harbor_crane',
       // chunk landmarks: 跨街空橋, 七股鹽山
       'crossstreet_skybridge', 'salt_mound',
     ],

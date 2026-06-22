@@ -1,5 +1,5 @@
 /**
- * @file packs/tainan/landmarks/xingtian.js — Roll Formosa Tainan pack, hero landmark.
+ * @file packs/tainan/landmarks/koxinga_shrine.js — Roll Formosa Tainan pack, hero landmark.
  *
  * 鄭成功祖廟 (Koxinga's Ancestral Shrine) — a southern-Min 閩南 temple in 臺南
  * honouring 鄭成功. Signature read: red plastered walls, a broad tiled
@@ -62,8 +62,8 @@ function swallowRoof(out, y, hw, hd, th, ridgeH) {
   }
 }
 
-export const NM_XINGTIAN = {
-  id: 'xingtian',
+export const NM_KOXINGA = {
+  id: 'koxinga_shrine',
   name: '鄭成功祖廟',
   landmarkId: 9,
   dioramaRHint: 34,
@@ -129,4 +129,4 @@ export const NM_XINGTIAN = {
   },
 };
 
-export default NM_XINGTIAN;
+export default NM_KOXINGA;

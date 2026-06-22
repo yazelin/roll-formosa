@@ -32,14 +32,14 @@ import { HERO_TRI_CAP } from '../../config/tuning.js';
 import { EXTRA_CODE_BASE } from '../../world/objects.js';
 
 // P6b: 8 curated Taipei landmark geometry descriptors (codes 82..89).
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+import { NM_SWORD_LION } from './landmarks/anping_sword_lion.js';
+import { NM_CHIHKAN } from './landmarks/chihkan_tower.js';
+import { NM_CONFUCIUS } from './landmarks/tainan_confucius.js';
+import { NM_WU_TEMPLE } from './landmarks/wu_temple.js';
+import { NM_ANPING_FORT } from './landmarks/anping_fort.js';
+import { NM_GOLDEN_CASTLE } from './landmarks/golden_castle.js';
+import { NM_LIT_MUSEUM } from './landmarks/literature_museum.js';
+import { NM_CHIMEI } from './landmarks/chimei_museum.js';
 
 // P7: 13 Taipei collectible (rare album) geometries (codes 70..81 + 94).
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
@@ -57,14 +57,14 @@ import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
 // DE-TOKYO: 8 Taipei extended landmarks replace the leftover EXTRA slots (codes 90-93 + 95-98).
-import { NM_RAINBOW } from './landmarks/rainbow_bridge_tp.js';
-import { NM_SYSHALL } from './landmarks/syshall.js';
-import { NM_STATION } from './landmarks/main_station.js';
-import { NM_PALACE } from './landmarks/palace_museum.js';
-import { NM_XINGTIAN } from './landmarks/xingtian.js';
-import { NM_THEATER } from './landmarks/national_theater.js';
-import { NM_WHEEL } from './landmarks/miramar_wheel.js';
-import { NM_MK_STATION } from './landmarks/maokong_station.js';
+import { NM_TREEHOUSE } from './landmarks/anping_treehouse.js';
+import { NM_SHENNONG_ST } from './landmarks/shennong_street_lm.js';
+import { NM_TAINAN_STATION } from './landmarks/tainan_station.js';
+import { NM_SALT_MTN } from './landmarks/salt_mountain.js';
+import { NM_KOXINGA } from './landmarks/koxinga_shrine.js';
+import { NM_HELE } from './landmarks/hele_plaza.js';
+import { NM_LIGHTHOUSE_LM } from './landmarks/anping_lighthouse_lm.js';
+import { NM_KAIYUAN } from './landmarks/kaiyuan_temple.js';
 
 /* ================================================================== */
 /* 70 chunk archetypes, assembled in tier order (code = tier*10 + slot)*/
@@ -104,19 +104,19 @@ for (const arch of _allTierArchetypes) {
 /**
  * The 8 Taipei curated landmark geometry descriptors (codes 82..89).
  * These REPLACE the placeholder landmark ids at the same codes — the id field is
- * the Taipei landmark id (e.g. 'beimen') not the legacy id.
+ * the Taipei landmark id (e.g. 'anping_sword_lion') not the legacy id.
  * P6b: tier/naturalBand match the EXTRA_POOL_CLASS assignment in curated.js:
  *   82 mid, 83 mid, 84 mid, 85 large, 86 mid, 87 large, 88 large, 89 large.
  */
 const _TAIPEI_LANDMARKS = [
-  { code: 82, nm: NM_BEIMEN,        sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 83, nm: NM_LONGSHAN,      sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 84, nm: NM_XIMEN,         sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
-  { code: 85, nm: NM_GRAND_HOTEL,   sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
-  { code: 86, nm: NM_PRESIDENTIAL,  sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
-  { code: 87, nm: NM_CKS,           sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 88, nm: NM_LIBERTY_ARCH,  sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
-  { code: 89, nm: NM_ARENA,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 82, nm: NM_SWORD_LION,        sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 83, nm: NM_CHIHKAN,      sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 84, nm: NM_CONFUCIUS,         sizeClass: 'landmark-mid',   tier: 3, naturalBand: 3 },
+  { code: 85, nm: NM_WU_TEMPLE,   sizeClass: 'landmark-large', tier: 4, naturalBand: 4 },
+  { code: 86, nm: NM_ANPING_FORT,  sizeClass: 'landmark-mid',   tier: 4, naturalBand: 4 },
+  { code: 87, nm: NM_GOLDEN_CASTLE,           sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 88, nm: NM_LIT_MUSEUM,  sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
+  { code: 89, nm: NM_CHIMEI,         sizeClass: 'landmark-large', tier: 5, naturalBand: 5 },
 ];
 
 /**
@@ -225,14 +225,14 @@ for (const { code, col } of _TAIPEI_COLLECTIBLES) {
 /* DE-TOKYO: 8 Taipei extended landmarks at codes 90-93 + 95-98 (replace the
    leftover EXTRA archetypes). Grounded like landmarks; not placed yet. */
 const _TAIPEI_EXTRA_LANDMARKS = [
-  { code: 90, nm: NM_RAINBOW,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 91, nm: NM_SYSHALL,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 92, nm: NM_STATION,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 93, nm: NM_PALACE,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 95, nm: NM_XINGTIAN,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
-  { code: 96, nm: NM_THEATER,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 97, nm: NM_WHEEL,      sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 98, nm: NM_MK_STATION, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 90, nm: NM_TREEHOUSE,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 91, nm: NM_SHENNONG_ST,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 92, nm: NM_TAINAN_STATION,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 93, nm: NM_SALT_MTN,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 95, nm: NM_KOXINGA,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 96, nm: NM_HELE,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 97, nm: NM_LIGHTHOUSE_LM,      sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 98, nm: NM_KAIYUAN, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
 ];
 for (const { code, nm, sizeClass, tier, naturalBand } of _TAIPEI_EXTRA_LANDMARKS) {
   const _g = nm.buildGeometry(() => 0.5);

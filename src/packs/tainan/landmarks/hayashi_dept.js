@@ -1,7 +1,7 @@
 /**
- * @file packs/tainan/landmarks/taipei101.js — Roll Formosa hero landmark.
+ * @file packs/tainan/landmarks/hayashi_dept.js — Roll Formosa hero landmark.
  *
- * NM_TAIPEI101 — 林百貨, THE GOAL MONUMENT. Tainan's 1932 art-deco department
+ * NM_HAYASHI — 林百貨, THE GOAL MONUMENT. Tainan's 1932 art-deco department
  * store, beloved as 「五層樓仔」(the six-storey block): a stocky, near-cubic
  * tan-tiled mass — taller than wide but emphatically NOT a slender tower. Its
  * facade is a regular grid of rectangular windows on every floor, ringed by
@@ -32,8 +32,8 @@ const ROOF_DK = 0x3a3026; // dark plinth / parapet
 const SHRINE_ROOF = 0x5a4a3a; // shrine pavilion tiled roof (dark brown)
 const STONE = 0xcfc2a4; // pale stone trim / machine room
 
-export const NM_TAIPEI101 = {
-  id: 'taipei101',
+export const NM_HAYASHI = {
+  id: 'hayashi_dept',
   name: '林百貨',
   landmarkId: 8,
   dioramaRHint: 508, // hero diorama hint (kept from goal-monument scale)
@@ -127,4 +127,4 @@ export const NM_TAIPEI101 = {
   },
 };
 
-export default NM_TAIPEI101;
+export default NM_HAYASHI;

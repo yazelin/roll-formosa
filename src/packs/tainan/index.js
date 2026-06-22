@@ -35,14 +35,14 @@ import { ending } from './ending.js';
 // P6b: Taipei replaces EXTRA codes 82..89 (legacy landmark ids at indices 12..19)
 // with Taipei landmark ids. Collectible codes 70..81 (indices 0..11) and codes
 // 90..93 (indices 20..23) remain frozen placeholder ids.
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+import { NM_SWORD_LION } from './landmarks/anping_sword_lion.js';
+import { NM_CHIHKAN } from './landmarks/chihkan_tower.js';
+import { NM_CONFUCIUS } from './landmarks/tainan_confucius.js';
+import { NM_WU_TEMPLE } from './landmarks/wu_temple.js';
+import { NM_ANPING_FORT } from './landmarks/anping_fort.js';
+import { NM_GOLDEN_CASTLE } from './landmarks/golden_castle.js';
+import { NM_LIT_MUSEUM } from './landmarks/literature_museum.js';
+import { NM_CHIMEI } from './landmarks/chimei_museum.js';
 
 /**
  * EXTRA id order for the Taipei pack.
@@ -55,19 +55,19 @@ const extraIds = [
   // indices 0..11 — codes 70..81: Taipei collectibles (P7)
   'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
   'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
-  // indices 12..19 — codes 82..89: Taipei landmark ids (P6b)
-  NM_BEIMEN.id,        // 82 北門(承恩門)
-  NM_LONGSHAN.id,      // 83 龍山寺
-  NM_XIMEN.id,         // 84 西門紅樓
-  NM_GRAND_HOTEL.id,   // 85 圓山大飯店
-  NM_PRESIDENTIAL.id,  // 86 總統府
-  NM_CKS.id,           // 87 中正紀念堂
-  NM_LIBERTY_ARCH.id,  // 88 自由廣場牌樓
-  NM_ARENA.id,         // 89 小巨蛋
-  // indices 20..23 — codes 90..93: Taipei extended landmarks (de-Tokyo)
-  'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
-  // v5 codes 94..98 — 94 媽祖; 95..98 Taipei extended landmarks (de-Tokyo)
-  'mazu', 'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
+  // indices 12..19 — codes 82..89: Tainan landmark ids
+  NM_SWORD_LION.id,    // 82 安平劍獅
+  NM_CHIHKAN.id,       // 83 赤崁樓
+  NM_CONFUCIUS.id,     // 84 臺南孔廟
+  NM_WU_TEMPLE.id,     // 85 祀典武廟
+  NM_ANPING_FORT.id,   // 86 安平古堡
+  NM_GOLDEN_CASTLE.id, // 87 億載金城
+  NM_LIT_MUSEUM.id,    // 88 臺灣文學館
+  NM_CHIMEI.id,        // 89 奇美博物館
+  // indices 20..23 — codes 90..93: Tainan extended landmarks
+  'anping_treehouse', 'shennong_street_lm', 'tainan_station', 'qigu_salt_mountain',
+  // v5 codes 94..98 — 94 媽祖; 95..98 Tainan extended landmarks
+  'mazu', 'koxinga_shrine', 'hele_plaza', 'anping_lighthouse_landmark', 'kaiyuan_temple',
 ];
 
 // Collectible album id -> index in extraIds (legacy rule preserved).
