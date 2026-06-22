@@ -12,6 +12,13 @@ git fetch -q origin
 git checkout -q main
 git pull -q --ff-only
 
+# #24: 切 branch 前工作樹必須乾淨,否則切換會把未提交內容帶過去、和 stash 相撞污染別檔。
+# 寧可大聲中止、跳過這次,也不要默默弄壞 build。
+if [ -n "$(git status --porcelain)" ]; then
+  echo "工作樹不乾淨,autopilot 中止(避免切 branch 污染)。先 commit/清乾淨再跑:"; git status -s
+  exit 1
+fi
+
 ITEM=$(grep -m1 -- '- \[ \]' NEXT.md || true)
 [ -z "$ITEM" ] && { echo "NEXT.md backlog 空,結束。"; exit 0; }
 TASK="${ITEM#*] }"
