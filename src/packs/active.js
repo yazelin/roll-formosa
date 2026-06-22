@@ -8,8 +8,9 @@ import { activePack as taipei } from './taipei/index.js';
 import { activePack as kaohsiung } from './kaohsiung/index.js';
 import { activePack as taichung } from './taichung/index.js';
 import { activePack as tainan } from './tainan/index.js';
+import { activePack as taoyuan } from './taoyuan/index.js';
 import { resolveCityId } from './manifest.js';
 
-const PACKS = { taipei, kaohsiung, taichung, tainan };
+const PACKS = { taipei, kaohsiung, taichung, tainan, taoyuan };
 export const activePack = PACKS[resolveCityId()] || taipei;
 export default activePack;
