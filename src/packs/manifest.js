@@ -7,6 +7,7 @@ export const CITIES = Object.freeze([
   Object.freeze({ id: 'kaohsiung', displayName: '高雄', tagline: '85 大樓終點', status: 'ready' }),
   Object.freeze({ id: 'taichung', displayName: '台中', tagline: '台中之鑽終點', status: 'ready' }),
   Object.freeze({ id: 'tainan', displayName: '台南', tagline: '林百貨終點', status: 'ready' }),
+  Object.freeze({ id: 'taitung', displayName: '台東', tagline: '三仙台終點', status: 'ready' }),
 ]);
 
 export const DEFAULT_CITY = 'taipei';
