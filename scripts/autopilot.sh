@@ -29,10 +29,14 @@ git checkout -q -b "$BR"
 
 OUT=$(claude -p "你是 roll-formosa repo 的 autopilot。先讀 NEXT.md 和 docs/ADD-A-CITY.md。\
 只做這一條 backlog:${ITEM}。嚴守它寫的範圍。可以跑 scaffold/build 等指令,\
-但不要 git commit/push、不要開 PR、不要 merge(外層腳本會處理),不用自己跑 npm test(外層會跑)。\
-若這條是加新城市:chunk 街頭物在地化必須夠深 —— 跑 'node scripts/check-city.mjs <城市 id>' 自我檢查,\
+但不要 git commit/push、不要開 PR、不要 merge(外層腳本會處理)。\
+**做完必須自己跑 'npx vitest run src/packs/<id>' 並修到全綠才算完成**(測試模板已 city-agnostic,\
+不用改測試斷言;你若弄壞結構/幾何/locale 它會紅——修到綠;外層還會再跑 npm test,沒綠 PR 開不出來=白做)。\
+若這條是加新城市:① 把 src/packs/manifest.js 該城 status 改成 'ready'(否則 localization/river 守衛不會把關);\
+② chunk 街頭物在地化必須夠深 —— 跑 'node scripts/check-city.mjs <城市 id>' 自我檢查,\
 必須 ≤44/70 同台北(台中級下限,目標 ~37 高雄級),否則 npm test 會紅、PR 開不出來,等於白做;\
-別只換地標/收藏就交,t0–t6 七階的街頭小物都要換成這座城市的在地版本(保留泛台灣通用物即可)。\
+別只換地標/收藏就交,t0–t6 七階的街頭小物都要換成這座城市的在地版本(保留泛台灣通用物即可);\
+③ 河也要在地化(cityMap.js 的 water:名稱+centerline+註解,別留台北基隆河),結尾 ending.js 不要動(共用、自動點亮)。\
 天際線圖(skyline-<id>.webp)若沒能力產就別硬塞,列進 FINDINGS 讓它變 issue(人工批次補)。\
 做完把 NEXT.md 該行 [ ] 改成 [x]。\
 最後**精確**用這格式輸出(給腳本解析,別多話):\
