@@ -120,7 +120,11 @@ export class EndingView {
     };
     const islandGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     // ExtrudeGeometry sits in XY — rotate to XZ plane (island lies flat).
-    islandGeo.rotateX(-Math.PI / 2);
+    // +90 (was -90) maps shapeY (z, south+) → world +Z, matching the city pins
+    // (which use city.z directly). -90 flipped N/S so the island rendered upside
+    // down and pins landed on the wrong half. DoubleSide below covers the flipped
+    // winding so the cap still draws.
+    islandGeo.rotateX(Math.PI / 2);
 
     const islandColor = new THREE.Color(colors.island);
     const islandEmissive = new THREE.Color(colors.islandEmissive);
@@ -128,6 +132,7 @@ export class EndingView {
     /** @type {THREE.MeshBasicMaterial} */
     this._islandMat = new THREE.MeshBasicMaterial({
       color: islandColor,
+      side: THREE.DoubleSide, // N/S flip reverses winding — draw both faces
       transparent: true,
       opacity: 0,
       depthTest: false,

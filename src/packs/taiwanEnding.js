@@ -35,8 +35,12 @@ const RAW_OUTLINE = [
   [-0.34, -0.58], [-0.22, -0.70], [-0.10, -0.82], [-0.04, -0.92],
 ];
 
-/** Taiwan polygon: narrowed [x, z] pairs. */
-export const TAIWAN_OUTLINE = RAW_OUTLINE.map(([x, z]) => [x * NARROW, z]);
+// x is negated (EW mirror): with the finale camera, un-negated x put western
+// cities (高雄/台南) on the screen's right. Verified via taipei(N)/高雄(SW) probes.
+const EW = -NARROW;
+
+/** Taiwan polygon: narrowed + EW-corrected [x, z] pairs. */
+export const TAIWAN_OUTLINE = RAW_OUTLINE.map(([x, z]) => [x * EW, z]);
 
 /**
  * Every city pin. `id` MUST match the pack id (src/packs/<id>) — EndingView
@@ -67,8 +71,8 @@ const RAW_CITIES = [
   { id: 'matsu',     name: '馬祖', x: -0.95, z: -0.86 },
 ];
 
-/** City pins with x narrowed to match the outline. */
-export const CITIES = RAW_CITIES.map((c) => ({ ...c, x: c.x * NARROW }));
+/** City pins with x narrowed + EW-corrected to match the outline. */
+export const CITIES = RAW_CITIES.map((c) => ({ ...c, x: c.x * EW }));
 
 /** Color palette (hex integers, consumed by endingView.js via THREE.Color). */
 export const COLORS = {
