@@ -12,10 +12,12 @@ import { describe, it, expect } from 'vitest';
 import { t, fmt } from './locale.js';
 
 describe('taipei locale t()', () => {
+  // City-agnostic: this is the taipei template new-city.mjs copies, so content
+  // strings are checked structurally (non-empty zh-TW), not by exact city wording.
   it('returns zh-TW string for a string key', () => {
-    expect(t('hud.rareFound')).toBe('發現稀有！+5000');
-    expect(t('hud.goalCall')).toBe('台北 101 在呼喚你…！');
-    expect(t('hud.goalGuide')).toBe('朝台北 101 前進！');
+    expect(t('hud.rareFound')).toBe('發現稀有！+5000'); // shared UI string
+    expect(t('hud.goalCall').length).toBeGreaterThan(0);
+    expect(t('hud.goalGuide').length).toBeGreaterThan(0);
   });
 
   it('hud.landmark interpolates landmark name', () => {
@@ -30,7 +32,6 @@ describe('taipei locale t()', () => {
 
   it('screens.shareText interpolates all fields', () => {
     const result = t('screens.shareText', '02:30.0', 'A', '12,345', 5, 13);
-    expect(result).toContain('台北捲完了');
     expect(result).toContain('02:30.0');
     expect(result).toContain('RANK A');
     expect(result).toContain('5/13');
@@ -43,11 +44,11 @@ describe('taipei locale t()', () => {
 
   it('title keys present', () => {
     expect(t('title.start')).toContain('START');
-    expect(t('title.subtitle')).toContain('台北');
+    expect(t('title.subtitle').length).toBeGreaterThan(0);
   });
 
   it('win overlay keys present', () => {
-    expect(t('win.title')).toContain('台北');
+    expect(t('win.title').length).toBeGreaterThan(0);
     expect(t('win.postX')).toContain('POST');
     expect(t('win.rollAgain')).toContain('再來');
   });

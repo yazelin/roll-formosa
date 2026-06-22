@@ -41,8 +41,15 @@ describe('taipei tier ladder', () => {
   });
 
   it('has zh-TW (non-Japanese, non-ASCII) tier names', () => {
-    const expected = ['柑仔店桌頭', '夜市', '騎樓', '機車海', '萬華街屋與廟', '商業文教區', '信義天際線'];
-    expect(TIERS.map((t) => t.name)).toEqual(expected);
+    // City-agnostic: 7 non-empty names, each with CJK and no Japanese kana.
+    const names = TIERS.map((t) => t.name);
+    expect(names).toHaveLength(7);
+    for (const n of names) {
+      expect(typeof n).toBe('string');
+      expect(n.length).toBeGreaterThan(0);
+      expect(/[一-鿿]/.test(n), `must contain CJK: ${n}`).toBe(true);
+      expect(/[぀-ヿ]/.test(n), `no Japanese kana: ${n}`).toBe(false);
+    }
   });
 
   it('has well-formed sky params within engine-asserted ranges', () => {

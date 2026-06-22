@@ -1,13 +1,24 @@
 import { describe, it, expect } from 'vitest';
+import { fileURLToPath } from 'node:url';
+import { dirname, basename } from 'node:path';
 import { activePack } from './index.js';
 import { buildCodeMap } from '../_engine/codeMap.js';
-import { ARCHETYPE_ID_BY_CODE, ARCHETYPE_CODE_BY_ID } from '../../world/objects.js';
+import { CITIES } from '../manifest.js';
 
-describe('taipei pack (P3 skeleton)', () => {
-  it('has id=taipei, region=TW, displayName=台北', () => {
-    expect(activePack.id).toBe('taipei');
+// City-AGNOSTIC pack contract: this file is the taipei template that new-city.mjs
+// copies, so it must pass for ANY localized city without per-city edits. Identity
+// is checked against the folder name + manifest; content is checked structurally
+// (counts/types/uniqueness). Real localization depth is gated elsewhere:
+// localization.test.js (chunk depth), river-localization.test.js, check-city.mjs.
+const PACK_ID = basename(dirname(fileURLToPath(import.meta.url)));
+
+describe(`${PACK_ID} pack`, () => {
+  it('id matches its folder + manifest, region=TW', () => {
+    expect(activePack.id).toBe(PACK_ID);
     expect(activePack.region).toBe('TW');
-    expect(activePack.displayName).toBe('台北');
+    const entry = CITIES.find((c) => c.id === PACK_ID);
+    expect(entry, `${PACK_ID} must be registered in manifest.js`).toBeTruthy();
+    expect(activePack.displayName).toBe(entry.displayName);
   });
 
   it('exposes zh-TW locale (t function and fmt)', () => {
@@ -20,7 +31,7 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(activePack.validate()).toBe(true);
   });
 
-  it('code map is hole-free and unique (mirrors 99-entry Tokyo table)', () => {
+  it('code map is hole-free and unique (99 entries)', () => {
     const m = buildCodeMap(activePack);
     expect(m.chunkCount).toBe(70); // 7 tiers x 10
     expect(m.idByCode.length).toBe(99); // 70 chunk + 24 EXTRA + 5 v5
@@ -34,49 +45,30 @@ describe('taipei pack (P3 skeleton)', () => {
     }
   });
 
-  it('collectible codes preserved: id 0 -> 70, id 11 -> 81, id 12 -> 94', () => {
+  it('collectible code mapping is structural (id 0->70, 11->81, 12->94)', () => {
     const m = buildCodeMap(activePack);
     expect(m.collectibleCodeForId(0)).toBe(70);
     expect(m.collectibleCodeForId(11)).toBe(81);
     expect(m.collectibleCodeForId(12)).toBe(94);
-    expect(m.idByCode[94]).toBe('mazu');
+    expect(typeof m.idByCode[94]).toBe('string');
+    expect(m.idByCode[94].length).toBeGreaterThan(0);
   });
 
   it('attaches R5 pack-scoped code-map methods', () => {
     expect(Array.isArray(activePack.archetypeIdByCode)).toBe(true);
     expect(activePack.archetypeIdByCode.length).toBe(99);
     expect(activePack.codeByArchetypeId[activePack.archetypeIdByCode[0]]).toBe(0);
-    expect(activePack.codeToArchetypeId(94)).toBe('mazu');
+    expect(typeof activePack.codeToArchetypeId(94)).toBe('string');
     expect(activePack.codeForCollectibleId(12)).toBe(94);
   });
 
-  it('code map: chunk 0-69 Taipei; collectibles 70-81+94 Taipei; landmarks 82-89 Taipei; 90-93/95-98 Tokyo', () => {
-    // P4 replaces chunk codes (0-69) with Taipei archetypeIds.
-    const taipeiChunkIds = activePack.tiers.flatMap((t) => t.archetypeIds);
-    expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(taipeiChunkIds);
-    // P7: collectible codes 70..81 are Taipei collectible ids.
-    expect(activePack.archetypeIdByCode.slice(70, 82)).toEqual([
-      'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-      'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
-    ]);
-    // P6b: codes 82..89 are Taipei landmark ids (replace Tokyo landmark ids).
-    expect(activePack.archetypeIdByCode[82]).toBe('beimen');
-    expect(activePack.archetypeIdByCode[83]).toBe('longshan_temple');
-    expect(activePack.archetypeIdByCode[84]).toBe('ximen_redhouse');
-    expect(activePack.archetypeIdByCode[85]).toBe('grand_hotel');
-    expect(activePack.archetypeIdByCode[86]).toBe('presidential_office');
-    expect(activePack.archetypeIdByCode[87]).toBe('cks_memorial');
-    expect(activePack.archetypeIdByCode[88]).toBe('liberty_square_arch');
-    expect(activePack.archetypeIdByCode[89]).toBe('taipei_arena');
-    // DE-TOKYO: codes 90..93 are Taipei extended landmarks.
-    expect(activePack.archetypeIdByCode.slice(90, 94)).toEqual([
-      'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
-    ]);
-    // code 94 媽祖; codes 95..98 Taipei extended landmarks (de-Tokyo).
-    expect(activePack.archetypeIdByCode[94]).toBe('mazu');
-    expect(activePack.archetypeIdByCode.slice(95)).toEqual([
-      'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
-    ]);
+  it('code map: chunk 0-69 == tiers archetypeIds; 70-98 all non-empty', () => {
+    const chunkIds = activePack.tiers.flatMap((t) => t.archetypeIds);
+    expect(activePack.archetypeIdByCode.slice(0, 70)).toEqual(chunkIds);
+    for (let c = 70; c < 99; c++) {
+      expect(typeof activePack.archetypeIdByCode[c], `code ${c}`).toBe('string');
+      expect(activePack.archetypeIdByCode[c].length, `code ${c}`).toBeGreaterThan(0);
+    }
   });
 
   it('exposes full R16 content surface', () => {
@@ -94,10 +86,10 @@ describe('taipei pack (P3 skeleton)', () => {
     expect(typeof activePack.cityMap.bandAllowedAt).toBe('function');
   });
 
-  it('has zh-TW seeds distinct from Tokyo seeds', () => {
-    expect(activePack.seeds.primary).toBe(0x54414950); // TAIP
-    expect(activePack.seeds.v5).toBe(0x56355441);      // V5TA
-    // Not tokyo seeds
-    expect(activePack.seeds.primary).not.toBe(0x544f4b59);
+  it('has valid seeds (finite, not Tokyo, primary != v5)', () => {
+    expect(Number.isFinite(activePack.seeds.primary)).toBe(true);
+    expect(Number.isFinite(activePack.seeds.v5)).toBe(true);
+    expect(activePack.seeds.primary).not.toBe(0x544f4b59); // not Tokyo (TOKY)
+    expect(activePack.seeds.primary).not.toBe(activePack.seeds.v5);
   });
 });
