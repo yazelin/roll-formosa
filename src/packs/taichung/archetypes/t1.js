@@ -184,7 +184,7 @@ export const T1_ARCHETYPES = [
     buildGeometry(rng) {
       return finish([
         // crispy folded crepe body — wide open mouth tapering to a point
-        cone(0.7, 2.4, 8, 0xe8c884, { y: 0.0, hex2: 0xd8a850 }),
+        cone(0.7, 2.4, 8, 0xe8c884, { rx: PI, y: 0.0, hex2: 0xd8a850 }),
         // browned crisp seam down one side
         box(0.1, 2.3, 0.14, 0xb86a3a, { x: 0.42, y: 0.0, rz: 0.18 }),
         // white paper sleeve at the bottom third

@@ -232,7 +232,7 @@ export const T2_ARCHETYPES = [
       const cream = 0xfbf3e0;  // pale soft-serve
       return finish([
         // waffle cone (point down)
-        cone(0.55, 1.4, 8, cone_c, { y: 0.7 }),
+        cone(0.55, 1.4, 8, cone_c, { rx: PI, y: 0.7 }),
         // cone rim ring
         cyl(0.56, 0.56, 0.1, 8, 0xc89a52, { y: 1.36, open: true }),
         // soft-serve swirl: stacked tapering rings spiralling to a peak
