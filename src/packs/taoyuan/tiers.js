@@ -147,7 +147,7 @@ export const TIERS = [
     archetypeIds: [
       // 大溪木器行, 鐵皮屋, 公寓, 豆乾店, 公車, 垃圾車, 加油站, 騎樓柱
       'daxi_woodcraft_shop', 'tin_roof_house', 'apartment', 'tofu_shop', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 大溪巴洛克街屋量體, 宮廟量體
+      // chunk landmarks: 大溪巴洛克街屋, 大廟
       'baroque_facade', 'temple_mass',
     ],
     fogColor: 0x201a44, // 大溪街屋暮色 藍紫
@@ -171,7 +171,7 @@ export const TIERS = [
     archetypeIds: [
       // 桃園捷運高架站, 科技園區大門, 捷運高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
       'metro_station_taoyuan', 'tech_park_gate', 'metro_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 工業廠房量體, 物流倉庫量體
+      // chunk landmarks: 工業廠房, 物流倉庫
       'factory_mass', 'warehouse_mass',
     ],
     fogColor: 0x1c1e48, // 工業區金紫 (golden hour 偏夜)
@@ -193,7 +193,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 貨運站, 巨型廣告牆, 塔台, 空橋, 屋頂機房, 航廈量體
+      // 玻璃帷幕高樓, 跨橋, 貨運站, 巨型廣告牆, 塔台, 空橋, 屋頂機房, 航廈大樓
       'glass_highrise', 'cross_bridge', 'cargo_terminal', 'giant_ad_wall', 'control_tower', 'sky_bridge', 'rooftop_plant_room', 'airport_terminal',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',

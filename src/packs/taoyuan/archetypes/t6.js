@@ -265,10 +265,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 航廈量體 airport terminal (TPE Terminal building) ------ */
+  /* ---- slot 7: 航廈大樓 airport terminal (TPE Terminal building) ------ */
   {
     id: 'airport_terminal',
-    displayName: '航廈量體',
+    displayName: '航廈大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,

@@ -208,6 +208,7 @@ for (const { code, col } of _TAIWAN_COLLECTIBLES) {
     yOffset: _yOffset,
     upright: true,
     collisionScale: 1.0,
+    heroTriCap: HERO_TRI_CAP, // collectibles get the 600-tri hero budget
     buildGeometry: col.buildGeometry.bind(col),
     extraCode: code,
     sizeClass: 'collectible-small',

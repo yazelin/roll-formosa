@@ -355,10 +355,10 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 工業廠房量體 factory_mass (CHUNK LANDMARK) ---------- */
+  /* ---- slot 8: 工業廠房 factory_mass (CHUNK LANDMARK) ---------- */
   {
     id: 'factory_mass',
-    displayName: '工業廠房量體',
+    displayName: '工業廠房',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 55,
@@ -403,10 +403,10 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 物流倉庫量體 warehouse_mass (CHUNK LANDMARK) -------- */
+  /* ---- slot 9: 物流倉庫 warehouse_mass (CHUNK LANDMARK) -------- */
   {
     id: 'warehouse_mass',
-    displayName: '物流倉庫量體',
+    displayName: '物流倉庫',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 50,
