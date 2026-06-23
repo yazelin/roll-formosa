@@ -1142,10 +1142,15 @@
     }
     #city-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(140px, 220px));
-      gap: clamp(12px, 3vw, 22px);
+      /* auto-fit so 4 cities = 2x2 but 10+ wrap into 4-5 columns; scrolls if still
+         too tall (lots of cities) instead of overflowing the viewport. */
+      grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      gap: clamp(10px, 2.4vw, 18px);
       width: 100%;
-      max-width: 480px;
+      max-width: 720px;
+      max-height: 66vh;
+      overflow-y: auto;
+      padding: 4px;
       justify-content: center;
     }
     /* one neon card per city — reuses the title's lit-sign vocabulary. */
@@ -1155,8 +1160,8 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 6px;
-      min-height: 132px;
-      padding: 18px 14px;
+      min-height: 104px;
+      padding: 14px 12px;
       text-align: center;
       color: #fff;
       cursor: pointer;
@@ -1174,7 +1179,7 @@
     .city-card:active { transform: translateY(0) scale(0.98); }
     .city-card-name {
       font-family:'Bungee', sans-serif; font-weight:400;
-      font-size: clamp(28px, 7vw, 46px); line-height:1; letter-spacing:.02em;
+      font-size: clamp(24px, 5.5vw, 38px); line-height:1; letter-spacing:.02em;
       text-shadow: 0 0 4px #fff, 0 0 14px #ff2a78, 0 0 30px #ff2a78;
     }
     .city-card-tag {
@@ -1206,7 +1211,7 @@
       box-shadow: 0 0 14px rgba(0,221,255,.28);
     }
     @media (max-width: 360px) {
-      #city-grid { grid-template-columns: 1fr; max-width: 280px; }
+      #city-grid { grid-template-columns: repeat(2, 1fr); max-width: 320px; }
     }
     @media (prefers-reduced-motion:reduce){ #city-select .city-card{ transition:none; } }
   </style>
