@@ -145,8 +145,10 @@ export class GoalTowerView {
     this._pulsePhase = 0;
 
     /* ---- draw 1: pack-driven monument geometry (台北101 bamboo tower) ---- */
-    // buildGeometry(rng) from the pack; rng is unused by taipei101.js.
-    this._geo = _monument.buildGeometry(null);
+    // buildGeometry(rng): taipei101 ignores rng, but other packs' goal monuments
+    // may call rng() (e.g. a micro-jitter) — pass a deterministic stub instead of
+    // null so any pack's goal builds without "rng is not a function" at finale.
+    this._geo = _monument.buildGeometry(() => 0.5);
     /** @type {THREE.MeshBasicMaterial} fog:false sky-element exemption. */
     this._mat = new THREE.MeshBasicMaterial({
       vertexColors: true,
