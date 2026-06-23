@@ -33,7 +33,7 @@ export const NM_LUYE_BALLOON = {
     // Main balloon (center, largest)
     // Envelope
     parts.push(sph(0.55, ENVELOPE_R, {
-      ws: 12, hs: 8,
+      ws: 8, hs: 6,
       sy: 1.3,
       y: 1.4,
       hex2: 0xc83838,

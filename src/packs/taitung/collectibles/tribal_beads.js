@@ -26,7 +26,7 @@ export const COL_TRIBAL_BEADS = {
     const colors = [RED, BLUE, YELLOW, GREEN, WHITE, RED, BLUE, YELLOW];
 
     // Main necklace loop (beads arranged in a circle)
-    const beadCount = 24;
+    const beadCount = 18;
     const radius = 0.7;
 
     for (let i = 0; i < beadCount; i++) {
@@ -34,7 +34,7 @@ export const COL_TRIBAL_BEADS = {
       const color = colors[i % colors.length];
       const size = 0.08 + (i % 3) * 0.02;
       parts.push(sph(size, color, {
-        ws: 5, hs: 4,
+        ws: 4, hs: 3,
         x: Math.cos(a) * radius,
         z: Math.sin(a) * radius,
         y: 0,

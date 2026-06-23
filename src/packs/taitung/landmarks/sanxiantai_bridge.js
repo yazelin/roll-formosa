@@ -69,7 +69,7 @@ export const NM_SANXIANTAI = {
       // Left rising support
       if (i > 0) {
         const leftLeg = Math.min(h, prevH);
-        parts.push(cyl(0.04, 0.04, leftLeg * 0.8, 8, WHITE, {
+        parts.push(cyl(0.04, 0.04, leftLeg * 0.8, 4, WHITE, {
           x: archBaseL,
           y: leftLeg * 0.4,
           rz: 0.25,
@@ -79,7 +79,7 @@ export const NM_SANXIANTAI = {
       // Right rising support
       if (i < archCount - 1) {
         const rightLeg = Math.min(h, nextH);
-        parts.push(cyl(0.04, 0.04, rightLeg * 0.8, 8, WHITE, {
+        parts.push(cyl(0.04, 0.04, rightLeg * 0.8, 4, WHITE, {
           x: archBaseR,
           y: rightLeg * 0.4,
           rz: -0.25,
@@ -87,51 +87,21 @@ export const NM_SANXIANTAI = {
       }
 
       // Vertical pier support from water level
-      parts.push(cyl(0.06, 0.08, h - 0.15, 8, WHITE, {
+      parts.push(cyl(0.06, 0.08, h - 0.15, 4, WHITE, {
         x: cx,
         y: (h - 0.15) / 2 + 0.05,
         hex2: CONCRETE,
       }));
 
-      // Concrete pier base in water
-      parts.push(box(0.18, 0.12, 0.22, CONCRETE, {
-        x: cx,
-        y: 0.06,
-      }));
-
-      // Railings on deck
-      parts.push(box(spanWidth + 0.02, 0.08, 0.02, RAIL, {
-        x: cx,
-        y: deckY + 0.06,
-        z: 0.17,
-      }));
-      parts.push(box(spanWidth + 0.02, 0.08, 0.02, RAIL, {
-        x: cx,
-        y: deckY + 0.06,
-        z: -0.17,
-      }));
+      // (pier-base + railings removed to stay under heroTriCap 600 — same budget
+      //  as 台北101; the 8-arch hump silhouette is what reads at finale scale)
     }
 
-    // ---- Connecting deck transitions between arches ----
-    for (let i = 0; i < archCount - 1; i++) {
-      const cx = startX + i * spanWidth + spanWidth / 2;
-      const h1 = archHeights[i];
-      const h2 = archHeights[i + 1];
-      const midH = (h1 + h2) / 2;
-
-      // Sloped transition deck
-      const angle = Math.atan2(h2 - h1, spanWidth);
-      parts.push(box(spanWidth * 0.5, deckThick * 0.8, 0.36, ORANGE_LO, {
-        x: cx,
-        y: midH,
-        rx: angle * 0.3,
-      }));
-    }
 
     // ---- Island at the far end (Sanxiantai) ----
     const islandX = startX + (archCount - 0.5) * spanWidth + 0.3;
     parts.push(sph(0.36, 0x5a6a4a, {
-      ws: 8, hs: 6,
+      ws: 5, hs: 4,
       sy: 0.5,
       x: islandX,
       y: 0.18,

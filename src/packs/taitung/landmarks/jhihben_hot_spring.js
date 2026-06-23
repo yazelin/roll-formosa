@@ -31,17 +31,17 @@ export const NM_JHIHBEN = {
     parts.push(box(2.8, 0.2, 2.4, 0x5a7a4a, { y: 0.1, hex2: 0x4a6a3a }));
 
     // Main hot spring pool (outdoor onsen style)
-    parts.push(cyl(0.6, 0.6, 0.15, 12, STONE, { y: 0.25, hex2: STONE_LO }));
-    parts.push(cyl(0.5, 0.5, 0.12, 12, POOL, { y: 0.26 }));
+    parts.push(cyl(0.6, 0.6, 0.15, 8, STONE, { y: 0.25, hex2: STONE_LO }));
+    parts.push(cyl(0.5, 0.5, 0.12, 8, POOL, { y: 0.26 }));
     // Steam effect (translucent spheres)
-    parts.push(sph(0.25, POOL_STEAM, { ws: 6, hs: 4, y: 0.45, sz: 0.4 }));
-    parts.push(sph(0.18, POOL_STEAM, { ws: 6, hs: 4, x: 0.15, y: 0.52, sz: 0.35 }));
+    parts.push(sph(0.25, POOL_STEAM, { ws: 4, hs: 3, y: 0.45, sz: 0.4 }));
+    parts.push(sph(0.18, POOL_STEAM, { ws: 4, hs: 3, x: 0.15, y: 0.52, sz: 0.35 }));
 
     // Natural stone borders
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * PI * 2;
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * PI * 2;
       parts.push(sph(0.12 + (i % 2) * 0.04, STONE, {
-        ws: 5, hs: 4,
+        ws: 4, hs: 3,
         x: Math.cos(a) * 0.58,
         z: Math.sin(a) * 0.58,
         y: 0.26,
@@ -69,7 +69,7 @@ export const NM_JHIHBEN = {
     // Bamboo/forest elements
     for (const pos of [[-1.1, 0.7], [1.1, 0.6], [-0.2, -0.9], [0.9, 0.7]]) {
       parts.push(cyl(0.04, 0.04, 0.6, 6, BAMBOO, { x: pos[0], z: pos[1], y: 0.5 }));
-      parts.push(sph(0.15, 0x4a7a3a, { ws: 6, hs: 4, x: pos[0], z: pos[1], y: 0.85 }));
+      parts.push(sph(0.15, 0x4a7a3a, { ws: 4, hs: 3, x: pos[0], z: pos[1], y: 0.85 }));
     }
 
     // Stone path

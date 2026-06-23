@@ -53,17 +53,17 @@ export const NM_AMIS = {
 
     // Support posts
     for (const px of [-0.9, 0.1]) {
-      parts.push(cyl(0.06, 0.06, 0.8, 8, WOOD, { x: px, y: 0.5, z: 0.4 }));
-      parts.push(cyl(0.06, 0.06, 0.8, 8, WOOD, { x: px, y: 0.5, z: -0.4 }));
+      parts.push(cyl(0.06, 0.06, 0.8, 6, WOOD, { x: px, y: 0.5, z: 0.4 }));
+      parts.push(cyl(0.06, 0.06, 0.8, 6, WOOD, { x: px, y: 0.5, z: -0.4 }));
     }
 
     // Totem pole (ceremonial, with geometric patterns)
     parts.push(cyl(0.12, 0.1, 1.6, 8, WOOD, { x: 0.9, y: 0.92 }));
     // Pattern bands
-    parts.push(cyl(0.13, 0.13, 0.15, 8, TOTEM_R, { x: 0.9, y: 0.4 }));
-    parts.push(cyl(0.13, 0.13, 0.15, 8, TOTEM_Y, { x: 0.9, y: 0.7 }));
-    parts.push(cyl(0.13, 0.13, 0.15, 8, TOTEM_B, { x: 0.9, y: 1.0 }));
-    parts.push(cyl(0.13, 0.13, 0.15, 8, TOTEM_R, { x: 0.9, y: 1.3 }));
+    parts.push(cyl(0.13, 0.13, 0.15, 6, TOTEM_R, { x: 0.9, y: 0.4 }));
+    parts.push(cyl(0.13, 0.13, 0.15, 6, TOTEM_Y, { x: 0.9, y: 0.7 }));
+    parts.push(cyl(0.13, 0.13, 0.15, 6, TOTEM_B, { x: 0.9, y: 1.0 }));
+    parts.push(cyl(0.13, 0.13, 0.15, 6, TOTEM_R, { x: 0.9, y: 1.3 }));
     // Carved top figure (stylized)
     parts.push(sph(0.14, WOOD, { ws: 6, hs: 4, x: 0.9, y: 1.78, sy: 0.8 }));
 
