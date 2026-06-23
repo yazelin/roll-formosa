@@ -53,9 +53,9 @@ export const NM_TIEHUA = {
       const ly = 1.28 - (i % 2) * 0.15;
       // String
       parts.push(cyl(0.01, 0.01, 0.26, 4, STRING, { x: lx, y: ly + 0.16, z: -0.4 }));
-      // Balloon shape (elongated sphere)
+      // Balloon shape (elongated sphere) — low-poly to stay under heroTriCap(600)
       parts.push(sph(0.12, lanternColors[i], {
-        ws: 8, hs: 6,
+        ws: 6, hs: 4,
         sy: 1.3,
         x: lx,
         y: ly,
