@@ -64,10 +64,10 @@ const extraIds = [
   NM_CKS.id,           // 87 中正紀念堂
   NM_LIBERTY_ARCH.id,  // 88 自由廣場牌樓
   NM_ARENA.id,         // 89 小巨蛋
-  // indices 20..23 — codes 90..93: Taipei extended landmarks (de-Tokyo)
-  'rainbow_bridge_tp', 'sun_yat_sen_hall', 'taipei_main_station', 'palace_museum',
-  // v5 codes 94..98 — 94 媽祖; 95..98 Taipei extended landmarks (de-Tokyo)
-  'mazu', 'xingtian_temple', 'national_theater', 'miramar_wheel', 'maokong_station',
+  // indices 20..23 — codes 90..93: keelung extended landmarks (reuse own, _ext id)
+  'miaokou_gate_ext90', 'keelung_station_ext91', 'guanyin_statue_ext92', 'ocean_plaza_ext93',
+  // v5 codes 94..98 — 94 媽祖; 95..98 keelung extended landmarks
+  'mazu', 'xiandonyan_ext95', 'heping_island_ext96', 'keelung_islet_ext97', 'qingan_temple_ext98',
 ];
 
 // Collectible album id -> index in extraIds (legacy rule preserved).

@@ -249,37 +249,37 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _NEWTAIPEI_EXTRA_LANDMA
   EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
 }
 
-// Fill remaining EXTRA codes (90-92, 95-98) with placeholder entries so 99-code contract holds.
-const _PLACEHOLDER_NAMES = {
-  90: '預留欄位 90',
-  91: '預留欄位 91',
-  92: '預留欄位 92',
-  95: '預留欄位 95',
-  96: '預留欄位 96',
-  97: '預留欄位 97',
-  98: '預留欄位 98',
+// Codes 90-92, 95-98: reuse newtaipei's own landmarks (real name + geometry) so the
+// 99-code contract holds with city-correct content (was '預留欄位' placeholders reusing
+// jiufen geometry). id stays extra_placeholder_<code> (index.js code-map unchanged).
+const _PH_LANDMARK = {
+  90: NM_JIUFEN_TEAHOUSE,
+  91: NM_SHIFEN_LANTERN,
+  92: NM_YINGGE_MUSEUM,
+  95: NM_SANXIA_TEMPLE,
+  96: NM_FORT_SAN_DOMINGO,
+  97: NM_PINGXI_STATION,
+  98: NM_LIN_FAMILY_GARDEN,
 };
 for (const code of [90, 91, 92, 95, 96, 97, 98]) {
   if (!EXTRA_SIZE_CLASS_BY_CODE[code]) {
     EXTRA_SIZE_CLASS_BY_CODE[code] = null;
-    // Create a minimal placeholder entry for the code
+    const nm = _PH_LANDMARK[code];
     const placeholderId = `extra_placeholder_${code}`;
     const entry = {
       id: placeholderId,
-      displayName: _PLACEHOLDER_NAMES[code],
+      displayName: nm.name,
       tier: 6,
       naturalBand: 6,
       radiusNominal: 50,
       radiusJitter: 0,
       spawnWeight: 0,
-      palette: [0x808080],
+      palette: [nm.colorHex || 0x808080],
       yOffset: 0,
       upright: true,
       collisionScale: 1.0,
       heroTriCap: HERO_TRI_CAP,
-      // geometryFactory BUILDS every CATALOG id — null crashed DEV boot. Reuse a
-      // real (already tri-capped) landmark; these codes are spawnWeight 0 / unplaced.
-      buildGeometry: CATALOG['jiufen_teahouse'].buildGeometry,
+      buildGeometry: nm.buildGeometry.bind(nm),
       extraCode: code,
       sizeClass: null,
     };

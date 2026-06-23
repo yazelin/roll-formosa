@@ -43,7 +43,7 @@ export { RESCALE_S, ARCH_PER_TIER };
 export const TIERS = [
   {
     index: 0,
-    name: '柑仔店桌頭', // 圖釘/文具桌頭 — drives HUD #tier-label
+    name: '廟口柑仔店', // 圖釘/文具桌頭 — drives HUD #tier-label
     enterTrueRadius: 0.02,
     cellSizeSim: 32,
     loadRadiusSim: 96,

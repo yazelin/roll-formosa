@@ -213,17 +213,17 @@ for (const { code, col } of _KEELUNG_COLLECTIBLES) {
   EXTRA_SIZE_CLASS_BY_CODE[code] = 'collectible-small';
 }
 
-/* 8 extended landmarks at codes 90-93 + 95-98. For now reuse taipei structures
-   until keelung-specific ones are created. */
+/* 8 extended landmarks at codes 90-93 + 95-98 — reuse keelung's own 8 landmarks
+   (curated/display slots, same as taitung's pattern; no taipei landmarks). */
 const _KEELUNG_EXTRA_LANDMARKS = [
-  { code: 90, nm: NM_RAINBOW,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 91, nm: NM_SYSHALL,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 92, nm: NM_STATION,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 93, nm: NM_PALACE,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
-  { code: 95, nm: NM_XINGTIAN,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
-  { code: 96, nm: NM_THEATER,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 97, nm: NM_WHEEL,      sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 98, nm: NM_MK_STATION, sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 90, nm: NM_MIAOKOU_GATE,    sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 91, nm: NM_KEELUNG_STATION, sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 92, nm: NM_GUANYIN_STATUE,  sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 93, nm: NM_OCEAN_PLAZA,     sizeClass: 'landmark-xl',  tier: 5, naturalBand: 5 },
+  { code: 95, nm: NM_XIANDONYAN,      sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
+  { code: 96, nm: NM_HEPING_ISLAND,   sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 97, nm: NM_KEELUNG_ISLET,   sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 98, nm: NM_QINGAN_TEMPLE,   sizeClass: 'landmark-mid', tier: 4, naturalBand: 4 },
 ];
 for (const { code, nm, sizeClass, tier, naturalBand } of _KEELUNG_EXTRA_LANDMARKS) {
   const _g = nm.buildGeometry(() => 0.5);
@@ -231,7 +231,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _KEELUNG_EXTRA_LANDMARK
   const _yOffset = -1 - _g.boundingBox.min.y;
   if (_g.dispose) _g.dispose();
   const entry = {
-    id: nm.id,
+    id: `${nm.id}_ext${code}`, // unique — reuses own landmark geom but distinct catalog id (no collision with codes 82-89)
     displayName: nm.name,
     tier,
     naturalBand,
@@ -247,7 +247,7 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _KEELUNG_EXTRA_LANDMARK
     extraCode: code,
     sizeClass,
   };
-  CATALOG[nm.id] = entry;
+  CATALOG[entry.id] = entry;
   EXTRA_CATALOG[code] = entry;
   EXTRA_SIZE_CLASS_BY_CODE[code] = sizeClass;
 }

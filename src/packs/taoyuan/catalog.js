@@ -221,15 +221,15 @@ for (const { code, col } of _TAIWAN_COLLECTIBLES) {
 /* DE-TOKYO: codes 90-93 + 95-98 -> Taoyuan placeholder/goal landmark entries.
    Code 93 = goal display slot (大溪牌樓); others are placeholder slots. */
 const _TAOYUAN_EXTRA_LANDMARKS = [
-  // Codes 90-92 are placeholder slots (may add more Taoyuan landmarks later)
-  { code: 90, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
-  { code: 91, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
-  { code: 92, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
-  { code: 93, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 }, // goal display slot
-  { code: 95, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 96, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 97, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
-  { code: 98, nm: NM_DAXI_PAILOU, sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  // Reuse taoyuan's own landmarks for variety (was 8× 大溪牌樓 = the goal repeated).
+  { code: 90, nm: NM_DAXI_BRIDGE,      sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
+  { code: 91, nm: NM_DAXI_OLDSTREET,   sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
+  { code: 92, nm: NM_ZHONGLI_STATION,  sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
+  { code: 93, nm: NM_HUTOUSHAN,        sizeClass: 'landmark-xl', tier: 6, naturalBand: 6 },
+  { code: 95, nm: NM_CIHU_MAUSOLEUM,   sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 96, nm: NM_YONGAN_HARBOR,    sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 97, nm: NM_TPE_TERMINAL,     sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
+  { code: 98, nm: NM_SHIMEN_RESERVOIR, sizeClass: 'landmark-mid', tier: 5, naturalBand: 5 },
 ];
 for (const { code, nm, sizeClass, tier, naturalBand } of _TAOYUAN_EXTRA_LANDMARKS) {
   const _g = nm.buildGeometry(() => 0.5);
