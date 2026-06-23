@@ -13,6 +13,18 @@ DEADLINE=$(date -d 'today 07:00' +%s)
 
 log(){ echo "[$(date '+%m-%d %H:%M:%S')] $*" | tee -a "$LOG"; }
 
+# log claude account usage (5h/7d window utilization) — the autopilot's throttle.
+# Endpoint reverse-engineered in yazelin/claude-auth-switcher.
+log_usage(){
+  local tok msg
+  tok=$(node -e 'try{process.stdout.write(JSON.parse(require("fs").readFileSync(process.env.HOME+"/.claude/.credentials.json")).claudeAiOauth.accessToken)}catch(e){}' 2>/dev/null)
+  [ -z "$tok" ] && return 0
+  msg=$(curl -s --max-time 10 https://api.anthropic.com/api/oauth/usage \
+        -H "Authorization: Bearer $tok" -H "anthropic-beta: oauth-2025-04-20" \
+      | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{try{const j=JSON.parse(d),f=j.five_hour||{},s=j.seven_day||{};process.stdout.write(`額度 5h=${f.utilization??"?"}%(resets ${f.resets_at||"?"}) 7d=${s.utilization??"?"}%`)}catch(e){process.stdout.write("額度查詢失敗")}})' 2>/dev/null)
+  [ -n "$msg" ] && log "$msg"
+}
+
 # run the doer for one backlog ITEM ($1); echoes its output. Retried by the caller
 # on a claude usage-limit hit.
 run_doer(){
@@ -49,6 +61,7 @@ for ITEM in "${ITEMS[@]}"; do
   if [ "$(date +%s)" -ge "$DEADLINE" ]; then log "到 07:00 deadline,停止開新城市。"; break; fi
   TASK="${ITEM#*] }"
   log "---- START: $TASK"
+  log_usage
 
   # 乾淨 slate,對齊最新 origin/main
   git checkout -q main
