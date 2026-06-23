@@ -13,6 +13,7 @@ export const CITIES = Object.freeze([
   Object.freeze({ id: 'newtaipei', displayName: '新北', tagline: '淡水漁人碼頭終點', status: 'ready' }),
   Object.freeze({ id: 'taoyuan', displayName: '桃園', tagline: '大溪老街終點', status: 'ready' }),
   Object.freeze({ id: 'chiayi', displayName: '嘉義', tagline: '阿里山下的木都', status: 'ready' }),
+  Object.freeze({ id: 'pingtung', displayName: '屏東', tagline: '鵝鑾鼻燈塔終點', status: 'ready' }),
 ]);
 
 export const DEFAULT_CITY = 'taipei';
