@@ -48,9 +48,9 @@ export const NM_OCEAN_PLAZA = {
     // ---- Wave-shaped canopy structure ----
     // Main canopy columns
     for (const cx of [-0.8, 0, 0.8]) {
-      parts.push(cyl(0.06, 0.06, 1.6, 6, STEEL, { x: cx, y: 0.96, z: -0.3 }));
+      parts.push(cyl(0.06, 0.06, 1.6, 4, STEEL, { x: cx, y: 0.96, z: -0.3 }));
       // Angled support
-      parts.push(cyl(0.04, 0.04, 0.6, 6, STEEL, {
+      parts.push(cyl(0.04, 0.04, 0.6, 4, STEEL, {
         x: cx, y: 1.5, z: 0.1, rz: 0.5
       }));
     }
@@ -70,7 +70,7 @@ export const NM_OCEAN_PLAZA = {
 
     // ---- Bollards along waterfront ----
     for (let i = -3; i <= 3; i++) {
-      parts.push(cyl(0.05, 0.05, 0.18, 6, BOLLARD, { x: i * 0.45, y: 0.25, z: 0.58 }));
+      parts.push(cyl(0.05, 0.05, 0.18, 4, BOLLARD, { x: i * 0.45, y: 0.25, z: 0.58 }));
     }
 
     // ---- Viewing platforms ----
@@ -86,8 +86,8 @@ export const NM_OCEAN_PLAZA = {
 
     // ---- Light poles ----
     for (const lx of [-1.2, 1.2]) {
-      parts.push(cyl(0.03, 0.03, 0.9, 6, STEEL, { x: lx, y: 0.62, z: -0.5 }));
-      parts.push(sph(0.06, LIGHT, { ws: 6, hs: 4, x: lx, y: 1.1, z: -0.5 }));
+      parts.push(cyl(0.03, 0.03, 0.9, 4, STEEL, { x: lx, y: 0.62, z: -0.5 }));
+      parts.push(sph(0.06, LIGHT, { ws: 4, hs: 3, x: lx, y: 1.1, z: -0.5 }));
     }
 
     return finish(parts);

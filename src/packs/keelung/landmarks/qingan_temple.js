@@ -43,8 +43,8 @@ export const NM_QINGAN_TEMPLE = {
 
     // ---- Colonnade (front pillars) ----
     for (const px of [-0.8, -0.4, 0.4, 0.8]) {
-      parts.push(cyl(0.08, 0.08, 1.1, 8, RED, { x: px, y: 0.83, z: 0.8 }));
-      parts.push(cyl(0.1, 0.1, 0.08, 8, STONE, { x: px, y: 0.32, z: 0.8 })); // base
+      parts.push(cyl(0.08, 0.08, 1.1, 6, RED, { x: px, y: 0.83, z: 0.8 }));
+      parts.push(cyl(0.1, 0.1, 0.08, 6, STONE, { x: px, y: 0.32, z: 0.8 })); // base
     }
 
     // ---- Entrance doors ----
@@ -92,12 +92,12 @@ export const NM_QINGAN_TEMPLE = {
 
     // ---- Red lanterns ----
     for (const lx of [-0.6, 0.6]) {
-      parts.push(cyl(0.08, 0.1, 0.2, 8, LANTERN, { x: lx, y: 1.25, z: 0.82 }));
-      parts.push(cyl(0.04, 0.04, 0.04, 8, GOLD, { x: lx, y: 1.37, z: 0.82 }));
+      parts.push(cyl(0.08, 0.1, 0.2, 6, LANTERN, { x: lx, y: 1.25, z: 0.82 }));
+      parts.push(cyl(0.04, 0.04, 0.04, 6, GOLD, { x: lx, y: 1.37, z: 0.82 }));
     }
 
     // ---- Incense burner in front ----
-    parts.push(cyl(0.15, 0.12, 0.25, 8, 0x8a6a4a, { y: 0.4, z: 1.0 }));
+    parts.push(cyl(0.15, 0.12, 0.25, 6, 0x8a6a4a, { y: 0.4, z: 1.0 }));
 
     return finish(parts);
   },

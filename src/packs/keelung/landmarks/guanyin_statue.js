@@ -48,13 +48,13 @@ export const NM_GUANYIN_STATUE = {
 
     // ---- Guanyin statue body ----
     // Flowing robes (lower body)
-    parts.push(cone(0.45, 1.6, 12, CREAM, { y: 2.08 }));
+    parts.push(cone(0.45, 1.6, 8, CREAM, { y: 2.08 }));
 
     // Torso
-    parts.push(cyl(0.32, 0.38, 0.7, 10, WHITE, { y: 3.2 }));
+    parts.push(cyl(0.32, 0.38, 0.7, 8, WHITE, { y: 3.2 }));
 
     // Chest/shoulder area
-    parts.push(sph(0.35, WHITE, { ws: 8, hs: 6, y: 3.6, sy: 0.6 }));
+    parts.push(sph(0.35, WHITE, { ws: 5, hs: 4, y: 3.6, sy: 0.6 }));
 
     // Arms (simplified - one holding vase, one in blessing gesture)
     // Left arm down holding vase
@@ -63,11 +63,11 @@ export const NM_GUANYIN_STATUE = {
 
     // Right arm in blessing mudra
     parts.push(cyl(0.08, 0.08, 0.4, 6, WHITE, { x: 0.32, y: 3.4, rz: -0.4 }));
-    parts.push(sph(0.1, WHITE, { ws: 6, hs: 4, x: 0.45, y: 3.6 })); // hand
+    parts.push(sph(0.1, WHITE, { ws: 4, hs: 3, x: 0.45, y: 3.6 })); // hand
 
     // ---- Head ----
     parts.push(sph(0.22, WHITE, { ws: 10, hs: 8, y: 3.95 })); // head
-    parts.push(sph(0.16, WHITE, { ws: 8, hs: 6, y: 4.08, sz: 0.8 })); // hair bun
+    parts.push(sph(0.16, WHITE, { ws: 5, hs: 4, y: 4.08, sz: 0.8 })); // hair bun
 
     // Crown/headdress
     parts.push(cyl(0.18, 0.2, 0.12, 8, GOLD, { y: 4.18 }));

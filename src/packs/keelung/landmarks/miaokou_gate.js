@@ -40,9 +40,9 @@ export const NM_MIAOKOU_GATE = {
     const pillarZ = [0.3, -0.3];
     for (const px of pillarX) {
       for (const pz of pillarZ) {
-        parts.push(cyl(0.14, 0.16, 2.0, 8, RED, { x: px, y: 1.0, z: pz }));
-        parts.push(cyl(0.18, 0.18, 0.12, 8, STONE, { x: px, y: 0.06, z: pz })); // base
-        parts.push(cyl(0.16, 0.14, 0.1, 8, GOLD, { x: px, y: 2.02, z: pz })); // capital
+        parts.push(cyl(0.14, 0.16, 2.0, 4, RED, { x: px, y: 1.0, z: pz }));
+        parts.push(cyl(0.18, 0.18, 0.12, 4, STONE, { x: px, y: 0.06, z: pz })); // base
+        parts.push(cyl(0.16, 0.14, 0.1, 4, GOLD, { x: px, y: 2.02, z: pz })); // capital
       }
     }
 
@@ -89,10 +89,10 @@ export const NM_MIAOKOU_GATE = {
 
     // ---- Red lanterns ----
     for (const lx of [-0.5, 0.5]) {
-      parts.push(cyl(0.08, 0.08, 0.02, 8, WOOD, { x: lx, y: 1.88, z: 0.38 })); // hanger
-      parts.push(cyl(0.12, 0.14, 0.28, 8, LANTERN, { x: lx, y: 1.7, z: 0.38 })); // lantern body
-      parts.push(cyl(0.06, 0.06, 0.04, 8, GOLD, { x: lx, y: 1.85, z: 0.38 })); // top cap
-      parts.push(cyl(0.05, 0.05, 0.06, 8, GOLD, { x: lx, y: 1.53, z: 0.38 })); // bottom
+      parts.push(cyl(0.08, 0.08, 0.02, 4, WOOD, { x: lx, y: 1.88, z: 0.38 })); // hanger
+      parts.push(cyl(0.12, 0.14, 0.28, 4, LANTERN, { x: lx, y: 1.7, z: 0.38 })); // lantern body
+      parts.push(cyl(0.06, 0.06, 0.04, 4, GOLD, { x: lx, y: 1.85, z: 0.38 })); // top cap
+      parts.push(cyl(0.05, 0.05, 0.06, 4, GOLD, { x: lx, y: 1.53, z: 0.38 })); // bottom
     }
 
     return finish(parts);

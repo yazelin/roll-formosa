@@ -247,10 +247,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 海港量體 harbor_block ---------------------------------- */
+  /* ---- slot 7: 海港大樓 harbor_block ---------------------------------- */
   {
     id: 'harbor_block',
-    displayName: '海港量體',
+    displayName: '海港大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,
