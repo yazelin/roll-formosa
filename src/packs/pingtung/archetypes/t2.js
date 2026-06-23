@@ -1,0 +1,328 @@
+/**
+ * @file packs/pingtung/archetypes/t2.js — Roll Formosa Pingtung pack, TIER 2 「恆春老街」.
+ *
+ * The 10 arcade-sidewalk (騎樓) rollable archetypes for Hengchun old street,
+ * authored in the FROZEN id order of tiers.js T2.archetypeIds (slots [0..7]
+ * absorbable, slots [8..9] are the repeatable CHUNK LANDMARKS —
+ * hengchun_vendor_cart / temple_incense_burner — at spawnWeight ~0.3).
+ *
+ * Size band: radiusNominal 0.25–1.2 m. Every buildGeometry(rng) returns ONE
+ * merged, vertex-colored BufferGeometry built ONLY from the engine geometry
+ * vocabulary (geomHelpers.js: box/cyl/cone/sph/ico/torus + paint/xf + finish)
+ * and normalized by finish() to a UNIT bounding sphere (radius 1). Tri budget
+ * <= 350 per archetype (kept low via small radial segment counts, 6-10).
+ */
+
+import {
+  box, cyl, cone, sph, ico, torus, finish, PI, HALF_PI,
+} from '../geomHelpers.js';
+
+/** @typedef {import('../../../types.js').Archetype} Archetype */
+
+/** @type {Archetype[]} */
+export const T2_ARCHETYPES = [
+  /* ---- slot 0 ---- 紅塑膠椅 — the ubiquitous stackable red stool/chair */
+  {
+    id: 'red_plastic_chair',
+    displayName: '紅塑膠椅',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.45,
+    radiusJitter: 0.15,
+    spawnWeight: 1.0,
+    palette: [0xd83026, 0xe23a2c, 0xc4281f, 0xee5a3a, 0xb84a3a],
+    yOffset: -0.219,
+    upright: true,
+    collisionScale: 0.8,
+    buildGeometry(rng) {
+      const r = 0xffffff;
+      return finish([
+        box(0.9, 0.1, 0.85, r, { y: 0.85 }),
+        box(0.9, 0.16, 0.06, r, { y: 0.78, z: 0.42 }),
+        box(0.86, 0.7, 0.1, r, { y: 1.2, z: -0.4 }),
+        box(0.86, 0.12, 0.1, r, { y: 1.0, z: -0.36 }),
+        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: 0.34 }),
+        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: 0.34 }),
+        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: -0.34 }),
+        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: -0.34 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 1 ---- 安全帽 — scooter half-helmet */
+  {
+    id: 'helmet',
+    displayName: '安全帽',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.28,
+    radiusJitter: 0.18,
+    spawnWeight: 1.0,
+    palette: [0xf2f2ee, 0xe23a2c, 0x2a55a8, 0x2e6a48, 0x303338],
+    yOffset: -0.075,
+    upright: false,
+    collisionScale: 0.85,
+    buildGeometry(rng) {
+      return finish([
+        sph(1.0, 0xffffff, { ws: 10, hs: 6, thetaLen: HALF_PI * 1.15, y: 0.0 }),
+        box(0.9, 0.06, 0.42, 0xffffff, { y: -0.02, z: 0.78, rx: -0.18 }),
+        cyl(1.0, 1.0, 0.16, 10, 0x2a2c30, { rx: HALF_PI, y: 0.02, thetaLen: PI, theta0: -HALF_PI }),
+        box(0.1, 0.5, 0.1, 0x303338, { x: -0.7, y: -0.5 }),
+        box(0.1, 0.5, 0.1, 0x303338, { x: 0.7, y: -0.5 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 2 ---- 電鍋 — the TATUNG rice cooker */
+  {
+    id: 'rice_cooker',
+    displayName: '電鍋',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.3,
+    radiusJitter: 0.14,
+    spawnWeight: 1.0,
+    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
+    yOffset: -0.253,
+    upright: true,
+    collisionScale: 0.9,
+    buildGeometry(rng) {
+      const body = 0xffffff;
+      return finish([
+        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
+        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
+        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
+        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
+        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
+        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
+        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 3 ---- 瓦斯桶 — the steel LPG cylinder */
+  {
+    id: 'gas_cylinder',
+    displayName: '瓦斯桶',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.32,
+    radiusJitter: 0.12,
+    spawnWeight: 1.0,
+    palette: [0xd0c8b8, 0xc94f46, 0xa8a098, 0xb84a3a, 0x9aa0aa],
+    yOffset: -0.121,
+    upright: true,
+    collisionScale: 0.92,
+    buildGeometry(rng) {
+      const steel = 0xffffff;
+      return finish([
+        cyl(0.62, 0.66, 0.16, 10, 0x8a8278, { y: 0.08 }),
+        cyl(0.6, 0.6, 1.5, 10, steel, { y: 0.9, hex2: 0xe2dccc }),
+        sph(0.6, steel, { ws: 10, hs: 5, thetaLen: HALF_PI, y: 1.6 }),
+        cyl(0.34, 0.34, 0.34, 8, 0x6a6258, { y: 2.18, open: true }),
+        cyl(0.1, 0.1, 0.14, 6, 0xc4281f, { y: 2.18 }),
+        cyl(0.04, 0.04, 0.18, 5, 0x9aa0aa, { y: 2.34 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 4 ---- 三角錐 — orange traffic cone */
+  {
+    id: 'traffic_cone',
+    displayName: '三角錐',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.3,
+    radiusJitter: 0.14,
+    spawnWeight: 1.0,
+    palette: [0xf26a1f, 0xff7a28, 0xe05a18, 0xf2f2ee, 0xd85518],
+    yOffset: -0.263,
+    upright: true,
+    collisionScale: 0.85,
+    buildGeometry(rng) {
+      const o = 0xffffff;
+      return finish([
+        box(1.2, 0.14, 1.2, o, { y: 0.07 }),
+        cyl(0.62, 0.82, 0.3, 8, o, { y: 0.27 }),
+        cone(0.6, 1.7, 8, o, { y: 1.0 }),
+        cyl(0.42, 0.5, 0.22, 8, 0xf0ede4, { y: 0.7 }),
+        cyl(0.28, 0.34, 0.16, 8, 0xf0ede4, { y: 1.05 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant */
+  {
+    id: 'fire_hydrant',
+    displayName: '消防栓',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.35,
+    radiusJitter: 0.13,
+    spawnWeight: 1.0,
+    palette: [0xd02a1f, 0xe23a2c, 0xb8241c, 0xffd000, 0xc4281f],
+    yOffset: -0.188,
+    upright: true,
+    collisionScale: 0.9,
+    buildGeometry(rng) {
+      const red = 0xffffff;
+      return finish([
+        cyl(0.66, 0.72, 0.2, 8, 0x9a2018, { y: 0.1 }),
+        cyl(0.52, 0.58, 1.1, 8, red, { y: 0.75 }),
+        cyl(0.42, 0.52, 0.24, 8, red, { y: 1.42 }),
+        sph(0.46, red, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 1.5 }),
+        cyl(0.16, 0.2, 0.2, 6, 0xf0c020, { y: 1.92 }),
+        cyl(0.18, 0.2, 0.22, 6, red, { rx: HALF_PI, y: 1.0, z: 0.58 }),
+        cyl(0.22, 0.22, 0.06, 6, 0xf0c020, { rx: HALF_PI, y: 1.0, z: 0.7 }),
+        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: -0.6, y: 0.85 }),
+        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: 0.6, y: 0.85 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat */
+  {
+    id: 'lucky_cat',
+    displayName: '招財貓',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.3,
+    radiusJitter: 0.14,
+    spawnWeight: 1.0,
+    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
+    yOffset: -0.195,
+    upright: true,
+    collisionScale: 0.82,
+    buildGeometry(rng) {
+      const white = 0xffffff;
+      return finish([
+        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
+        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
+        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
+        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
+        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
+        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
+        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
+        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
+        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
+        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }),
+        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 7 ---- 衝浪板架 — surfboard rack near beach shops */
+  {
+    id: 'surfboard_rack',
+    displayName: '衝浪板架',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 0.6,
+    radiusJitter: 0.14,
+    spawnWeight: 1.0,
+    palette: [0x8a7a6a, 0x40c0ff, 0xff6040, 0xffd040, 0x40ff80],
+    yOffset: -0.28,
+    upright: true,
+    collisionScale: 0.75,
+    buildGeometry(rng) {
+      const wood = 0x8a7a6a;
+      const parts = [
+        // Wooden frame
+        cyl(0.08, 0.08, 2.0, 6, wood, { x: -0.8, y: 1.0 }),
+        cyl(0.08, 0.08, 2.0, 6, wood, { x: 0.8, y: 1.0 }),
+        box(1.8, 0.1, 0.1, wood, { y: 0.5 }),
+        box(1.8, 0.1, 0.1, wood, { y: 1.5 }),
+        // Surfboards leaning on rack
+        box(0.3, 2.2, 0.08, 0x40c0ff, { x: -0.4, y: 1.1, rz: 0.15 }),
+        box(0.28, 2.0, 0.08, 0xff6040, { x: 0.0, y: 1.0, rz: 0.1 }),
+        box(0.32, 2.1, 0.08, 0xffd040, { x: 0.4, y: 1.05, rz: 0.05 }),
+        // Board fin details
+        box(0.08, 0.2, 0.12, 0x2a2a2a, { x: -0.4, y: 0.3, z: 0.08, rz: 0.15 }),
+        box(0.08, 0.18, 0.12, 0x2a2a2a, { x: 0.0, y: 0.25, z: 0.08, rz: 0.1 }),
+        box(0.08, 0.2, 0.12, 0x2a2a2a, { x: 0.4, y: 0.28, z: 0.08, rz: 0.05 }),
+      ];
+      return finish(parts);
+    },
+  },
+
+  /* ---- slot 8 (CHUNK LANDMARK) ---- 恆春推車 — wheeled Hengchun vendor cart */
+  {
+    id: 'hengchun_vendor_cart',
+    displayName: '恆春推車',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 1.8,
+    radiusJitter: 0.12,
+    spawnWeight: 0.3,
+    palette: [0x2a8a5a, 0xe0a050, 0xf8f4f0, 0x9a8a78, 0xead8b0],
+    yOffset: -0.369,
+    upright: true,
+    collisionScale: 0.85,
+    buildGeometry(rng) {
+      const cart = 0xffffff;
+      const wood = 0x9a7a52;
+      return finish([
+        // Cart body
+        box(2.0, 1.0, 1.1, wood, { y: 0.75 }),
+        // Counter top
+        box(2.15, 0.1, 1.25, 0xd8dce2, { y: 1.3 }),
+        // Glass display
+        box(2.0, 0.5, 0.06, 0xbfd8e0, { y: 1.6, z: -0.55 }),
+        // Front panel (green Hengchun style)
+        box(2.0, 0.5, 0.06, cart, { y: 0.7, z: 0.56, hex2: 0x2a8a5a }),
+        // Roof posts
+        cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: 0.45 }),
+        cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: 0.45 }),
+        cyl(0.06, 0.06, 1.2, 5, wood, { x: -0.85, y: 1.95, z: -0.45 }),
+        cyl(0.06, 0.06, 1.2, 5, wood, { x: 0.85, y: 1.95, z: -0.45 }),
+        // Striped awning
+        box(2.4, 0.12, 1.5, cart, { y: 2.6 }),
+        box(2.4, 0.28, 0.06, 0xe0a050, { y: 2.42, z: 0.74 }),
+        // Lamp
+        sph(0.2, 0xffd06a, { ws: 6, hs: 4, x: 0.7, y: 2.3, z: 0.5 }),
+        // Wheels
+        cyl(0.34, 0.34, 0.16, 8, 0x2e3138, { rx: HALF_PI, x: -0.85, y: 0.34, z: 0 }),
+        cyl(0.34, 0.34, 0.16, 8, 0x2e3138, { rx: HALF_PI, x: 0.85, y: 0.34, z: 0 }),
+        // Push handle
+        cyl(0.05, 0.05, 1.0, 5, wood, { rz: HALF_PI, x: 1.2, y: 1.1, rx: 0.2 }),
+      ]);
+    },
+  },
+
+  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐(鼎) — temple incense burner */
+  {
+    id: 'temple_incense_burner',
+    displayName: '廟前香爐(鼎)',
+    tier: 2,
+    naturalBand: 2,
+    radiusNominal: 1.5,
+    radiusJitter: 0.12,
+    spawnWeight: 0.3,
+    palette: [0x9a7b3a, 0xb89048, 0x7a5e2a, 0xc8a050, 0x6a4e22],
+    yOffset: -0.215,
+    upright: true,
+    collisionScale: 0.85,
+    buildGeometry(rng) {
+      const bronze = 0xffffff;
+      return finish([
+        sph(1.0, bronze, { ws: 8, hs: 4, y: 1.0, hex2: 0xead8b0 }),
+        cyl(1.02, 1.02, 0.2, 8, 0x8a6a30, { y: 1.6, open: true }),
+        cyl(0.92, 0.92, 0.1, 8, 0xc8b89a, { y: 1.62, open: true }),
+        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, z: 0.7 }),
+        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: -0.6, z: -0.4 }),
+        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: 0.6, z: -0.4 }),
+        torus(0.28, 0.07, 4, 5, bronze, { x: -1.0, y: 1.7 }),
+        torus(0.28, 0.07, 4, 5, bronze, { x: 1.0, y: 1.7 }),
+        cyl(0.1, 0.12, 1.6, 5, bronze, { x: -1.05, y: 1.0 }),
+        cyl(0.1, 0.12, 1.6, 5, bronze, { x: 1.05, y: 1.0 }),
+        cone(0.5, 0.5, 6, 0xc83020, { y: 2.0 }),
+        cyl(0.06, 0.06, 0.3, 5, 0xf0c020, { y: 2.35 }),
+        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.2, z: 0.1 }),
+        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: -0.18, z: 0.2 }),
+        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.0, z: -0.2 }),
+      ]);
+    },
+  },
+];
+
+export default T2_ARCHETYPES;
