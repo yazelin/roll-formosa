@@ -54,7 +54,7 @@ export const NM_SWALLOW = {
     ];
     for (const [cx, cy, cz] of cavePositions) {
       const size = 0.06 + rng() * 0.04;
-      parts.push(cyl(size, size * 0.8, 0.08, 6, CAVE, { x: cx, y: cy, z: cz, ry: HALF_PI }));
+      parts.push(cyl(size, size * 0.8, 0.08, 4, CAVE, { x: cx, y: cy, z: cz, ry: HALF_PI }));
     }
 
     // ---- Right cliff face ------------------------------------------------
@@ -69,7 +69,7 @@ export const NM_SWALLOW = {
     parts.push(box(0.02, 0.2, 2.4, RAILING, { x: -0.35, y: 0.24, z: 0 }));
     // Railing posts
     for (let z = -1.0; z <= 1.0; z += 0.5) {
-      parts.push(cyl(0.015, 0.015, 0.22, 6, RAILING, { x: -0.35, y: 0.21, z }));
+      parts.push(cyl(0.015, 0.015, 0.22, 4, RAILING, { x: -0.35, y: 0.21, z }));
     }
 
     // ---- Rocky outcrops and boulders in river ----------------------------

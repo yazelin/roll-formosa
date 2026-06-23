@@ -148,7 +148,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 石雕工坊, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
       'townhouse', 'marble_workshop', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 石藝街屋量體, 宮廟量體
+      // chunk landmarks: 石藝街屋, 大廟
       'marble_shop_mass', 'temple_mass',
     ],
     fogColor: 0x201a44, // T4 石藝街屋藍紫(轉冷)
@@ -194,7 +194,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 斷崖岩壁, 公路護欄, 觀景平台, 巨型海蝕洞, 蘇花隧道, 斷崖量體, 海上巨岩, 燈塔
+      // 斷崖岩壁, 公路護欄, 觀景平台, 巨型海蝕洞, 蘇花隧道, 斷崖大樓, 海上巨岩, 燈塔
       'cliff_wall', 'highway_guardrail', 'scenic_platform', 'sea_cave', 'suhua_tunnel', 'cliff_mass', 'sea_rock', 'lighthouse',
       // chunk landmarks: 清水斷崖觀景, 蘇花公路彎道
       'qingshui_viewpoint', 'suhua_curve',

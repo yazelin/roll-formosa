@@ -36,7 +36,7 @@
  *   T3 = 30-39 (機車/小貨車/漂流木/鵝卵石堆/風箏/涼亭/海濱棕櫚/石獅 + chunk lm)
  *   T4 = 40-49 (透天厝/石雕工坊/公寓/超商/公車/垃圾車/加油站/騎樓柱 + chunk lm)
  *   T5 = 50-59 (大理石岩塊/吊橋塔/步道欄杆/山壁岩石/停車塔/峽谷看板/遊客中心/隧道口 + chunk lm)
- *   T6 = 60-69 (斷崖岩壁/公路護欄/觀景平台/海蝕洞/蘇花隧道/斷崖量體/海上巨岩/燈塔 + chunk lm)
+ *   T6 = 60-69 (斷崖岩壁/公路護欄/觀景平台/海蝕洞/蘇花隧道/斷崖大樓/海上巨岩/燈塔 + chunk lm)
  *
  * Id contract: append-only. Never reuse or rename existing ids.
  * Static data only — zero runtime allocation beyond module init.

@@ -42,9 +42,9 @@ export const NM_FARGLORY = {
     const arenaX = 0.3;
     const arenaZ = 0.5;
     // Circular pool
-    parts.push(cyl(0.7, 0.7, 0.15, 12, ARENA, { x: arenaX, z: arenaZ, y: 0.225 }));
+    parts.push(cyl(0.7, 0.7, 0.15, 8, ARENA, { x: arenaX, z: arenaZ, y: 0.225 }));
     // Stadium seating (semi-circle)
-    parts.push(cyl(1.0, 0.85, 0.4, 12, SEAT, {
+    parts.push(cyl(1.0, 0.85, 0.4, 8, SEAT, {
       x: arenaX, z: arenaZ - 0.15, y: 0.35,
       theta0: 0, thetaLen: PI, // half circle
     }));
@@ -56,7 +56,7 @@ export const NM_FARGLORY = {
     // ---- Sea Lion Theater (smaller venue) --------------------------------
     const sealX = -1.0;
     const sealZ = 0.3;
-    parts.push(cyl(0.4, 0.4, 0.10, 10, ARENA, { x: sealX, z: sealZ, y: 0.20 }));
+    parts.push(cyl(0.4, 0.4, 0.10, 8, ARENA, { x: sealX, z: sealZ, y: 0.20 }));
     parts.push(cyl(0.55, 0.5, 0.25, 8, SEAT, { x: sealX, z: sealZ - 0.1, y: 0.28 }));
 
     // ---- Cable car system (signature feature) ----------------------------

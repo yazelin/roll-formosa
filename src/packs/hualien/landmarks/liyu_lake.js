@@ -37,9 +37,9 @@ export const NM_LIYU = {
     const parts = [];
 
     // ---- Lake surface (carp-shaped implied) ------------------------------
-    parts.push(cyl(1.5, 1.4, 0.08, 12, WATER, { y: 0.04, hex2: WATER_D }));
+    parts.push(cyl(1.5, 1.4, 0.08, 8, WATER, { y: 0.04, hex2: WATER_D }));
     // Shore edge
-    parts.push(cyl(1.6, 1.55, 0.06, 12, 0x8a8070, { y: 0.03 }));
+    parts.push(cyl(1.6, 1.55, 0.06, 8, 0x8a8070, { y: 0.03 }));
 
     // ---- Swan-shaped paddle boats (鯉魚潭 signature) ----------------------
     // Swan boat 1
@@ -48,16 +48,16 @@ export const NM_LIYU = {
     // Body (elongated hull)
     parts.push(box(0.35, 0.12, 0.18, BOAT, { x: swan1X, z: swan1Z, y: 0.12 }));
     // Neck and head
-    parts.push(cyl(0.04, 0.03, 0.25, 6, BOAT, { x: swan1X + 0.12, z: swan1Z, y: 0.28, rx: 0.3 }));
-    parts.push(sph(0.06, BOAT, { ws: 6, hs: 4, x: swan1X + 0.18, z: swan1Z, y: 0.38 })); // head
+    parts.push(cyl(0.04, 0.03, 0.25, 4, BOAT, { x: swan1X + 0.12, z: swan1Z, y: 0.28, rx: 0.3 }));
+    parts.push(sph(0.06, BOAT, { ws: 4, hs: 3, x: swan1X + 0.18, z: swan1Z, y: 0.38 })); // head
     parts.push(cone(0.03, 0.08, 4, BEAK, { x: swan1X + 0.24, z: swan1Z, y: 0.38, rz: -HALF_PI })); // beak
 
     // Swan boat 2
     const swan2X = 0.5;
     const swan2Z = -0.2;
     parts.push(box(0.32, 0.11, 0.16, BOAT, { x: swan2X, z: swan2Z, y: 0.115 }));
-    parts.push(cyl(0.035, 0.025, 0.22, 6, BOAT, { x: swan2X + 0.10, z: swan2Z, y: 0.26, rx: 0.25 }));
-    parts.push(sph(0.055, BOAT, { ws: 6, hs: 4, x: swan2X + 0.15, z: swan2Z, y: 0.35 }));
+    parts.push(cyl(0.035, 0.025, 0.22, 4, BOAT, { x: swan2X + 0.10, z: swan2Z, y: 0.26, rx: 0.25 }));
+    parts.push(sph(0.055, BOAT, { ws: 4, hs: 3, x: swan2X + 0.15, z: swan2Z, y: 0.35 }));
     parts.push(cone(0.025, 0.07, 4, BEAK, { x: swan2X + 0.20, z: swan2Z, y: 0.35, rz: -HALF_PI }));
 
     // ---- Lakeside pagoda pavilion ----------------------------------------
@@ -68,24 +68,24 @@ export const NM_LIYU = {
     // Red pillars (6 around)
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * PI * 2;
-      parts.push(cyl(0.03, 0.03, 0.6, 6, PAGODA_RED, {
+      parts.push(cyl(0.03, 0.03, 0.6, 4, PAGODA_RED, {
         x: pagX + Math.cos(a) * 0.25, z: pagZ + Math.sin(a) * 0.25, y: 0.46,
       }));
     }
     // Hexagonal roof
-    parts.push(cone(0.5, 0.35, 6, PAGODA_RED, { x: pagX, z: pagZ, y: 0.95 }));
+    parts.push(cone(0.5, 0.35, 4, PAGODA_RED, { x: pagX, z: pagZ, y: 0.95 }));
     // Gold finial
-    parts.push(cyl(0.04, 0.02, 0.15, 6, PAGODA_GOLD, { x: pagX, z: pagZ, y: 1.22 }));
+    parts.push(cyl(0.04, 0.02, 0.15, 4, PAGODA_GOLD, { x: pagX, z: pagZ, y: 1.22 }));
 
     // ---- Wooden dock -----------------------------------------------------
     parts.push(box(0.6, 0.06, 0.25, WOOD, { x: 0.7, z: 0.9, y: 0.09 }));
     // Dock posts
     for (const dx of [-0.25, 0.25]) {
-      parts.push(cyl(0.03, 0.03, 0.2, 6, WOOD, { x: 0.7 + dx, z: 1.0, y: 0.16 }));
+      parts.push(cyl(0.03, 0.03, 0.2, 4, WOOD, { x: 0.7 + dx, z: 1.0, y: 0.16 }));
     }
 
     // ---- Surrounding mountains -------------------------------------------
-    parts.push(cone(0.9, 1.0, 6, MOUNTAIN, { x: 0, z: -1.6, y: 0.5, hex2: 0x5a7a6a }));
+    parts.push(cone(0.9, 1.0, 4, MOUNTAIN, { x: 0, z: -1.6, y: 0.5, hex2: 0x5a7a6a }));
     parts.push(cone(0.6, 0.7, 5, MOUNTAIN, { x: -0.9, z: -1.3, y: 0.35 }));
     parts.push(cone(0.5, 0.6, 5, MOUNTAIN, { x: 1.0, z: -1.4, y: 0.30 }));
 
@@ -94,8 +94,8 @@ export const NM_LIYU = {
       [1.2, 0.5], [-1.1, 0.3], [0.9, -0.7], [-0.7, 0.8],
     ];
     for (const [tx, tz] of treePositions) {
-      parts.push(cyl(0.04, 0.05, 0.35, 6, 0x5a4030, { x: tx, z: tz, y: 0.23 }));
-      parts.push(cone(0.2, 0.35, 6, TREE, { x: tx, z: tz, y: 0.55 }));
+      parts.push(cyl(0.04, 0.05, 0.35, 4, 0x5a4030, { x: tx, z: tz, y: 0.23 }));
+      parts.push(cone(0.2, 0.35, 4, TREE, { x: tx, z: tz, y: 0.55 }));
     }
 
     return finish(parts);

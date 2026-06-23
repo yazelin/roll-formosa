@@ -207,10 +207,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 斷崖量體 cliff mass ------------------------------------ */
+  /* ---- slot 5: 斷崖大樓 cliff mass ------------------------------------ */
   {
     id: 'cliff_mass',
-    displayName: '斷崖量體',
+    displayName: '斷崖大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 220,
