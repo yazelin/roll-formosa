@@ -343,10 +343,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 老街街屋量體 (chunk landmark — 連棟紅磚老街屋 row mass) - */
+  /* ---- slot 8: 老街街屋 (chunk landmark — 連棟紅磚老街屋 row mass) - */
   {
     id: 'oldstreet_row_mass',
-    displayName: '老街街屋量體',
+    displayName: '老街街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
@@ -384,10 +384,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 萬和宮量體 (chunk landmark — Wanhe temple mass, 燕尾脊) - */
+  /* ---- slot 9: 萬和宮 (chunk landmark — Wanhe temple mass, 燕尾脊) - */
   {
     id: 'wanhe_temple_mass',
-    displayName: '萬和宮量體',
+    displayName: '萬和宮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,

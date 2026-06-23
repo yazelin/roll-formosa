@@ -160,7 +160,7 @@ export const DONACK_LINES = Object.freeze({
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_presidential: Object.freeze({
-    text: '台中市政府！七期的玻璃量體，新市政中心就坐落在這',
+    text: '台中市政府！七期的玻璃帷幕大樓，新市政中心就坐落在這',
     priority: 3, expression: 'speaking', once: true, phase: PLAY,
   }),
   lm_cks: Object.freeze({

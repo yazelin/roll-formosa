@@ -332,10 +332,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 鹽埕街屋量體 (chunk landmark — Yancheng street-house row) */
+  /* ---- slot 8: 鹽埕街屋 (chunk landmark — Yancheng street-house row) */
   {
     id: 'saltfield_streethouse_mass',
-    displayName: '鹽埕街屋量體',
+    displayName: '鹽埕街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
@@ -372,10 +372,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 宮廟量體 (chunk landmark — temple mass, 燕尾脊) -------- */
+  /* ---- slot 9: 大廟 (chunk landmark — temple mass, 燕尾脊) -------- */
   {
     id: 'temple_mass',
-    displayName: '宮廟量體',
+    displayName: '大廟',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,

@@ -407,10 +407,10 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 港倉量體 warehouse_mass (CHUNK LANDMARK) ----------- */
+  /* ---- slot 9: 港邊倉庫 warehouse_mass (CHUNK LANDMARK) ----------- */
   {
     id: 'warehouse_mass',
-    displayName: '港倉量體',
+    displayName: '港邊倉庫',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 50,

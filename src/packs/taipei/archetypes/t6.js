@@ -232,10 +232,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 天際線量體 skyline block ------------------------------- */
+  /* ---- slot 7: 摩天大樓 skyline block ------------------------------- */
   {
     id: 'skyline_block',
-    displayName: '天際線量體',
+    displayName: '摩天大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,

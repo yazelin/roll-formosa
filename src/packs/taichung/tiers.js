@@ -146,7 +146,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 老街街屋, 公寓, 超商, 公車, 打鐵爐, 廟前金爐, 廟埕戲台
       'townhouse', 'oldstreet_shophouse', 'apartment', 'convenience_store', 'city_bus', 'blacksmith_forge', 'temple_gold_furnace', 'temple_opera_stage',
-      // chunk landmarks: 老街街屋量體, 萬和宮量體
+      // chunk landmarks: 老街街屋, 萬和宮
       'oldstreet_row_mass', 'wanhe_temple_mass',
     ],
     fogColor: 0x201a44, // T4 街屋廟埕藍紫(轉冷)
@@ -170,7 +170,7 @@ export const TIERS = [
     archetypeIds: [
       // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
       'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 商辦塔樓, 百貨量體
+      // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
     fogColor: 0x1c1e48, // T5 夜店電光藍(俱樂部)
@@ -192,7 +192,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 空橋, 屋頂機房, 街區量體
+      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 空橋, 屋頂機房, 街區大樓
       'glass_highrise', 'cross_bridge', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',

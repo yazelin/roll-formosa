@@ -250,10 +250,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 灣區量體 bay-area block ------------------------------- */
+  /* ---- slot 7: 灣區大樓 bay-area block ------------------------------- */
   {
     id: 'bayarea_block',
-    displayName: '灣區量體',
+    displayName: '灣區大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,

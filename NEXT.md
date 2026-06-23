@@ -11,6 +11,8 @@ Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(
 > —— 換成這座城市的河/運河/溪,避開起點(0,0)與終點。`river-localization.test.js` 會擋。
 > **結尾(`ending.js`)不要動**:已是共用 `../taiwanEnding.js`,引擎依 active city id 自動
 > 點亮對應燈點。新城市只要 id 有在 `taiwanEnding.js` 的 CITIES 裡就自動正確,別在 pack 裡改它。
+> **displayName/旁白別用「量體」**(建築術語,台灣口語不這樣講)。chunk 大樓類用口語:
+> 街屋 / 大樓 / 百貨大樓 / 摩天大樓 / 大廟 / 倉庫 等,別寫「XX量體」。
 > 每座的「終點地標 / 主題」是創作錨點,doer 照它發揮、不要照搬別城。
 
 ## 待辦城市(由標誌性 + 地理分散排序)

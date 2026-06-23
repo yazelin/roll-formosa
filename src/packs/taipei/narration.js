@@ -37,7 +37,7 @@
  *   T3 = 30-39 (機車/小貨車/變電箱/霓虹招牌/鐵捲門/路樹/棚架/石獅 + chunk lm)
  *   T4 = 40-49 (透天厝/鐵皮屋/公寓/超商/公車/垃圾車/加油站/騎樓柱 + chunk lm)
  *   T5 = 50-59 (商辦大樓/百貨/捷運高架/天橋/停車塔/巨型看板/玻璃帷幕街屋/銀行 + chunk lm)
- *   T6 = 60-69 (玻璃帷幕高樓/跨橋/其他摩天樓/巨型廣告牆/商辦塔/空橋/屋頂機房/街區量體 + chunk lm)
+ *   T6 = 60-69 (玻璃帷幕高樓/跨橋/其他摩天樓/巨型廣告牆/商辦塔/空橋/屋頂機房/街區大樓 + chunk lm)
  *
  * Id contract: append-only.  Never reuse or rename existing ids.
  * Static data only — zero runtime allocation beyond module init.

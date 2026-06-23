@@ -8,7 +8,7 @@
  * packs/taichung/tiers.js — spelling must NOT drift.
  *
  * Taichung re-theme of the Taipei commercial tier: 商辦大樓 / 玻璃帷幕街屋 /
- * 商辦塔樓 / 百貨量體 / 停車塔 / 銀行 / 巨型看板 stay as pan-Taiwan commercial
+ * 商辦塔樓 / 百貨大樓 / 停車塔 / 銀行 / 巨型看板 stay as pan-Taiwan commercial
  * generics, but the district's signature 七期·草悟道 flavour replaces three
  * slots — 勤美綠園道 (green植生牆 retail), 捷運綠線高架 (Taichung MRT Green
  * Line), 草悟道綠廊樹 (Calligraphy Greenway tree-lined corridor).
@@ -394,10 +394,10 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 百貨量體 department_mass (CHUNK LANDMARK) ---------- */
+  /* ---- slot 9: 百貨大樓 department_mass (CHUNK LANDMARK) ---------- */
   {
     id: 'department_mass',
-    displayName: '百貨量體',
+    displayName: '百貨大樓',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 50,

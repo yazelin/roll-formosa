@@ -147,7 +147,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
       'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 鹽埕街屋量體, 宮廟量體
+      // chunk landmarks: 鹽埕街屋, 大廟
       'saltfield_streethouse_mass', 'temple_mass',
     ],
     fogColor: 0x201a44, // 鹽埕街屋暮色 藍紫
@@ -171,7 +171,7 @@ export const TIERS = [
     archetypeIds: [
       // 商辦大樓, 港倉, 輕軌高架, 跨港天橋, 停車塔, 港區看板, 玻璃帷幕街屋, 銀行
       'office_tower', 'port_warehouse', 'lrt_viaduct', 'harbor_bridge', 'parking_tower', 'port_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 港邊商辦塔, 港倉量體
+      // chunk landmarks: 港邊商辦塔, 港邊倉庫
       'waterfront_office_tower', 'warehouse_mass',
     ],
     fogColor: 0x1c1e48, // 港區金紫 (golden hour 偏夜)
@@ -193,7 +193,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 屋頂機房, 灣區量體
+      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 屋頂機房, 灣區大樓
       'glass_highrise', 'exhibition_hall', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'music_center', 'rooftop_plant_room', 'bayarea_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',

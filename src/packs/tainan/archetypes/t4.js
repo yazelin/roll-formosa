@@ -332,10 +332,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 府城街屋量體 (chunk landmark — old Tainan townhouse mass) --- */
+  /* ---- slot 8: 府城街屋 (chunk landmark — old Tainan townhouse mass) --- */
   {
     id: 'fucheng_streethouse_mass',
-    displayName: '府城街屋量體',
+    displayName: '府城街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
@@ -370,10 +370,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 孔廟量體 (chunk landmark — Confucius temple complex) -------- */
+  /* ---- slot 9: 孔廟 (chunk landmark — Confucius temple complex) -------- */
   {
     id: 'confucius_temple_mass',
-    displayName: '孔廟量體',
+    displayName: '孔廟',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,

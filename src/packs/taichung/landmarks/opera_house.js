@@ -54,7 +54,7 @@ export const NM_OPERA_HOUSE = {
     /* ---- pale plaza apron (the block sits low and wide) --------------- */
     parts.push(cyl(2.1, 2.18, 0.16, 10, GROUND, { sx: XW, y: 0.08, hex2: 0xb0ada3 })); // rounded plaza pad
 
-    /* ---- main rounded white mass (低而寬的圓潤量體) ------------------- */
+    /* ---- main rounded white mass (低而寬的圓潤主體) ------------------- */
     // WIDE, LOW oval block: a high-seg OPEN cyl shell stretched on X so the
     // walls read as one continuous curved skin (no box corners). open:true
     // keeps it a shell; the dome supplies the rounded top.

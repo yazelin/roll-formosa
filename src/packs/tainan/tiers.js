@@ -146,7 +146,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
       'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 府城街屋量體, 孔廟量體
+      // chunk landmarks: 府城街屋, 孔廟
       'fucheng_streethouse_mass', 'confucius_temple_mass',
     ],
     fogColor: 0x201a44, // T4 街屋廟埕藍紫(轉冷)
@@ -170,7 +170,7 @@ export const TIERS = [
     archetypeIds: [
       // 商辦大樓, 百貨, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
       'office_tower', 'department_store', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 商辦塔樓, 百貨量體
+      // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
     fogColor: 0x1c1e48, // T5 夜店電光藍(俱樂部)
