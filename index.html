@@ -1148,9 +1148,11 @@
       gap: clamp(10px, 2.4vw, 18px);
       width: 100%;
       max-width: 720px;
-      max-height: 66vh;
+      max-height: 72vh;
       overflow-y: auto;
-      padding: 4px;
+      /* generous padding: overflow clips at the padding edge, so the hover glow
+         (box-shadow ~30px) + lift/scale on edge cards needs room or it's eaten. */
+      padding: 30px;
       justify-content: center;
     }
     /* one neon card per city — reuses the title's lit-sign vocabulary. */
