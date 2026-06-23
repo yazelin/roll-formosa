@@ -47,7 +47,9 @@ assert,vitest <id> 抓不到、超標會害 'npm run dev' 主遊戲開不了(pre
 ② chunk 街頭物在地化必須夠深 —— 跑 'node scripts/check-city.mjs <城市 id>' 自我檢查,\
 必須 ≤44/70 同台北(台中級下限,目標 ~37 高雄級),否則 npm test 會紅、PR 開不出來,等於白做;\
 別只換地標/收藏就交,t0–t6 七階的街頭小物都要換成這座城市的在地版本(保留泛台灣通用物即可);\
-③ 河也要在地化(cityMap.js 的 water:名稱+centerline+註解,別留台北基隆河),結尾 ending.js 不要動(共用、自動點亮)。\
+③ 河也要在地化(cityMap.js 的 water:名稱+centerline+註解,別留台北基隆河),結尾 ending.js 不要動(共用、自動點亮);\
+④ **tier 名要在地化**(tiers.js 每階 name,尤其 tier 0 別留台北『柑仔店桌頭』、別照抄機車海/信義天際線);\
+⑤ **ext 地標 codes 90-98 用這座城自己的地標**(reuse 主地標、id 加 _ext 後綴避免撞 82-89,並同步 index.js 的 codeMap),別借台北故宮/美麗華/中山堂、別留『預留欄位』。city-content-localization.test.js 會擋 ④⑤。\
 天際線圖(skyline-<id>.webp)若沒能力產就別硬塞,列進 FINDINGS。\
 做完把 NEXT.md 該行 [ ] 改成 [x]。\
 最後**精確**輸出:第一行 'SUMMARY: <一句你改了什麼>';接著 'FINDINGS:';每行 '- <...>' 最多3條,沒有寫 '- none'。" \
