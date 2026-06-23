@@ -319,10 +319,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 部落街屋量體 (chunk landmark — tribal streethouse mass) --- */
+  /* ---- slot 8: 部落街屋 (chunk landmark — tribal streethouse mass) --- */
   {
     id: 'tribal_streethouse_mass',
-    displayName: '部落街屋量體',
+    displayName: '部落街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 14,
@@ -353,10 +353,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 天后宮量體 (chunk landmark — Mazu temple complex) -------- */
+  /* ---- slot 9: 天后宮 (chunk landmark — Mazu temple complex) -------- */
   {
     id: 'mazu_temple_mass',
-    displayName: '天后宮量體',
+    displayName: '天后宮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,

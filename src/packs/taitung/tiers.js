@@ -149,7 +149,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 鐵皮屋, 部落公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
       'townhouse', 'tin_roof_house', 'tribal_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 部落街屋量體, 天后宮量體
+      // chunk landmarks: 部落街屋, 天后宮
       'tribal_streethouse_mass', 'mazu_temple_mass',
     ],
     fogColor: 0x201a44, // 部落街屋暮色 藍紫
@@ -195,7 +195,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 熱氣球, 珊瑚礁岩, 海岸漁船, 浮標, 民宿塔, 漁港吊車, 觀光旅館, 海岸量體
+      // 熱氣球, 珊瑚礁岩, 海岸漁船, 浮標, 民宿塔, 漁港吊車, 觀光旅館, 海岸大樓
       'hot_air_balloon', 'coral_rock', 'coast_fishing_boat', 'ocean_buoy', 'resort_tower', 'port_crane', 'beach_hotel', 'coastline_block',
       // chunk landmarks: 跨海空橋, 燈塔
       'coast_skybridge', 'lighthouse_tower',

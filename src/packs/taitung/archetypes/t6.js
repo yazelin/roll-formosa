@@ -294,10 +294,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 海岸量體 coastline_block --------------------------------- */
+  /* ---- slot 7: 海岸大樓 coastline_block --------------------------------- */
   {
     id: 'coastline_block',
-    displayName: '海岸量體',
+    displayName: '海岸大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 150,

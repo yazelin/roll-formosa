@@ -38,7 +38,7 @@
  *   T3 = 30-39 (機車/小貨車/伯朗大道路標/稻田棧道/金城武樹/稻草人/大片稻田/田邊水牛 + chunk lm)
  *   T4 = 40-49 (透天厝/鐵皮屋/部落公寓/超商/公車/垃圾車/加油站/騎樓柱 + chunk lm)
  *   T5 = 50-59 (民宿大樓/衝浪店/台鐵高架/跨海天橋/停車塔/觀光看板/玻璃帷幕街屋/漁會 + chunk lm)
- *   T6 = 60-69 (熱氣球/珊瑚礁岩/海岸漁船/浮標/民宿塔/漁港吊車/觀光旅館/海岸量體 + chunk lm)
+ *   T6 = 60-69 (熱氣球/珊瑚礁岩/海岸漁船/浮標/民宿塔/漁港吊車/觀光旅館/海岸大樓 + chunk lm)
  *
  * Id contract: append-only. Never reuse or rename existing ids.
  * Static data only — zero runtime allocation beyond module init.
