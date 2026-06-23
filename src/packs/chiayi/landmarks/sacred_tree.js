@@ -32,7 +32,7 @@ export const NM_SACRED_TREE = {
     const parts = [];
 
     // Forest floor
-    parts.push(cyl(2.0, 2.2, 0.12, 10, GROUND, { y: 0.06, hex2: 0x5a5848 }));
+    parts.push(cyl(2.0, 2.2, 0.12, 6, GROUND, { y: 0.06, hex2: 0x5a5848 }));
 
     // Main trunk base - massive gnarled base with buttress roots
     const trunkY = 0.12;
@@ -49,10 +49,10 @@ export const NM_SACRED_TREE = {
     }
 
     // Massive main trunk - tapered cylinder with irregular bulges
-    parts.push(cyl(0.4, 0.65, 0.8, 8, BARK, { y: trunkY + 0.4, hex2: BARK_HI }));
+    parts.push(cyl(0.4, 0.65, 0.8, 6, BARK, { y: trunkY + 0.4, hex2: BARK_HI }));
     parts.push(cyl(0.32, 0.4, 0.7, 7, BARK, { y: trunkY + 1.15, hex2: BARK_HI }));
-    parts.push(cyl(0.25, 0.32, 0.65, 6, BARK, { y: trunkY + 1.82, hex2: BARK_HI }));
-    parts.push(cyl(0.18, 0.25, 0.55, 6, BARK, { y: trunkY + 2.4, hex2: BARK_HI }));
+    parts.push(cyl(0.25, 0.32, 0.65, 4, BARK, { y: trunkY + 1.82, hex2: BARK_HI }));
+    parts.push(cyl(0.18, 0.25, 0.55, 4, BARK, { y: trunkY + 2.4, hex2: BARK_HI }));
 
     // Major branches spreading out
     const branchY = trunkY + 2.2;
@@ -69,18 +69,18 @@ export const NM_SACRED_TREE = {
     // Foliage canopy - multiple overlapping cloud shapes
     const canopyY = trunkY + 2.6;
     parts.push(sph(0.55, FOLIAGE, { ws: 7, hs: 5, y: canopyY + 0.4, sx: 1.2, sy: 0.8, sz: 1.2, hex2: FOLIAGE_HI }));
-    parts.push(sph(0.4, FOLIAGE, { ws: 6, hs: 4, x: -0.35, y: canopyY + 0.2, z: 0.2, hex2: FOLIAGE_HI }));
-    parts.push(sph(0.38, FOLIAGE, { ws: 6, hs: 4, x: 0.32, y: canopyY + 0.15, z: -0.25, hex2: FOLIAGE_HI }));
+    parts.push(sph(0.4, FOLIAGE, { ws: 4, hs: 3, x: -0.35, y: canopyY + 0.2, z: 0.2, hex2: FOLIAGE_HI }));
+    parts.push(sph(0.38, FOLIAGE, { ws: 4, hs: 3, x: 0.32, y: canopyY + 0.15, z: -0.25, hex2: FOLIAGE_HI }));
     parts.push(sph(0.32, FOLIAGE, { ws: 5, hs: 4, x: 0.15, y: canopyY + 0.65 + j, z: 0.28, hex2: FOLIAGE_HI }));
 
     // Smaller companion tree
-    parts.push(cyl(0.12, 0.18, 0.9, 6, BARK, { x: 1.1, y: trunkY + 0.45, z: -0.3, hex2: BARK_HI }));
+    parts.push(cyl(0.12, 0.18, 0.9, 4, BARK, { x: 1.1, y: trunkY + 0.45, z: -0.3, hex2: BARK_HI }));
     parts.push(cyl(0.08, 0.12, 0.6, 5, BARK, { x: 1.1, y: trunkY + 1.2, z: -0.3, hex2: BARK_HI }));
-    parts.push(sph(0.35, FOLIAGE, { ws: 6, hs: 4, x: 1.1, y: trunkY + 1.75, z: -0.3, hex2: FOLIAGE_HI }));
+    parts.push(sph(0.35, FOLIAGE, { ws: 4, hs: 3, x: 1.1, y: trunkY + 1.75, z: -0.3, hex2: FOLIAGE_HI }));
 
     // Forest floor ferns
     for (const fx of [-0.9, 0.7, -0.4]) {
-      parts.push(cone(0.18, 0.22, 6, FERN, { x: fx, y: trunkY + 0.11, z: fx * 0.5 + 0.6, hex2: 0x4a7848 }));
+      parts.push(cone(0.18, 0.22, 4, FERN, { x: fx, y: trunkY + 0.11, z: fx * 0.5 + 0.6, hex2: 0x4a7848 }));
     }
 
     // Mist / fog patches at base (translucent suggestion)

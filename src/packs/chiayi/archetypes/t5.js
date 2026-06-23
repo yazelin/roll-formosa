@@ -399,10 +399,10 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 百貨量體 department_mass (CHUNK LANDMARK) ---------- */
+  /* ---- slot 9: 百貨大樓 department_mass (CHUNK LANDMARK) ---------- */
   {
     id: 'department_mass',
-    displayName: '百貨量體',
+    displayName: '百貨大樓',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 50,

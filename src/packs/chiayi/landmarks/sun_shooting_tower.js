@@ -38,12 +38,12 @@ export const NM_SUN_SHOOTING_TOWER = {
   colorHex: ALU_HI,
 
   buildGeometry(rng) {
-    const j = (rng() - 0.5) * 0.008; // micro jitter
+    const j = (rng ? rng() - 0.5 : 0) * 0.008; // micro jitter (goalTower passes rng=null)
     const parts = [];
 
     /* ---- 1) Ground plaza / podium ---------------------------------------- */
-    parts.push(cyl(1.2, 1.25, 0.14, 10, BASE, { y: 0.07 })); // circular plaza
-    parts.push(cyl(0.92, 0.98, 0.2, 10, 0x5e5e5e, { y: 0.2 })); // stepped base
+    parts.push(cyl(1.2, 1.25, 0.14, 4, BASE, { y: 0.07 })); // circular plaza
+    parts.push(cyl(0.92, 0.98, 0.2, 4, 0x5e5e5e, { y: 0.2 })); // stepped base
 
     /* ---- 2) Main cylindrical tower body ---------------------------------- */
     // The tower: a tall cylinder with aluminum cladding
@@ -51,14 +51,14 @@ export const NM_SUN_SHOOTING_TOWER = {
     const towerH = 3.6;
     const towerR = 0.6;
     // Main cylinder - tapers slightly toward top
-    parts.push(cyl(towerR * 0.88, towerR, towerH, 12, ALU_LO, {
+    parts.push(cyl(towerR * 0.88, towerR, towerH, 4, ALU_LO, {
       y: towerBot + towerH / 2, hex2: ALU_HI,
     }));
 
     /* ---- 3) Horizontal band rings (floor divisions visible outside) ------ */
-    const ringY = [0.9, 1.6, 2.3, 3.0];
+    const ringY = [0.9, 1.8, 3.0];
     for (const ry of ringY) {
-      parts.push(torus(towerR * 0.89, 0.035, 4, 10, ALU_HI, {
+      parts.push(torus(towerR * 0.89, 0.035, 4, 4, ALU_HI, {
         rx: HALF_PI, y: towerBot + ry,
       }));
     }
@@ -73,11 +73,11 @@ export const NM_SUN_SHOOTING_TOWER = {
     // An oval-shaped opening through the tower - represented by a dark recessed oval
     const openingY = towerBot + towerH * 0.55;
     // Dark elliptical cavity representing the sky-through opening
-    parts.push(cyl(0.35, 0.38, 0.65, 8, WINDOW, {
+    parts.push(cyl(0.35, 0.38, 0.65, 4, WINDOW, {
       y: openingY, z: towerR * 0.3, sy: 1.4, sz: 0.4, rx: 0.15,
     }));
     // Bronze rim around the opening
-    parts.push(torus(0.38, 0.04, 4, 8, BRONZE, {
+    parts.push(torus(0.38, 0.04, 4, 4, BRONZE, {
       rx: HALF_PI - 0.15, y: openingY, z: towerR * 0.42, sy: 1.3,
     }));
 
@@ -93,21 +93,21 @@ export const NM_SUN_SHOOTING_TOWER = {
 
     /* ---- 7) Observation deck at top -------------------------------------- */
     const deckY = towerBot + towerH;
-    parts.push(cyl(towerR * 0.95, towerR * 0.86, 0.18, 10, DECK, { y: deckY + 0.09 }));
-    parts.push(cyl(towerR * 1.02, towerR * 0.98, 0.08, 10, ALU_HI, { y: deckY + 0.22 })); // deck rim
+    parts.push(cyl(towerR * 0.95, towerR * 0.86, 0.18, 4, DECK, { y: deckY + 0.09 }));
+    parts.push(cyl(towerR * 1.02, towerR * 0.98, 0.08, 4, ALU_HI, { y: deckY + 0.22 })); // deck rim
     // Railing posts around the deck
-    for (let a = 0; a < PI * 2; a += PI / 4) {
+    for (let a = 0; a < PI * 2; a += PI / 2) {
       const rx = Math.sin(a) * towerR * 0.9;
       const rz = Math.cos(a) * towerR * 0.9;
       parts.push(cyl(0.02, 0.02, 0.2, 4, ALU_HI, { x: rx, y: deckY + 0.36, z: rz }));
     }
     // Top railing ring
-    parts.push(torus(towerR * 0.9, 0.02, 3, 10, ALU_HI, { rx: HALF_PI, y: deckY + 0.46 }));
+    parts.push(torus(towerR * 0.9, 0.02, 3, 4, ALU_HI, { rx: HALF_PI, y: deckY + 0.46 }));
 
     /* ---- 8) Crown structure / lantern ------------------------------------ */
     const crownY = deckY + 0.52;
-    parts.push(cyl(0.25, 0.35, 0.3, 8, ALU_LO, { y: crownY + 0.15, hex2: ALU_HI }));
-    parts.push(cone(0.22, 0.25, 8, DECK, { y: crownY + 0.42, hex2: ALU_HI }));
+    parts.push(cyl(0.25, 0.35, 0.3, 4, ALU_LO, { y: crownY + 0.15, hex2: ALU_HI }));
+    parts.push(cone(0.22, 0.25, 4, DECK, { y: crownY + 0.42, hex2: ALU_HI }));
 
     /* ---- 9) Bronze archer sculpture at top (the sun-shooter) ------------- */
     // Simplified figure of a person drawing a bow, aiming at the sky
@@ -121,7 +121,7 @@ export const NM_SUN_SHOOTING_TOWER = {
       x: 0.06, y: archerY + 0.12, rz: -0.4, rx: 0.2,
     }));
     // Bow (arc shape - small torus segment)
-    parts.push(torus(0.08, 0.01, 3, 6, BRONZE_HI, {
+    parts.push(torus(0.08, 0.01, 3, 4, BRONZE_HI, {
       x: 0.12, y: archerY + 0.14, rx: HALF_PI, rz: -0.3,
     }));
     // Arrow pointing skyward

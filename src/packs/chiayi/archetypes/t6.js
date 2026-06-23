@@ -279,10 +279,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 公園量體 park block (Chiayi Park district) ------------- */
+  /* ---- slot 7: 公園 park block (Chiayi Park district) ------------- */
   {
     id: 'park_block',
-    displayName: '公園量體',
+    displayName: '公園',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,

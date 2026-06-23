@@ -34,7 +34,7 @@ export const NM_ALISHAN_TRAIN = {
 
     // Track base and ties
     parts.push(box(5.5, 0.08, 0.9, 0x4a4038, { y: 0.04 })); // ballast bed
-    for (let tx = -2.4; tx <= 2.4; tx += 0.35) {
+    for (let tx = -2.4; tx <= 2.4; tx += 1.1) {
       parts.push(box(0.12, 0.06, 0.75, TIE, { x: tx, y: 0.11 })); // ties
     }
     // Rails
@@ -52,18 +52,18 @@ export const NM_ALISHAN_TRAIN = {
     parts.push(box(0.3, 0.25, 0.06, WINDOW, { x: locoX - 0.32, y: locoY + 0.8, z: 0.28 })); // cab window
 
     // Boiler / front nose section
-    parts.push(cyl(0.22, 0.24, 0.55, 8, TRAIN_RED, { x: locoX + 0.55, y: locoY + 0.45, rz: HALF_PI, hex2: TRAIN_RED_HI }));
+    parts.push(cyl(0.22, 0.24, 0.55, 4, TRAIN_RED, { x: locoX + 0.55, y: locoY + 0.45, rz: HALF_PI, hex2: TRAIN_RED_HI }));
     // Smokestack
-    parts.push(cyl(0.08, 0.1, 0.25, 6, 0x2a2a2a, { x: locoX + 0.5, y: locoY + 0.85 }));
-    parts.push(cyl(0.12, 0.08, 0.08, 6, 0x3a3a3a, { x: locoX + 0.5, y: locoY + 1.0 }));
+    parts.push(cyl(0.08, 0.1, 0.25, 4, 0x2a2a2a, { x: locoX + 0.5, y: locoY + 0.85 }));
+    parts.push(cyl(0.12, 0.08, 0.08, 4, 0x3a3a3a, { x: locoX + 0.5, y: locoY + 1.0 }));
 
     // Headlight
-    parts.push(cyl(0.06, 0.06, 0.08, 6, 0xf0e080, { x: locoX + 0.85, y: locoY + 0.55, rz: HALF_PI }));
+    parts.push(cyl(0.06, 0.06, 0.08, 4, 0xf0e080, { x: locoX + 0.85, y: locoY + 0.55, rz: HALF_PI }));
 
     // Loco wheels
     for (const wx of [locoX - 0.3, locoX + 0.15, locoX + 0.55]) {
       for (const wz of [-0.32, 0.32]) {
-        parts.push(cyl(0.12, 0.12, 0.06, 8, WHEEL, { x: wx, y: locoY + 0.12, z: wz, rx: HALF_PI }));
+        parts.push(cyl(0.12, 0.12, 0.06, 4, WHEEL, { x: wx, y: locoY + 0.12, z: wz, rx: HALF_PI }));
       }
     }
 
@@ -79,7 +79,7 @@ export const NM_ALISHAN_TRAIN = {
     // Wheels
     for (const wx of [car1X - 0.3, car1X + 0.3]) {
       for (const wz of [-0.3, 0.3]) {
-        parts.push(cyl(0.1, 0.1, 0.05, 6, WHEEL, { x: wx, y: locoY + 0.1, z: wz, rx: HALF_PI }));
+        parts.push(cyl(0.1, 0.1, 0.05, 4, WHEEL, { x: wx, y: locoY + 0.1, z: wz, rx: HALF_PI }));
       }
     }
 
@@ -92,7 +92,7 @@ export const NM_ALISHAN_TRAIN = {
     }
     for (const wx of [car2X - 0.28, car2X + 0.28]) {
       for (const wz of [-0.28, 0.28]) {
-        parts.push(cyl(0.09, 0.09, 0.05, 6, WHEEL, { x: wx, y: locoY + 0.1, z: wz, rx: HALF_PI }));
+        parts.push(cyl(0.09, 0.09, 0.05, 4, WHEEL, { x: wx, y: locoY + 0.1, z: wz, rx: HALF_PI }));
       }
     }
 

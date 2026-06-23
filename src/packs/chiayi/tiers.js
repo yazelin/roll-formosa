@@ -148,7 +148,7 @@ export const TIERS = [
     archetypeIds: [
       // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
       'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 木都街屋量體, 宮廟量體
+      // chunk landmarks: 木都街屋, 大廟
       'woodcity_streethouse_mass', 'temple_mass',
     ],
     fogColor: 0x201a44, // 嘉義街屋暮色 藍紫
@@ -172,7 +172,7 @@ export const TIERS = [
     archetypeIds: [
       // 商辦大樓, 耐斯百貨, 嘉義車站, 跨街天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
       'office_tower', 'nice_plaza', 'chiayi_station_plaza', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
-      // chunk landmarks: 車站商辦塔, 百貨量體
+      // chunk landmarks: 車站商辦塔, 百貨大樓
       'station_office_tower', 'department_mass',
     ],
     fogColor: 0x1c1e48, // 車站商圈金紫 (golden hour 偏夜)
@@ -194,7 +194,7 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 射日塔遠景, 神木群, 阿里山小火車, 雲海觀景台, 商辦塔, 纜車柱, 屋頂機房, 公園量體
+      // 射日塔遠景, 神木群, 阿里山小火車, 雲海觀景台, 商辦塔, 纜車柱, 屋頂機房, 公園
       'sun_tower_silhouette', 'sacred_tree_grove', 'alishan_train_scene', 'sea_of_clouds_deck', 'biz_tower', 'ropeway_pole', 'rooftop_plant_room', 'park_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',

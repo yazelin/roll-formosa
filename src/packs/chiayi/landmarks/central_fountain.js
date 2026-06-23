@@ -32,13 +32,13 @@ export const NM_CENTRAL_FOUNTAIN = {
     const parts = [];
 
     // Circular road / roundabout
-    parts.push(cyl(2.2, 2.2, 0.1, 12, ROAD, { y: 0.05 }));
+    parts.push(cyl(2.2, 2.2, 0.1, 8, ROAD, { y: 0.05 }));
     // Inner sidewalk ring
-    parts.push(cyl(1.5, 1.5, 0.14, 12, SIDEWALK, { y: 0.07 }));
+    parts.push(cyl(1.5, 1.5, 0.14, 8, SIDEWALK, { y: 0.07 }));
 
     // Fountain pool base (circular pool)
-    parts.push(cyl(1.1, 1.15, 0.2, 10, 0x808080, { y: 0.18 })); // pool rim
-    parts.push(cyl(1.0, 1.0, 0.12, 10, POOL, { y: 0.26, hex2: POOL_HI })); // water surface
+    parts.push(cyl(1.1, 1.15, 0.2, 8, 0x808080, { y: 0.18 })); // pool rim
+    parts.push(cyl(1.0, 1.0, 0.12, 8, POOL, { y: 0.26, hex2: POOL_HI })); // water surface
 
     // Central fountain sculpture - tiered white structure
     const baseY = 0.26;
