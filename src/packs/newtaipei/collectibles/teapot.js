@@ -36,15 +36,15 @@ export const COL_TEAPOT = {
     }));
 
     // ---- 2) Flat bottom and foot ring ----------------------------------
-    parts.push(cyl(0.35, 0.38, 0.08, 10, CLAY_DK, { y: 0.04 }));
+    parts.push(cyl(0.35, 0.38, 0.08, 6, CLAY_DK, { y: 0.04 }));
 
     // ---- 3) Neck and lid seat ------------------------------------------
-    parts.push(cyl(0.28, 0.26, 0.1, 10, clay, { y: 0.75 }));
+    parts.push(cyl(0.28, 0.26, 0.1, 6, clay, { y: 0.75 }));
     // Lid seat rim
-    parts.push(cyl(0.3, 0.3, 0.03, 10, CLAY_DK, { y: 0.81 }));
+    parts.push(cyl(0.3, 0.3, 0.03, 6, CLAY_DK, { y: 0.81 }));
 
     // ---- 4) Domed lid --------------------------------------------------
-    parts.push(cyl(0.26, 0.28, 0.05, 10, clay, { y: 0.86 })); // lid base
+    parts.push(cyl(0.26, 0.28, 0.05, 6, clay, { y: 0.86 })); // lid base
     parts.push(sph(0.24, clay, {
       ws: 8, hs: 4,
       y: 0.92,
@@ -52,31 +52,31 @@ export const COL_TEAPOT = {
       thetaLen: HALF_PI,
     }));
     // Lid knob
-    parts.push(cyl(0.06, 0.08, 0.06, 8, CLAY_DK, { y: 1.0 }));
-    parts.push(sph(0.06, clay, { ws: 6, hs: 4, y: 1.06 }));
+    parts.push(cyl(0.06, 0.08, 0.06, 6, CLAY_DK, { y: 1.0 }));
+    parts.push(sph(0.06, clay, { ws: 4, hs: 3, y: 1.06 }));
 
     // ---- 5) Spout ------------------------------------------------------
     // Curved spout extending from body
     // Base attachment
-    parts.push(cyl(0.08, 0.1, 0.1, 8, clay, {
+    parts.push(cyl(0.08, 0.1, 0.1, 6, clay, {
       x: 0.45, y: 0.5, z: 0,
       rx: 0, rz: -HALF_PI * 0.6,
     }));
     // Spout tube (angled up)
-    parts.push(cyl(0.05, 0.07, 0.25, 8, clay, {
+    parts.push(cyl(0.05, 0.07, 0.25, 6, clay, {
       x: 0.62, y: 0.58, z: 0,
       rz: -HALF_PI * 0.4,
       hex2: CLAY_HI,
     }));
     // Spout tip
-    parts.push(cyl(0.04, 0.05, 0.06, 8, CLAY_DK, {
+    parts.push(cyl(0.04, 0.05, 0.06, 6, CLAY_DK, {
       x: 0.78, y: 0.7, z: 0,
       rz: -HALF_PI * 0.3,
     }));
 
     // ---- 6) Handle (loop handle opposite spout) ------------------------
     // Torus segment for the loop handle
-    parts.push(torus(0.18, 0.04, 6, 10, clay, {
+    parts.push(torus(0.18, 0.04, 4, 6, clay, {
       x: -0.45, y: 0.5, z: 0,
       ry: HALF_PI,
       arc: PI * 0.8,

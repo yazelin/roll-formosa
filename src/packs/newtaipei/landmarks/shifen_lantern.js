@@ -67,9 +67,9 @@ export const NM_SHIFEN_LANTERN = {
     for (let i = 0; i < lanternPos.length; i++) {
       const { x, y, z } = lanternPos[i];
       // lantern body (barrel shape with fire glow at bottom)
-      parts.push(cyl(0.07, 0.08, 0.14, 8, lanternColors[i], { x, y, z, hex2: 0xffeeaa }));
+      parts.push(cyl(0.07, 0.08, 0.14, 6, lanternColors[i], { x, y, z, hex2: 0xffeeaa }));
       // lantern top cap
-      parts.push(cyl(0.04, 0.06, 0.02, 6, 0x3a3a3a, { x, y: y + 0.08, z }));
+      parts.push(cyl(0.04, 0.06, 0.02, 4, 0x3a3a3a, { x, y: y + 0.08, z }));
       // fire glow
       parts.push(sph(0.03, 0xffaa44, { ws: 4, hs: 3, x, y: y - 0.06, z }));
     }

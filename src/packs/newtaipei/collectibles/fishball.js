@@ -28,12 +28,12 @@ export const COL_FISHBALL = {
     const parts = [];
 
     // ---- 1) Soup bowl --------------------------------------------------
-    parts.push(cyl(0.8, 0.7, 0.4, 10, BOWL, { y: 0.2 }));
-    parts.push(cyl(0.85, 0.82, 0.05, 10, BOWL, { y: 0.42 })); // rim
-    parts.push(cyl(0.65, 0.62, 0.3, 10, 0xf0ece4, { y: 0.22 })); // inner
+    parts.push(cyl(0.8, 0.7, 0.4, 8, BOWL, { y: 0.2 }));
+    parts.push(cyl(0.85, 0.82, 0.05, 8, BOWL, { y: 0.42 })); // rim
+    parts.push(cyl(0.65, 0.62, 0.3, 8, 0xf0ece4, { y: 0.22 })); // inner
 
     // ---- 2) Clear broth ------------------------------------------------
-    parts.push(cyl(0.6, 0.58, 0.15, 10, BROTH, { y: 0.28 }));
+    parts.push(cyl(0.6, 0.58, 0.15, 8, BROTH, { y: 0.28 }));
 
     // ---- 3) Fishballs floating -----------------------------------------
     const fishballPos = [

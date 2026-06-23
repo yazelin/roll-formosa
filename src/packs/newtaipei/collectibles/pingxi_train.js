@@ -39,7 +39,7 @@ export const COL_PINGXI_TRAIN = {
     // ---- 2) Roof -------------------------------------------------------
     // Curved roof (simplified as rounded box)
     parts.push(box(1.55, 0.06, 0.5, ROOF, { y: 0.83 }));
-    parts.push(cyl(0.26, 0.26, 1.5, 8, ROOF, {
+    parts.push(cyl(0.26, 0.26, 1.5, 6, ROOF, {
       y: 0.88,
       rz: HALF_PI,
       thetaLen: PI,
@@ -67,16 +67,16 @@ export const COL_PINGXI_TRAIN = {
     // Windshield
     parts.push(box(0.02, 0.2, 0.35, WINDOW, { x: 0.79, y: 0.6 }));
     // Headlights
-    parts.push(cyl(0.04, 0.04, 0.03, 6, LIGHT, { x: 0.82, y: 0.45, z: 0.15 }));
-    parts.push(cyl(0.04, 0.04, 0.03, 6, LIGHT, { x: 0.82, y: 0.45, z: -0.15 }));
+    parts.push(cyl(0.04, 0.04, 0.03, 4, LIGHT, { x: 0.82, y: 0.45, z: 0.15 }));
+    parts.push(cyl(0.04, 0.04, 0.03, 4, LIGHT, { x: 0.82, y: 0.45, z: -0.15 }));
     // Front number plate
     parts.push(box(0.02, 0.06, 0.15, BODY_WHITE, { x: 0.81, y: 0.32 }));
 
     // ---- 5) Rear cab ---------------------------------------------------
     parts.push(box(0.02, 0.2, 0.35, WINDOW, { x: -0.79, y: 0.6 }));
     // Rear lights (red)
-    parts.push(cyl(0.03, 0.03, 0.02, 6, 0xc03030, { x: -0.82, y: 0.45, z: 0.15 }));
-    parts.push(cyl(0.03, 0.03, 0.02, 6, 0xc03030, { x: -0.82, y: 0.45, z: -0.15 }));
+    parts.push(cyl(0.03, 0.03, 0.02, 4, 0xc03030, { x: -0.82, y: 0.45, z: 0.15 }));
+    parts.push(cyl(0.03, 0.03, 0.02, 4, 0xc03030, { x: -0.82, y: 0.45, z: -0.15 }));
 
     // ---- 6) Undercarriage and wheels -----------------------------------
     parts.push(box(1.5, 0.08, 0.5, STEEL, { y: 0.08 })); // frame
@@ -85,11 +85,11 @@ export const COL_PINGXI_TRAIN = {
       parts.push(box(0.25, 0.06, 0.52, 0x404048, { x: tx, y: 0.05 }));
       // Wheels
       for (const wz of [-0.22, 0.22]) {
-        parts.push(cyl(0.08, 0.08, 0.04, 8, 0x303030, {
+        parts.push(cyl(0.08, 0.08, 0.04, 6, 0x303030, {
           x: tx - 0.08, y: 0.08, z: wz,
           rx: HALF_PI,
         }));
-        parts.push(cyl(0.08, 0.08, 0.04, 8, 0x303030, {
+        parts.push(cyl(0.08, 0.08, 0.04, 6, 0x303030, {
           x: tx + 0.08, y: 0.08, z: wz,
           rx: HALF_PI,
         }));

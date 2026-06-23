@@ -224,10 +224,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 河岸量體 riverside block -------------------------------- */
+  /* ---- slot 7: 河岸大樓 riverside block -------------------------------- */
   {
     id: 'riverside_block',
-    displayName: '河岸量體',
+    displayName: '河岸大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,
@@ -238,7 +238,7 @@ export const T6_ARCHETYPES = [
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      // 淡水河岸量體 — simplified riverside development
+      // 淡水河岸大樓 — simplified riverside development
       const parts = [
         box(3.5, 0.16, 1.5, 0x2a3142, { y: 0.08 }), // ground slab
       ];

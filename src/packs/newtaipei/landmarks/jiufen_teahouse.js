@@ -55,13 +55,13 @@ export const NM_JIUFEN_TEAHOUSE = {
     parts.push(box(1.4, 0.15, 0.04, WOOD, { y: 0.6, z: 0.85 })); // balcony rail
     // balcony support posts
     for (const x of [-0.6, 0, 0.6]) {
-      parts.push(cyl(0.04, 0.04, 0.5, 6, WOOD, { x, y: 0.25, z: 0.75 }));
+      parts.push(cyl(0.04, 0.04, 0.5, 4, WOOD, { x, y: 0.25, z: 0.75 }));
     }
 
     // ---- 3) Red paper lanterns hanging from eaves ----------------------
     const lanternY = [0.48, 0.98, 1.46];
     const lanternZ = [0.45, 0.35, 0.2];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       for (const x of [-0.35, 0.35]) {
         // lantern body (oval sphere)
         parts.push(sph(0.08, LANTERN, { ws: 6, hs: 5, sy: 1.3, x, y: lanternY[i], z: lanternZ[i] }));
@@ -80,7 +80,7 @@ export const NM_JIUFEN_TEAHOUSE = {
     parts.push(box(0.12, 0.15, 0.02, WINDOW, { x: -0.25, y: 0.8, z: 0.26 }));
 
     // ---- 5) Stone steps leading up the hillside ------------------------
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 2; i++) {
       parts.push(box(0.5, 0.08, 0.15, 0x7a7a7a, { y: 0.04 + i * 0.1, z: 0.35 - i * 0.2 }));
     }
 

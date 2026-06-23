@@ -368,10 +368,10 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 宮廟量體 (chunk landmark — temple mass, 燕尾脊) -------- */
+  /* ---- slot 9: 大廟 (chunk landmark — temple mass, 燕尾脊) -------- */
   {
     id: 'temple_mass',
-    displayName: '宮廟量體',
+    displayName: '大廟',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,

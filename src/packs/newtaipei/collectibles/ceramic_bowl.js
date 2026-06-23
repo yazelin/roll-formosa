@@ -27,23 +27,23 @@ export const COL_CERAMIC_BOWL = {
 
     // ---- 1) Bowl body (classic rice bowl shape) ------------------------
     // Flared bowl shape
-    parts.push(cyl(0.25, 0.65, 0.45, 12, PORCELAIN, { y: 0.225 }));
+    parts.push(cyl(0.25, 0.65, 0.45, 8, PORCELAIN, { y: 0.225 }));
     // Lip/rim
-    parts.push(cyl(0.67, 0.68, 0.04, 12, PORCELAIN, { y: 0.47 }));
+    parts.push(cyl(0.67, 0.68, 0.04, 8, PORCELAIN, { y: 0.47 }));
     // Inner surface (darker)
-    parts.push(cyl(0.22, 0.62, 0.4, 12, 0xf0f0e8, { y: 0.25 }));
+    parts.push(cyl(0.22, 0.62, 0.4, 8, 0xf0f0e8, { y: 0.25 }));
 
     // ---- 2) Foot ring --------------------------------------------------
-    parts.push(cyl(0.22, 0.25, 0.06, 10, PORCELAIN, { y: 0.03 }));
-    parts.push(cyl(0.18, 0.2, 0.04, 10, 0xe8e8e0, { y: 0.02 })); // inner foot
+    parts.push(cyl(0.22, 0.25, 0.06, 8, PORCELAIN, { y: 0.03 }));
+    parts.push(cyl(0.18, 0.2, 0.04, 8, 0xe8e8e0, { y: 0.02 })); // inner foot
 
     // ---- 3) Blue decorative bands --------------------------------------
     // Rim band
-    parts.push(cyl(0.685, 0.685, 0.03, 12, BLUE, { y: 0.46, open: true }));
+    parts.push(cyl(0.685, 0.685, 0.03, 8, BLUE, { y: 0.46, open: true }));
     // Middle band (main decoration zone)
-    parts.push(cyl(0.55, 0.55, 0.08, 12, BLUE, { y: 0.35, open: true }));
+    parts.push(cyl(0.55, 0.55, 0.08, 8, BLUE, { y: 0.35, open: true }));
     // Lower accent band
-    parts.push(cyl(0.4, 0.4, 0.03, 12, BLUE_LT, { y: 0.15, open: true }));
+    parts.push(cyl(0.4, 0.4, 0.03, 8, BLUE_LT, { y: 0.15, open: true }));
 
     // ---- 4) Floral/geometric motifs (simplified) -----------------------
     // Four medallion patterns on the band

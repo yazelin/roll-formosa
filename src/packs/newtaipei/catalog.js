@@ -205,6 +205,7 @@ for (const { code, col } of _NEWTAIPEI_COLLECTIBLES) {
     yOffset: _yOffset,
     upright: true,
     collisionScale: 1.0,
+    heroTriCap: HERO_TRI_CAP, // collectibles get the 600-tri hero budget
     buildGeometry: col.buildGeometry.bind(col),
     extraCode: code,
     sizeClass: 'collectible-small',
@@ -275,7 +276,10 @@ for (const code of [90, 91, 92, 95, 96, 97, 98]) {
       yOffset: 0,
       upright: true,
       collisionScale: 1.0,
-      buildGeometry: () => null, // Never built
+      heroTriCap: HERO_TRI_CAP,
+      // geometryFactory BUILDS every CATALOG id — null crashed DEV boot. Reuse a
+      // real (already tri-capped) landmark; these codes are spawnWeight 0 / unplaced.
+      buildGeometry: CATALOG['jiufen_teahouse'].buildGeometry,
       extraCode: code,
       sizeClass: null,
     };

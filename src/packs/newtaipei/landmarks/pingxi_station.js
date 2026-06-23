@@ -39,7 +39,7 @@ export const NM_PINGXI_STATION = {
     parts.push(box(1.9, 0.03, 0.06, RAIL, { y: 0.015, z: -0.15 })); // left rail
     parts.push(box(1.9, 0.03, 0.06, RAIL, { y: 0.015, z: -0.35 })); // right rail
     // Wooden ties
-    for (let i = -8; i <= 8; i++) {
+    for (let i = -8; i <= 8; i += 2) {
       parts.push(box(0.08, 0.02, 0.3, TIE, { x: i * 0.11, y: 0, z: -0.25 }));
     }
 
@@ -61,7 +61,7 @@ export const NM_PINGXI_STATION = {
     parts.push(box(0.5, 0.03, 0.25, ROOF, { x: -0.4, y: 0.42, z: 0.08 }));
     // Support posts
     for (const x of [-0.6, -0.2]) {
-      parts.push(cyl(0.025, 0.025, 0.32, 6, WOOD_DK, { x, y: 0.26, z: -0.02 }));
+      parts.push(cyl(0.025, 0.025, 0.32, 4, WOOD_DK, { x, y: 0.26, z: -0.02 }));
     }
 
     // ---- 5) Station name sign ------------------------------------------

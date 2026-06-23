@@ -34,8 +34,8 @@ export const NM_LIN_FAMILY_GARDEN = {
     // ---- 1) Garden grounds and lotus pond ------------------------------
     parts.push(box(1.6, 0.04, 1.2, 0x6a7a5a, { y: 0.02 })); // garden floor
     // Lotus pond (irregular shape approximated)
-    parts.push(cyl(0.35, 0.38, 0.06, 10, POND, { x: 0.3, y: 0.05, z: 0.15 }));
-    parts.push(cyl(0.2, 0.22, 0.06, 8, POND, { x: 0.55, y: 0.05, z: 0.0 }));
+    parts.push(cyl(0.35, 0.38, 0.06, 6, POND, { x: 0.3, y: 0.05, z: 0.15 }));
+    parts.push(cyl(0.2, 0.22, 0.06, 6, POND, { x: 0.55, y: 0.05, z: 0.0 }));
 
     // ---- 2) Main pavilion (定靜堂 style) -------------------------------
     const pavX = -0.35;
@@ -52,7 +52,7 @@ export const NM_LIN_FAMILY_GARDEN = {
     }
     // Red wooden columns
     for (const dx of [-0.18, 0.18]) {
-      parts.push(cyl(0.025, 0.025, 0.35, 6, WOOD, { x: pavX + dx, y: 0.2, z: pavZ + 0.21 }));
+      parts.push(cyl(0.025, 0.025, 0.35, 4, WOOD, { x: pavX + dx, y: 0.2, z: pavZ + 0.21 }));
     }
 
     // ---- 3) Moon gate (圓門) -------------------------------------------
@@ -63,14 +63,14 @@ export const NM_LIN_FAMILY_GARDEN = {
     parts.push(box(0.35, 0.4, 0.06, WALL, { x: gateX + 0.25, y: 0.22, z: gateZ }));
     parts.push(box(0.2, 0.12, 0.06, WALL, { x: gateX, y: 0.36, z: gateZ }));
     // Moon gate circle (represented as torus)
-    parts.push(cyl(0.14, 0.14, 0.07, 12, WALL, { x: gateX, y: 0.16, z: gateZ, open: true }));
+    parts.push(cyl(0.14, 0.14, 0.07, 6, WALL, { x: gateX, y: 0.16, z: gateZ, open: true }));
 
     // ---- 4) Covered corridor (長廊) ------------------------------------
     const corrZ = 0.35;
     parts.push(box(0.8, 0.04, 0.15, ROOF, { x: -0.2, y: 0.35, z: corrZ }));
     // Corridor columns
     for (let i = 0; i < 5; i++) {
-      parts.push(cyl(0.02, 0.02, 0.3, 6, WOOD, { x: -0.5 + i * 0.2, y: 0.18, z: corrZ }));
+      parts.push(cyl(0.02, 0.02, 0.3, 4, WOOD, { x: -0.5 + i * 0.2, y: 0.18, z: corrZ }));
     }
     // Lattice railing (simplified)
     parts.push(box(0.78, 0.08, 0.02, WOOD, { x: -0.2, y: 0.12, z: corrZ + 0.06 }));
@@ -94,7 +94,7 @@ export const NM_LIN_FAMILY_GARDEN = {
 
     // ---- 7) Garden trees -----------------------------------------------
     for (const pos of [{ x: 0.15, z: -0.1 }, { x: 0.65, z: -0.3 }, { x: -0.7, z: -0.1 }]) {
-      parts.push(cyl(0.025, 0.03, 0.2, 6, 0x4a3020, { x: pos.x, y: 0.12, z: pos.z })); // trunk
+      parts.push(cyl(0.025, 0.03, 0.2, 4, 0x4a3020, { x: pos.x, y: 0.12, z: pos.z })); // trunk
       parts.push(sph(0.1, GREEN, { ws: 5, hs: 4, x: pos.x, y: 0.28, z: pos.z })); // canopy
     }
 

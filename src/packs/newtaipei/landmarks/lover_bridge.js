@@ -35,7 +35,8 @@ export const NM_LOVER_BRIDGE = {
   colorHex: 0xf0f2ff, // pale white-lilac of the curved deck
 
   buildGeometry(rng) {
-    const tint = rng() < 0.5 ? 0x0 : 0x020304; // tiny per-instance deck-sheen nudge
+    // goalTower renders the goal with rng=null — guard so the finale doesn't crash.
+    const tint = rng && rng() < 0.5 ? 0x0 : 0x020304; // tiny per-instance deck-sheen nudge
     const deckHi = DECK - tint;
     const parts = [];
 
@@ -68,7 +69,7 @@ export const NM_LOVER_BRIDGE = {
       const a = pt * arcSpan;
       const cx = Math.sin(a) * radius;
       const cz = (Math.cos(a) - Math.cos(arcSpan * 0.5)) * radius;
-      parts.push(cyl(0.05, 0.06, deckY, 6, PIER, { x: cx, y: deckY * 0.5, z: cz }));
+      parts.push(cyl(0.05, 0.06, deckY, 4, PIER, { x: cx, y: deckY * 0.5, z: cz }));
     }
 
     // ---- 3) The signature TALL LEANING MAST at one end ---------------
@@ -81,17 +82,17 @@ export const NM_LOVER_BRIDGE = {
     const lean = 0.35; // outward lean
     // main mast column (tapered)
     parts.push(
-      cyl(0.04, 0.08, mastH, 8, MAST, { rz: lean, x: mastBaseX - 0.05, y: mastBaseY + mastH * 0.5, z: mastBaseZ })
+      cyl(0.04, 0.08, mastH, 6, MAST, { rz: lean, x: mastBaseX - 0.05, y: mastBaseY + mastH * 0.5, z: mastBaseZ })
     );
     // mast tip position for cable attachment
     const tipX = mastBaseX - 0.05 - Math.sin(lean) * (mastH * 0.5);
     const tipY = mastBaseY + Math.cos(lean) * (mastH * 0.5) + mastH * 0.45;
     const tipZ = mastBaseZ;
     // small mast-tip cap
-    parts.push(sph(0.05, MAST, { ws: 6, hs: 4, x: tipX, y: tipY, z: tipZ }));
+    parts.push(sph(0.05, MAST, { ws: 4, hs: 3, x: tipX, y: tipY, z: tipZ }));
 
     // ---- 4) Radiating stay cables from mast tip to deck --------------
-    for (let k = 0; k < 7; k++) {
+    for (let k = 0; k < 4; k++) {
       const t = 0.46 - k * 0.14;
       const a = t * arcSpan;
       const ax = Math.sin(a) * radius;
@@ -128,7 +129,7 @@ export const NM_LOVER_BRIDGE = {
     }
 
     // ---- 7) Harbor water base hint ----------------------------------
-    parts.push(cyl(0.8, 0.8, 0.02, 12, 0x2a4a6e, { y: 0.01 })); // water plane hint
+    parts.push(cyl(0.8, 0.8, 0.02, 6, 0x2a4a6e, { y: 0.01 })); // water plane hint
 
     return finish(parts);
   },
