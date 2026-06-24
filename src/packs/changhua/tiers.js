@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 小盤香, 圖釘, 鹿港糖果, 扇子吊飾, 尪仔標, 書法筆, 佛珠
-      'marble', 'incense_coil', 'pushpin', 'lukang_candy', 'fan_charm', 'ngiauimia_card', 'calligraphy_brush', 'temple_bead',
+      // 麵茶包, 小盤香, 八卦山明信片, 鹿港糖果, 扇子吊飾, 尪仔標, 書法筆, 佛珠
+      'flour_tea_packet', 'incense_coil', 'bagua_postcard', 'lukang_candy', 'fan_charm', 'ngiauimia_card', 'calligraphy_brush', 'temple_bead',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
