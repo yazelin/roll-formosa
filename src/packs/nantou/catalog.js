@@ -43,12 +43,12 @@ import { NM_PULI_WINERY } from './landmarks/puli_winery.js';
 // Nantou-specific: bamboo_basket, shaoxing_wine, ropeway_gondola, qingjing_sheep
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_BOBA } from './collectibles/boba.js';
-import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
-import { COL_GUABAO } from './collectibles/gua_bao.js';
-import { COL_XLB } from './collectibles/xiaolongbao.js';
-import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
-import { COL_SANTAIZI } from './collectibles/santaizi.js';
-import { COL_PUPPET } from './collectibles/budaixi.js';
+import { COL_TEA_EGG } from './collectibles/sun_moon_egg.js';
+import { COL_SHIITAKE } from './collectibles/shiitake.js';
+import { COL_ROOSTER } from './collectibles/golden_rooster.js';
+import { COL_FISH } from './collectibles/sunmoon_fish.js';
+import { COL_CANOE } from './collectibles/thao_canoe.js';
+import { COL_BANANA } from './collectibles/jiji_banana.js';
 import { COL_BAMBOO_BASKET } from './collectibles/bamboo_basket.js';
 import { COL_SHAOXING_BOTTLE } from './collectibles/shaoxing_bottle.js';
 import { COL_ROPEWAY_GONDOLA } from './collectibles/ropeway_gondola.js';
@@ -156,12 +156,12 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _NANTOU_LANDMARKS) {
 const _NANTOU_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
   { code: 71, col: COL_BOBA },
-  { code: 72, col: COL_CHICKEN },
-  { code: 73, col: COL_GUABAO },
-  { code: 74, col: COL_XLB },
-  { code: 75, col: COL_PINEAPPLE },
-  { code: 76, col: COL_SANTAIZI },
-  { code: 77, col: COL_PUPPET },
+  { code: 72, col: COL_TEA_EGG },
+  { code: 73, col: COL_SHIITAKE },
+  { code: 74, col: COL_ROOSTER },
+  { code: 75, col: COL_FISH },
+  { code: 76, col: COL_CANOE },
+  { code: 77, col: COL_BANANA },
   { code: 78, col: COL_BAMBOO_BASKET },      // nantou: 竹編籃
   { code: 79, col: COL_SHAOXING_BOTTLE },    // nantou: 紹興酒瓶
   { code: 80, col: COL_ROPEWAY_GONDOLA },    // nantou: 日月潭纜車
@@ -185,6 +185,7 @@ for (const { code, col } of _NANTOU_COLLECTIBLES) {
     yOffset: _yOffset,
     upright: true,
     collisionScale: 1.0,
+    heroTriCap: HERO_TRI_CAP, // collectibles get the 600-tri hero budget
     buildGeometry: col.buildGeometry.bind(col),
     extraCode: code,
     sizeClass: 'collectible-small',
