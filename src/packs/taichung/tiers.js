@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 宮原冰淇淋杯, 鉛筆, 太陽餅
+      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'miyahara_icecream_cup', 'pencil', 'suncake',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -120,8 +120,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 霓虹招牌, 公車候車亭, 路樹, 天橋, 台中市公車
-      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'bus_shelter', 'street_tree', 'footbridge', 'taichung_bus',
+      // 機車, 小貨車, 變電箱, 霓虹招牌, 逢甲攤車, 路樹, 大甲媽遶境旗, 台中市公車
+      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'fengjia_cart', 'street_tree', 'mazu_pilgrimage_flag', 'taichung_bus',
       // chunk landmarks: 夜市拱門, 廟前牌樓
       'night_market_arch', 'temple_pailou',
     ],
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 審計新村, 巨型看板, 玻璃帷幕街屋, 銀行
+      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'shengjicun', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
@@ -192,8 +192,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 空橋, 屋頂機房, 街區大樓
-      'glass_highrise', 'cross_bridge', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
+      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 台中車站, 台中歌劇院, 街區大樓
+      'glass_highrise', 'cross_bridge', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'taichung_station_bldg', 'opera_house_bldg', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

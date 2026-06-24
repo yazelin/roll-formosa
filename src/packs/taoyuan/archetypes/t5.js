@@ -153,50 +153,47 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 機捷連通天橋 airport mrt skybridge -------------------- */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'airport_mrt_skybridge',
+    displayName: '機捷連通天橋',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 16,
-    radiusJitter: 0.18,
+    radiusNominal: 18,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
-    yOffset: -0.57,
+    palette: [0x6a4a8a, 0x8a6aaa, 0xc8d0d8, 0xa0c8e0, 0x9aa0a8],
+    yOffset: -0.55,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.65,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
-      const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
-      ];
-      // railing posts (sparse) + canopy supports
-      for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
+      // Taoyuan Airport MRT (機捷) station connection skybridge with purple accents
+      const parts = [];
+      const purple = 0x6a4a8a; // 機捷 corporate purple
+      const glass = 0xa0c8e0;
+      const concrete = 0xc8d0d8;
+      // Main enclosed walkway tube (curved roof)
+      parts.push(box(6.0, 1.0, 1.5, concrete, { y: 2.5 }));
+      // Curved glass roof
+      parts.push(cyl(1.5, 1.5, 6.2, 10, glass, { rx: PI / 2, y: 3.3, thetaLen: PI }));
+      // Purple accent stripe along the walkway (機捷 branding)
+      parts.push(box(6.2, 0.12, 0.2, purple, { y: 2.1, z: 0.65 }));
+      parts.push(box(6.2, 0.12, 0.2, purple, { y: 2.1, z: -0.65 }));
+      // Glass side panels
+      parts.push(box(5.8, 0.8, 0.08, glass, { y: 2.6, z: 0.72 }));
+      parts.push(box(5.8, 0.8, 0.08, glass, { y: 2.6, z: -0.72 }));
+      // Support columns (Y-shaped piers typical of 機捷)
+      for (const sx of [-2.5, 2.5]) {
+        parts.push(cyl(0.25, 0.35, 2.0, 6, 0x9aa0a8, { x: sx, y: 1.0 }));
+        parts.push(box(0.8, 0.2, 1.3, 0xb0b8c0, { x: sx, y: 1.95 })); // pier cap
       }
-      // twin stair / lift towers at the ends
-      for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
-          }));
-        }
-      }
+      // Elevator tower at one end
+      parts.push(box(1.2, 3.0, 1.2, concrete, { x: -3.5, y: 1.5 }));
+      parts.push(box(1.0, 0.6, 0.08, glass, { x: -3.5, y: 2.0, z: 0.62 })); // glass panel
+      // Purple signage
+      parts.push(box(0.8, 0.4, 0.1, purple, { x: -3.5, y: 2.8, z: 0.64 }));
+      // Ground level entrance
+      parts.push(box(1.6, 0.8, 1.0, 0x9aa0a8, { x: 3.5, y: 0.4 }));
       return finish(parts);
     },
   },

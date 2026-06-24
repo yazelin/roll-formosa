@@ -71,40 +71,41 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 1 ── 小貨車 mini truck (blue Kei-style pickup) ─────────────────────── */
+  /* 1 ── 農用搬運車 farm transport vehicle (Taoyuan farm area) ──────────── */
   {
-    id: 'mini_truck',
-    displayName: '小貨車',
+    id: 'farm_transport',
+    displayName: '農用搬運車',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.6,
-    radiusJitter: 0.13,
+    radiusNominal: 1.5,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x2f6db0, 0xd8dde4, 0x1a1c2a, 0x9aa0ac, 0x3a3f52],
-    yOffset: -0.61,
+    palette: [0x4a8a3a, 0xd8dde4, 0x1a1c2a, 0xe0a030, 0x3a3f52],
+    yOffset: -0.58,
     upright: true,
-    collisionScale: 0.78,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      const cab = rng() < 0.5 ? 0x2f6db0 : 0xd8dde4;
+      // Taoyuan agricultural area small transport vehicle (搬運車)
+      const green = 0x4a8a3a;
       const parts = [];
-      // flatbed deck
-      parts.push(box(2.0, 0.22, 1.0, 0x9aa0ac, { x: 0.35, y: 0.55 }));
-      // bed side rails
-      parts.push(box(2.0, 0.3, 0.06, 0x7d828e, { x: 0.35, y: 0.78, z: 0.47 }));
-      parts.push(box(2.0, 0.3, 0.06, 0x7d828e, { x: 0.35, y: 0.78, z: -0.47 }));
-      parts.push(box(0.06, 0.3, 1.0, 0x7d828e, { x: 1.32, y: 0.78 })); // tailgate
-      // cab
-      parts.push(box(0.85, 0.7, 1.0, cab, { x: -0.95, y: 0.85 }));
-      // windshield (darker)
-      parts.push(box(0.06, 0.42, 0.86, 0x1a2330, { x: -0.55, y: 1.0 }));
-      // front bumper / face
-      parts.push(box(0.18, 0.4, 1.02, 0x3a3f52, { x: -1.42, y: 0.55 }));
-      // headlights
-      parts.push(box(0.06, 0.12, 0.18, 0xfff2cc, { x: -1.46, y: 0.62, z: 0.34 }));
-      parts.push(box(0.06, 0.12, 0.18, 0xfff2cc, { x: -1.46, y: 0.62, z: -0.34 }));
-      // 4 wheels
-      const wheel = (wx, wz) => cyl(0.28, 0.28, 0.18, 10, 0x14151f, { x: wx, y: 0.28, z: wz, rx: HALF_PI });
-      parts.push(wheel(-0.9, 0.52), wheel(-0.9, -0.52), wheel(0.9, 0.52), wheel(0.9, -0.52));
+      // flatbed platform
+      parts.push(box(1.8, 0.16, 1.0, 0x6a7a6a, { x: 0.2, y: 0.4 }));
+      // bed side rails (wooden slat style)
+      parts.push(box(1.8, 0.25, 0.06, 0x8a6a48, { x: 0.2, y: 0.62, z: 0.47 }));
+      parts.push(box(1.8, 0.25, 0.06, 0x8a6a48, { x: 0.2, y: 0.62, z: -0.47 }));
+      // small engine/cab unit (green)
+      parts.push(box(0.65, 0.6, 0.8, green, { x: -0.9, y: 0.55 }));
+      // engine grille
+      parts.push(box(0.06, 0.35, 0.6, 0x3a3f52, { x: -1.24, y: 0.45 }));
+      // steering column/handlebar
+      parts.push(cyl(0.04, 0.04, 0.5, 6, 0x3a3f52, { x: -0.75, y: 0.85, rx: -0.4 }));
+      parts.push(cyl(0.03, 0.03, 0.4, 6, 0x3a3f52, { x: -0.65, y: 1.05, rz: HALF_PI }));
+      // produce crates on back (typical of Taoyuan farm transport)
+      parts.push(box(0.5, 0.3, 0.4, 0xe0a030, { x: 0.5, y: 0.68 }));
+      parts.push(box(0.5, 0.3, 0.4, 0x4a8a3a, { x: 0.0, y: 0.68 }));
+      // 4 wheels (small utility vehicle)
+      const wheel = (wx, wz) => cyl(0.22, 0.22, 0.16, 8, 0x14151f, { x: wx, y: 0.22, z: wz, rx: HALF_PI });
+      parts.push(wheel(-0.8, 0.48), wheel(-0.8, -0.48), wheel(0.8, 0.48), wheel(0.8, -0.48));
       return finish(parts);
     },
   },

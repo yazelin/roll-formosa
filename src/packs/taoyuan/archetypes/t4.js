@@ -62,37 +62,41 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 農機具行 (Taoyuan farm equipment shop) ------------------- */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'farm_equipment_shop',
+    displayName: '農機具行',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 4.0,
-    radiusJitter: 0.18,
+    radiusNominal: 5.5,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
-    yOffset: -0.42,
+    palette: [0x4a8a3a, 0xe0a030, 0x9aa0aa, 0xc83828, 0xd8c8b0],
+    yOffset: -0.40,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Taoyuan's agricultural areas (Guanyin, Xinwu) have many farm equipment shops
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
-        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
-        // corrugation ridges suggested by thin batten boxes along the slope
+        // main building body
+        box(2.6, 1.5, 2.0, 0xd8c8b0, { y: 0.75 }),
+        // corrugated metal roof
+        box(2.8, 0.12, 2.2, 0x8a9098, { y: 1.56 }),
+        // large open bay door
+        box(2.0, 1.2, 0.08, 0x4a5058, { y: 0.6, z: 1.02 }),
+        // signboard
+        box(2.2, 0.4, 0.1, 0x4a8a3a, { y: 1.4, z: 1.06 }),
+        // displayed farm equipment in front
+        // small tractor (simplified)
+        box(0.8, 0.5, 0.6, 0x4a8a3a, { x: -0.7, y: 0.25, z: 1.4 }), // tractor body
+        cyl(0.2, 0.2, 0.15, 6, 0x2a2c30, { x: -1.0, y: 0.2, z: 1.4, rx: HALF_PI }), // wheel
+        cyl(0.2, 0.2, 0.15, 6, 0x2a2c30, { x: -0.4, y: 0.2, z: 1.4, rx: HALF_PI }), // wheel
+        // rotary tiller attachment
+        box(0.5, 0.3, 0.4, 0xe0a030, { x: 0.6, y: 0.15, z: 1.5 }),
+        cyl(0.15, 0.15, 0.5, 6, 0x8a8a8a, { x: 0.6, y: 0.2, z: 1.5, rz: HALF_PI }),
+        // pump equipment
+        cyl(0.2, 0.2, 0.4, 6, 0xc83828, { x: 1.0, y: 0.2, z: 1.3 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
-      }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof (typical 違建 detail)
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
       return finish(parts);
     },
   },

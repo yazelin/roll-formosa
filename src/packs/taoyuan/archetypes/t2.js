@@ -55,32 +55,39 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell */
+  /* ---- slot 1 ---- 客家花布燈籠 — Hakka floral fabric lantern (桃園客家特色) */
   {
-    id: 'helmet',
-    displayName: '安全帽',
+    id: 'hakka_lantern',
+    displayName: '客家花布燈籠',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.28,
-    radiusJitter: 0.18,
+    radiusNominal: 0.32,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf2f2ee, 0xe23a2c, 0x2a55a8, 0x2e6a48, 0x303338],
-    yOffset: -0.075,
-    upright: false,
-    collisionScale: 0.85,
+    palette: [0xc83040, 0x2070a0, 0x40a850, 0xf0d050, 0xe8b8d0],
+    yOffset: -0.05,
+    upright: true,
+    collisionScale: 0.75,
     buildGeometry(rng) {
+      // Hakka floral fabric lantern (客家花布燈籠) - iconic Taoyuan Hakka craft
       return finish([
-        // dome shell (upper hemisphere, baked near-white for tint)
-        sph(1.0, 0xffffff, { ws: 10, hs: 6, thetaLen: HALF_PI * 1.15, y: 0.0 }),
-        // brim/peak at the front
-        box(0.9, 0.06, 0.42, 0xffffff, { y: -0.02, z: 0.78, rx: -0.18 }),
-        // visor band (dark tint-resistant strip)
-        cyl(1.0, 1.0, 0.16, 10, 0x2a2c30, {
-          rx: HALF_PI, y: 0.02, thetaLen: PI, theta0: -HALF_PI,
-        }),
-        // chin strap stub
-        box(0.1, 0.5, 0.1, 0x303338, { x: -0.7, y: -0.5 }),
-        box(0.1, 0.5, 0.1, 0x303338, { x: 0.7, y: -0.5 }),
+        // top cap (wooden)
+        cyl(0.3, 0.35, 0.15, 8, 0x6a4a32, { y: 1.4 }),
+        // lantern body - barrel shape (tinted for floral pattern)
+        cyl(0.5, 0.4, 0.3, 8, 0xffffff, { y: 1.2 }), // top taper (tinted)
+        cyl(0.65, 0.5, 0.3, 8, 0xffffff, { y: 0.95 }), // upper body
+        cyl(0.65, 0.65, 0.35, 8, 0xffffff, { y: 0.6 }), // middle body
+        cyl(0.5, 0.65, 0.3, 8, 0xffffff, { y: 0.3 }), // lower body
+        cyl(0.35, 0.5, 0.2, 8, 0xffffff, { y: 0.1 }), // bottom taper
+        // floral pattern bands (Hakka signature colors)
+        cyl(0.67, 0.67, 0.1, 8, 0xc83040, { y: 0.85, open: true }), // red band
+        cyl(0.67, 0.67, 0.1, 8, 0x40a850, { y: 0.55, open: true }), // green band
+        cyl(0.52, 0.52, 0.08, 8, 0x2070a0, { y: 1.1, open: true }), // blue band
+        // bottom cap (wooden)
+        cyl(0.3, 0.28, 0.12, 8, 0x6a4a32, { y: 0.0 }),
+        // tassel hanging below
+        cyl(0.04, 0.04, 0.2, 6, 0xf0d050, { y: -0.15 }),
+        cone(0.1, 0.15, 6, 0xc83040, { y: -0.32 }),
       ]);
     },
   },
