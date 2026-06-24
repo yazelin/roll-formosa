@@ -46,10 +46,10 @@ import { COL_XLB } from './collectibles/xiaolongbao.js';
 import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
 import { COL_SANTAIZI } from './collectibles/santaizi.js';
 import { COL_PUPPET } from './collectibles/budaixi.js';
-import { COL_YOUBIKE } from './collectibles/youbike.js';
+import { COL_LIHU } from './collectibles/li_hu_cake.js';
 import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
-import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
-import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
+import { COL_JIGUELA } from './collectibles/jiguela.js';
+import { COL_PAOPAO } from './collectibles/paopao_ice.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
 // 8 Keelung extended landmarks for codes 90-93 + 95-98.
@@ -172,10 +172,10 @@ const _KEELUNG_COLLECTIBLES = [
   { code: 75, col: COL_PINEAPPLE },
   { code: 76, col: COL_SANTAIZI },
   { code: 77, col: COL_PUPPET },
-  { code: 78, col: COL_YOUBIKE },
+  { code: 78, col: COL_LIHU },
   { code: 79, col: COL_PRES_TROPHY },
-  { code: 80, col: COL_GONDOLA },
-  { code: 81, col: COL_BIGCHICKEN },
+  { code: 80, col: COL_JIGUELA },
+  { code: 81, col: COL_PAOPAO },
   { code: 94, col: COL_MAZU },
 ];
 for (const { code, col } of _KEELUNG_COLLECTIBLES) {
