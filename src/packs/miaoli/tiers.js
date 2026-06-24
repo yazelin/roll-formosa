@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 草莓糖, 擂茶粉包, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'strawberry_candy', 'leicha_packet', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 草莓糖, 擂茶粉包, 尪仔標, 鉛筆, 陶瓷碗
+      'marble', 'eraser', 'pushpin', 'strawberry_candy', 'leicha_packet', 'ngiauimia_card', 'pencil', 'ceramic_bowl',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 草莓籃, 瓦斯桶, 三角錐, 消防栓, 招財貓, 草莓箱
-      'red_plastic_chair', 'helmet', 'strawberry_basket', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'strawberry_crate',
+      // 紅塑膠椅, 安全帽, 草莓籃, 瓦斯桶, 三角錐, 消防栓, 油桐花盆, 草莓箱
+      'red_plastic_chair', 'helmet', 'strawberry_basket', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'tung_flower_pot', 'strawberry_crate',
       // chunk landmarks: 草莓攤車, 廟前香爐
       'strawberry_cart', 'temple_incense_burner',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 客家夥房, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'hakka_house', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 透天厝, 鐵皮屋, 客家夥房, 超商, 公車, 垃圾車, 加油站, 木雕騎樓
+      'townhouse', 'tin_roof_house', 'hakka_house', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'woodcarving_arcade',
       // chunk landmarks: 客家街屋, 大廟
       'hakka_streethouse', 'temple_mass',
     ],
@@ -194,8 +194,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 其他高樓, 巨型廣告牆, 商辦塔, 空橋, 屋頂機房, 街區大樓
-      'glass_highrise', 'cross_bridge', 'other_skyscraper', 'giant_ad_wall', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
+      // 龍騰斷橋拱門, 跨橋, 木雕工廠, 客家聚落, 舊山線隧道口, 空橋, 屋頂機房, 街區大樓
+      'longteng_arch', 'cross_bridge', 'woodcarving_factory', 'hakka_village_cluster', 'railway_tunnel', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

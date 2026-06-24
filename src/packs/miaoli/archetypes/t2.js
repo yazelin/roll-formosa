@@ -226,41 +226,45 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat, seated with raised paw */
+  /* ---- slot 6 ---- 油桐花盆 — potted tung oil tree with white flowers (桐花季) */
   {
-    id: 'lucky_cat',
-    displayName: '招財貓',
+    id: 'tung_flower_pot',
+    displayName: '油桐花盆',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.4,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
-    yOffset: -0.195,
+    palette: [0x6a5040, 0x3a6a3a, 0xffffff, 0x4a8a4a, 0xffd84d],
+    yOffset: -0.28,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      const white = 0xffffff; // porcelain body, tinted
-      return finish([
-        // seated body (rounded, slightly tapered)
-        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
-        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
-        // head
-        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
-        // two ears
-        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
-        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
-        // raised beckoning paw (front-left, up)
-        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
-        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
-        // resting paw
-        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
-        // gold bib / coin collar (tint-resistant gold)
-        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
-        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }), // koban coin
-        // red collar bell
-        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
-      ]);
+      // A potted tung oil tree seedling with characteristic white flowers —
+      // the symbol of Miaoli's famous 桐花季 (Tung Blossom Festival).
+      const parts = [
+        // terracotta pot
+        cyl(0.5, 0.65, 0.55, 8, 0x6a5040, { y: 0.28, hex2: 0x8a6a50 }),
+        cyl(0.55, 0.55, 0.1, 8, 0x5a4030, { y: 0.56 }), // pot rim
+        // soil surface
+        cyl(0.48, 0.48, 0.08, 8, 0x4a3a28, { y: 0.54 }),
+        // main trunk
+        cyl(0.1, 0.14, 0.9, 6, 0x5a4030, { y: 1.0, hex2: 0x7a5a40 }),
+        // leaf clusters (green blobs)
+        sph(0.4, 0x3a6a3a, { ws: 5, hs: 3, y: 1.5, hex2: 0x4a8a4a }),
+        sph(0.28, 0x4a7a4a, { ws: 5, hs: 3, x: 0.25, y: 1.35, z: 0.15 }),
+        sph(0.25, 0x3a7a3a, { ws: 5, hs: 3, x: -0.2, y: 1.4, z: -0.18 }),
+      ];
+      // white tung blossoms scattered on the canopy
+      const flowers = [
+        [0, 1.75, 0], [0.22, 1.55, 0.2], [-0.18, 1.6, 0.15],
+        [0.15, 1.48, -0.18], [-0.25, 1.5, -0.1],
+      ];
+      for (const [fx, fy, fz] of flowers) {
+        parts.push(sph(0.1, 0xffffff, { ws: 4, hs: 2, x: fx, y: fy, z: fz }));
+        parts.push(sph(0.04, 0xffd84d, { ws: 3, hs: 2, x: fx, y: fy + 0.06, z: fz })); // yellow center
+      }
+      return finish(parts);
     },
   },
 
