@@ -1,6 +1,6 @@
 /**
- * @file packs/taipei/archetypes/t4.js — Roll Formosa Taipei pack, TIER 4
- * content: 萬華街屋與廟 (Wanhua shophouses & temple).
+ * @file packs/tainan/archetypes/t4.js — Roll Formosa Tainan pack, TIER 4
+ * content: 孔廟街屋與廟 (Tainan shophouses & temples).
  *
  * The 10 tier-4 ArchetypeDefs (size band 3–12 m REAL). ids are the FROZEN
  * CONTRACT from packs/taipei/tiers.js TIERS[4].archetypeIds — slots [0..7]
@@ -293,41 +293,44 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 牛肉湯店 (Tainan beef soup shop facade) --------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'beef_soup_shop',
+    displayName: '牛肉湯店',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xc83828, 0xe04838, 0xf8f0e0, 0xd8c8b0, 0xfff0c0],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // typical early-morning Tainan beef soup shop storefront
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // main shop body (two-story townhouse style)
+        box(3.0, 2.2, 1.4, 0xf8f0e0, { y: 1.1 }),
+        // red signboard across the front (iconic)
+        box(3.1, 0.6, 0.08, 0xc83828, { y: 1.8, z: 0.72 }),
+        // white text area on sign
+        box(2.6, 0.4, 0.04, 0xfff0c0, { y: 1.8, z: 0.76 }),
+        // open kitchen area at ground floor
+        box(2.8, 0.8, 0.06, 0x3a3a3a, { y: 0.4, z: 0.72 }), // dark open front
+        // steaming pots (stainless steel)
+        cyl(0.35, 0.35, 0.5, 8, 0xd8dce2, { x: -0.6, y: 0.5, z: 0.4 }),
+        cyl(0.35, 0.35, 0.5, 8, 0xd8dce2, { x: 0.6, y: 0.5, z: 0.4 }),
+        // steam rising (white wisps)
+        cyl(0.08, 0.12, 0.4, 5, 0xf0f0f0, { x: -0.6, y: 0.95, z: 0.4 }),
+        cyl(0.08, 0.12, 0.4, 5, 0xf0f0f0, { x: 0.6, y: 0.95, z: 0.4 }),
+        // awning/canopy
+        box(3.3, 0.08, 1.0, 0xc83828, { y: 2.3, z: 0.3, rx: -0.15 }),
+        // second floor window
+        box(2.4, 0.5, 0.06, 0x6a8aa0, { y: 1.95, z: -0.68 }),
+        // small tables in front
+        box(0.5, 0.4, 0.5, 0x9a8a78, { x: -0.9, y: 0.2, z: 1.0 }),
+        box(0.5, 0.4, 0.5, 0x9a8a78, { x: 0.9, y: 0.2, z: 1.0 }),
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
-      }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
       return finish(parts);
     },
   },
