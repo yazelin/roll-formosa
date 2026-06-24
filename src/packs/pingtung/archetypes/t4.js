@@ -267,37 +267,43 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 萬巒豬腳店 (Wanruan pig trotter shop) ----------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'pig_trotter_shop',
+    displayName: '萬巒豬腳店',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xc87848, 0xd88858, 0xb86838, 0xe89868, 0xa85828],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Famous Wanruan pig trotter restaurant storefront
       const parts = [
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }),
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }),
+        // Shop building body
+        box(3.0, 1.8, 1.6, 0xffffff, { y: 0.9, hex2: 0xf8f4f0 }),
+        // Roof with characteristic red awning
+        box(3.2, 0.2, 1.8, 0xc83828, { y: 1.9 }),
+        // Sign board with golden trim
+        box(2.6, 0.5, 0.1, 0xc83828, { y: 1.6, z: 0.85 }),
+        box(2.4, 0.4, 0.06, 0xffd040, { y: 1.6, z: 0.88 }),
+        // Glass storefront
+        box(2.2, 0.9, 0.08, 0x9fc4d8, { y: 0.65, z: 0.82 }),
+        // Display case with pig trotters
+        box(1.5, 0.6, 0.5, 0xe8e4e0, { y: 0.4, z: 0.5 }),
+        // Pig trotter display (rounded brown shapes)
+        sph(0.2, 0xc87848, { ws: 6, hs: 4, x: -0.4, y: 0.6, z: 0.5 }),
+        sph(0.18, 0xb86838, { ws: 6, hs: 4, x: 0, y: 0.55, z: 0.55 }),
+        sph(0.2, 0xd88858, { ws: 6, hs: 4, x: 0.35, y: 0.6, z: 0.5 }),
+        // Hanging lanterns
+        sph(0.15, 0xff4040, { ws: 5, hs: 4, x: -1.2, y: 1.5, z: 0.7 }),
+        sph(0.15, 0xff4040, { ws: 5, hs: 4, x: 1.2, y: 1.5, z: 0.7 }),
+        // Steam vent
+        cyl(0.1, 0.1, 0.3, 6, 0x9aa0aa, { x: 1.2, y: 2.15 }),
       ];
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 }));
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 }));
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 }));
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 }));
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 }));
-        }
-      }
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
       return finish(parts);
     },
   },

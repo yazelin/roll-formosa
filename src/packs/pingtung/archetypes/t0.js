@@ -52,27 +52,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] dried_mango 愛文芒果乾 — dried mango slice from Pingtung        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'dried_mango',
+    displayName: '愛文芒果乾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
+    palette: [0xffa030, 0xffb040, 0xff9020, 0xffc050, 0xff8018],
     yOffset: -0.68,
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Dried mango slice - wrinkled chewy texture
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }),
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }),
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }),
+        // Main slice body - flattened oval
+        box(1.8, 0.25, 1.2, 0xffffff, { y: 0.12, hex2: 0xffb040 }),
+        // Wrinkled surface texture
+        box(1.5, 0.08, 0.2, 0xffa030, { y: 0.28, z: 0.3 }),
+        box(1.3, 0.08, 0.15, 0xff9020, { y: 0.26, z: -0.2 }),
+        box(1.0, 0.08, 0.18, 0xffc050, { y: 0.24, z: 0.1 }),
+        // Darker caramelized edges
+        box(0.15, 0.2, 1.0, 0xe08020, { x: -0.85, y: 0.1 }),
+        box(0.15, 0.2, 1.0, 0xe08020, { x: 0.85, y: 0.1 }),
       ]);
     },
   },
@@ -223,34 +228,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] yueqin_pick 月琴撥片 — plectrum for Hengchun folk yueqin        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'yueqin_pick',
+    displayName: '月琴撥片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
+    palette: [0xf0e8d8, 0xe8d8c0, 0xd8c8a8, 0xf8f0e0, 0xc8b898],
     yOffset: -0.80,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }),
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }),
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }),
-      ];
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      // Bamboo/bone plectrum for yueqin (moon guitar)
+      return finish([
+        // Teardrop-shaped pick body
+        sph(0.8, 0xffffff, { ws: 8, hs: 6, sy: 0.15, y: 0.08, hex2: 0xf0e8d8 }),
+        // Tapered point
+        cone(0.4, 0.6, 6, 0xe8d8c0, { y: 0.08, rz: PI, sy: 0.15 }),
+        // Grip texture lines
+        box(0.6, 0.02, 0.08, 0xc8b898, { y: 0.12, z: 0.15 }),
+        box(0.5, 0.02, 0.08, 0xc8b898, { y: 0.12, z: -0.1 }),
+        box(0.4, 0.02, 0.08, 0xc8b898, { y: 0.12, z: -0.3 }),
+      ]);
     },
   },
 
