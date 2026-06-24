@@ -55,8 +55,8 @@ import { NM_CIEN_PAGODA } from './landmarks/cien_pagoda.js';
  */
 const extraIds = [
   // indices 0..11 — codes 70..81: Nantou collectibles
-  'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-  'santaizi', 'budaixi', 'bamboo_basket_col', 'shaoxing_wine', 'ropeway_gondola', 'qingjing_sheep',
+  'black_bear', 'boba', 'sun_moon_egg', 'shiitake', 'golden_rooster', 'sunmoon_fish',
+  'thao_canoe', 'jiji_banana', 'bamboo_basket_col', 'shaoxing_wine', 'ropeway_gondola', 'qingjing_sheep',
   // indices 12..19 — codes 82..89: Nantou landmark ids
   NM_WENWU_TEMPLE.id,      // 82 文武廟
   NM_XUANGUANG_TEMPLE.id,  // 83 玄光寺
