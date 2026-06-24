@@ -23,30 +23,33 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, finish, PI, HALF_PI } from 
 /** @type {ArchetypeDef[]} */
 export const T1_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] 養樂多 — squat Yakult bottle: white body, pinched waist, red label */
+  /* [0] 溫泉麻糬 — Jiaoxi hot spring mochi: soft round mochi ball        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'yakult',
-    displayName: '養樂多',
+    id: 'hot_spring_mochi',
+    displayName: '溫泉麻糬',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.055,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xf7f4ee, 0xe4d9c4, 0xc8442e, 0xb03828, 0xf0e8d8],
-    yOffset: -0.1645,
+    palette: [0xf8f4e8, 0xf0e8d8, 0xe8e0d0, 0xfff8f0, 0xf4f0e0],
+    yOffset: -0.20,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(0.62, 0.46, 0.5, 9, 0xf7f4ee, { y: 0.25 }), // tapered base
-        cyl(0.66, 0.62, 0.55, 9, 0xf7f4ee, { y: 0.78 }), // belly
-        cyl(0.5, 0.66, 0.3, 9, 0xf7f4ee, { y: 1.2 }), // shoulder pinch
-        cyl(0.46, 0.5, 0.18, 9, 0xf7f4ee, { y: 1.44 }), // neck
-        cyl(0.5, 0.5, 0.06, 9, 0xc8442e, { y: 1.55 }), // foil cap
-        // red label band wrapping the belly
-        cyl(0.69, 0.66, 0.34, 9, 0xc8442e, { y: 0.66, open: true }),
-        cyl(0.65, 0.63, 0.1, 9, 0xf7f4ee, { y: 0.78, open: true }), // white stripe in label
+        // soft round mochi base (slightly squished)
+        sph(0.8, 0xffffff, { ws: 8, hs: 6, y: 0.6, sy: 0.7, hex2: 0xf8f4e8 }),
+        // slight indent on top where it sits
+        cyl(0.35, 0.4, 0.08, 8, 0xf0e8d8, { y: 0.95 }),
+        // peanut powder dusting (light brown spots)
+        sph(0.1, 0xd8c8a0, { ws: 4, hs: 3, x: 0.3, y: 0.75, z: 0.2 }),
+        sph(0.08, 0xd0c098, { ws: 4, hs: 3, x: -0.25, y: 0.8, z: 0.15 }),
+        sph(0.1, 0xd8c8a0, { ws: 4, hs: 3, x: 0.1, y: 0.7, z: -0.3 }),
+        sph(0.08, 0xd0c098, { ws: 4, hs: 3, x: -0.15, y: 0.85, z: -0.2 }),
+        // bamboo pick stuck in top
+        cyl(0.02, 0.02, 0.4, 4, 0xc8a870, { y: 1.05 }),
       ]);
     },
   },

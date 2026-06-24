@@ -235,32 +235,34 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] lanyang_rice_ball 蘭陽飯糰 — Yilan-style rice ball wrapped in nori */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'lanyang_rice_ball',
+    displayName: '蘭陽飯糰',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.011,
-    radiusJitter: 0.16,
+    radiusNominal: 0.025,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80,
+    palette: [0xf8f4e8, 0xfff8f0, 0xf0e8d8, 0xe8e0d0, 0xf4f0e0],
+    yOffset: -0.45,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }),
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }),
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }),
-      ];
-      const d = 0.2;
-      const holes = [[d, d], [-d, d], [d, -d], [-d, -d]];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      return finish([
+        // triangular rice ball body (onigiri shape)
+        box(1.0, 0.4, 0.8, 0xffffff, { y: 0.3 }),
+        // top point (triangle peak made from box tilted)
+        box(0.7, 0.3, 0.6, 0xffffff, { y: 0.55, rx: 0.15 }),
+        box(0.4, 0.2, 0.4, 0xffffff, { y: 0.75 }),
+        // nori (seaweed) wrap at the bottom
+        box(1.05, 0.25, 0.82, 0x1a2a1a, { y: 0.12 }),
+        // visible rice texture - tiny dots
+        sph(0.05, 0xf0e8d8, { ws: 3, hs: 2, x: 0.3, y: 0.5, z: 0.25 }),
+        sph(0.05, 0xf0e8d8, { ws: 3, hs: 2, x: -0.2, y: 0.55, z: 0.2 }),
+        sph(0.05, 0xf0e8d8, { ws: 3, hs: 2, x: 0.1, y: 0.6, z: -0.15 }),
+      ]);
     },
   },
 

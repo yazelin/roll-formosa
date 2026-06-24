@@ -146,37 +146,35 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 3 ── 霓虹招牌 neon sign (cantilever shop sign) ─────────────────────── */
+  /* 3 ── 雨量筒 rain gauge — Yilan is famous for heavy rainfall ────────── */
   {
-    id: 'neon_sign',
-    displayName: '霓虹招牌',
+    id: 'rain_gauge',
+    displayName: '雨量筒',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.1,
-    radiusJitter: 0.16,
+    radiusNominal: 0.9,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x14161f, 0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a],
-    yOffset: -0.27,
+    palette: [0x4a8ab0, 0x3a7aa0, 0x5a9ac0, 0x2a6a90, 0x6aaad0],
+    yOffset: -0.20,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      const glow = [0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a][Math.floor(rng() * 4)];
-      const glow2 = 0x32d6ff;
       const parts = [];
-      // wall mount bracket
-      parts.push(box(0.2, 1.8, 0.2, 0x2a2c34, { x: -1.05, y: 1.1 }));
-      // boom arm
-      parts.push(cyl(0.05, 0.05, 1.0, 6, 0x3a3d46, { x: -0.55, y: 1.7, rz: HALF_PI }));
-      // dark sign backing panel
-      parts.push(box(0.12, 1.5, 1.3, 0x14161f, { x: 0.1, y: 1.0 }));
-      // neon tube border (torus arc rings as glow strokes) — top & bottom bars
-      parts.push(box(0.06, 0.1, 1.16, glow, { x: 0.18, y: 1.66 }));
-      parts.push(box(0.06, 0.1, 1.16, glow2, { x: 0.18, y: 0.34 }));
-      parts.push(box(0.06, 1.36, 0.1, glow, { x: 0.18, y: 1.0, z: 0.6 }));
-      parts.push(box(0.06, 1.36, 0.1, glow2, { x: 0.18, y: 1.0, z: -0.6 }));
-      // neon glyph rings (two circular characters suggestion)
-      parts.push(torus(0.26, 0.05, 6, 10, glow, { x: 0.2, y: 1.28, ry: HALF_PI }));
-      parts.push(torus(0.26, 0.05, 6, 10, 0xfff04a, { x: 0.2, y: 0.68, ry: HALF_PI }));
+      // clear cylindrical collection tube
+      parts.push(cyl(0.35, 0.35, 1.8, 8, 0xc8e8f8, { y: 0.9, hex2: 0xe8f4fa }));
+      // water level inside (partial fill)
+      parts.push(cyl(0.32, 0.32, 0.6, 8, 0x4a9ac8, { y: 0.35 }));
+      // measurement markings (white stripes)
+      for (let i = 0; i < 5; i++) {
+        parts.push(box(0.38, 0.02, 0.06, 0xffffff, { y: 0.3 + i * 0.35, z: 0.33 }));
+      }
+      // funnel top to catch rain
+      parts.push(cone(0.6, 0.3, 8, 0x5a5a5a, { y: 1.95 }));
+      parts.push(cyl(0.6, 0.6, 0.08, 8, 0x4a4a4a, { y: 1.85 }));
+      // mounting stake/post
+      parts.push(cyl(0.08, 0.1, 1.0, 5, 0x6a5a4a, { y: 0.0, x: 0.5 }));
+      parts.push(box(0.12, 0.06, 0.4, 0x5a4a3a, { y: 0.9, x: 0.45 })); // bracket
       return finish(parts);
     },
   },
