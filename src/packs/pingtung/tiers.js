@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 貝殼, 椰子糖, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'seashell', 'coconut_candy', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 愛文芒果乾, 圖釘, 貝殼, 椰子糖, 尪仔標, 鉛筆, 月琴撥片
+      'marble', 'dried_mango', 'pushpin', 'seashell', 'coconut_candy', 'ngiauimia_card', 'pencil', 'yueqin_pick',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 招財貓, 衝浪板架
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'surfboard_rack',
+      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 洋蔥籃, 浮潛面鏡, 衝浪板架
+      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'onion_basket', 'snorkel_mask', 'surfboard_rack',
       // chunk landmarks: 恆春推車, 廟前香爐
       'hengchun_vendor_cart', 'temple_incense_burner',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 萬巒豬腳店
+      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'pig_trotter_shop',
       // chunk landmarks: 恆春街屋, 大廟
       'hengchun_streethouse_mass', 'temple_mass',
     ],
