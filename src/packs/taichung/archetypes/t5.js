@@ -200,39 +200,45 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 審計新村 shengjicun (TAICHUNG SWAP: Shengjicun market) - */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'shengjicun',
+    displayName: '審計新村',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 18,
+    radiusNominal: 20,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0xf0e8d8, 0xc4b8a0, 0x6a8a5a, 0xc23a2e, 0x9a8a72],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.85,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
+      // 審計新村 — the retro government dormitory village turned creative market:
+      // rows of 2-storey refurbished concrete dorms with colorful awnings + vendors.
       const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
+        // ground plaza / paved court
+        box(5.0, 0.16, 3.6, 0xc4b8a0, { y: 0.08 }),
+        // main dormitory building (boxy 50s concrete, repainted cream)
+        box(3.8, 2.0, 2.2, 0xf0e8d8, { y: 1.1, hex2: 0xe8e0d0 }),
+        box(3.9, 0.12, 2.3, 0x9a8a72, { y: 2.18 }), // roof slab / eave
+        // the signature外走廊 (exterior corridor) with colorful canopy
+        box(4.0, 0.1, 0.6, 0xc23a2e, { y: 1.7, z: 1.35 }), // red canopy
+        box(4.0, 0.1, 0.6, 0x3f8a52, { y: 1.35, z: 1.35 }), // green lower canopy band
+        // corridor support posts (simplified: 3 posts as boxes)
+        box(0.12, 1.5, 0.12, 0x8a7a62, { x: -1.2, y: 0.85, z: 1.55 }),
+        box(0.12, 1.5, 0.12, 0x8a7a62, { x: 0, y: 0.85, z: 1.55 }),
+        box(0.12, 1.5, 0.12, 0x8a7a62, { x: 1.2, y: 0.85, z: 1.55 }),
+        // simplified market stalls (2 tables + 2 awnings as boxes)
+        box(1.0, 0.55, 0.7, 0x9a7a52, { x: -1.2, y: 0.4, z: -0.9 }), // table 1
+        box(1.0, 0.55, 0.7, 0x9a7a52, { x: 1.0, y: 0.4, z: -0.9 }), // table 2
+        box(1.2, 0.08, 0.8, 0xc23a2e, { x: -1.2, y: 1.1, z: -0.9 }), // awning 1
+        box(1.2, 0.08, 0.8, 0x3f8a52, { x: 1.0, y: 1.1, z: -0.9 }), // awning 2
+        // hanging lights as boxes instead of spheres
+        box(0.18, 0.18, 0.18, 0xffd040, { x: -1.4, y: 1.0, z: 0.3 }),
+        box(0.18, 0.18, 0.18, 0xc23a2e, { x: 0, y: 1.0, z: 0.3 }),
+        box(0.18, 0.18, 0.18, 0x2a55a8, { x: 1.4, y: 1.0, z: 0.3 }),
       ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
-      }
       return finish(parts);
     },
   },
