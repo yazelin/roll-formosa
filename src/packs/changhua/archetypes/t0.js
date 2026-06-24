@@ -28,26 +28,30 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] flour_tea_packet 麵茶包 — Lukang specialty roasted flour tea   */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'flour_tea_packet',
+    displayName: '麵茶包',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xc8a868, 0xb89858, 0xd8b878, 0xe0c888, 0xa08048],
+    yOffset: -0.55, // packet lying flat
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        // Small sachet packet (rectangular pouch)
+        box(1.4, 0.3, 1.0, 0xffffff, { y: 0.15 }), // paper/plastic packet (tinted)
+        // Serrated seal edge at top
+        box(1.4, 0.08, 0.08, 0xc8a868, { y: 0.32, z: 0.46 }),
+        // Printed label with red accent
+        box(0.9, 0.2, 0.02, 0xc83828, { y: 0.18, z: 0.52 }),
+        // Content bulge showing flour tea inside
+        sph(0.35, 0xd8c088, { ws: 6, hs: 4, sy: 0.3, y: 0.18 }),
       ]);
     },
   },
@@ -80,26 +84,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] bagua_postcard 八卦山明信片 — postcard with Great Buddha image  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'bagua_postcard',
+    displayName: '八卦山明信片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0x4a9ac8, 0x3a7aa8, 0x6abae8, 0xf0e8d0, 0x2a6a98],
+    yOffset: -0.90, // flat card lying down
     upright: false,
     collisionScale: 0.7,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // Postcard body (rectangular card)
+        box(1.6, 0.06, 1.1, 0xffffff, { y: 0.03 }), // white card stock (tinted)
+        // Photo area (sky blue gradient for 八卦山 scenery)
+        box(1.4, 0.065, 0.9, 0x6abadf, { y: 0.035 }),
+        // Buddha silhouette (simplified golden icon)
+        sph(0.25, 0xd8b050, { ws: 6, hs: 4, sy: 1.3, y: 0.08 }),
+        // Red stamp in corner
+        box(0.2, 0.07, 0.2, 0xc83828, { x: 0.6, z: 0.4, y: 0.04 }),
+        // Text line at bottom
+        box(1.2, 0.065, 0.12, 0x2a3a4a, { y: 0.035, z: -0.4 }),
       ]);
     },
   },
