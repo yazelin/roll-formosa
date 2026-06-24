@@ -53,7 +53,7 @@ import { NM_QINGAN_TEMPLE } from './landmarks/qingan_temple.js';
 const extraIds = [
   // indices 0..11 — codes 70..81: Taipei collectibles (P7)
   'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-  'santaizi', 'budaixi', 'li_hu_cake', 'presidential_trophy', 'jiguela', 'paopao_ice',
+  'santaizi', 'budaixi', 'li_hu_cake', 'water_lantern', 'jiguela', 'paopao_ice',
   // indices 12..19 — codes 82..89: keelung landmark ids (aligned with catalog 82..89)
   NM_MIAOKOU_GATE.id,    // 82 廟口
   NM_KEELUNG_STATION.id, // 83 基隆車站
