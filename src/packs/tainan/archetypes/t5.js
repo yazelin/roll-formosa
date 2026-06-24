@@ -1,5 +1,5 @@
 /**
- * @file archetypes/t5.js — Taipei pack T5 「商業文教區」chunk archetypes.
+ * @file packs/tainan/archetypes/t5.js — Tainan pack T5 「東區商圈」chunk archetypes.
  *
  * Tier 5 (naturalBand 5) of the 7-tier ladder: the commercial / civic
  * district scale band (radiusNominal 12–60 m real). Eight absorbable
@@ -34,39 +34,49 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 林百貨風格樓 linbai_tower — Art Deco style (Tainan) ---- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'linbai_tower',
+    displayName: '林百貨風格樓',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
+    palette: [0xd8c8a8, 0xe8dcc0, 0xb8a888, 0x8a7a5a, 0xf0e8d0],
     yOffset: -0.06,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
-      return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
-      ]);
+      // Art Deco style mid-rise inspired by Tainan's historic 林百貨
+      const parts = [
+        // main body (stone-tinted)
+        box(3.0, 5.8, 2.4, 0xffffff, { y: 3.0 }),
+        // horizontal band lines (Art Deco motif)
+        box(3.1, 0.12, 2.5, 0xb8a888, { y: 1.2 }),
+        box(3.1, 0.12, 2.5, 0xb8a888, { y: 2.4 }),
+        box(3.1, 0.12, 2.5, 0xb8a888, { y: 3.6 }),
+        box(3.1, 0.12, 2.5, 0xb8a888, { y: 4.8 }),
+        // vertical pilasters (Art Deco)
+        box(0.2, 5.8, 0.1, 0xc8b898, { x: -1.3, y: 3.0, z: 1.22 }),
+        box(0.2, 5.8, 0.1, 0xc8b898, { x: 1.3, y: 3.0, z: 1.22 }),
+        // corner tower element (signature Tainan Art Deco)
+        box(0.8, 1.2, 0.8, 0xe8dcc0, { x: -1.0, y: 6.5, z: 1.0 }),
+        box(0.6, 0.8, 0.6, 0xd8c8a8, { x: -1.0, y: 7.3, z: 1.0 }),
+        // ground-floor arcade entry
+        box(2.8, 1.0, 2.2, 0x4a3a2a, { y: 0.5 }),
+        box(1.2, 0.8, 0.06, 0xc8b898, { y: 0.5, z: 1.22 }), // door
+        // parapet decoration
+        box(3.2, 0.3, 2.6, 0xb8a888, { y: 6.05 }),
+      ];
+      // windows (grid)
+      for (let f = 0; f < 4; f++) {
+        for (let w = 0; w < 3; w++) {
+          const lit = rng() < 0.4 ? 0xfff0c0 : 0x4a5a6a;
+          parts.push(box(0.5, 0.7, 0.05, lit, { x: -0.9 + w * 0.9, y: 1.6 + f * 1.2, z: 1.22 }));
+        }
+      }
+      return finish(parts);
     },
   },
 
