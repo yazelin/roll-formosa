@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 花生糖, 大溪豆乾, 尪仔標, 客家花布小方巾, 鈕扣
-      'marble', 'eraser', 'pushpin', 'peanut_candy', 'daxi_tofu', 'ngiauimia_card', 'hakka_floral_cloth', 'button',
+      // 彈珠, 大溪陀螺, 圖釘, 花生糖, 大溪豆乾, 尪仔標, 客家花布小方巾, 鈕扣
+      'marble', 'daxi_top_street', 'pushpin', 'peanut_candy', 'daxi_tofu', 'ngiauimia_card', 'hakka_floral_cloth', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_sticks',
     ],
@@ -73,8 +73,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 養樂多, 寶特瓶, 落花生, 香, 金紙, 牛肉麵碗, 紅白塑膠袋, 蔥油餅
-      'yakult', 'pet_bottle', 'ground_nut', 'incense_stick', 'joss_paper', 'beef_noodle_bowl', 'redwhite_bag', 'scallion_pancake',
+      // 客家擂茶杯, 寶特瓶, 落花生, 香, 金紙, 牛肉麵碗, 紅白塑膠袋, 蔥油餅
+      'hakka_leicha_cup', 'pet_bottle', 'ground_nut', 'incense_stick', 'joss_paper', 'beef_noodle_bowl', 'redwhite_bag', 'scallion_pancake',
       // chunk landmarks: 攤車燈籠, 彈珠台
       'stall_lantern', 'pinball_machine',
     ],
@@ -97,8 +97,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 埤塘水位標, 消防栓, 木器行木雕, 埤塘水桶
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'irrigation_marker', 'fire_hydrant', 'daxi_woodcarving', 'pond_bucket',
+      // 紅塑膠椅, 客家花布燈籠, 大同電鍋, 瓦斯桶, 埤塘水位標, 消防栓, 木器行木雕, 埤塘水桶
+      'red_plastic_chair', 'hakka_lantern', 'rice_cooker', 'gas_cylinder', 'irrigation_marker', 'fire_hydrant', 'daxi_woodcarving', 'pond_bucket',
       // chunk landmarks: 豆乾推車, 廟前香爐
       'tofu_cart', 'temple_incense_burner',
     ],
@@ -121,8 +121,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 花生糖攤, 鐵捲門, 落羽松, 埤塘閘門, 石獅
-      'scooter', 'mini_truck', 'transformer_box', 'peanut_candy_stall', 'roll_shutter', 'bald_cypress', 'pond_sluice_gate', 'stone_lion',
+      // 機車, 農用搬運車, 變電箱, 花生糖攤, 鐵捲門, 落羽松, 埤塘閘門, 石獅
+      'scooter', 'farm_transport', 'transformer_box', 'peanut_candy_stall', 'roll_shutter', 'bald_cypress', 'pond_sluice_gate', 'stone_lion',
       // chunk landmarks: 夜市拱門, 埤塘涼亭
       'night_market_arch', 'pond_pavilion',
     ],
@@ -145,8 +145,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 大溪木器行, 鐵皮屋, 公寓, 豆乾店, 公車, 垃圾車, 加油站, 騎樓柱
-      'daxi_woodcraft_shop', 'tin_roof_house', 'apartment', 'tofu_shop', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 大溪木器行, 農機具行, 公寓, 豆乾店, 公車, 垃圾車, 加油站, 騎樓柱
+      'daxi_woodcraft_shop', 'farm_equipment_shop', 'apartment', 'tofu_shop', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
       // chunk landmarks: 大溪巴洛克街屋, 大廟
       'baroque_facade', 'temple_mass',
     ],
@@ -169,8 +169,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 桃園捷運高架站, 科技園區大門, 捷運高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'metro_station_taoyuan', 'tech_park_gate', 'metro_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 桃園捷運高架站, 科技園區大門, 捷運高架, 機捷連通天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'metro_station_taoyuan', 'tech_park_gate', 'metro_viaduct', 'airport_mrt_skybridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 工業廠房, 物流倉庫
       'factory_mass', 'warehouse_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 貨運站, 巨型廣告牆, 塔台, 空橋, 屋頂機房, 航廈大樓
-      'glass_highrise', 'cross_bridge', 'cargo_terminal', 'giant_ad_wall', 'control_tower', 'sky_bridge', 'rooftop_plant_room', 'airport_terminal',
+      // 航空貨櫃堆, 跨橋, 貨運站, 巨型廣告牆, 塔台, 空橋, 屋頂機房, 航廈大樓
+      'cargo_container_stack', 'cross_bridge', 'cargo_terminal', 'giant_ad_wall', 'control_tower', 'sky_bridge', 'rooftop_plant_room', 'airport_terminal',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

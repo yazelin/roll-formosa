@@ -23,29 +23,44 @@ import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 航空貨櫃堆 airport cargo container stack ----------------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'cargo_container_stack',
+    displayName: '航空貨櫃堆',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 180,
+    radiusNominal: 150,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
-    yOffset: -0.04,
+    palette: [0x4a7aaa, 0x8ab0c8, 0xc0c8d0, 0xe0a030, 0x3a6080],
+    yOffset: -0.45,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.88,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and a vertical mullion seam.
-      return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.7 }), // glass shaft (cool blue + lit windows)
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
-      ]);
+      // Taoyuan Airport air cargo ULD containers (Unit Load Devices) stacked at cargo terminal
+      const parts = [];
+      // Ground row - 3 containers
+      for (let i = 0; i < 3; i++) {
+        const x = -2.0 + i * 2.0;
+        const color = [0x4a7aaa, 0xc0c8d0, 0x3a6080][i];
+        parts.push(box(1.6, 1.4, 1.8, color, { x, y: 0.7 }));
+        // container door handles / latches
+        parts.push(box(0.15, 0.8, 0.06, 0x6a7a8a, { x: x + 0.6, y: 0.7, z: 0.92 }));
+        // airline logo sticker
+        parts.push(box(0.6, 0.3, 0.04, 0xe0a030, { x, y: 1.0, z: 0.92 }));
+      }
+      // Second row - 2 containers offset
+      for (let i = 0; i < 2; i++) {
+        const x = -1.0 + i * 2.0;
+        const color = [0x8ab0c8, 0x4a7aaa][i];
+        parts.push(box(1.6, 1.4, 1.8, color, { x, y: 2.1 }));
+        parts.push(box(0.15, 0.8, 0.06, 0x6a7a8a, { x: x + 0.6, y: 2.1, z: 0.92 }));
+      }
+      // Top container
+      parts.push(box(1.6, 1.4, 1.8, 0xc0c8d0, { x: 0, y: 3.5 }));
+      // Ground pallet (wooden pallet base)
+      parts.push(box(6.5, 0.15, 2.2, 0x9a8a70, { y: 0.075 }));
+      return finish(parts);
     },
   },
 

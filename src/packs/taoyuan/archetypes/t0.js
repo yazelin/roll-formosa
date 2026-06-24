@@ -53,28 +53,35 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] daxi_top 大溪陀螺 — Daxi traditional wooden spinning top        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'daxi_top_street',
+    displayName: '大溪陀螺',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.018,
+    radiusNominal: 0.025,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.84,
+    palette: [0xc83040, 0x2060a0, 0x30a850, 0xf0c040, 0x8a5a38],
+    yOffset: -0.15, // spinning top resting on its point
+    upright: true,
+    collisionScale: 0.82,
     buildGeometry(rng) {
+      // Daxi (大溪) is famous for traditional handmade wooden spinning tops (陀螺)
+      const wood = 0x8a5a38;
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // main body - painted wood with color rings (classic Daxi style)
+        cyl(0.7, 0.2, 0.5, 8, 0xffffff, { y: 0.6 }), // upper dome (tinted)
+        cyl(0.5, 0.7, 0.3, 8, 0xffffff, { y: 0.35 }), // shoulder (tinted)
+        // tapered point
+        cone(0.5, 0.7, 8, wood, { y: 0.0, rx: PI }),
+        // decorative color rings (Daxi tops have painted stripes)
+        cyl(0.72, 0.72, 0.08, 8, 0xc83040, { y: 0.55, open: true }),
+        cyl(0.65, 0.65, 0.06, 8, 0x2060a0, { y: 0.7, open: true }),
+        cyl(0.52, 0.52, 0.05, 8, 0xf0c040, { y: 0.4, open: true }),
+        // metal tip at the very point
+        cone(0.12, 0.15, 6, 0xc8ccd4, { y: -0.35, rx: PI }),
       ]);
     },
   },
