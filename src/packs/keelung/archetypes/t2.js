@@ -179,76 +179,70 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant with side outlets + bonnet cap */
+  /* ---- slot 5 ---- 魚簍 — bamboo fish basket, iconic harbor fishing gear */
   {
-    id: 'fire_hydrant',
-    displayName: '消防栓',
+    id: 'fish_basket',
+    displayName: '魚簍',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.35,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xd02a1f, 0xe23a2c, 0xb8241c, 0xffd000, 0xc4281f],
-    yOffset: -0.188,
+    palette: [0xb89060, 0xa08050, 0xc8a070, 0x9a7048, 0xd8b080],
+    yOffset: -0.22,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const red = 0xffffff; // tinted red body
+      const bamboo = 0xffffff; // tinted bamboo
       return finish([
-        // base foot
-        cyl(0.66, 0.72, 0.2, 8, 0x9a2018, { y: 0.1 }),
-        // barrel
-        cyl(0.52, 0.58, 1.1, 8, red, { y: 0.75 }),
-        // shoulder taper
-        cyl(0.42, 0.52, 0.24, 8, red, { y: 1.42 }),
-        // bonnet dome
-        sph(0.46, red, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 1.5 }),
-        // top cap nut (yellow, tint-resistant)
-        cyl(0.16, 0.2, 0.2, 6, 0xf0c020, { y: 1.92 }),
-        // front nozzle outlet
-        cyl(0.18, 0.2, 0.22, 6, red, { rx: HALF_PI, y: 1.0, z: 0.58 }),
-        cyl(0.22, 0.22, 0.06, 6, 0xf0c020, { rx: HALF_PI, y: 1.0, z: 0.7 }),
-        // two side outlets
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: -0.6, y: 0.85 }),
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: 0.6, y: 0.85 }),
+        // woven basket body (tapered cylinder)
+        cyl(0.85, 0.55, 1.5, 8, bamboo, { y: 0.75, hex2: 0xc8a870 }),
+        // basket rim (slightly wider)
+        cyl(0.88, 0.88, 0.12, 8, 0xa08050, { y: 1.52 }),
+        // woven texture bands
+        cyl(0.87, 0.74, 0.08, 8, 0x9a7048, { y: 0.4 }),
+        cyl(0.78, 0.66, 0.08, 8, 0x9a7048, { y: 0.8 }),
+        cyl(0.69, 0.58, 0.08, 8, 0x9a7048, { y: 1.2 }),
+        // handle loop on top
+        torus(0.25, 0.04, 5, 8, 0xa08050, { y: 1.72, rx: 0.3 }),
+        // fish peeking out
+        sph(0.15, 0x7090a0, { ws: 6, hs: 4, x: 0.2, y: 1.55, z: 0.1 }),
+        sph(0.12, 0x8aa0b0, { ws: 5, hs: 3, x: -0.15, y: 1.58, z: -0.08 }),
       ]);
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat (招財貓), seated with raised paw */
+  /* ---- slot 6 ---- 漁燈 — harbor fishing lantern, iconic keelung dock scene */
   {
-    id: 'lucky_cat',
-    displayName: '招財貓',
+    id: 'fishing_lantern',
+    displayName: '漁燈',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
-    yOffset: -0.195,
+    palette: [0xffd84d, 0xff9030, 0xe86830, 0xf0c040, 0xffa848],
+    yOffset: -0.25,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      const white = 0xffffff; // porcelain body, tinted
       return finish([
-        // seated body (rounded, slightly tapered)
-        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
-        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
-        // head
-        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
-        // two ears
-        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
-        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
-        // raised beckoning paw (front-left, up)
-        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
-        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
-        // resting paw
-        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
-        // gold bib / coin collar (tint-resistant gold)
-        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
-        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }), // koban coin
-        // red collar bell
-        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
+        // base plate / mounting bracket
+        box(0.4, 0.1, 0.4, 0x4a4e58, { y: 0.05 }),
+        // vertical support arm
+        cyl(0.06, 0.06, 0.6, 6, 0x4a4e58, { y: 0.4 }),
+        // hanging bracket (horizontal arm)
+        box(0.08, 0.08, 0.4, 0x4a4e58, { y: 0.7, z: 0.2 }),
+        // lantern housing (cylindrical cage)
+        cyl(0.45, 0.45, 0.8, 8, 0x4a4e58, { y: 1.1, open: true }),
+        cyl(0.48, 0.48, 0.08, 8, 0x5a5e68, { y: 0.72 }), // bottom rim
+        cyl(0.48, 0.48, 0.08, 8, 0x5a5e68, { y: 1.5 }), // top rim
+        // glowing bulb inside (bright orange/yellow)
+        sph(0.35, 0xffd84d, { ws: 8, hs: 5, y: 1.1, hex2: 0xffa848 }),
+        // top cap
+        cone(0.48, 0.25, 8, 0x4a4e58, { y: 1.7 }),
+        // hook for hanging
+        torus(0.1, 0.025, 4, 6, 0x4a4e58, { y: 1.85 }),
       ]);
     },
   },

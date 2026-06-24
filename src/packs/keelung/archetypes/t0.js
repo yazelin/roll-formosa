@@ -34,26 +34,31 @@ export const T0_ARCHETYPES = [
     },
   },
 
-  /* [1] eraser 橡皮擦 */
+  /* [1] shaved_ice_cup 剉冰杯 — Keelung temple-street shaved ice cup */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'shaved_ice_cup',
+    displayName: '剉冰杯',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68,
-    upright: false,
+    palette: [0xe8f4f8, 0xffeedd, 0xd0f0ff, 0xfff4e8],
+    yOffset: -0.55,
+    upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }),
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }),
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }),
+        // plastic cup (tapered cylinder)
+        cyl(0.7, 0.9, 1.4, 8, 0xffffff, { y: 0.7 }),
+        // shaved ice mound (white fluffy dome)
+        sph(0.85, 0xe8f4f8, { ws: 8, hs: 5, y: 1.5, hex2: 0xd0f0ff }),
+        // syrup drizzle (colorful streaks)
+        box(0.1, 0.6, 0.2, 0xc23a2e, { x: 0.3, y: 1.5, z: 0.2 }),
+        box(0.1, 0.5, 0.2, 0x2f6db0, { x: -0.2, y: 1.55, z: -0.25 }),
+        // toppings (small spheres for beans/fruits)
+        sph(0.12, 0x3a2a1a, { ws: 5, hs: 3, x: 0.25, y: 1.85, z: 0.1 }), // red bean
+        sph(0.1, 0xe8d060, { ws: 5, hs: 3, x: -0.15, y: 1.9, z: 0.2 }), // mango
       ]);
     },
   },
@@ -163,26 +168,34 @@ export const T0_ARCHETYPES = [
     },
   },
 
-  /* [6] pencil 鉛筆 */
+  /* [6] ding_bian_cuo_bowl 鼎邊趖碗 — Keelung famous ding bian cuo bowl */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'ding_bian_cuo_bowl',
+    displayName: '鼎邊趖碗',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85,
-    upright: false,
+    palette: [0xf8f4e8, 0xe8dcc8, 0xd0c4b0, 0xfff8e8],
+    yOffset: -0.55,
+    upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }),
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }),
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }),
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }),
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }),
+        // ceramic bowl (tapered)
+        cyl(0.9, 1.1, 0.9, 10, 0xf8f4e8, { y: 0.45, hex2: 0xe8dcc8 }),
+        // bowl rim
+        cyl(1.12, 1.12, 0.1, 10, 0xe0d4c0, { y: 0.92 }),
+        // soup broth (tan liquid inside)
+        cyl(0.95, 0.95, 0.1, 8, 0xd8c8a8, { y: 0.85 }),
+        // ding bian cuo strips (white rice noodle pieces floating)
+        box(0.6, 0.08, 0.15, 0xf8f8f0, { x: 0.2, y: 0.92, z: 0.1 }),
+        box(0.5, 0.08, 0.12, 0xfaf8f2, { x: -0.25, y: 0.94, z: -0.15 }),
+        box(0.4, 0.08, 0.14, 0xf6f4ec, { x: 0.0, y: 0.93, z: 0.25 }),
+        // topping (small meat/veggie bits)
+        sph(0.08, 0x8a6a4a, { ws: 5, hs: 3, x: 0.3, y: 0.98, z: -0.1 }),
+        sph(0.06, 0x4a8a4a, { ws: 5, hs: 3, x: -0.2, y: 0.97, z: 0.2 }),
       ]);
     },
   },
