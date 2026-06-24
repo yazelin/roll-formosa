@@ -22,10 +22,11 @@ import { activePack as changhua } from './changhua/index.js';
 import { activePack as yunlin } from './yunlin/index.js';
 import { activePack as miaoli } from './miaoli/index.js';
 import { activePack as matsu } from './matsu/index.js';
+import { activePack as kinmen } from './kinmen/index.js';
 import { resolveCityId } from './manifest.js';
 
 const PACKS = {
   taipei, kaohsiung, taichung, tainan, taitung, hualien,
-  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung, yilan, nantou, changhua, yunlin, miaoli, matsu };
+  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung, yilan, nantou, changhua, yunlin, miaoli, matsu, kinmen };
 export const activePack = PACKS[resolveCityId()] || taipei;
 export default activePack;
