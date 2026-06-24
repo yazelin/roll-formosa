@@ -16,11 +16,11 @@ import { activePack as taoyuan } from './taoyuan/index.js';
 import { activePack as chiayi } from './chiayi/index.js';
 import { activePack as hsinchu } from './hsinchu/index.js';
 import { activePack as pingtung } from './pingtung/index.js';
+import { activePack as yilan } from './yilan/index.js';
 import { resolveCityId } from './manifest.js';
 
 const PACKS = {
   taipei, kaohsiung, taichung, tainan, taitung, hualien,
-  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung,
-};
+  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung, yilan };
 export const activePack = PACKS[resolveCityId()] || taipei;
 export default activePack;
