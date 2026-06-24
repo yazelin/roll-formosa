@@ -55,32 +55,32 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell */
+  /* ---- slot 1 ---- 礁溪溫泉蛋 — Jiaoxi hot spring egg: brown-shelled soft-boiled egg */
   {
-    id: 'helmet',
-    displayName: '安全帽',
+    id: 'jiaoxi_egg',
+    displayName: '礁溪溫泉蛋',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.28,
-    radiusJitter: 0.18,
+    radiusNominal: 0.035,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf2f2ee, 0xe23a2c, 0x2a55a8, 0x2e6a48, 0x303338],
-    yOffset: -0.075,
-    upright: false,
+    palette: [0xa87850, 0xb88860, 0x986840, 0xc89870, 0x886030],
+    yOffset: -0.20,
+    upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        // dome shell (upper hemisphere, baked near-white for tint)
-        sph(1.0, 0xffffff, { ws: 10, hs: 6, thetaLen: HALF_PI * 1.15, y: 0.0 }),
-        // brim/peak at the front
-        box(0.9, 0.06, 0.42, 0xffffff, { y: -0.02, z: 0.78, rx: -0.18 }),
-        // visor band (dark tint-resistant strip)
-        cyl(1.0, 1.0, 0.16, 10, 0x2a2c30, {
-          rx: HALF_PI, y: 0.02, thetaLen: PI, theta0: -HALF_PI,
-        }),
-        // chin strap stub
-        box(0.1, 0.5, 0.1, 0x303338, { x: -0.7, y: -0.5 }),
-        box(0.1, 0.5, 0.1, 0x303338, { x: 0.7, y: -0.5 }),
+        // egg shell - oval shape (brown-tinted from hot spring)
+        sph(0.8, 0xffffff, { ws: 8, hs: 6, y: 0.7, sy: 1.2, hex2: 0xc89870 }),
+        // slight narrowing at the top (egg point)
+        sph(0.5, 0xffffff, { ws: 7, hs: 5, y: 1.3, sy: 0.8, hex2: 0xa87850 }),
+        // small wire basket cradle at bottom (eggs are sold in baskets)
+        torus(0.4, 0.03, 5, 6, 0x6a6a6a, { y: 0.15 }),
+        // basket wire supports
+        cyl(0.02, 0.02, 0.15, 4, 0x5a5a5a, { x: 0.35, y: 0.08 }),
+        cyl(0.02, 0.02, 0.15, 4, 0x5a5a5a, { x: -0.35, y: 0.08 }),
+        cyl(0.02, 0.02, 0.15, 4, 0x5a5a5a, { z: 0.35, y: 0.08 }),
+        cyl(0.02, 0.02, 0.15, 4, 0x5a5a5a, { z: -0.35, y: 0.08 }),
       ]);
     },
   },

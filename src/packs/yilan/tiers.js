@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 鴨鴨哨子, 圖釘, 牛舌餅, 三星蔥, 尪仔標, 幾米明信片, 鈕扣
-      'marble', 'duck_call_toy', 'pushpin', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'jimmy_postcard', 'button',
+      // 彈珠, 鴨鴨哨子, 圖釘, 牛舌餅, 三星蔥, 尪仔標, 幾米明信片, 蘭陽飯糰
+      'marble', 'duck_call_toy', 'pushpin', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'jimmy_postcard', 'lanyang_rice_ball',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -74,8 +74,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 養樂多, 寶特瓶, 鴨賞, 香, 金紙, 滷味夾, 紅白塑膠袋, 蔥油餅
-      'yakult', 'pet_bottle', 'duck_jerky', 'incense_stick', 'joss_paper', 'luwei_tongs', 'redwhite_bag', 'scallion_pancake',
+      // 溫泉麻糬, 寶特瓶, 鴨賞, 香, 金紙, 滷味夾, 紅白塑膠袋, 蔥油餅
+      'hot_spring_mochi', 'pet_bottle', 'duck_jerky', 'incense_stick', 'joss_paper', 'luwei_tongs', 'redwhite_bag', 'scallion_pancake',
       // chunk landmarks: 夜市拱門, 攤車
       'night_market_arch', 'stall',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 蔥油餅攤爐, 瓦斯桶, 三角錐, 消防栓, 溫泉桶, 鐵馬樁
-      'red_plastic_chair', 'helmet', 'scallion_griddle', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'hot_spring_bucket', 'bike_dock',
+      // 紅塑膠椅, 礁溪溫泉蛋, 蔥油餅攤爐, 瓦斯桶, 三角錐, 消防栓, 溫泉桶, 鐵馬樁
+      'red_plastic_chair', 'jiaoxi_egg', 'scallion_griddle', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'hot_spring_bucket', 'bike_dock',
       // chunk landmarks: 老街推車, 廟前香爐
       'old_street_cart', 'temple_incense_burner',
     ],
@@ -122,8 +122,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 稻草捆, 霓虹招牌, 鐵捲門, 田間棕櫚, 棚架, 石獅
-      'scooter', 'mini_truck', 'rice_bale', 'neon_sign', 'roll_shutter', 'field_palm', 'awning_frame', 'stone_lion',
+      // 機車, 小貨車, 稻草捆, 雨量筒, 鐵捲門, 田間棕櫚, 棚架, 石獅
+      'scooter', 'mini_truck', 'rice_bale', 'rain_gauge', 'roll_shutter', 'field_palm', 'awning_frame', 'stone_lion',
       // chunk landmarks: 傳藝牌樓, 田間水車
       'chuanyi_pailou', 'waterwheel',
     ],
