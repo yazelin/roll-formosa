@@ -23,28 +23,37 @@ import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 蘭陽博物館塔 Lanyang Museum style angular tower ----------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'lanyang_tower',
+    displayName: '蘭陽博物館塔',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 180,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
-    yOffset: -0.04,
+    palette: [0x4a5a6a, 0x3a4a5a, 0x6a7a8a, 0x8a9aaa, 0xffd880],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and a vertical mullion seam.
+      // Distinctive angular museum-style tower (inspired by Lanyang Museum cuesta form)
       return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.7 }), // glass shaft (cool blue + lit windows)
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
+        // main angular body - tilted triangular prism shape
+        box(1.8, 3.5, 1.4, 0x4a5a6a, { y: 1.75, rz: -0.12, hex2: 0x5a6a7a }),
+        // sloped glass facade (front-facing)
+        box(1.9, 2.8, 0.1, 0x6aa8c8, { y: 1.6, z: 0.75, rx: -0.15 }),
+        // horizontal banding (stone/metal aesthetic)
+        box(2.0, 0.08, 1.5, 0x3a4a5a, { y: 1.2 }),
+        box(2.0, 0.08, 1.5, 0x3a4a5a, { y: 2.2 }),
+        box(2.0, 0.08, 1.5, 0x3a4a5a, { y: 3.2 }),
+        // base podium
+        box(2.2, 0.4, 1.8, 0x5a6a7a, { y: 0.2 }),
+        // angular roof cap
+        box(1.6, 0.15, 1.2, 0x3a4a5a, { y: 3.55, rz: -0.1 }),
+        // lit windows
+        box(0.3, 0.4, 0.05, 0xffd880, { x: 0.4, y: 1.5, z: 0.76 }),
+        box(0.3, 0.4, 0.05, 0xffd880, { x: -0.4, y: 2.5, z: 0.76 }),
       ]);
     },
   },
@@ -89,60 +98,79 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 其他摩天樓 other skyscraper --------------------------- */
+  /* ---- slot 2: 龜山島觀景台 Guishan Island observation platform ---------- */
   {
-    id: 'other_skyscraper',
-    displayName: '其他摩天樓',
+    id: 'guishan_platform',
+    displayName: '龜山島觀景台',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 190,
+    radiusNominal: 150,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
-    yOffset: -0.046,
+    palette: [0x5a6a78, 0x4a5a68, 0x7a8a98, 0x9aaab8, 0xffd884],
+    yOffset: -0.3,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic Xinyi peer.
+      // Coastal observation platform with viewing deck and nautical elements
       return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block (setback)
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
+        // main tower body (lighthouse-inspired)
+        cyl(0.8, 0.9, 3.2, 8, 0xe8e4dc, { y: 1.6 }),
+        // horizontal bands (coastal architecture style)
+        cyl(0.92, 0.92, 0.15, 8, 0x3a5a7a, { y: 0.6 }),
+        cyl(0.88, 0.88, 0.15, 8, 0x3a5a7a, { y: 1.8 }),
+        cyl(0.84, 0.84, 0.15, 8, 0x3a5a7a, { y: 2.8 }),
+        // observation deck (cantilevered platform)
+        box(2.2, 0.15, 2.2, 0x6a7a88, { y: 3.4 }),
+        // deck railings
+        box(2.3, 0.25, 0.05, 0x4a5a68, { y: 3.55, z: 1.1 }),
+        box(2.3, 0.25, 0.05, 0x4a5a68, { y: 3.55, z: -1.1 }),
+        box(0.05, 0.25, 2.2, 0x4a5a68, { y: 3.55, x: 1.15 }),
+        // roof canopy
+        box(2.0, 0.08, 2.0, 0x3a4a58, { y: 4.0 }),
+        // telescope viewing station
+        cyl(0.1, 0.08, 0.4, 6, 0x4a4a4a, { x: 0.6, y: 3.7 }),
+        // wind flag pole
+        cyl(0.03, 0.03, 0.8, 5, 0x8a8a8a, { y: 4.4 }),
+        // flag (triangular)
+        box(0.3, 0.15, 0.02, 0xe05040, { y: 4.65 }),
       ]);
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ------------------------------- */
+  /* ---- slot 3: 衝浪塔 surfing tower (外澳/頭城衝浪意象) -------------- */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'surfing_tower',
+    displayName: '衝浪塔',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
-    yOffset: -0.239,
+    palette: [0x2a5580, 0x50a8d0, 0x80d0f0, 0xffa040, 0xf0f8ff],
+    yOffset: -0.25,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // A building face turned into a giant LED billboard wall: bright color panels.
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
-      const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building (dark)
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard backing frame
-      ];
-      // 3 x 4 grid of glowing LED panels on the front face
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 })); // LED panel
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // ground catwalk
-      return finish(parts);
+      // Wai'ao surfing-themed tower: wave-form façade, surfboard mural, ocean colors
+      return finish([
+        // main tower body (ocean blue gradient)
+        box(1.8, 3.4, 1.2, 0x2a5580, { y: 1.7, hex2: 0x3a6890 }),
+        // wave-form decorative bands (undulating horizontal strips)
+        box(2.0, 0.12, 1.3, 0x50a8d0, { y: 0.8 }),
+        box(1.9, 0.12, 1.25, 0x60b8e0, { y: 1.6, rz: 0.02 }),
+        box(2.0, 0.12, 1.3, 0x70c8f0, { y: 2.4, rz: -0.02 }),
+        // large surfboard mural on facade
+        box(0.5, 2.0, 0.08, 0xffa040, { z: 0.65, y: 1.8, rz: 0.1 }),
+        box(0.4, 0.3, 0.09, 0xf0f8ff, { z: 0.66, y: 2.5, rz: 0.1 }), // fin detail
+        // base podium (sandy beach color)
+        box(2.2, 0.35, 1.5, 0xd0c0a0, { y: 0.18 }),
+        // rooftop wave sculpture
+        box(1.4, 0.2, 0.8, 0x80d0f0, { y: 3.5, rz: -0.08 }),
+        // palm tree accent
+        cyl(0.08, 0.06, 1.0, 6, 0x6a5040, { x: -0.7, y: 3.9 }),
+        sph(0.35, 0x40a050, { ws: 5, hs: 4, x: -0.7, y: 4.5 }),
+      ]);
     },
   },
 
