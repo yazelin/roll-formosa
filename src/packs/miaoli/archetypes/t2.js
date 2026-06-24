@@ -60,32 +60,36 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell */
+  /* ---- slot 1 ---- 採茶帽 — traditional tea-picking bamboo hat (Hakka)              */
+  /*                  The wide conical straw hat worn by Hakka tea pickers              */
   {
-    id: 'helmet',
-    displayName: '安全帽',
+    id: 'tea_picking_hat',
+    displayName: '採茶帽',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.28,
-    radiusJitter: 0.18,
+    radiusNominal: 0.35,
+    radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xf2f2ee, 0xe23a2c, 0x2a55a8, 0x2e6a48, 0x303338],
-    yOffset: -0.075,
+    palette: [0xc8b890, 0xe8d8b8, 0x9a8a68, 0xb8a880, 0x8a7a58],
+    yOffset: -0.18,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional Hakka tea-picking hat (採茶帽) — wide conical bamboo/straw hat
+      // with a cloth band around the crown. Iconic in Miaoli's tea-growing regions.
       return finish([
-        // dome shell (upper hemisphere, baked near-white for tint)
-        sph(1.0, 0xffffff, { ws: 10, hs: 6, thetaLen: HALF_PI * 1.15, y: 0.0 }),
-        // brim/peak at the front
-        box(0.9, 0.06, 0.42, 0xffffff, { y: -0.02, z: 0.78, rx: -0.18 }),
-        // visor band (dark tint-resistant strip)
-        cyl(1.0, 1.0, 0.16, 10, 0x2a2c30, {
-          rx: HALF_PI, y: 0.02, thetaLen: PI, theta0: -HALF_PI,
-        }),
-        // chin strap stub
-        box(0.1, 0.5, 0.1, 0x303338, { x: -0.7, y: -0.5 }),
-        box(0.1, 0.5, 0.1, 0x303338, { x: 0.7, y: -0.5 }),
+        // wide conical hat body (bamboo/straw weave)
+        cone(1.2, 0.5, 12, 0xffffff, { y: 0.25, rx: PI, hex2: 0xe8d8b8 }),
+        // inner crown (darker woven rim)
+        cone(0.5, 0.15, 8, 0x9a8a68, { y: 0.4, rx: PI }),
+        // decorative cloth band around the base (Hakka floral pattern)
+        cyl(1.18, 1.22, 0.12, 12, 0x4a6a9a, { y: 0.08, open: true }), // blue Hakka cloth
+        // woven texture suggested by concentric rings
+        cyl(0.9, 0.92, 0.04, 10, 0xb8a880, { y: 0.2, open: true }),
+        cyl(0.6, 0.62, 0.04, 10, 0xa89870, { y: 0.32, open: true }),
+        // chin strap ties (hanging down)
+        box(0.06, 0.4, 0.04, 0x4a6a9a, { x: -0.9, y: -0.1 }),
+        box(0.06, 0.4, 0.04, 0x4a6a9a, { x: 0.9, y: -0.1 }),
       ]);
     },
   },
