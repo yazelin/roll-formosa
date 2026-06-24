@@ -221,61 +221,98 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 登機空橋 boarding jet bridge (TPE airport) ------------ */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'jetbridge',
+    displayName: '登機空橋',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 85,
+    radiusNominal: 95,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
-    yOffset: -0.427,
+    palette: [0x8a98a8, 0xb0c0d0, 0xd0d8e0, 0x4a6a8a, 0xffe880],
+    yOffset: -0.48,
     upright: true,
     collisionScale: 0.65,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
-      return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
-      ]);
+      // TPE Airport jet bridge (登機空橋) — the telescoping passenger boarding bridge
+      const parts = [];
+      const metal = 0xb0c0d0;
+      const glass = 0x90c8e0;
+      // Fixed terminal end (rotunda mounting point)
+      parts.push(cyl(0.6, 0.6, 0.8, 8, 0x8a98a8, { x: -2.2, y: 1.0 }));
+      parts.push(cyl(0.65, 0.65, 0.15, 8, 0x6a7a88, { x: -2.2, y: 1.45 })); // rotunda roof
+      // First segment (fixed near terminal)
+      parts.push(box(1.6, 0.6, 0.8, metal, { x: -1.2, y: 1.0 }));
+      parts.push(box(1.5, 0.15, 0.7, glass, { x: -1.2, y: 1.2 })); // windows
+      // Second segment (telescoping)
+      parts.push(box(1.8, 0.55, 0.75, 0xa0b0c0, { x: 0.4, y: 0.95 }));
+      parts.push(box(1.7, 0.12, 0.65, glass, { x: 0.4, y: 1.12 })); // windows
+      // Third segment (aircraft end, angled down)
+      parts.push(box(1.4, 0.5, 0.7, metal, { x: 1.9, y: 0.75, rz: -0.15 }));
+      parts.push(box(1.3, 0.1, 0.6, glass, { x: 1.9, y: 0.9, rz: -0.15 })); // windows
+      // Aircraft cabin adaptor (the flexible end)
+      parts.push(box(0.4, 0.45, 0.65, 0x4a5060, { x: 2.7, y: 0.55 }));
+      // Support column (hydraulic)
+      parts.push(cyl(0.12, 0.15, 1.0, 6, 0x6a7a88, { x: 0.4, y: 0.35 }));
+      parts.push(box(0.35, 0.12, 0.35, 0x5a6a78, { x: 0.4, y: -0.15 })); // base plate
+      // Wheels on the ground
+      parts.push(cyl(0.12, 0.12, 0.25, 6, 0x3a4048, { x: 0.2, y: 0.06, z: 0.35, rx: 1.57 }));
+      parts.push(cyl(0.12, 0.12, 0.25, 6, 0x3a4048, { x: 0.6, y: 0.06, z: 0.35, rx: 1.57 }));
+      parts.push(cyl(0.12, 0.12, 0.25, 6, 0x3a4048, { x: 0.2, y: 0.06, z: -0.35, rx: 1.57 }));
+      parts.push(cyl(0.12, 0.12, 0.25, 6, 0x3a4048, { x: 0.6, y: 0.06, z: -0.35, rx: 1.57 }));
+      // Accordion canopy joint (between segments)
+      parts.push(box(0.15, 0.5, 0.78, 0x6a7a88, { x: -0.35, y: 0.95 }));
+      parts.push(box(0.15, 0.48, 0.76, 0x5a6a78, { x: 1.25, y: 0.88 }));
+      return finish(parts);
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 機場雷達站 airport radar station ----------------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'airport_radar',
+    displayName: '機場雷達站',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 68,
+    radiusNominal: 75,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
-    yOffset: -0.38,
+    palette: [0xd0d8e0, 0xf0f0f0, 0x4a6a8a, 0x8aa0b8, 0xff4040],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
-      const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
-      ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
+      // TPE Airport primary surveillance radar (機場雷達站)
+      // The distinctive rotating radar antenna and radome
+      const parts = [];
+      const concrete = 0xb8b8b0;
+      const white = 0xf0f0f0;
+      // Equipment building base
+      parts.push(box(2.0, 1.2, 1.8, concrete, { y: 0.6 }));
+      parts.push(box(2.1, 0.1, 1.9, 0x9a9a90, { y: 1.25 })); // roof
+      // Door and windows
+      parts.push(box(0.5, 0.8, 0.08, 0x4a5a68, { x: 0.5, y: 0.45, z: 0.92 }));
+      parts.push(box(0.35, 0.35, 0.06, 0x90b8d0, { x: -0.5, y: 0.7, z: 0.92 }));
+      // Radar tower/pedestal
+      parts.push(cyl(0.4, 0.35, 1.6, 8, concrete, { y: 2.1 }));
+      // Radar antenna platform
+      parts.push(cyl(0.55, 0.55, 0.15, 8, 0x8a98a8, { y: 2.97 }));
+      // Primary radar antenna (the big rectangular reflector)
+      parts.push(box(2.2, 0.8, 0.15, white, { y: 3.5, rz: 0.05 }));
+      parts.push(box(2.0, 0.7, 0.08, 0x4a6a8a, { y: 3.5, z: -0.06, rz: 0.05 })); // feedhorn side
+      // Antenna support struts
+      parts.push(box(0.08, 0.5, 0.1, 0x8a98a8, { x: -0.7, y: 3.2 }));
+      parts.push(box(0.08, 0.5, 0.1, 0x8a98a8, { x: 0.7, y: 3.2 }));
+      // Secondary surveillance radar (SSR) antenna on top
+      parts.push(box(1.4, 0.25, 0.08, 0x8aa0b8, { y: 4.0 }));
+      // Warning lights
+      parts.push(sph(0.08, 0xff4040, { ws: 4, hs: 3, x: -1.0, y: 3.5 }));
+      parts.push(sph(0.08, 0xff4040, { ws: 4, hs: 3, x: 1.0, y: 3.5 }));
+      // Cable/waveguide running down
+      parts.push(cyl(0.06, 0.06, 1.5, 6, 0x6a7a88, { x: 0.35, y: 2.0 }));
+      // Perimeter fence posts
+      parts.push(box(0.08, 0.6, 0.08, 0x8a8a8a, { x: -1.3, y: 0.3, z: 1.2 }));
+      parts.push(box(0.08, 0.6, 0.08, 0x8a8a8a, { x: 1.3, y: 0.3, z: 1.2 }));
       return finish(parts);
     },
   },

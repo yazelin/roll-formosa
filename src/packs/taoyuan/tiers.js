@@ -145,8 +145,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 大溪木器行, 農機具行, 公寓, 豆乾店, 公車, 垃圾車, 加油站, 騎樓柱
-      'daxi_woodcraft_shop', 'farm_equipment_shop', 'apartment', 'tofu_shop', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 大溪木器行, 農機具行, 客家老街屋, 豆乾店, 公車, 垃圾車, 加油站, 龍岡市場攤位
+      'daxi_woodcraft_shop', 'farm_equipment_shop', 'hakka_shophouse', 'tofu_shop', 'city_bus', 'garbage_truck', 'gas_station', 'longgang_market_stall',
       // chunk landmarks: 大溪巴洛克街屋, 大廟
       'baroque_facade', 'temple_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 航空貨櫃堆, 跨橋, 貨運站, 巨型廣告牆, 塔台, 空橋, 屋頂機房, 航廈大樓
-      'cargo_container_stack', 'cross_bridge', 'cargo_terminal', 'giant_ad_wall', 'control_tower', 'sky_bridge', 'rooftop_plant_room', 'airport_terminal',
+      // 航空貨櫃堆, 跨橋, 貨運站, 巨型廣告牆, 塔台, 登機空橋, 機場雷達站, 航廈大樓
+      'cargo_container_stack', 'cross_bridge', 'cargo_terminal', 'giant_ad_wall', 'control_tower', 'jetbridge', 'airport_radar', 'airport_terminal',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
