@@ -37,6 +37,13 @@ OUT=$(claude -p "你是 roll-formosa repo 的 autopilot。先讀 NEXT.md 和 doc
 只有完整 npm test 會紅;沒在這裡自己抓到,外層 gate 會擋下整城白做。\
 **還必跑 'node scripts/check-hero-tris.mjs <id>' 修到 0 over** —— 地標/收藏 tri cap(heroTriCap 600/一般 350)是 DEV boot 期\
 assert,vitest <id> 抓不到、超標會害 'npm run dev' 主遊戲開不了(preview 卻正常);超標就降 sph ws/hs、cyl segments。\
+**若這條任務開頭是『加深』(deepen 既有城市街頭物,不是加新城)**:① 跑 'node scripts/check-city.mjs <city>' 看哪幾階(t0-t6)『同台北』最多;\
+② 打開 src/packs/<city>/archetypes/tN.js,把『還照抄台北』的街頭小物換成這座城市真實會出現的在地版本(例:台中→宮原冰淇淋杯/太陽餅/麻芛冰;宜蘭→鴨賞/三星蔥/羅東夜市攤),\
+保留『真．全台通用』物(機車/紅綠燈/便利商店/路樹/變電箱/紅白塑膠椅這類)即可;\
+③ 目標把 check-city 的『同台北』壓到 ≤37/70(高雄級),越低越好(金門級 ~20),且每階(每 10 個)至少換掉幾個;\
+④ 換的幾何照 geomHelpers、跑 'node scripts/check-hero-tris.mjs <city>' 修到 0 over;\
+⑤ **不要動 landmarks/collectibles(已在地化好了)、不要改 active.js/manifest/ext codes**;只動 archetypes/tN.js(必要時 narration/tiers 文字);\
+⑥ npm test(含 localization/city-content 守衛)要綠。做完把 NEXT.md 該行改 [x]。\
 若這條是加新城市:① 把 src/packs/manifest.js 該城 status 改成 'ready'(否則 localization/river 守衛不會把關);\
 ② chunk 街頭物在地化必須夠深 —— 跑 'node scripts/check-city.mjs <城市 id>' 自我檢查,\
 必須 ≤44/70 同台北(台中級下限,目標 ~37 高雄級),否則 npm test 會紅、PR 開不出來,等於白做;\
