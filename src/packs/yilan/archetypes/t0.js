@@ -198,27 +198,38 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] jimmy_postcard 幾米明信片 — Jimmy Liao postcard from Yilan Jimmy Plaza */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'jimmy_postcard',
+    displayName: '幾米明信片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85,
+    palette: [0xf4e8d8, 0xf0dcc0, 0xe8d0b0, 0xfff0e0, 0xe0c8a8],
+    yOffset: -0.92,
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }),
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }),
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }),
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }),
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }),
+        // postcard base (thick card stock)
+        box(2.1, 0.08, 1.4, 0xffffff, { y: 0.04 }),
+        // white border
+        box(2.0, 0.02, 1.3, 0xf8f8f8, { y: 0.09 }),
+        // colorful illustration area (Jimmy's signature style - warm pastel)
+        box(1.7, 0.02, 1.0, 0x8fc4e8, { y: 0.11 }),
+        // simple figure silhouette (Jimmy's characteristic lonely child)
+        sph(0.12, 0x4a3a30, { ws: 5, hs: 4, x: 0.1, y: 0.16, z: 0.0 }),
+        box(0.08, 0.2, 0.12, 0xc04030, { x: 0.1, y: 0.14, z: 0.0 }),
+        // balloon (Jimmy's iconic element)
+        sph(0.15, 0xff6080, { ws: 5, hs: 4, x: 0.4, y: 0.26, z: 0.15 }),
+        cyl(0.01, 0.01, 0.12, 4, 0x4a4a4a, { x: 0.38, y: 0.15, z: 0.12 }),
+        // stamp corner
+        box(0.25, 0.02, 0.2, 0xe8a040, { x: 0.8, y: 0.1, z: -0.5 }),
+        // postmark circle
+        cyl(0.12, 0.12, 0.01, 8, 0x8a8a8a, { x: 0.75, y: 0.11, z: -0.45 }),
       ]);
     },
   },

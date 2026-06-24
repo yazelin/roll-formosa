@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 鴨鴨哨子, 圖釘, 牛舌餅, 三星蔥, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'duck_call_toy', 'pushpin', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 鴨鴨哨子, 圖釘, 牛舌餅, 三星蔥, 尪仔標, 幾米明信片, 鈕扣
+      'marble', 'duck_call_toy', 'pushpin', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'jimmy_postcard', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 招財貓, 鐵馬樁
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lucky_cat', 'bike_dock',
+      // 紅塑膠椅, 安全帽, 蔥油餅攤爐, 瓦斯桶, 三角錐, 消防栓, 溫泉桶, 鐵馬樁
+      'red_plastic_chair', 'helmet', 'scallion_griddle', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'hot_spring_bucket', 'bike_dock',
       // chunk landmarks: 老街推車, 廟前香爐
       'old_street_cart', 'temple_incense_burner',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 農舍, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'farmhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 農舍, 宜蘭厝, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
+      'farmhouse', 'yilan_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
       // chunk landmarks: 宜蘭街屋, 大廟
       'yilan_streethouse_mass', 'temple_mass',
     ],
@@ -194,8 +194,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 屋頂機房, 灣區大樓
-      'glass_highrise', 'exhibition_hall', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'tourism_center', 'rooftop_plant_room', 'bayarea_block',
+      // 蘭陽博物館塔, 展覽館, 龜山島觀景台, 衝浪塔, 圖書館塔, 海音中心, 屋頂機房, 灣區大樓
+      'lanyang_tower', 'exhibition_hall', 'guishan_platform', 'surfing_tower', 'library_tower', 'tourism_center', 'rooftop_plant_room', 'bayarea_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
