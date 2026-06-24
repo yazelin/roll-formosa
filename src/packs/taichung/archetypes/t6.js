@@ -52,42 +52,53 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 跨橋 cross bridge -------------------------------------- */
+  /* ---- slot 1: 高美濕地步道 gaomei_boardwalk (TAICHUNG SWAP: Gaomei Wetlands boardwalk) */
   {
-    id: 'cross_bridge',
-    displayName: '跨橋',
+    id: 'gaomei_boardwalk',
+    displayName: '高美濕地步道',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 200,
+    radiusNominal: 180,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xb8b0a4, 0xc8c0b4, 0xe05a4a, 0xd8d4cc, 0xffd25a],
-    yOffset: -0.561,
+    palette: [0x8a6a4a, 0x6a8a7a, 0xc8d8e8, 0xb0a090, 0xff9040],
+    yOffset: -0.52,
     upright: true,
-    collisionScale: 0.55,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      // Cable-stayed road bridge: two A-pylons, a long deck, fanned stay cables.
+      // 高美濕地 — the famous Taichung wetlands boardwalk:
+      // a long wooden observation deck over mudflats with wind turbines in the distance.
+      const wood = 0x8a6a4a;
       const parts = [
-        box(4.2, 0.16, 0.9, 0xc4bcb0, { y: 1.2 }), // deck (concrete)
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: 0.42 }), // parapet rail near
-        box(4.2, 0.1, 0.06, 0x9a9288, { y: 1.32, z: -0.42 }), // parapet rail far
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: -3.0, y: 0.55 }), // approach pier
-        cyl(0.16, 0.2, 1.1, 6, 0xb0a89c, { x: 3.0, y: 0.55 }), // approach pier
+        // long wooden boardwalk deck (elevated above the wetlands)
+        box(5.0, 0.14, 1.2, wood, { y: 1.0, hex2: 0x7a5a3a }),
+        // boardwalk support piles (wooden stilts)
+        cyl(0.12, 0.14, 1.0, 6, 0x6a4a32, { x: -2.0, y: 0.5 }),
+        cyl(0.12, 0.14, 1.0, 6, 0x6a4a32, { x: 0, y: 0.5 }),
+        cyl(0.12, 0.14, 1.0, 6, 0x6a4a32, { x: 2.0, y: 0.5 }),
+        // wooden handrails on both sides
+        box(5.0, 0.08, 0.06, wood, { y: 1.4, z: 0.58 }),
+        box(5.0, 0.08, 0.06, wood, { y: 1.4, z: -0.58 }),
+        // handrail posts
+        box(0.08, 0.4, 0.08, wood, { x: -2.0, y: 1.2, z: 0.55 }),
+        box(0.08, 0.4, 0.08, wood, { x: 0, y: 1.2, z: 0.55 }),
+        box(0.08, 0.4, 0.08, wood, { x: 2.0, y: 1.2, z: 0.55 }),
+        box(0.08, 0.4, 0.08, wood, { x: -2.0, y: 1.2, z: -0.55 }),
+        box(0.08, 0.4, 0.08, wood, { x: 0, y: 1.2, z: -0.55 }),
+        box(0.08, 0.4, 0.08, wood, { x: 2.0, y: 1.2, z: -0.55 }),
+        // mudflat base (wet sandy ground beneath the boardwalk)
+        box(6.0, 0.1, 2.4, 0x9a9078, { y: 0.05, hex2: 0x8a8068 }),
+        // wind turbine in the background (the iconic Gaomei view)
+        cyl(0.1, 0.12, 3.0, 6, 0xe8e8e8, { x: 2.8, y: 1.6, z: -0.8 }), // tower
+        // turbine nacelle
+        box(0.4, 0.2, 0.2, 0xd8d8d8, { x: 2.8, y: 3.2, z: -0.8 }),
+        // rotor blades (simplified as 3 thin boxes)
+        box(0.08, 1.2, 0.04, 0xf0f0f0, { x: 2.8, y: 3.8, z: -0.78 }),
+        box(0.08, 1.2, 0.04, 0xf0f0f0, { x: 2.8, y: 2.6, z: -0.78, rz: 2.09 }),
+        box(0.08, 1.2, 0.04, 0xf0f0f0, { x: 2.8, y: 2.6, z: -0.82, rz: -2.09 }),
+        // sunset reflection pool (the famous sunset view)
+        box(3.0, 0.06, 1.8, 0xc8d8e8, { x: -1.0, y: 0.08, z: 0, hex2: 0xff9040 }),
       ];
-      // Two A-frame pylons rising from the deck.
-      for (const px of [-1.1, 1.1]) {
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: 0.13, x: px - 0.18, y: 2.15 })); // pylon leg
-        parts.push(cyl(0.1, 0.13, 1.9, 6, 0xe05a4a, { rz: -0.13, x: px + 0.18, y: 2.15 })); // pylon leg
-        parts.push(box(0.5, 0.12, 0.16, 0xe05a4a, { x: px, y: 2.7 })); // pylon crossbeam
-        // fanned stay cables both directions
-        for (let i = 0; i < 3; i++) {
-          const span = 0.55 + i * 0.55;
-          const len = Math.hypot(span, 1.65);
-          const ang = Math.atan2(span, 1.65);
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: ang, x: px - span / 2, y: 2.1 })); // cable left
-          parts.push(box(0.025, len, 0.025, 0xe8e2d6, { rz: -ang, x: px + span / 2, y: 2.1 })); // cable right
-        }
-      }
       return finish(parts);
     },
   },

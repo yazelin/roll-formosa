@@ -321,41 +321,45 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 建國市場 jianguo_market (TAICHUNG SWAP: Jianguo Market Hall) */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'jianguo_market',
+    displayName: '建國市場',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 24,
+    radiusNominal: 30,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
-    yOffset: -0.4,
+    palette: [0xc4281f, 0xf0e8d8, 0x8a7a62, 0x3a6ca8, 0xe8b840],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.84,
+    collisionScale: 0.82,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // 建國市場 — Taichung's massive traditional wholesale market hall:
+      // a long corrugated-roof hangar with vendor stalls and a red arched entrance.
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        // main market hall (long low building with corrugated roof)
+        box(5.6, 2.2, 3.4, 0xf0e8d8, { y: 1.3, hex2: 0xe0d8c8 }),
+        // corrugated roof (arched metal)
+        cyl(3.0, 3.0, 5.8, 8, 0x9aa0a8, { rx: HALF_PI, y: 2.8, theta0: 0, thetaLen: PI }),
+        // red entrance arch (the signature red gate)
+        box(0.4, 2.6, 2.4, 0xc4281f, { x: -2.9, y: 1.5 }),
+        box(0.4, 2.6, 2.4, 0xc4281f, { x: 2.9, y: 1.5 }),
+        // arched top connecting the entrance pillars
+        box(5.4, 0.5, 0.5, 0xc4281f, { y: 2.9, z: 1.7 }),
+        // entrance sign board
+        box(3.0, 0.6, 0.1, 0xe8b840, { y: 2.6, z: 1.75 }),
+        // vendor stalls inside (simplified as colored boxes peeking out)
+        box(1.2, 0.6, 0.8, 0x3a6ca8, { x: -1.5, y: 0.8, z: 1.2 }),
+        box(1.2, 0.6, 0.8, 0xc4281f, { x: 0.8, y: 0.8, z: 1.2 }),
+        box(1.0, 0.5, 0.6, 0xe8b840, { x: -0.3, y: 0.75, z: 1.2 }),
+        // side loading dock
+        box(1.2, 0.3, 3.0, 0x8a7a62, { x: 2.5, y: 0.15 }),
+        // hanging banners from the roof edge (market atmosphere)
+        box(0.08, 0.8, 0.4, 0xc4281f, { x: -1.5, y: 2.6, z: 1.7 }),
+        box(0.08, 0.8, 0.4, 0xe8b840, { x: 0.5, y: 2.6, z: 1.7 }),
+        box(0.08, 0.8, 0.4, 0x3a6ca8, { x: 1.5, y: 2.6, z: 1.7 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
-      }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
       return finish(parts);
     },
   },
