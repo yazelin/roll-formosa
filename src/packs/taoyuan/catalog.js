@@ -45,12 +45,12 @@ import { NM_SHIMEN_RESERVOIR } from './landmarks/shimen_reservoir.js';
 // These are Taiwan-wide items that fit all cities.
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_BOBA } from './collectibles/boba.js';
-import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
-import { COL_GUABAO } from './collectibles/gua_bao.js';
+import { COL_SQUIDBALL } from './collectibles/yongan_squidball.js';
+import { COL_LOTUS } from './collectibles/guanyin_lotus.js';
 import { COL_RICENOODLE } from './collectibles/longgang_ricenoodle.js';
 import { COL_YUEGUANG } from './collectibles/yueguang_bing.js';
-import { COL_SANTAIZI } from './collectibles/santaizi.js';
-import { COL_PUPPET } from './collectibles/budaixi.js';
+import { COL_GENERAL } from './collectibles/daxi_general.js';
+import { COL_LEICHA } from './collectibles/hakka_leicha.js';
 import { COL_TOP } from './collectibles/daxi_top.js';
 import { COL_FISH } from './collectibles/shimen_fish.js';
 import { COL_PEACH } from './collectibles/lalashan_peach.js';
@@ -179,12 +179,12 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _TAOYUAN_LANDMARKS) {
 const _TAIWAN_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
   { code: 71, col: COL_BOBA },
-  { code: 72, col: COL_CHICKEN },
-  { code: 73, col: COL_GUABAO },
+  { code: 72, col: COL_SQUIDBALL },
+  { code: 73, col: COL_LOTUS },
   { code: 74, col: COL_RICENOODLE },
   { code: 75, col: COL_YUEGUANG },
-  { code: 76, col: COL_SANTAIZI },
-  { code: 77, col: COL_PUPPET },
+  { code: 76, col: COL_GENERAL },
+  { code: 77, col: COL_LEICHA },
   { code: 78, col: COL_TOP },
   { code: 79, col: COL_FISH },
   { code: 80, col: COL_PEACH },
