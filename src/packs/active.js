@@ -20,10 +20,11 @@ import { activePack as yilan } from './yilan/index.js';
 import { activePack as nantou } from './nantou/index.js';
 import { activePack as changhua } from './changhua/index.js';
 import { activePack as yunlin } from './yunlin/index.js';
+import { activePack as miaoli } from './miaoli/index.js';
 import { resolveCityId } from './manifest.js';
 
 const PACKS = {
   taipei, kaohsiung, taichung, tainan, taitung, hualien,
-  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung, yilan, nantou, changhua, yunlin };
+  keelung, newtaipei, taoyuan, chiayi, hsinchu, pingtung, yilan, nantou, changhua, yunlin, miaoli };
 export const activePack = PACKS[resolveCityId()] || taipei;
 export default activePack;
