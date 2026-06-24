@@ -85,35 +85,40 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 醬油甕 — Xiluo soy sauce fermentation urn (西螺醬油甕) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'soy_sauce_urn',
+    displayName: '醬油甕',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.35,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
+    palette: [0x5a4028, 0x6a5038, 0x4a3018, 0x7a6048, 0x3a2010],
+    yOffset: -0.22,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.88,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
+      // Traditional earthenware urn for Xiluo soy sauce fermentation
+      const clay = 0xffffff; // tinted clay
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // base foot ring
+        cyl(0.55, 0.6, 0.12, 8, 0x4a3018, { y: 0.06 }),
+        // lower body (tapered belly)
+        cyl(0.55, 0.75, 0.6, 8, clay, { y: 0.42 }),
+        // wide belly
+        cyl(0.75, 0.78, 0.5, 8, clay, { y: 0.95, hex2: 0x6a5038 }),
+        // upper shoulder taper
+        cyl(0.6, 0.75, 0.35, 8, clay, { y: 1.38 }),
+        // narrow neck
+        cyl(0.45, 0.55, 0.25, 8, clay, { y: 1.68 }),
+        // rim lip
+        cyl(0.5, 0.48, 0.1, 8, 0x5a4028, { y: 1.85 }),
+        // woven bamboo lid cover
+        cyl(0.52, 0.52, 0.08, 6, 0xa08050, { y: 1.94 }),
+        cyl(0.35, 0.3, 0.15, 6, 0x906838, { y: 2.05 }), // lid knob
+        // decorative band (stamped pattern)
+        cyl(0.77, 0.77, 0.08, 8, 0x4a3018, { y: 0.95, open: true }),
       ]);
     },
   },
