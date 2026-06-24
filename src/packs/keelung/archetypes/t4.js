@@ -131,43 +131,44 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 超商 (小七/全家 convenience store) --------------------- */
+  /* ---- slot 3: 魚市場攤位 (fish market stall - Keelung Zhengbin fish market) */
   {
-    id: 'convenience_store',
-    displayName: '超商',
+    id: 'fish_market_stall',
+    displayName: '魚市場攤位',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 5.0,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xe8edf2, 0xf6f0e6, 0xdfeae2, 0xd8dee6],
-    yOffset: -0.6,
+    palette: [0x2f6db0, 0xd8dce2, 0x3a8080, 0xffd84d, 0xe8e8ee],
+    yOffset: -0.5,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        box(2.6, 0.95, 1.5, 0xffffff, { y: 0.48 }), // store box (tinted white)
-        // 小七 signature orange/green/red tricolor fascia stripe
-        box(2.66, 0.22, 1.54, 0xe06a1a, { y: 1.06 }), // orange band
-        box(2.66, 0.08, 1.54, 0x2a8a3a, { y: 1.21 }), // green stripe
-        box(2.66, 0.06, 1.54, 0xc83828, { y: 1.28 }), // red stripe
-        box(1.1, 0.16, 0.06, 0xfff2c0, { x: -0.5, y: 1.06, z: 0.79 }), // lit logo plate
-        box(2.72, 0.06, 1.6, 0x8a9098, { y: 1.34 }), // roof lip
-        box(0.42, 0.32, 0.32, 0xb8bec8, { x: 0.9, y: 1.46 }), // rooftop AC unit
-        // glass storefront
-        box(2.2, 0.6, 0.06, 0x9fc4d8, { y: 0.46, z: 0.76 }), // glass front
-        box(2.1, 0.1, 0.07, 0xffe9b0, { y: 0.62, z: 0.765 }), // top shelf glow
-        box(2.1, 0.08, 0.07, 0xf0d8a0, { y: 0.4, z: 0.765 }), // mid shelf glow
-        box(0.5, 0.66, 0.08, 0x7a8088, { x: 0.92, y: 0.36, z: 0.78 }), // auto door
-        box(0.46, 0.42, 0.05, 0x9fc4d8, { x: 0.92, y: 0.44, z: 0.81 }), // door glass
-        box(0.5, 0.7, 0.4, 0xd8dce2, { x: -1.0, y: 0.36, z: 0.95 }), // ATM / ice box by door
-        cyl(0.06, 0.06, 0.7, 6, 0xc8ccd2, { x: -1.25, y: 0.85, z: 0.7 }), // pole sign post
-        box(0.4, 0.34, 0.06, 0xe06a1a, { x: -1.25, y: 1.25, z: 0.7 }), // pole sign panel
+        // stainless steel counter
+        box(2.6, 0.8, 1.5, 0xd8dce2, { y: 0.4, hex2: 0xc8ccd2 }),
+        // ice display bed
+        box(2.4, 0.2, 1.3, 0xd0e8f0, { y: 0.9 }),
+        // fish on display (elongated shapes)
+        box(0.8, 0.12, 0.25, 0x7090a0, { x: -0.6, y: 1.0, z: 0.3 }),
+        box(0.7, 0.1, 0.22, 0x6080a8, { x: 0.4, y: 1.02, z: -0.2 }),
+        box(0.6, 0.08, 0.2, 0x8098a8, { x: 0.0, y: 1.0, z: 0.0 }),
+        // shrimp pile
+        sph(0.2, 0xf0a080, { ws: 6, hs: 4, x: 0.8, y: 1.0, z: 0.35 }),
+        // blue awning roof (harbor themed)
+        box(2.8, 0.1, 1.7, 0x2f6db0, { y: 2.2 }),
+        // awning support posts
+        cyl(0.06, 0.06, 1.2, 6, 0x8a9098, { x: -1.2, y: 1.6, z: 0.7 }),
+        cyl(0.06, 0.06, 1.2, 6, 0x8a9098, { x: 1.2, y: 1.6, z: 0.7 }),
+        cyl(0.06, 0.06, 1.2, 6, 0x8a9098, { x: -1.2, y: 1.6, z: -0.7 }),
+        cyl(0.06, 0.06, 1.2, 6, 0x8a9098, { x: 1.2, y: 1.6, z: -0.7 }),
+        // price sign
+        box(0.6, 0.4, 0.05, 0xffd84d, { x: -0.8, y: 1.6, z: 0.78 }),
+        // hanging scale
+        cyl(0.03, 0.03, 0.4, 5, 0x6a7078, { x: 0.9, y: 1.8 }),
+        sph(0.12, 0xc8ccd2, { ws: 6, hs: 4, x: 0.9, y: 1.55 }),
       ];
-      // mullions splitting the glass front
-      for (let i = 0; i < 3; i++) {
-        parts.push(box(0.06, 0.62, 0.08, 0xe8e4da, { x: -0.7 + i * 0.6, y: 0.44, z: 0.77 }));
-      }
       return finish(parts);
     },
   },
@@ -249,46 +250,43 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 加油站 (gas station — canopy + pumps) ------------------ */
+  /* ---- slot 6: 漁船配件店 (fishing boat parts shop - harbor district) ---- */
   {
-    id: 'gas_station',
-    displayName: '加油站',
+    id: 'boat_parts_shop',
+    displayName: '漁船配件店',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 9.0,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xeef2f4, 0xc94f46, 0x3a6ea0, 0xe0a83a, 0xd8dce2],
-    yOffset: -0.49,
+    palette: [0x2f6db0, 0x8a9098, 0xe8e8ee, 0xffd84d, 0xc94f46],
+    yOffset: -0.45,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // big flat canopy roof on slender columns
-        box(3.4, 0.26, 2.4, 0xffffff, { y: 1.9 }), // canopy slab (tinted white)
-        box(3.46, 0.14, 2.46, 0xc94f46, { y: 2.06 }), // red fascia trim
-        box(3.46, 0.06, 2.46, 0x3a6ea0, { y: 2.14 }), // blue trim stripe
+        // main shop building
+        box(3.2, 2.0, 2.0, 0xe8e8ee, { y: 1.0, hex2: 0xd8d8de }),
+        // blue roll-up door (harbor shop theme)
+        box(1.6, 1.5, 0.08, 0x2f6db0, { y: 0.75, z: 1.02 }),
+        // shop sign
+        box(2.8, 0.5, 0.1, 0xffd84d, { y: 1.9, z: 1.05 }),
+        // roof
+        box(3.4, 0.15, 2.2, 0x8a9098, { y: 2.1 }),
+        // displayed items outside - propeller
+        cyl(0.5, 0.5, 0.1, 6, 0x8a9098, { x: -1.4, y: 0.6, z: 1.2, rx: HALF_PI }),
+        // displayed items - rope coil
+        cyl(0.35, 0.35, 0.2, 8, 0xc8b896, { x: 1.4, y: 0.3, z: 1.15 }),
+        // displayed items - buoys
+        sph(0.25, 0xc94f46, { ws: 6, hs: 4, x: -1.0, y: 0.25, z: 1.3 }),
+        sph(0.22, 0xff8a3d, { ws: 6, hs: 4, x: 1.0, y: 0.22, z: 1.35 }),
+        // side window
+        box(1.0, 0.8, 0.06, 0x9fc4d8, { x: -1.65, y: 1.2, z: 0.0, ry: HALF_PI }),
+        // anchor display on wall
+        box(0.5, 0.6, 0.08, 0x4a4e58, { x: 1.65, y: 1.3, z: 0.0, ry: HALF_PI }),
+        // roof water tank
+        cyl(0.3, 0.3, 0.4, 8, 0x3a6ea0, { x: 0.8, y: 2.4 }),
       ];
-      // 4 support columns
-      const cx = [-1.3, 1.3, -1.3, 1.3];
-      const cz = [0.9, 0.9, -0.9, -0.9];
-      for (let i = 0; i < 4; i++) {
-        parts.push(cyl(0.16, 0.16, 1.8, 7, 0xd8dce2, { x: cx[i], z: cz[i], y: 0.9 }));
-      }
-      // ground island slab
-      parts.push(box(2.2, 0.12, 1.2, 0x9aa0aa, { y: 0.06 }));
-      // 2 fuel pumps
-      const px = [-0.6, 0.6];
-      for (let i = 0; i < 2; i++) {
-        parts.push(box(0.36, 0.7, 0.5, 0xeef2f4, { x: px[i], y: 0.5 })); // pump body
-        parts.push(box(0.32, 0.22, 0.46, 0x2a3138, { x: px[i], y: 0.78 })); // pump screen (dark)
-        parts.push(box(0.3, 0.06, 0.4, 0xe0a83a, { x: px[i], y: 0.92 })); // pump top cap (amber)
-        parts.push(cyl(0.05, 0.05, 0.5, 6, 0x44484f, { x: px[i] + 0.22, y: 0.5, z: 0.28 })); // hose post
-      }
-      // tall price totem sign at the corner
-      parts.push(cyl(0.1, 0.1, 2.1, 6, 0xbfc4ca, { x: 1.7, z: -0.7, y: 1.05 })); // pole
-      parts.push(box(0.7, 0.8, 0.14, 0xc94f46, { x: 1.7, z: -0.7, y: 2.1 })); // price board
-      parts.push(box(0.6, 0.5, 0.05, 0xfff2c0, { x: 1.7, z: -0.84, y: 2.1 })); // lit price digits
       return finish(parts);
     },
   },
