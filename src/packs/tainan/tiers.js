@@ -1,5 +1,5 @@
 /**
- * @file packs/taipei/tiers.js — Roll Formosa Taipei pack: the 7-tier scale
+ * @file packs/tainan/tiers.js — Roll Formosa Tainan pack: the 7-tier scale
  * ladder (圖釘 2 cm → 台北 101). Pack-scoped re-theme of the engine's legacy
  * tier table. The engine reads tiers via the active pack (src/packs/active.js),
  * NOT via config/tiers.js — but RESCALE_S / ARCH_PER_TIER stay engine constants
@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 瓶蓋, 蜜餞, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'bottle_cap', 'preserved_plum', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 碗粿小碗, 圖釘, 瓶蓋, 蜜餞, 尪仔標, 擔仔麵小碗, 棺材板小份
+      'marble', 'wagui_bowl', 'pushpin', 'bottle_cap', 'preserved_plum', 'ngiauimia_card', 'danzai_mian', 'coffin_bread',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -144,8 +144,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 牛肉湯店
+      'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'beef_soup_shop',
       // chunk landmarks: 府城街屋, 孔廟
       'fucheng_streethouse_mass', 'confucius_temple_mass',
     ],
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 百貨, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'department_store', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 林百貨風格樓, 百貨, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'linbai_tower', 'department_store', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
