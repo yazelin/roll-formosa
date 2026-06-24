@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 瓶蓋, 方塊酥, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 檜木香包, 圖釘, 瓶蓋, 方塊酥, 尪仔標, 鉛筆, 鈕扣
+      'marble', 'hinoki_sachet', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'ngiauimia_card', 'pencil', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 檜木盒, 嘉義公車站牌
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'hinoki_box', 'chiayi_bus_stop',
+      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 雞肉飯攤, 檜木盒, 嘉義公車站牌
+      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'turkey_rice_stall', 'hinoki_box', 'chiayi_bus_stop',
       // chunk landmarks: 檜木推車, 廟前香爐
       'hinoki_vendor_cart', 'temple_incense_burner',
     ],
