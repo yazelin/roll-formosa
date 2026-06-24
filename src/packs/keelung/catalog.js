@@ -47,7 +47,7 @@ import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
 import { COL_SANTAIZI } from './collectibles/santaizi.js';
 import { COL_PUPPET } from './collectibles/budaixi.js';
 import { COL_LIHU } from './collectibles/li_hu_cake.js';
-import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
+import { COL_LANTERN } from './collectibles/water_lantern.js';
 import { COL_JIGUELA } from './collectibles/jiguela.js';
 import { COL_PAOPAO } from './collectibles/paopao_ice.js';
 import { COL_MAZU } from './collectibles/mazu.js';
@@ -173,7 +173,7 @@ const _KEELUNG_COLLECTIBLES = [
   { code: 76, col: COL_SANTAIZI },
   { code: 77, col: COL_PUPPET },
   { code: 78, col: COL_LIHU },
-  { code: 79, col: COL_PRES_TROPHY },
+  { code: 79, col: COL_LANTERN },
   { code: 80, col: COL_JIGUELA },
   { code: 81, col: COL_PAOPAO },
   { code: 94, col: COL_MAZU },
