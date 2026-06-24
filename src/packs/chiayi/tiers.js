@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 檜木香包, 圖釘, 瓶蓋, 方塊酥, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'hinoki_sachet', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 檜木香包, 圖釘, 瓶蓋, 方塊酥, 尪仔標, 檜木尺, 鈕扣
+      'marble', 'hinoki_sachet', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'ngiauimia_card', 'hinoki_ruler', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 透天厝, 鐵皮屋, 老公寓, 超商, 嘉義BRT, 垃圾車, 加油站, 檜意騎樓
+      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'chiayi_brt', 'garbage_truck', 'gas_station', 'hinoki_arcade',
       // chunk landmarks: 木都街屋, 大廟
       'woodcity_streethouse_mass', 'temple_mass',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 耐斯百貨, 嘉義車站, 跨街天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'nice_plaza', 'chiayi_station_plaza', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 商辦大樓, 耐斯百貨, 嘉義車站, 車站跨站天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'office_tower', 'nice_plaza', 'chiayi_station_plaza', 'station_overpass', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 車站商辦塔, 百貨大樓
       'station_office_tower', 'department_mass',
     ],
