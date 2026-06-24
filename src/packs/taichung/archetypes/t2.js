@@ -97,36 +97,46 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob (pan-Taiwan) */
+  /* ---- slot 2 ---- 麻辣鴛鴦鍋 — mala hot pot (TAICHUNG SWAP: 一中麻辣鍋名店特色) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'mala_hotpot',
+    displayName: '麻辣鴛鴦鍋',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.32,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
+    palette: [0xc8442e, 0xf0e8d0, 0x8a6a4a, 0xe8c870, 0xd85a3a],
+    yOffset: -0.26,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
-      return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
-      ]);
+      // 鴛鴦鍋 — the split hot pot with mala red and white broths:
+      // a brass ring pot divided into two halves, chopsticks, and side dish.
+      const brass = 0xe8c870;
+      const red = 0xc8442e;
+      const white = 0xf0e8d0;
+      const parts = [
+        // pot body (wide shallow ring)
+        cyl(0.9, 0.85, 0.5, 10, brass, { y: 0.25, hex2: 0xd8b860 }),
+        // pot rim (brass lip)
+        cyl(0.92, 0.92, 0.08, 10, 0xd8b060, { y: 0.52 }),
+        // split divider down the middle
+        box(0.08, 0.5, 1.7, brass, { y: 0.25 }),
+        // red mala broth on one side (spicy red liquid surface)
+        cyl(0.82, 0.82, 0.08, 8, red, { y: 0.4, theta0: 0, thetaLen: PI }),
+        // white broth on the other side (milky white)
+        cyl(0.82, 0.82, 0.08, 8, white, { y: 0.4, theta0: PI, thetaLen: PI }),
+        // floating chili peppers in the red broth (small red dots)
+        box(0.1, 0.04, 0.1, 0xd02a1a, { x: -0.3, y: 0.46, z: 0.3 }),
+        box(0.08, 0.04, 0.08, 0xd02a1a, { x: -0.45, y: 0.46, z: -0.2 }),
+        // gas burner base
+        cyl(1.0, 1.0, 0.12, 8, 0x3a3d46, { y: 0.0 }),
+        // pair of chopsticks resting across the pot
+        cyl(0.03, 0.03, 1.4, 5, 0x8a6a4a, { rx: HALF_PI, y: 0.65, z: 0.5, rz: 0.2 }),
+        cyl(0.03, 0.03, 1.4, 5, 0x8a6a4a, { rx: HALF_PI, y: 0.65, z: 0.55, rz: 0.2 }),
+      ];
+      return finish(parts);
     },
   },
 
