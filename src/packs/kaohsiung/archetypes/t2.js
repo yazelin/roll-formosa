@@ -87,35 +87,38 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 大同電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 愛河遊船票亭 — Love River boat ticket booth (iconic Kaohsiung) */
   {
-    id: 'rice_cooker',
-    displayName: '大同電鍋',
+    id: 'love_river_booth',
+    displayName: '愛河遊船票亭',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.5,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
+    palette: [0x3a7ab0, 0x4a8ac0, 0x2a6aa0, 0x5a9ad0, 0x3a6a90],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
+      const booth = 0xffffff; // tinted blue for Love River theme
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // booth base platform
+        box(1.2, 0.15, 0.9, 0x8a8a8a, { y: 0.08 }),
+        // main booth body (small kiosk)
+        box(1.0, 1.1, 0.8, booth, { y: 0.7, hex2: 0xd0e4f4 }),
+        // sloped roof
+        box(1.2, 0.12, 1.0, 0x4a6080, { y: 1.32, rz: 0.1 }),
+        // ticket window (dark)
+        box(0.5, 0.4, 0.06, 0x283848, { y: 0.8, z: 0.42 }),
+        // counter ledge
+        box(0.6, 0.08, 0.15, 0xd8d8d8, { y: 0.55, z: 0.48 }),
+        // boat/wave logo (heart shape suggested with spheres)
+        sph(0.12, 0xe05080, { ws: 6, hs: 4, y: 1.1, z: 0.42, x: -0.1 }),
+        sph(0.12, 0xe05080, { ws: 6, hs: 4, y: 1.1, z: 0.42, x: 0.1 }),
+        // small pole sign
+        cyl(0.04, 0.04, 0.6, 5, 0x606060, { x: 0.5, y: 1.0, z: 0.3 }),
+        box(0.25, 0.18, 0.04, 0xf0c020, { x: 0.5, y: 1.35, z: 0.3 }),
       ]);
     },
   },
