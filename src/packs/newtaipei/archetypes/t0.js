@@ -105,54 +105,36 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] brown_sugar_cakes — steamed brown sugar cake cubes in tray    */
+  /* [3] iron_egg_pack 淡水鐵蛋包 — vacuum-sealed iron eggs (Tamsui)    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'brown_sugar_cakes',
-    displayName: '黑糖糕盤',
+    id: 'iron_egg_pack',
+    displayName: '淡水鐵蛋包',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x5a3020, 0x6a4030, 0x4a2818, 0x7a5040],
-    yOffset: -0.58,
+    palette: [0x3a2820, 0x5a4030, 0x2a1810, 0xc83030],
+    yOffset: -0.62,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const CAKE = 0x5a3020;
-      const CAKE_HI = 0x6a4030;
-      const PAPER = 0xf8f4e8;
+      // Vacuum-sealed pack of Tamsui iron eggs (dark brown small eggs in plastic)
+      const EGG = 0x3a2820;
+      const EGG_HI = 0x5a4030;
+      const PLASTIC = 0xe8e8e8;
       const parts = [];
-      // Paper wrapper/tray
-      parts.push(box(1.0, 0.08, 0.8, PAPER, { y: 0.04 }));
-      // Folded paper edges
-      parts.push(box(0.04, 0.12, 0.8, PAPER, { x: -0.52, y: 0.08 }));
-      parts.push(box(0.04, 0.12, 0.8, PAPER, { x: 0.52, y: 0.08 }));
-      // Multiple small cake cubes arranged
-      const gridX = 2;
-      const gridZ = 2;
-      const cubeSize = 0.36;
-      const gap = 0.02;
-      for (let i = 0; i < gridX; i++) {
-        for (let j = 0; j < gridZ; j++) {
-          const x = (i - (gridX - 1) / 2) * (cubeSize + gap);
-          const z = (j - (gridZ - 1) / 2) * (cubeSize + gap);
-          parts.push(box(cubeSize, 0.28, cubeSize, CAKE, {
-            x, y: 0.26, z,
-            hex2: CAKE_HI,
-          }));
-          // Spongy texture bumps on top
-          for (let b = 0; b < 2; b++) {
-            const bx = x + (rng() - 0.5) * 0.18;
-            const bz = z + (rng() - 0.5) * 0.18;
-            parts.push(sph(0.04, CAKE_HI, {
-              ws: 4, hs: 3,
-              x: bx, y: 0.42, z: bz,
-            }));
-          }
-        }
-      }
+      // Clear plastic vacuum pack (slightly visible)
+      parts.push(box(1.2, 0.5, 0.8, PLASTIC, { y: 0.25, hex2: 0xd8d8d8 }));
+      // Iron eggs inside (small dark eggs)
+      parts.push(sph(0.22, EGG, { ws: 6, hs: 5, x: -0.3, y: 0.25, z: 0.15, sy: 1.2, hex2: EGG_HI }));
+      parts.push(sph(0.22, EGG, { ws: 6, hs: 5, x: 0.2, y: 0.25, z: 0.15, sy: 1.2, hex2: EGG_HI }));
+      parts.push(sph(0.2, EGG, { ws: 6, hs: 5, x: -0.1, y: 0.3, z: -0.2, sy: 1.15, hex2: EGG_HI }));
+      parts.push(sph(0.18, EGG, { ws: 6, hs: 5, x: 0.35, y: 0.22, z: -0.15, sy: 1.2, hex2: EGG_HI }));
+      // Red label band
+      parts.push(box(0.8, 0.18, 0.82, 0xc83030, { y: 0.25 }));
+      parts.push(box(0.7, 0.12, 0.05, 0xf8d848, { y: 0.26, z: 0.42 })); // gold text
       return finish(parts);
     },
   },
@@ -255,34 +237,39 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] agei_mini 阿給小盤 — Tamsui A-ge (stuffed tofu) mini serving   */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'agei_mini',
+    displayName: '阿給小盤',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xd8a050, 0xc89040, 0xe8b060, 0xf8c070],
+    yOffset: -0.72,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
-      ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
+      // Small serving of Tamsui A-ge (fried tofu stuffed with noodles)
+      const TOFU = 0xd8a050;
+      const TOFU_HI = 0xe8b060;
+      const PLATE = 0xf0f0f0;
+      const parts = [];
+      // Small plate
+      parts.push(cyl(1.0, 1.0, 0.12, 10, PLATE, { y: 0.06 }));
+      parts.push(cyl(0.85, 0.85, 0.08, 10, 0xe8e8e8, { y: 0.12 }));
+      // A-ge tofu (triangular fried tofu pouch)
+      parts.push(box(0.6, 0.4, 0.5, TOFU, { y: 0.38, hex2: TOFU_HI }));
+      // Stuffed appearance (slight bulge)
+      parts.push(sph(0.25, TOFU_HI, { ws: 5, hs: 4, y: 0.42, z: 0.05 }));
+      // Sauce drizzle (dark sweet sauce)
+      parts.push(box(0.5, 0.04, 0.4, 0x4a2810, { y: 0.58 }));
+      parts.push(box(0.3, 0.04, 0.3, 0x5a3820, { y: 0.58, x: 0.15 }));
+      // Noodles peeking out
+      parts.push(cyl(0.05, 0.05, 0.3, 4, 0xf8f0e0, { y: 0.35, rz: 0.2, x: -0.2 }));
+      parts.push(cyl(0.05, 0.05, 0.25, 4, 0xf8f0e0, { y: 0.38, rz: -0.15, x: 0.15 }));
       return finish(parts);
     },
   },

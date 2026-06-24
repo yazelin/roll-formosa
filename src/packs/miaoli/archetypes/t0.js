@@ -235,34 +235,40 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] ceramic_bowl 苗栗陶瓷碗 — traditional Hakka ceramic rice bowl    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'ceramic_bowl',
+    displayName: '陶瓷碗',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.011,
-    radiusJitter: 0.16,
+    radiusNominal: 0.06,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
-    upright: false,
+    palette: [0xf4f0e8, 0x4a6a9a, 0xe8e4dc, 0x3a5a8a, 0xc8c4b8],
+    yOffset: -0.55, // bowl sitting upright
+    upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional Hakka ceramic rice bowl — Miaoli has a pottery tradition.
+      // White/cream glazed bowl with blue floral patterns.
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        // bowl body (tapered cylinder, wider at top)
+        cyl(0.9, 0.5, 0.7, 10, 0xffffff, { y: 0.4, hex2: 0xf4f0e8 }),
+        // rim
+        cyl(0.95, 0.9, 0.08, 10, 0xe8e4dc, { y: 0.76 }),
+        // foot ring base
+        cyl(0.4, 0.45, 0.12, 8, 0xe8e4dc, { y: 0.06 }),
+        // interior (slightly darker)
+        cyl(0.82, 0.4, 0.5, 8, 0xd8d4cc, { y: 0.5 }),
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
+      // Blue floral pattern bands (simplified as colored rings)
+      parts.push(cyl(0.92, 0.88, 0.08, 10, 0x4a6a9a, { y: 0.35, open: true }));
+      parts.push(cyl(0.78, 0.74, 0.06, 10, 0x3a5a8a, { y: 0.55, open: true }));
+      // small flower motif dots
+      parts.push(sph(0.08, 0x4a6a9a, { ws: 4, hs: 2, x: 0.6, y: 0.45, z: 0.4 }));
+      parts.push(sph(0.08, 0x4a6a9a, { ws: 4, hs: 2, x: -0.55, y: 0.45, z: 0.45 }));
+      parts.push(sph(0.08, 0x3a5a8a, { ws: 4, hs: 2, x: 0.0, y: 0.45, z: 0.7 }));
       return finish(parts);
     },
   },
