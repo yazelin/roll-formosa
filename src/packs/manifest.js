@@ -20,6 +20,7 @@ export const CITIES = Object.freeze([
   Object.freeze({ id: 'changhua', displayName: '彰化', tagline: '八卦山大佛終點', status: 'ready' }),
   Object.freeze({ id: 'yunlin', displayName: '雲林', tagline: '西螺大橋終點', status: 'ready' }),
   Object.freeze({ id: 'miaoli', displayName: '苗栗', tagline: '龍騰斷橋終點', status: 'ready' }),
+  Object.freeze({ id: 'matsu', displayName: '連江馬祖', tagline: '媽祖巨神像終點', status: 'ready' }),
 ]);
 
 export const DEFAULT_CITY = 'taipei';
