@@ -33,6 +33,9 @@ run_doer(){
 但不要 git commit/push、不要開 PR、不要 merge(外層腳本會處理)。\
 **做完必須自己跑 'npx vitest run src/packs/<id>' 並修到全綠才算完成**(測試模板已是 city-agnostic,\
 不用改測試斷言,但你若弄壞結構/幾何/locale 它會紅——修到綠;外層還會再跑一次 npm test,你沒綠 PR 開不出來=白做)。\
+**改完 src/packs/active.js / manifest.js 後,務必再跑一次完整 'npm test'(不能只跑 city-scoped vitest)**\
+—— city-scoped vitest 不 import active.js,active.js 的語法錯(例如多打逗號 'pingtung,, matsu')它抓不到,\
+只有完整 npm test 會紅;沒在這裡自己抓到,外層 gate 會擋下整城白做。\
 **還必跑 'node scripts/check-hero-tris.mjs <id>' 修到 0 over** —— 地標/收藏 tri cap(heroTriCap 600/一般 350)是 DEV boot 期\
 assert,vitest <id> 抓不到、超標會害 'npm run dev' 主遊戲開不了(preview 卻正常);超標就降 sph ws/hs、cyl segments。\
 若這條是加新城市:① 把 src/packs/manifest.js 該城 status 改成 'ready'(否則 localization/river 守衛不會把關);\
