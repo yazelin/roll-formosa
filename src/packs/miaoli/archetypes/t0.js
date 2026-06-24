@@ -57,28 +57,37 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] hakka_flower_sachet 客家花布香包 — Hakka floral fabric sachet    */
+  /*     The iconic blue/pink floral fabric sachets sold in Miaoli       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'hakka_flower_sachet',
+    displayName: '客家花布香包',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.018,
+    radiusNominal: 0.025,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0x4a6a9a, 0xff6b8a, 0x3a5a8a, 0xe8405a, 0x6a8aaa],
+    yOffset: -0.45, // sachet resting flat
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Traditional Hakka floral fabric sachet (客家花布香包).
+      // Pillow-shaped pouch with characteristic blue/pink flower patterns.
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // main sachet body (pillow-shaped, slightly rounded)
+        sph(0.8, 0xffffff, { ws: 8, hs: 5, sx: 1.4, sy: 0.5, y: 0.3, hex2: 0xf0e8f0 }),
+        // Hakka flower pattern (simplified as colored patches)
+        sph(0.2, 0xff6b8a, { ws: 4, hs: 2, x: 0.3, y: 0.4, z: 0.3 }), // pink flower
+        sph(0.15, 0x4a6a9a, { ws: 4, hs: 2, x: -0.25, y: 0.38, z: 0.25 }), // blue flower
+        sph(0.12, 0x3a8a4a, { ws: 4, hs: 2, x: 0.0, y: 0.42, z: 0.4 }), // green leaf
+        sph(0.18, 0xe84060, { ws: 4, hs: 2, x: -0.35, y: 0.36, z: -0.15 }), // red flower
+        // top gathered tie (ribbon/string closure)
+        cyl(0.1, 0.08, 0.3, 5, 0xf4e8c8, { y: 0.55 }), // gathered top
+        box(0.6, 0.06, 0.08, 0xff6b8a, { y: 0.65 }), // ribbon bow
+        box(0.12, 0.15, 0.06, 0xff6b8a, { x: 0.2, y: 0.72 }), // bow loop
+        box(0.12, 0.15, 0.06, 0xff6b8a, { x: -0.2, y: 0.72 }), // bow loop
       ]);
     },
   },

@@ -147,43 +147,51 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 超商 (convenience store) -------------------------------- */
+  /* ---- slot 3: 客家米店 (Hakka rice shop) ------------------------------ */
   {
-    id: 'convenience_store',
-    displayName: '超商',
+    id: 'hakka_rice_shop',
+    displayName: '客家米店',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 5.0,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xe8edf2, 0xf6f0e6, 0xdfeae2, 0xd8dee6],
-    yOffset: -0.56,
+    palette: [0xc8b8a0, 0xe6d4b8, 0x8a7a5a, 0xf4e8d0, 0xa09070],
+    yOffset: -0.52,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
+      // Traditional Hakka rice shop — low-rise shophouse with rice sacks
+      // displayed outside, wooden signage with Chinese characters.
       const parts = [
-        box(2.6, 0.95, 1.5, 0xffffff, { y: 0.48 }), // store box (tinted white)
-        // 小七 signature orange/green/red tricolor fascia stripe
-        box(2.66, 0.22, 1.54, 0xe06a1a, { y: 1.06 }), // orange band
-        box(2.66, 0.08, 1.54, 0x2a8a3a, { y: 1.21 }), // green stripe
-        box(2.66, 0.06, 1.54, 0xc83828, { y: 1.28 }), // red stripe
-        box(1.1, 0.16, 0.06, 0xfff2c0, { x: -0.5, y: 1.06, z: 0.79 }), // lit logo plate
-        box(2.72, 0.06, 1.6, 0x8a9098, { y: 1.34 }), // roof lip
-        box(0.42, 0.32, 0.32, 0xb8bec8, { x: 0.9, y: 1.46 }), // rooftop AC unit
-        // glass storefront with warm interior shelf glow
-        box(2.2, 0.6, 0.06, 0x9fc4d8, { y: 0.46, z: 0.76 }), // glass front
-        box(2.1, 0.1, 0.07, 0xffe9b0, { y: 0.62, z: 0.765 }), // top shelf glow
-        box(2.1, 0.08, 0.07, 0xf0d8a0, { y: 0.4, z: 0.765 }), // mid shelf glow
-        box(0.5, 0.66, 0.08, 0x7a8088, { x: 0.92, y: 0.36, z: 0.78 }), // auto door
-        box(0.46, 0.42, 0.05, 0x9fc4d8, { x: 0.92, y: 0.44, z: 0.81 }), // door glass
-        box(0.5, 0.7, 0.4, 0xd8dce2, { x: -1.0, y: 0.36, z: 0.95 }), // ATM / ice box by door
-        cyl(0.06, 0.06, 0.7, 6, 0xc8ccd2, { x: -1.25, y: 0.85, z: 0.7 }), // pole sign post
-        box(0.4, 0.34, 0.06, 0xe06a1a, { x: -1.25, y: 1.25, z: 0.7 }), // pole sign panel
+        // main shop building (earth-tone walls)
+        box(2.6, 1.2, 1.5, 0xffffff, { y: 0.6, hex2: 0xf0e8d8 }),
+        // dark wood trim beams (horizontal)
+        box(2.7, 0.12, 0.08, 0x5a4a3a, { y: 0.18, z: 0.76 }),
+        box(2.7, 0.12, 0.08, 0x5a4a3a, { y: 1.18, z: 0.76 }),
+        // sloped tile roof
+        box(2.8, 0.12, 0.9, 0x7a5a40, { y: 1.35, z: 0.4, rx: -0.15 }),
+        box(2.8, 0.12, 0.9, 0x7a5a40, { y: 1.35, z: -0.4, rx: 0.15 }),
+        // wooden signboard
+        box(1.6, 0.5, 0.1, 0x6a4a2a, { y: 1.1, z: 0.82 }),
+        box(1.4, 0.35, 0.04, 0xf4e8c8, { y: 1.1, z: 0.88 }), // text area
+        // open shop front with display
+        box(2.2, 0.8, 0.06, 0x2a2a2e, { y: 0.5, z: 0.76 }), // dark interior
+        // rice sacks displayed in front (burlap bags)
+        box(0.5, 0.35, 0.4, 0xc8b8a0, { x: -0.8, y: 0.18, z: 0.95 }),
+        box(0.5, 0.35, 0.4, 0xe6d4b8, { x: -0.3, y: 0.18, z: 0.95 }),
+        box(0.5, 0.35, 0.4, 0xd8c8b0, { x: 0.2, y: 0.18, z: 0.95 }),
+        // stacked rice sacks
+        box(0.45, 0.3, 0.35, 0xb8a890, { x: -0.55, y: 0.48, z: 0.95 }),
+        // weighing scale
+        box(0.3, 0.05, 0.3, 0x8a8a8a, { x: 0.75, y: 0.2, z: 0.9 }),
+        cyl(0.04, 0.04, 0.3, 5, 0x6a6a6a, { x: 0.75, y: 0.38, z: 0.9 }),
+        // awning support posts
+        cyl(0.08, 0.08, 1.0, 6, 0x5a4a3a, { x: -1.2, y: 0.5, z: 0.9 }),
+        cyl(0.08, 0.08, 1.0, 6, 0x5a4a3a, { x: 1.2, y: 0.5, z: 0.9 }),
+        // cloth awning
+        box(2.6, 0.08, 0.6, 0x4a6a9a, { y: 1.02, z: 1.05 }), // Hakka blue cloth
       ];
-      // mullions splitting the glass front
-      for (let i = 0; i < 3; i++) {
-        parts.push(box(0.06, 0.62, 0.08, 0xe8e4da, { x: -0.7 + i * 0.6, y: 0.44, z: 0.77 }));
-      }
       return finish(parts);
     },
   },
