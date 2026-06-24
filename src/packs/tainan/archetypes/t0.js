@@ -1,8 +1,8 @@
 /**
- * @file packs/taipei/archetypes/t0.js — Roll Formosa Taipei pack, TIER 0
- *   柑仔店桌頭 (corner-store tabletop trinkets), the smallest absorbable band
+ * @file packs/tainan/archetypes/t0.js — Roll Formosa Tainan pack, TIER 0
+ *   府城柑仔店桌頭 (corner-store tabletop trinkets), the smallest absorbable band
  *   (radiusNominal 0.01–0.05 m). 10 ArchetypeDefs, ids FROZEN by
- *   packs/taipei/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
+ *   packs/tainan/tiers.js TIERS[0].archetypeIds (slots [0..7] absorbable,
  *   slots [8..9] = chunk landmarks 戳戳樂板 / 籤筒, spawnWeight ~0.3).
  *
  * Authored ONLY with the engine geometry vocabulary (geomHelpers.js):
@@ -53,28 +53,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] wagui_bowl 碗粿小碗 — Tainan's iconic steamed rice pudding dish  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'wagui_bowl',
+    displayName: '碗粿小碗',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
-    upright: false,
+    palette: [0xf6f2ea, 0xe8dcc8, 0xf0e8d8, 0xfff8e8],
+    yOffset: -0.68,
+    upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // small white ceramic bowl holding steamed rice pudding (碗粿)
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // bowl body (short wide cylinder with slight taper)
+        cyl(0.9, 0.8, 0.5, 10, 0xf6f2ea, { y: 0.28 }),
+        // bowl lip rim
+        cyl(0.92, 0.92, 0.08, 10, 0xf6f2ea, { y: 0.55 }),
+        // rice pudding filling inside (slight dome, off-white)
+        sph(0.72, 0xf0e8d8, { ws: 8, hs: 4, sy: 0.3, y: 0.58 }),
+        // sauce drizzle on top (dark soy sauce)
+        box(0.4, 0.04, 0.08, 0x4a3020, { y: 0.68, z: 0.1 }),
+        box(0.06, 0.04, 0.3, 0x4a3020, { y: 0.68, x: 0.1 }),
       ]);
     },
   },
@@ -206,63 +210,72 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] danzai_mian 擔仔麵小碗 — mini bowl of Tainan's signature noodles  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'danzai_mian',
+    displayName: '擔仔麵小碗',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
-    upright: false,
+    palette: [0xf6f2ea, 0xd8a060, 0xc89048, 0xe8c088, 0xf0e0c0],
+    yOffset: -0.55,
+    upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
+      // small blue-white ceramic bowl of 擔仔麵 with shrimp + minced pork
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // bowl exterior (blue-white porcelain)
+        cyl(0.85, 0.7, 0.65, 10, 0xeef6f8, { y: 0.35 }),
+        cyl(0.88, 0.88, 0.1, 10, 0xeef6f8, { y: 0.7 }), // rim
+        // blue pattern band
+        cyl(0.87, 0.87, 0.12, 10, 0x4a78a8, { y: 0.5, open: true }),
+        // broth inside (tan)
+        cyl(0.75, 0.75, 0.1, 8, 0xd8a060, { y: 0.65 }),
+        // noodle tangle (yellow strands suggested by overlapping thin cylinders)
+        cyl(0.5, 0.5, 0.08, 6, 0xf0d898, { y: 0.72 }),
+        cyl(0.4, 0.4, 0.06, 6, 0xf0d898, { y: 0.78, x: 0.1, z: 0.1 }),
+        // minced pork topping (brown mound)
+        sph(0.22, 0x8a5a30, { ws: 6, hs: 4, sy: 0.5, y: 0.82 }),
+        // shrimp (orange curved shape)
+        cyl(0.1, 0.08, 0.25, 5, 0xe88048, { rx: 0.3, x: 0.2, y: 0.9, z: 0.15 }),
+        // green scallion garnish
+        cyl(0.03, 0.03, 0.2, 4, 0x4a8a40, { y: 0.9, x: -0.15, z: 0.2 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] coffin_bread 棺材板小份 — Tainan's signature fried toast box    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'coffin_bread',
+    displayName: '棺材板小份',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
-    upright: false,
+    palette: [0xd8a050, 0xc89040, 0xe8b860, 0xf0c870, 0xd09030],
+    yOffset: -0.75,
+    upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
-      ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      // 棺材板: fried bread box with creamy filling
+      return finish([
+        // thick slice of fried bread (golden box)
+        box(1.6, 0.7, 1.4, 0xd8a050, { y: 0.4 }),
+        // top crust (darker golden lid)
+        box(1.5, 0.12, 1.3, 0xc89040, { y: 0.78 }),
+        // hollowed-out center showing creamy filling
+        box(1.2, 0.25, 1.0, 0xf0e8d0, { y: 0.55 }), // cream filling
+        // bits of chicken/vegetable chunks in cream
+        sph(0.12, 0xe8c0a0, { ws: 4, hs: 3, x: 0.2, y: 0.68 }),
+        sph(0.1, 0xe8c0a0, { ws: 4, hs: 3, x: -0.25, y: 0.66, z: 0.15 }),
+        sph(0.08, 0x90a060, { ws: 4, hs: 3, x: 0.1, y: 0.65, z: -0.2 }), // pea
+      ]);
     },
   },
 
