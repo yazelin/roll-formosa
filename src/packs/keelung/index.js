@@ -32,22 +32,21 @@ import { goalMonument } from './monument.js';
 import * as narration from './narration.js';
 import { ending } from './ending.js';
 
-// P6b: Taipei replaces EXTRA codes 82..89 (legacy landmark ids at indices 12..19)
-// with Taipei landmark ids. Collectible codes 70..81 (indices 0..11) and codes
-// 90..93 (indices 20..23) remain frozen placeholder ids.
-import { NM_BEIMEN } from './landmarks/beimen.js';
-import { NM_LONGSHAN } from './landmarks/longshan.js';
-import { NM_XIMEN } from './landmarks/ximen.js';
-import { NM_GRAND_HOTEL } from './landmarks/grand_hotel.js';
-import { NM_PRESIDENTIAL } from './landmarks/presidential.js';
-import { NM_CKS } from './landmarks/cks_memorial.js';
-import { NM_LIBERTY_ARCH } from './landmarks/liberty_arch.js';
-import { NM_ARENA } from './landmarks/arena.js';
+// Codes 82..89 (extraIds indices 12..19) carry keelung's own landmark ids, aligned
+// with the catalog's 82..89 geometry (NM_MIAOKOU_GATE … NM_QINGAN_TEMPLE). Same order.
+import { NM_MIAOKOU_GATE } from './landmarks/miaokou_gate.js';
+import { NM_KEELUNG_STATION } from './landmarks/keelung_station.js';
+import { NM_GUANYIN_STATUE } from './landmarks/guanyin_statue.js';
+import { NM_OCEAN_PLAZA } from './landmarks/ocean_plaza.js';
+import { NM_XIANDONYAN } from './landmarks/xiandonyan.js';
+import { NM_HEPING_ISLAND } from './landmarks/heping_island.js';
+import { NM_KEELUNG_ISLET } from './landmarks/keelung_islet.js';
+import { NM_QINGAN_TEMPLE } from './landmarks/qingan_temple.js';
 
 /**
- * EXTRA id order for the Taipei pack.
+ * EXTRA id order for the keelung pack.
  * Codes 70..81 (indices 0..11): frozen collectible ids.
- * Codes 82..89 (indices 12..19): Taipei landmark ids (P6b).
+ * Codes 82..89 (indices 12..19): keelung landmark ids.
  * Codes 90..93 (indices 20..23): frozen bridge/tower/shop/goal-tower ids.
  * Codes 94..98 (v5 indices 0..4): frozen v5 ids.
  */
@@ -55,15 +54,15 @@ const extraIds = [
   // indices 0..11 — codes 70..81: Taipei collectibles (P7)
   'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
   'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
-  // indices 12..19 — codes 82..89: Taipei landmark ids (P6b)
-  NM_BEIMEN.id,        // 82 北門(承恩門)
-  NM_LONGSHAN.id,      // 83 龍山寺
-  NM_XIMEN.id,         // 84 西門紅樓
-  NM_GRAND_HOTEL.id,   // 85 圓山大飯店
-  NM_PRESIDENTIAL.id,  // 86 總統府
-  NM_CKS.id,           // 87 中正紀念堂
-  NM_LIBERTY_ARCH.id,  // 88 自由廣場牌樓
-  NM_ARENA.id,         // 89 小巨蛋
+  // indices 12..19 — codes 82..89: keelung landmark ids (aligned with catalog 82..89)
+  NM_MIAOKOU_GATE.id,    // 82 廟口
+  NM_KEELUNG_STATION.id, // 83 基隆車站
+  NM_GUANYIN_STATUE.id,  // 84 中正公園觀音像
+  NM_OCEAN_PLAZA.id,     // 85 海洋廣場
+  NM_XIANDONYAN.id,      // 86 仙洞巖
+  NM_HEPING_ISLAND.id,   // 87 和平島
+  NM_KEELUNG_ISLET.id,   // 88 基隆嶼
+  NM_QINGAN_TEMPLE.id,   // 89 慶安宮
   // indices 20..23 — codes 90..93: keelung extended landmarks (reuse own, _ext id)
   'miaokou_gate_ext90', 'keelung_station_ext91', 'guanyin_statue_ext92', 'ocean_plaza_ext93',
   // v5 codes 94..98 — 94 媽祖; 95..98 keelung extended landmarks
