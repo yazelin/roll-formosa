@@ -151,62 +151,73 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant */
+  /* ---- slot 5 ---- 洋蔥籃 — basket of Hengchun onions */
   {
-    id: 'fire_hydrant',
-    displayName: '消防栓',
+    id: 'onion_basket',
+    displayName: '洋蔥籃',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.35,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xd02a1f, 0xe23a2c, 0xb8241c, 0xffd000, 0xc4281f],
+    palette: [0xd8a060, 0xc89050, 0xe8b070, 0xb88040, 0xf0c080],
     yOffset: -0.188,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      const red = 0xffffff;
+      // Woven basket with Hengchun onions piled inside
+      const basket = 0xffffff;
       return finish([
-        cyl(0.66, 0.72, 0.2, 8, 0x9a2018, { y: 0.1 }),
-        cyl(0.52, 0.58, 1.1, 8, red, { y: 0.75 }),
-        cyl(0.42, 0.52, 0.24, 8, red, { y: 1.42 }),
-        sph(0.46, red, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 1.5 }),
-        cyl(0.16, 0.2, 0.2, 6, 0xf0c020, { y: 1.92 }),
-        cyl(0.18, 0.2, 0.22, 6, red, { rx: HALF_PI, y: 1.0, z: 0.58 }),
-        cyl(0.22, 0.22, 0.06, 6, 0xf0c020, { rx: HALF_PI, y: 1.0, z: 0.7 }),
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: -0.6, y: 0.85 }),
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: 0.6, y: 0.85 }),
+        // Basket body - tapered cylinder
+        cyl(0.7, 0.9, 0.9, 10, basket, { y: 0.5, hex2: 0xd8a060 }),
+        // Basket rim
+        cyl(0.92, 0.92, 0.12, 10, 0xc89050, { y: 0.98 }),
+        // Woven texture bands
+        cyl(0.75, 0.85, 0.08, 10, 0xb88040, { y: 0.35 }),
+        cyl(0.78, 0.88, 0.08, 10, 0xb88040, { y: 0.65 }),
+        // Onions piled on top
+        sph(0.3, 0xf0e0c0, { ws: 6, hs: 4, x: 0, y: 1.2, z: 0, hex2: 0xe8d0b0 }),
+        sph(0.28, 0xf0e0c0, { ws: 6, hs: 4, x: 0.3, y: 1.1, z: 0.2 }),
+        sph(0.26, 0xf0e0c0, { ws: 6, hs: 4, x: -0.25, y: 1.15, z: 0.15 }),
+        sph(0.24, 0xf0e0c0, { ws: 6, hs: 4, x: 0.1, y: 1.0, z: -0.25 }),
+        // Green onion tops
+        cyl(0.04, 0.02, 0.5, 4, 0x60a048, { x: 0, y: 1.5, rz: 0.3 }),
+        cyl(0.04, 0.02, 0.45, 4, 0x60a048, { x: 0.3, y: 1.4, rz: -0.25 }),
       ]);
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat */
+  /* ---- slot 6 ---- 浮潛面鏡 — snorkel mask for Kenting diving */
   {
-    id: 'lucky_cat',
-    displayName: '招財貓',
+    id: 'snorkel_mask',
+    displayName: '浮潛面鏡',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
+    palette: [0x40c0ff, 0x60d0ff, 0x2090c0, 0xffffff, 0x80e0ff],
     yOffset: -0.195,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      const white = 0xffffff;
+      // Diving/snorkeling mask with transparent lens
       return finish([
-        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
-        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
-        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
-        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
-        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
-        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
-        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
-        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
-        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
-        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }),
-        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
+        // Silicone skirt frame
+        box(1.6, 0.9, 0.3, 0xffffff, { y: 0.5, hex2: 0x40c0ff }),
+        // Lens frame
+        box(1.4, 0.7, 0.1, 0x2a2a2a, { y: 0.5, z: 0.15 }),
+        // Double lenses (transparent blue tint)
+        box(0.5, 0.5, 0.06, 0x80d8f0, { x: -0.35, y: 0.5, z: 0.18 }),
+        box(0.5, 0.5, 0.06, 0x80d8f0, { x: 0.35, y: 0.5, z: 0.18 }),
+        // Nose bridge
+        box(0.2, 0.3, 0.12, 0x2a2a2a, { y: 0.35, z: 0.12 }),
+        // Strap connectors
+        box(0.15, 0.2, 0.15, 0x2a2a2a, { x: -0.85, y: 0.5 }),
+        box(0.15, 0.2, 0.15, 0x2a2a2a, { x: 0.85, y: 0.5 }),
+        // Elastic strap pieces
+        box(0.4, 0.12, 0.08, 0x40c0ff, { x: -1.1, y: 0.5, z: -0.1 }),
+        box(0.4, 0.12, 0.08, 0x40c0ff, { x: 1.1, y: 0.5, z: -0.1 }),
       ]);
     },
   },
