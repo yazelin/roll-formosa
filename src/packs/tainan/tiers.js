@@ -96,8 +96,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 電鍋, 瓦斯桶, 三角錐, 消防栓, 霜淇淋攤, T-Bike樁
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'gelato_cart', 'tbike_dock',
+      // 紅塑膠椅, 安全帽, 蝦捲炸籃, 瓦斯桶, 三角錐, 消防栓, 霜淇淋攤, T-Bike樁
+      'red_plastic_chair', 'helmet', 'shrimp_roll_basket', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'gelato_cart', 'tbike_dock',
       // chunk landmarks: 枝仔冰車, 廟前香爐
       'popsicle_cart', 'temple_incense_burner',
     ],
@@ -144,8 +144,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 公寓, 超商, 公車, 垃圾車, 加油站, 牛肉湯店
-      'townhouse', 'tin_roof_house', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'beef_soup_shop',
+      // 透天厝, 鐵皮屋, 鹽田瓦厝, 超商, 公車, 垃圾車, 加油站, 牛肉湯店
+      'townhouse', 'tin_roof_house', 'salt_field_house', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'beef_soup_shop',
       // chunk landmarks: 府城街屋, 孔廟
       'fucheng_streethouse_mass', 'confucius_temple_mass',
     ],
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 林百貨風格樓, 百貨, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'linbai_tower', 'department_store', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 林百貨風格樓, 虱目魚店, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'linbai_tower', 'milkfish_shop', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
