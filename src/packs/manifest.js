@@ -15,6 +15,9 @@ export const CITIES = Object.freeze([
   Object.freeze({ id: 'chiayi', displayName: '嘉義', tagline: '阿里山下的木都', status: 'ready' }),
   Object.freeze({ id: 'hsinchu', displayName: '新竹', tagline: '城隍廟終點', status: 'ready' }),
   Object.freeze({ id: 'pingtung', displayName: '屏東', tagline: '鵝鑾鼻燈塔終點', status: 'ready' }),
+  Object.freeze({ id: 'yilan', displayName: '宜蘭', tagline: '龜山島終點', status: 'ready' }),
+  Object.freeze({ id: 'nantou', displayName: '南投', tagline: '日月潭終點', status: 'ready' }),
+  Object.freeze({ id: 'changhua', displayName: '彰化', tagline: '八卦山大佛終點', status: 'ready' }),
   Object.freeze({ id: 'yunlin', displayName: '雲林', tagline: '西螺大橋終點', status: 'ready' }),
 ]);
 
