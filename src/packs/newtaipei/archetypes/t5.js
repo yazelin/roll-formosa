@@ -34,75 +34,86 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 淡水渡船頭 tamsui_ferry_terminal ------------------- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'tamsui_ferry_terminal',
+    displayName: '淡水渡船頭',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
-    yOffset: -0.06,
+    palette: [0x3a6ea0, 0xe8e8ee, 0x2a55a8, 0xffd040, 0x1a2a40],
+    yOffset: -0.38,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
-      return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
-      ]);
+      // Tamsui Ferry Terminal — iconic riverside building with observation deck
+      const parts = [
+        // Main terminal building
+        box(4.0, 2.8, 3.0, 0xe8e8ee, { y: 1.4 }),
+        // Blue accent bands (Tamsui river theme)
+        box(4.1, 0.3, 3.1, 0x3a6ea0, { y: 0.15 }),
+        box(4.1, 0.2, 3.1, 0x2a55a8, { y: 2.9 }),
+        // Glass facade
+        box(3.6, 2.0, 0.1, 0x9fc4d8, { y: 1.5, z: 1.52 }),
+        // Window grid
+        box(3.5, 0.08, 0.08, 0x1a2a40, { y: 1.0, z: 1.56 }),
+        box(3.5, 0.08, 0.08, 0x1a2a40, { y: 2.0, z: 1.56 }),
+        // Entrance canopy
+        box(2.0, 0.12, 1.0, 0x2a55a8, { y: 1.2, z: 2.0 }),
+        cyl(0.08, 0.08, 1.1, 6, 0xe8e8ee, { x: -0.8, y: 0.65, z: 1.8 }),
+        cyl(0.08, 0.08, 1.1, 6, 0xe8e8ee, { x: 0.8, y: 0.65, z: 1.8 }),
+        // Observation tower on top
+        box(1.5, 1.5, 1.5, 0xe8e8ee, { y: 3.55 }),
+        box(1.6, 0.1, 1.6, 0x3a6ea0, { y: 4.35 }),
+        // Flagpole with Taiwan flag
+        cyl(0.05, 0.05, 1.5, 6, 0xc8ccd2, { x: 0.5, y: 5.0 }),
+        box(0.5, 0.3, 0.05, 0xc83030, { x: 0.75, y: 5.5 }),
+        // Pier platform
+        box(5.0, 0.2, 2.0, 0x8a7a6a, { y: 0.1, z: -0.8 }),
+      ];
+      return finish(parts);
     },
   },
 
-  /* ---- slot 1: 百貨 department_store ------------------------------ */
+  /* ---- slot 1: 林口購物中心 linkou_mall --------------------------- */
   {
-    id: 'department_store',
-    displayName: '百貨',
+    id: 'linkou_mall',
+    displayName: '林口購物中心',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 28,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc8b8a0, 0xe8dcc8, 0x8a7a64, 0xb84a3a, 0xf0e8d8],
+    palette: [0xd8dce2, 0xe8ecf0, 0x8a9098, 0x3a6ea0, 0xf4f6f8],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Broad stone block with a glass display podium + a big vertical brand band.
+      // Linkou Outlet style mall — modern white/blue glass structure
       const parts = [
-        box(4.4, 4.6, 3.4, 0xffffff, { y: 2.5 }), // main stone mass (tinted)
-        box(4.5, 0.3, 3.5, 0x9a8a72, { y: 4.95 }), // cornice cap
-        // glass podium (ground 2 floors) wrapping the front
-        box(4.6, 1.5, 0.4, 0x2b3640, { y: 0.95, z: 1.7 }), // dark glass frame
-        box(4.2, 1.2, 0.06, 0xb9c8da, { y: 0.95, z: 1.92 }), // bright display glass
-        // entrance canopy
-        box(2.0, 0.18, 1.0, 0xb84a3a, { y: 1.9, z: 2.0 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: -0.8, y: 1.0, z: 2.4 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: 0.8, y: 1.0, z: 2.4 }),
-        // vertical brand band on the corner
-        box(0.5, 3.6, 0.12, 0xb84a3a, { x: -2.15, y: 2.9, z: 1.66 }),
-        box(0.34, 3.2, 0.06, 0xf0e0c8, { x: -2.15, y: 2.9, z: 1.73 }),
+        box(4.4, 3.8, 3.4, 0xffffff, { y: 2.0 }), // main white mass
+        box(4.5, 0.2, 3.5, 0x3a6ea0, { y: 4.0 }), // blue roof trim
+        // glass curtain wall front
+        box(4.2, 3.2, 0.12, 0x9fc4d8, { y: 1.9, z: 1.72 }),
+        // entrance atrium (curved glass)
+        cyl(1.2, 1.2, 3.4, 8, 0xa8d0e4, { y: 1.9, z: 2.0, rx: HALF_PI, theta0: -HALF_PI, thetaLen: PI }),
+        // Brand signage
+        box(2.5, 0.5, 0.1, 0x3a6ea0, { y: 3.6, z: 1.78 }),
+        box(2.3, 0.35, 0.06, 0xf4f6f8, { y: 3.6, z: 1.84 }),
+        // Ground level shop fronts
+        box(4.0, 0.8, 0.08, 0x2a3440, { y: 0.5, z: 1.74 }),
+        // Parking garage entrance
+        box(1.5, 1.2, 0.6, 0x6a7078, { x: -1.8, y: 0.6, z: 0 }),
+        box(1.2, 0.8, 0.1, 0x2a3440, { x: -1.8, y: 0.5, z: 0.32 }),
+        // Rooftop sign tower
+        box(0.8, 1.2, 0.8, 0xe8ecf0, { x: 1.4, y: 4.5 }),
+        box(0.6, 0.8, 0.1, 0x3a6ea0, { x: 1.4, y: 4.8, z: 0.42 }),
       ];
-      // a row of square clerestory windows along the upper facade
-      for (let i = 0; i < 6; i++) {
-        const lit = rng() < 0.5 ? 0xfff0c8 : 0x6a7280;
-        parts.push(box(0.42, 0.5, 0.05, lit, { x: -1.7 + i * 0.68, y: 4.0, z: 1.72 }));
+      // Window mullions
+      for (let i = 0; i < 5; i++) {
+        parts.push(box(0.06, 3.2, 0.08, 0x8a9098, { x: -1.6 + i * 0.8, y: 1.9, z: 1.78 }));
       }
       return finish(parts);
     },
@@ -192,117 +203,126 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 鶯歌陶瓷廠 yingge_ceramics_factory ----------------- */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'yingge_ceramics_factory',
+    displayName: '鶯歌陶瓷廠',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0xa84a32, 0xc8bca8, 0x6a5a4a, 0xe8dcc4, 0xd8b878],
+    yOffset: -0.32,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
+      // Yingge Ceramics Factory — traditional kiln building with chimney
       const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
+        // Main factory building (red brick style)
+        box(3.5, 2.5, 2.5, 0xa84a32, { y: 1.25, hex2: 0x8a3a28 }),
+        // Brick texture lines
+        box(3.52, 0.06, 2.52, 0x7a2a18, { y: 0.8 }),
+        box(3.52, 0.06, 2.52, 0x7a2a18, { y: 1.6 }),
+        // Arched kiln opening
+        cyl(0.6, 0.6, 0.4, 8, 0x2a1a0a, { y: 0.6, z: 1.28, rx: HALF_PI, theta0: 0, thetaLen: PI }),
+        box(1.0, 0.6, 0.1, 0x2a1a0a, { y: 0.3, z: 1.28 }),
+        // Tall chimney
+        cyl(0.4, 0.35, 4.0, 8, 0xa84a32, { x: 1.2, y: 4.5, hex2: 0x8a3a28 }),
+        cyl(0.5, 0.45, 0.3, 8, 0x7a2a18, { x: 1.2, y: 6.55 }), // chimney cap
+        // Ceramic vases displayed outside
+        cyl(0.2, 0.15, 0.5, 6, 0xd8b878, { x: -1.2, y: 0.25, z: 1.4 }),
+        cyl(0.18, 0.12, 0.4, 6, 0xc8a868, { x: -0.8, y: 0.2, z: 1.4 }),
+        cyl(0.22, 0.18, 0.55, 6, 0xe8c888, { x: -1.6, y: 0.28, z: 1.4 }),
+        // Roof with clay tiles
+        box(3.7, 0.15, 2.7, 0x6a5a4a, { y: 2.55 }),
+        box(3.8, 0.1, 0.3, 0x7a6a5a, { y: 2.7, z: 0 }), // ridge
+        // Sign board
+        box(1.5, 0.4, 0.08, 0xe8dcc4, { y: 2.2, z: 1.32 }),
       ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 5: 巨型看板 giant_billboard --------------------------- */
+  /* ---- slot 5: 平溪天燈工坊 pingxi_lantern_workshop ---------------- */
   {
-    id: 'giant_billboard',
-    displayName: '巨型看板',
+    id: 'pingxi_lantern_workshop',
+    displayName: '平溪天燈工坊',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 20,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46, 0xf2f2ee],
-    yOffset: -0.21,
+    palette: [0xc83030, 0xe8a020, 0xf8d848, 0x8a6040, 0xf0e8d8],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.5,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // A rooftop / roadside billboard: big bright panel on a lattice gantry.
+      // Pingxi Sky Lantern Workshop — traditional shop with lanterns on display
       const parts = [
-        // gantry legs (wide A-stance)
-        box(0.22, 4.6, 0.22, 0x44484f, { x: -1.7, y: 2.3, rz: 0.06 }),
-        box(0.22, 4.6, 0.22, 0x44484f, { x: 1.7, y: 2.3, rz: -0.06 }),
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 1.4 }), // cross brace
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 3.0, rz: 0 }), // cross brace
-        // diagonal brace
-        box(4.0, 0.14, 0.14, 0x5a6068, { y: 2.2, rz: 0.78 }),
-        // billboard frame + bright face
-        box(5.2, 2.4, 0.18, 0x2e3138, { y: 5.4 }), // frame
-        box(5.0, 2.2, 0.06, 0xffffff, { y: 5.4, z: 0.13 }), // ad face (tinted bright)
-        box(5.2, 0.2, 0.3, 0x222428, { y: 6.7 }), // top spotlight bar
+        // Main workshop building
+        box(3.5, 2.8, 2.5, 0xf0e8d8, { y: 1.4, hex2: 0xe0d8c8 }),
+        // Traditional tiled roof (4 segments)
+        cyl(2.0, 2.0, 3.8, 4, 0x6a4030, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.2 }),
+        box(4.0, 0.1, 0.2, 0x5a3020, { y: 3.6 }), // ridge
+        // Shop front opening
+        box(2.5, 2.0, 0.1, 0x4a3020, { y: 1.0, z: 1.28 }),
+        // Wooden beam
+        box(3.6, 0.15, 0.15, 0x6a4030, { y: 2.1, z: 1.25 }),
+        // Hanging sky lanterns (reduced count, lower segments for tri budget)
+        sph(0.5, 0xc83030, { ws: 5, hs: 4, x: -0.8, y: 1.8, z: 1.5, sy: 1.4 }),
+        sph(0.5, 0xe8a020, { ws: 5, hs: 4, x: 0.4, y: 1.7, z: 1.5, sy: 1.35 }),
+        sph(0.45, 0xf8d848, { ws: 5, hs: 4, x: 0, y: 2.2, z: 1.4, sy: 1.3 }),
+        // Sign
+        box(1.8, 0.5, 0.08, 0xc83030, { y: 2.8, z: 1.32 }),
+        box(1.6, 0.35, 0.04, 0xf8d848, { y: 2.8, z: 1.38 }),
       ];
-      // color blocks on the ad face (deterministic mock graphic)
-      const adHex = [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46];
-      for (let i = 0; i < 4; i++) {
-        const w = 0.9 + (i % 2) * 0.4;
-        parts.push(box(w, 1.6 - (i % 2) * 0.6, 0.04, adHex[i], {
-          x: -1.7 + i * 1.15, y: 5.4, z: 0.17,
-        }));
-      }
-      // spotlights
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: -1.6, y: 6.6, rx: 0.6 }));
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: 1.6, y: 6.6, rx: 0.6 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 6: 玻璃帷幕街屋 glass_curtain_house ------------------- */
+  /* ---- slot 6: 九份茶屋 jiufen_teashop ----------------------------- */
   {
-    id: 'glass_curtain_house',
-    displayName: '玻璃帷幕街屋',
+    id: 'jiufen_teashop',
+    displayName: '九份茶屋',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 14,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6fbfd0, 0xbfeaf0, 0x3a6a78, 0x2e3744, 0xe8f4f6],
-    yOffset: -0.1,
+    palette: [0xc83030, 0xe8a020, 0x5a3020, 0xf0e8d8, 0xd8b040],
+    yOffset: -0.25,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Narrow mid-rise street shophouse with a full glass curtain wall front.
+      // Jiufen Teahouse — multi-level traditional teahouse with red lanterns
       const parts = [
-        box(2.2, 5.2, 2.0, 0xffffff, { y: 2.8 }), // body (tinted concrete sides)
-        // glass curtain wall on the front (proud, gridded)
-        box(2.0, 4.6, 0.14, 0x2e3744, { y: 2.9, z: 1.02 }), // mullion grid (dark)
-        box(1.8, 4.4, 0.06, 0x8fd6e2, { y: 2.9, z: 1.1 }), // glass (tinted blue-green)
-        // ground-floor shop entrance
-        box(2.0, 0.9, 0.1, 0x20262c, { y: 0.5, z: 1.06 }),
-        box(1.2, 0.7, 0.06, 0xbfeaf0, { y: 0.5, z: 1.12 }), // bright entry glass
-        // parapet + a small rooftop water tank
-        box(2.3, 0.24, 2.1, 0x4a8090, { y: 5.5 }),
-        cyl(0.4, 0.4, 0.6, 7, 0x9aa0a8, { x: 0.5, y: 5.9 }),
+        // Multi-story traditional building
+        box(2.2, 4.5, 2.0, 0xf0e8d8, { y: 2.35, hex2: 0xe0d8c8 }),
+        // Dark wood frame accents
+        box(2.24, 0.1, 2.04, 0x5a3020, { y: 0.85 }),
+        box(2.24, 0.1, 2.04, 0x5a3020, { y: 1.85 }),
+        box(2.24, 0.1, 2.04, 0x5a3020, { y: 2.85 }),
+        box(2.24, 0.1, 2.04, 0x5a3020, { y: 3.85 }),
+        // Traditional tiled roof (overhanging)
+        cyl(1.6, 1.6, 2.4, 4, 0x5a4030, { theta0: PI, rx: HALF_PI, sy: 0.35, y: 4.8 }),
+        box(2.5, 0.08, 0.15, 0x4a3020, { y: 5.05 }), // ridge
+        // Hanging red lanterns (signature Jiufen look)
+        sph(0.25, 0xc83030, { ws: 6, hs: 4, x: -0.7, y: 1.3, z: 1.15 }),
+        sph(0.25, 0xc83030, { ws: 6, hs: 4, x: 0, y: 1.3, z: 1.15 }),
+        sph(0.25, 0xc83030, { ws: 6, hs: 4, x: 0.7, y: 1.3, z: 1.15 }),
+        sph(0.22, 0xc83030, { ws: 6, hs: 4, x: -0.35, y: 2.3, z: 1.15 }),
+        sph(0.22, 0xc83030, { ws: 6, hs: 4, x: 0.35, y: 2.3, z: 1.15 }),
+        // Wooden balcony railings
+        box(2.0, 0.5, 0.08, 0x6a4030, { y: 1.55, z: 1.04 }),
+        box(2.0, 0.5, 0.08, 0x6a4030, { y: 2.55, z: 1.04 }),
+        // Windows with warm light
+        box(0.4, 0.5, 0.05, 0xffd868, { x: -0.6, y: 3.3, z: 1.02 }),
+        box(0.4, 0.5, 0.05, 0xffd868, { x: 0.6, y: 3.3, z: 1.02 }),
+        // Shop sign
+        box(0.6, 1.2, 0.08, 0xc83030, { x: -1.05, y: 2.5, z: 1.05 }),
+        box(0.5, 1.0, 0.04, 0xd8b040, { x: -1.05, y: 2.5, z: 1.1 }),
       ];
-      // horizontal floor-line mullions across the glass (5 floors)
-      for (let f = 1; f < 5; f++) {
-        parts.push(box(1.85, 0.07, 0.04, 0x223038, { y: 0.6 + f * 0.95, z: 1.14 }));
-      }
       return finish(parts);
     },
   },

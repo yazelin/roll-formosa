@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 黑糖糕盤, 礦工油燈, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'brown_sugar_cakes', 'miner_lamp_vintage', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 淡水鐵蛋包, 礦工油燈, 尪仔標, 鉛筆, 阿給小盤
+      'marble', 'eraser', 'pushpin', 'iron_egg_pack', 'miner_lamp_vintage', 'ngiauimia_card', 'pencil', 'agei_mini',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -169,8 +169,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 百貨, 捷運高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'department_store', 'metro_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 淡水渡船頭, 林口購物中心, 捷運高架, 天橋, 鶯歌陶瓷廠, 平溪天燈工坊, 九份茶屋, 銀行
+      'tamsui_ferry_terminal', 'linkou_mall', 'metro_viaduct', 'pedestrian_bridge', 'yingge_ceramics_factory', 'pingxi_lantern_workshop', 'jiufen_teashop', 'bank',
       // chunk landmarks: 新北商辦塔, 百貨大樓
       'newtaipei_tower', 'department_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨河大橋, 其他摩天樓, 巨型廣告牆, 商辦塔, 空橋, 屋頂機房, 河岸大樓
-      'glass_highrise', 'river_bridge', 'other_skyscraper', 'giant_ad_wall', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'riverside_block',
+      // 玻璃帷幕高樓, 跨河大橋, 其他摩天樓, 淡水老街招牌牆, 板橋車站大樓, 空橋, 新莊副都心大樓, 河岸大樓
+      'glass_highrise', 'river_bridge', 'other_skyscraper', 'tamsui_signage_wall', 'banqiao_station_tower', 'sky_bridge', 'xinzhuang_tower', 'riverside_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
