@@ -40,12 +40,12 @@ import { NM_QINGAN_TEMPLE } from './landmarks/qingan_temple.js';
 // 13 Keelung collectible (rare album) geometries (codes 70..81 + 94).
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_BOBA } from './collectibles/boba.js';
-import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
-import { COL_GUABAO } from './collectibles/gua_bao.js';
-import { COL_XLB } from './collectibles/xiaolongbao.js';
-import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
-import { COL_SANTAIZI } from './collectibles/santaizi.js';
-import { COL_PUPPET } from './collectibles/budaixi.js';
+import { COL_SHRIMP_GENG } from './collectibles/shrimp_geng.js';
+import { COL_SAUSAGE } from './collectibles/mini_sausage.js';
+import { COL_TARO_BALL } from './collectibles/taro_ball.js';
+import { COL_HONGZAO } from './collectibles/hongzao_meatball.js';
+import { COL_SQUID } from './collectibles/squid.js';
+import { COL_CRAB } from './collectibles/crab.js';
 import { COL_LIHU } from './collectibles/li_hu_cake.js';
 import { COL_LANTERN } from './collectibles/water_lantern.js';
 import { COL_JIGUELA } from './collectibles/jiguela.js';
@@ -166,12 +166,12 @@ for (const { code, nm, sizeClass, tier, naturalBand } of _KEELUNG_LANDMARKS) {
 const _KEELUNG_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
   { code: 71, col: COL_BOBA },
-  { code: 72, col: COL_CHICKEN },
-  { code: 73, col: COL_GUABAO },
-  { code: 74, col: COL_XLB },
-  { code: 75, col: COL_PINEAPPLE },
-  { code: 76, col: COL_SANTAIZI },
-  { code: 77, col: COL_PUPPET },
+  { code: 72, col: COL_SHRIMP_GENG },
+  { code: 73, col: COL_SAUSAGE },
+  { code: 74, col: COL_TARO_BALL },
+  { code: 75, col: COL_HONGZAO },
+  { code: 76, col: COL_SQUID },
+  { code: 77, col: COL_CRAB },
   { code: 78, col: COL_LIHU },
   { code: 79, col: COL_LANTERN },
   { code: 80, col: COL_JIGUELA },
