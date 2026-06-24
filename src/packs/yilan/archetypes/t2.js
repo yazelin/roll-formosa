@@ -85,36 +85,42 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 蔥油餅攤爐 — scallion pancake griddle, signature Yilan street food */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'scallion_griddle',
+    displayName: '蔥油餅攤爐',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.38,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
+    palette: [0x4a4a4a, 0x3a3a3a, 0x6a6a6a, 0xd8b870, 0xc8a050],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
-      return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
-      ]);
+      const parts = [
+        // large flat griddle plate (round, cast iron look)
+        cyl(1.1, 1.1, 0.12, 10, 0x3a3a3a, { y: 0.9 }),
+        // raised edge rim
+        cyl(1.12, 1.12, 0.06, 10, 0x2a2a2a, { y: 0.97, open: true }),
+        // gas burner base stand
+        box(1.4, 0.7, 1.0, 0x5a5a5a, { y: 0.35 }),
+        // burner grate slats
+        box(1.3, 0.05, 0.08, 0x4a4a4a, { y: 0.72, z: -0.2 }),
+        box(1.3, 0.05, 0.08, 0x4a4a4a, { y: 0.72, z: 0.2 }),
+        // gas knob
+        cyl(0.08, 0.08, 0.06, 6, 0x2a2a2a, { x: 0.75, y: 0.4, z: 0.45 }),
+        // golden scallion pancake cooking on top
+        cyl(0.4, 0.4, 0.08, 8, 0xd8b870, { y: 1.0, x: -0.25 }),
+        // scallion bits on the pancake
+        box(0.06, 0.03, 0.04, 0x4a8a3a, { x: -0.2, y: 1.05, z: 0.05 }),
+        box(0.05, 0.03, 0.04, 0x4a8a3a, { x: -0.35, y: 1.05, z: -0.05 }),
+        // spatula resting nearby
+        box(0.5, 0.02, 0.15, 0x8a8a8a, { x: 0.4, y: 0.98, z: 0.1 }),
+        cyl(0.04, 0.04, 0.25, 4, 0x6a5a4a, { x: 0.7, y: 0.98, z: 0.1 }),
+      ];
+      return finish(parts);
     },
   },
 
@@ -214,41 +220,37 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6 ---- 招財貓 — the beckoning lucky cat (招財貓), seated with raised paw */
+  /* ---- slot 6 ---- 溫泉桶 — Jiaoxi hot spring wooden bucket, signature Yilan bathing */
   {
-    id: 'lucky_cat',
-    displayName: '招財貓',
+    id: 'hot_spring_bucket',
+    displayName: '溫泉桶',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.35,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf6f2ea, 0xffd000, 0xe23a2c, 0xf0ede4, 0xe8b03d],
-    yOffset: -0.195,
+    palette: [0xb89060, 0xa07850, 0xc8a070, 0x8a6840, 0xd0b080],
+    yOffset: -0.22,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const white = 0xffffff; // porcelain body, tinted
-      return finish([
-        // seated body (rounded, slightly tapered)
-        cyl(0.62, 0.78, 0.9, 8, white, { y: 0.5 }),
-        sph(0.78, white, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 0.95 }),
-        // head
-        sph(0.62, white, { ws: 8, hs: 5, y: 1.55 }),
-        // two ears
-        cone(0.22, 0.3, 5, white, { x: -0.36, y: 2.0, z: 0.0, rz: -0.25 }),
-        cone(0.22, 0.3, 5, white, { x: 0.36, y: 2.0, z: 0.0, rz: 0.25 }),
-        // raised beckoning paw (front-left, up)
-        sph(0.2, white, { ws: 6, hs: 4, x: -0.55, y: 1.5, z: 0.45 }),
-        cyl(0.1, 0.1, 0.4, 6, white, { x: -0.5, y: 1.2, z: 0.4, rz: -0.3 }),
-        // resting paw
-        sph(0.18, white, { ws: 6, hs: 4, x: 0.45, y: 0.55, z: 0.55 }),
-        // gold bib / coin collar (tint-resistant gold)
-        cyl(0.5, 0.6, 0.14, 8, 0xf0c020, { y: 1.18 }),
-        box(0.34, 0.24, 0.06, 0xe8a020, { y: 0.95, z: 0.62 }), // koban coin
-        // red collar bell
-        sph(0.1, 0xd02a1f, { ws: 6, hs: 3, y: 1.18, z: 0.6 }),
-      ]);
+      const wood = 0xffffff; // tinted wood
+      const parts = [
+        // main bucket body (wooden staves)
+        cyl(0.8, 0.7, 1.4, 8, wood, { y: 0.7, hex2: 0xc8a070 }),
+        // metal bands around the bucket
+        cyl(0.82, 0.82, 0.08, 8, 0x6a6a6a, { y: 0.25 }),
+        cyl(0.78, 0.78, 0.08, 8, 0x6a6a6a, { y: 1.1 }),
+        // wooden handle (arched)
+        cyl(0.06, 0.06, 0.5, 5, 0x8a6840, { x: 0.0, y: 1.7, rz: HALF_PI }),
+        // handle supports
+        cyl(0.05, 0.05, 0.3, 4, 0x8a6840, { x: -0.42, y: 1.55, rz: 0.3 }),
+        cyl(0.05, 0.05, 0.3, 4, 0x8a6840, { x: 0.42, y: 1.55, rz: -0.3 }),
+        // steam wisps (simple white spheres)
+        sph(0.12, 0xe8e8e8, { ws: 5, hs: 4, x: 0.0, y: 1.8, z: 0.2 }),
+        sph(0.08, 0xf0f0f0, { ws: 4, hs: 3, x: 0.15, y: 1.95, z: -0.1 }),
+      ];
+      return finish(parts);
     },
   },
 
