@@ -113,72 +113,99 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 2 ── 變電箱 transformer / pad-mount box ────────────────────────────── */
+  /* 2 ── 東海牧場牛奶攤 donghai_milk_cart (TAICHUNG SWAP: Donghai dairy cart) */
   {
-    id: 'transformer_box',
-    displayName: '變電箱',
+    id: 'donghai_milk_cart',
+    displayName: '東海牧場牛奶攤',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 0.7,
+    radiusNominal: 1.2,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x4f7d52, 0x3a5e3c, 0xd8d2a8, 0x2a2c30, 0xb0a060],
-    yOffset: -0.18,
+    palette: [0xf0f0f0, 0x2a8a52, 0x7a5a3a, 0xfff8e8, 0xd8a050],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      const green = 0x4f7d52;
+      // 東海牧場 (Tunghai University dairy farm) — the famous fresh milk stand:
+      // a green-and-white cart with milk bottles, ice cream tubs, and a dairy cow logo.
+      const white = 0xffffff;
+      const green = 0x2a8a52;
       const parts = [];
-      // concrete plinth
-      parts.push(box(1.05, 0.18, 0.85, 0x8c8a82, { x: 0, y: 0.09 }));
-      // main cabinet body (gradient to a darker top)
-      parts.push(box(0.95, 1.5, 0.75, green, { x: 0, y: 0.95, hex2: 0x3a5e3c }));
-      // louver vents (front strips)
-      for (let i = 0; i < 4; i++) {
-        parts.push(box(0.7, 0.06, 0.02, 0x2a2c30, { x: 0, y: 0.55 + i * 0.22, z: 0.385 }));
-      }
-      // hazard plate
-      parts.push(box(0.3, 0.3, 0.02, 0xd8d2a8, { x: 0.28, y: 1.05, z: 0.39 }));
-      // lid / roof lip
-      parts.push(box(1.02, 0.1, 0.82, 0x3a5e3c, { x: 0, y: 1.74 }));
-      // bushing knobs on roof
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: -0.25, y: 1.86 }));
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: 0.25, y: 1.86 }));
+      // cart body (white enamel with green trim — 東海牧場 signature colors)
+      parts.push(box(1.8, 0.9, 1.0, white, { y: 0.65 }));
+      // green accent bands (牧場招牌配色)
+      parts.push(box(1.82, 0.12, 1.02, green, { y: 1.14 })); // top band
+      parts.push(box(1.82, 0.12, 1.02, green, { y: 0.22 })); // bottom band
+      // stainless steel countertop
+      parts.push(box(1.9, 0.08, 1.1, 0xc8c8c8, { y: 1.18 }));
+      // milk bottles as boxes (simplified for tri budget)
+      parts.push(box(0.16, 0.35, 0.16, 0xf8f8f8, { x: -0.4, y: 1.42, z: 0.25 }));
+      parts.push(box(0.14, 0.08, 0.14, green, { x: -0.4, y: 1.62, z: 0.25 })); // cap
+      parts.push(box(0.16, 0.35, 0.16, 0xf8f8f8, { x: 0.0, y: 1.42, z: 0.25 }));
+      parts.push(box(0.14, 0.08, 0.14, green, { x: 0.0, y: 1.62, z: 0.25 })); // cap
+      parts.push(box(0.16, 0.35, 0.16, 0xf8f8f8, { x: 0.4, y: 1.42, z: 0.25 }));
+      parts.push(box(0.14, 0.08, 0.14, green, { x: 0.4, y: 1.62, z: 0.25 })); // cap
+      // ice cream freezer cabinet (the 鮮乳冰淇淋)
+      parts.push(box(0.7, 0.45, 0.5, 0xe8e8e8, { x: 0.4, y: 1.45, z: -0.2 }));
+      parts.push(box(0.68, 0.08, 0.48, 0x1a5a38, { x: 0.4, y: 1.72, z: -0.2 })); // freezer lid (green)
+      // signboard with cow logo (standing sign at back)
+      parts.push(box(1.4, 0.6, 0.08, green, { y: 1.8, z: -0.5 }));
+      parts.push(box(1.3, 0.5, 0.04, white, { y: 1.8, z: -0.48 })); // white panel
+      // cow spots on sign (simplified dairy logo)
+      parts.push(box(0.2, 0.2, 0.02, 0x2a2c30, { x: -0.3, y: 1.85, z: -0.46 }));
+      // two cart wheels (fewer segments)
+      parts.push(cyl(0.25, 0.25, 0.12, 5, 0x2e3138, { rx: HALF_PI, x: -0.7, y: 0.25, z: 0 }));
+      parts.push(cyl(0.25, 0.25, 0.12, 5, 0x2e3138, { rx: HALF_PI, x: 0.7, y: 0.25, z: 0 }));
       return finish(parts);
     },
   },
 
-  /* 3 ── 霓虹招牌 neon sign (cantilever shop sign) ─────────────────────── */
+  /* 3 ── 太陽餅店招牌 suncake_shop_sign (TAICHUNG SWAP: Suncake shop sign) ─ */
   {
-    id: 'neon_sign',
-    displayName: '霓虹招牌',
+    id: 'suncake_shop_sign',
+    displayName: '太陽餅店招牌',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.1,
-    radiusJitter: 0.16,
+    radiusNominal: 1.3,
+    radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x14161f, 0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a],
-    yOffset: -0.27,
+    palette: [0xf0c870, 0xb04030, 0xfff8e0, 0x8a5030, 0xffe8a0],
+    yOffset: -0.22,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.65,
     buildGeometry(rng) {
-      const glow = [0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a][Math.floor(rng() * 4)];
-      const glow2 = 0x32d6ff;
+      // 太陽餅店 (Taichung's famous suncake shops) — a traditional shopfront sign:
+      // a wooden signboard with golden sun motif and red banner trim.
+      const wood = 0x8a5030;
+      const gold = 0xf0c870;
+      const red = 0xb04030;
+      const cream = 0xfff8e0;
       const parts = [];
-      // wall mount bracket
-      parts.push(box(0.2, 1.8, 0.2, 0x2a2c34, { x: -1.05, y: 1.1 }));
-      // boom arm
-      parts.push(cyl(0.05, 0.05, 1.0, 6, 0x3a3d46, { x: -0.55, y: 1.7, rz: HALF_PI }));
-      // dark sign backing panel
-      parts.push(box(0.12, 1.5, 1.3, 0x14161f, { x: 0.1, y: 1.0 }));
-      // neon tube border (torus arc rings as glow strokes) — top & bottom bars
-      parts.push(box(0.06, 0.1, 1.16, glow, { x: 0.18, y: 1.66 }));
-      parts.push(box(0.06, 0.1, 1.16, glow2, { x: 0.18, y: 0.34 }));
-      parts.push(box(0.06, 1.36, 0.1, glow, { x: 0.18, y: 1.0, z: 0.6 }));
-      parts.push(box(0.06, 1.36, 0.1, glow2, { x: 0.18, y: 1.0, z: -0.6 }));
-      // neon glyph rings (two circular characters suggestion)
-      parts.push(torus(0.26, 0.05, 6, 10, glow, { x: 0.2, y: 1.28, ry: HALF_PI }));
-      parts.push(torus(0.26, 0.05, 6, 10, 0xfff04a, { x: 0.2, y: 0.68, ry: HALF_PI }));
+      // wall-mounted wooden signboard bracket
+      parts.push(box(0.2, 2.2, 0.2, wood, { x: -1.2, y: 1.2 }));
+      parts.push(cyl(0.06, 0.06, 1.1, 6, wood, { x: -0.65, y: 2.0, rz: HALF_PI }));
+      // main signboard (vertical wooden panel, traditional 招牌 style)
+      parts.push(box(0.14, 2.0, 1.4, wood, { x: 0.0, y: 1.2, hex2: 0x7a4526 }));
+      // cream paper backing with printed elements
+      parts.push(box(0.06, 1.8, 1.3, cream, { x: 0.08, y: 1.2 }));
+      // large golden sun disc (太陽餅 signature motif)
+      parts.push(cyl(0.45, 0.45, 0.08, 10, gold, { ry: HALF_PI, y: 1.4, x: 0.12 }));
+      // sun center disc (darker golden)
+      parts.push(cyl(0.2, 0.2, 0.1, 8, 0xd8a040, { ry: HALF_PI, y: 1.4, x: 0.14 }));
+      // red banner trim at top and bottom
+      parts.push(box(0.07, 0.2, 1.38, red, { x: 0.1, y: 2.1 }));
+      parts.push(box(0.07, 0.2, 1.38, red, { x: 0.1, y: 0.3 }));
+      // sun rays radiating from the center (simplified as small golden bars)
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * PI * 2;
+        const rx = Math.cos(a) * 0.3;
+        const ry = Math.sin(a) * 0.3;
+        parts.push(box(0.04, 0.12, 0.04, 0xf8d060, { x: 0.14, y: 1.4 + ry, z: rx }));
+      }
+      // golden frame border around the sign
+      parts.push(box(0.05, 2.05, 0.08, gold, { x: 0.12, y: 1.2, z: 0.68 }));
+      parts.push(box(0.05, 2.05, 0.08, gold, { x: 0.12, y: 1.2, z: -0.68 }));
       return finish(parts);
     },
   },

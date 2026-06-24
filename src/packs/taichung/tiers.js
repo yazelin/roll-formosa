@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 宮原冰淇淋杯, 鉛筆, 太陽餅
-      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'miyahara_icecream_cup', 'pencil', 'suncake',
+      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 宮原冰淇淋杯, 鳳梨酥, 太陽餅
+      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'miyahara_icecream_cup', 'fengli_pineapple', 'suncake',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -96,8 +96,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 電鍋, 瓦斯桶, 三角錐, 消防栓, 立式燈箱招牌, 手搖飲大杯
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lightbox_sign', 'bubble_tea_cup',
+      // 紅塑膠椅, 安全帽, 麻辣鴛鴦鍋, 瓦斯桶, 三角錐, 消防栓, 立式燈箱招牌, 手搖飲大杯
+      'red_plastic_chair', 'helmet', 'mala_hotpot', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'lightbox_sign', 'bubble_tea_cup',
       // chunk landmarks: 一中街攤車, 騎樓柱招牌
       'yizhong_snack_cart', 'arcade_pillar_signs',
     ],
@@ -120,8 +120,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 霓虹招牌, 逢甲攤車, 路樹, 大甲媽遶境旗, 台中市公車
-      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'fengjia_cart', 'street_tree', 'mazu_pilgrimage_flag', 'taichung_bus',
+      // 機車, 小貨車, 東海牧場牛奶攤, 太陽餅店招牌, 逢甲攤車, 路樹, 大甲媽遶境旗, 台中市公車
+      'scooter', 'mini_truck', 'donghai_milk_cart', 'suncake_shop_sign', 'fengjia_cart', 'street_tree', 'mazu_pilgrimage_flag', 'taichung_bus',
       // chunk landmarks: 夜市拱門, 廟前牌樓
       'night_market_arch', 'temple_pailou',
     ],
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 審計新村, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'shengjicun', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 審計新村, 巨型看板, 玻璃帷幕街屋, 建國市場
+      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'shengjicun', 'giant_billboard', 'glass_curtain_house', 'jianguo_market',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
@@ -192,8 +192,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨橋, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 台中車站, 台中歌劇院, 街區大樓
-      'glass_highrise', 'cross_bridge', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'taichung_station_bldg', 'opera_house_bldg', 'skyline_block',
+      // 玻璃帷幕高樓, 高美濕地步道, 七期商辦塔, 巨型廣告牆, 七期豪宅塔, 台中車站, 台中歌劇院, 街區大樓
+      'glass_highrise', 'gaomei_boardwalk', 'xitun_office_tower', 'giant_ad_wall', 'xitun_luxury_tower', 'taichung_station_bldg', 'opera_house_bldg', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

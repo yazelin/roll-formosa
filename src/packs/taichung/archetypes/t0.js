@@ -214,29 +214,38 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] fengli_pineapple 鳳梨酥 (TAICHUNG SWAP: pineapple cake bar)      */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'fengli_pineapple',
+    displayName: '鳳梨酥',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.045,
-    radiusJitter: 0.12,
+    radiusNominal: 0.025,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xf0c870, 0xe8b050, 0xdaa040, 0xf8d890, 0xc89030],
+    yOffset: -0.72, // cake bar lying flat (= -1 - minY of normalized geo)
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.84,
     buildGeometry(rng) {
+      // 鳳梨酥 — Taichung's signature pineapple cake (rectangular shortbread bar):
+      // golden crust shell with visible pineapple jam filling.
+      const crust = 0xffffff; // golden shortbread crust (tinted)
+      const jam = 0xe8a840; // pineapple jam filling
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // main rectangular pastry body
+        box(1.8, 0.6, 1.0, crust, { y: 0.3 }),
+        // top crust with slight crown
+        box(1.7, 0.12, 0.9, crust, { y: 0.64, hex2: 0xe8c070 }),
+        // dark pineapple jam filling visible at the ends
+        box(0.12, 0.4, 0.7, jam, { x: 0.9, y: 0.3 }),
+        box(0.12, 0.4, 0.7, jam, { x: -0.9, y: 0.3 }),
+        // crust texture lines (baked golden)
+        box(1.6, 0.04, 0.1, 0xd8a050, { y: 0.58, z: 0.25 }),
+        box(1.6, 0.04, 0.1, 0xd8a050, { y: 0.58, z: -0.25 }),
+        // branded diagonal score mark on top (鳳梨酥 signature pattern)
+        box(0.8, 0.05, 0.08, 0xc89030, { y: 0.66, rz: 0.4 }),
       ]);
     },
   },
