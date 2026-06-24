@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 竹蜻蜓, 米粉糖, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'bamboo_copter', 'rice_candy', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 玻璃珠工藝, 貢丸籤, 竹蜻蜓, 米粉糖, 尪仔標, 鉛筆, 鈕扣
+      'marble', 'glass_bead_craft', 'meatball_pick', 'bamboo_copter', 'rice_candy', 'ngiauimia_card', 'pencil', 'button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -122,8 +122,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 變電箱, 霓虹招牌, 鐵捲門, 路樹, 風城旗幟, 石獅
-      'scooter', 'mini_truck', 'transformer_box', 'neon_sign', 'roll_shutter', 'street_tree', 'wind_banner', 'stone_lion',
+      // 機車, 小貨車, 變電箱, 米粉束, 鐵捲門, 路樹, 風城旗幟, 石獅
+      'scooter', 'mini_truck', 'transformer_box', 'mifun_bundle', 'roll_shutter', 'street_tree', 'wind_banner', 'stone_lion',
       // chunk landmarks: 東門城牌樓, 古井
       'dongmen_pailou', 'ancient_well',
     ],

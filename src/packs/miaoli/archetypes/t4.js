@@ -309,41 +309,46 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 木雕騎樓 (woodcarving arcade colonnade) ----------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'woodcarving_arcade',
+    displayName: '木雕騎樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd6cbb6, 0xc6baa6, 0xded0be, 0xcdd4ce, 0xb6aa96],
+    palette: [0x8a6a3a, 0x6a4a2a, 0xa08050, 0xc8a870, 0x5a3a1a],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Sanyi woodcarving shop arcade — wooden colonnade with carved displays
+      // Simplified to stay under tri cap
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb6aa96, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcdd4ce, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // the slab beam the storefront sits under (騎樓 ceiling) — wood-toned
+        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe8dcc0 }),
+        box(3.24, 0.12, 1.24, 0x6a4a2a, { y: 2.2 }), // dark wood edge band
+        box(2.0, 0.5, 1.0, 0xf0e8d8, { z: -0.4, y: 1.4 }), // rear shop wall recess
       ];
-      // 4 square arcade columns with capital + base
+      // 4 square wooden columns (boxes instead of cylinders to save tris)
       const cx = [-1.35, -0.45, 0.45, 1.35];
       for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc6baa6, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb6aa96, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+        parts.push(box(0.28, 1.7, 0.28, 0xffffff, { x: cx[i], y: 0.95, hex2: 0xa08050 })); // wood column
+        parts.push(box(0.36, 0.14, 0.36, 0x6a4a2a, { x: cx[i], y: 1.82 })); // capital
+        parts.push(box(0.36, 0.16, 0.36, 0x5a3a1a, { x: cx[i], y: 0.16 })); // base
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // wood carving signboard
+      parts.push(box(1.8, 0.45, 0.1, 0x8a6a3a, { y: 1.7, z: 0.5 }));
+      parts.push(box(1.6, 0.32, 0.04, 0xf4e8c8, { y: 1.7, z: 0.56 })); // carved text area
+      // display sculptures outside (simplified)
+      parts.push(box(0.3, 0.4, 0.3, 0x5a3a1a, { x: -0.9, y: 0.2, z: 0.6 })); // pedestal
+      parts.push(box(0.25, 0.35, 0.2, 0x8a6a3a, { x: -0.9, y: 0.55, z: 0.6 })); // carving
+      parts.push(box(0.3, 0.4, 0.3, 0x5a3a1a, { x: 0.9, y: 0.2, z: 0.6 })); // pedestal
+      parts.push(box(0.25, 0.35, 0.15, 0xa08050, { x: 0.9, y: 0.6, z: 0.6 })); // buddha
+      // hanging lanterns (boxes instead of cyls)
+      parts.push(box(0.18, 0.2, 0.18, 0xc8a870, { x: -0.9, y: 1.78 }));
+      parts.push(box(0.18, 0.2, 0.18, 0xc8a870, { x: 0.9, y: 1.78 }));
       return finish(parts);
     },
   },

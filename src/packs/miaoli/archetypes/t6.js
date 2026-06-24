@@ -25,29 +25,50 @@ import { box, cyl, sph, towerBanded, finish, HALF_PI } from '../geomHelpers.js';
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 龍騰斷橋拱門 Longteng Bridge ruined brick arch ----------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'longteng_arch',
+    displayName: '龍騰斷橋拱門',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 180,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffd98a],
-    yOffset: -0.04,
+    palette: [0xb8443a, 0xa03a30, 0xc85848, 0x8a6a4a, 0x6a4a32],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Glass slab tower with Miaoli mountain-modern aesthetic, stepped crown.
-      return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffd98a, rng, { y: 1.7 }), // glass shaft
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
-      ]);
+      // Iconic ruined brick arches of Longteng Bridge (龍騰斷橋) — the 1935
+      // earthquake left dramatic standalone piers. Multiple brick piers with
+      // semicircular arch remnants against the mountain dusk.
+      const parts = [];
+      // Four massive brick piers (some intact, some broken)
+      const piers = [-2.2, -0.8, 0.8, 2.2];
+      const heights = [3.8, 4.2, 3.5, 3.0]; // varying heights (ruined)
+      for (let i = 0; i < 4; i++) {
+        const h = heights[i];
+        // brick pier body
+        parts.push(box(0.7, h, 0.9, 0xb8443a, { x: piers[i], y: h / 2, hex2: 0xa03a30 }));
+        // pier cap (those still intact)
+        if (i < 3) parts.push(box(0.78, 0.18, 0.98, 0x8a5a40, { x: piers[i], y: h + 0.09 }));
+        // rugged brick detail bands
+        parts.push(box(0.72, 0.12, 0.92, 0x9a4a38, { x: piers[i], y: h * 0.3 }));
+        parts.push(box(0.72, 0.12, 0.92, 0x9a4a38, { x: piers[i], y: h * 0.6 }));
+      }
+      // Surviving arch segments between some piers (half-cylinder arches)
+      parts.push(cyl(0.65, 0.65, 0.85, 8, 0xb8443a, {
+        x: -1.5, y: 3.0, rx: HALF_PI, thetaLen: Math.PI, theta0: 0,
+      }));
+      parts.push(cyl(0.55, 0.55, 0.85, 8, 0xa03a30, {
+        x: 0.0, y: 2.8, rx: HALF_PI, thetaLen: Math.PI * 0.7, theta0: 0.3,
+      })); // partial arch
+      // Ground rubble / foundation stones
+      parts.push(box(5.5, 0.3, 1.4, 0x7a6a58, { y: 0.15 }));
+      // Vegetation creeping on ruins
+      parts.push(sph(0.25, 0x3a6a3a, { ws: 5, hs: 3, x: -2.2, y: 3.9, z: 0.3 }));
+      parts.push(sph(0.2, 0x4a7a4a, { ws: 5, hs: 3, x: 0.8, y: 3.6, z: -0.3 }));
+      return finish(parts);
     },
   },
 
@@ -86,87 +107,138 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 其他高樓 other skyscraper -------------------------------- */
+  /* ---- slot 2: 木雕工廠 woodcarving factory ------------------------------ */
   {
-    id: 'other_skyscraper',
-    displayName: '其他高樓',
+    id: 'woodcarving_factory',
+    displayName: '木雕工廠',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 190,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
-    yOffset: -0.05,
+    palette: [0x8a6a4a, 0x6a4a2a, 0xa08050, 0xc8a870, 0x5a3a1a],
+    yOffset: -0.32,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Tapered three-tier office tower — Miaoli's emerging urban skyline.
-      return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
-      ]);
+      // Large Sanyi woodcarving factory/workshop complex — the heart of
+      // Miaoli's famed wood sculpture industry. Multiple connected sheds
+      // with traditional wood construction and carving displays.
+      const parts = [];
+      // Main factory hall (large wood-frame structure)
+      parts.push(box(4.2, 2.8, 3.0, 0xffffff, { y: 1.4, hex2: 0xf0e8d8 }));
+      // Gabled roof with wide eaves
+      parts.push(box(4.6, 0.15, 1.7, 0x6a4a32, { y: 2.95, z: 0.85, rx: 0.25 }));
+      parts.push(box(4.6, 0.15, 1.7, 0x6a4a32, { y: 2.95, z: -0.85, rx: -0.25 }));
+      parts.push(box(4.6, 0.18, 0.2, 0x5a3a1a, { y: 3.2 })); // ridge
+      // Side workshop wing
+      parts.push(box(2.0, 2.2, 2.4, 0xffffff, { x: 2.8, y: 1.1, hex2: 0xe8dcc8 }));
+      parts.push(box(2.2, 0.12, 2.6, 0x7a5a40, { x: 2.8, y: 2.28 })); // flat roof
+      // Dark wood structural beams
+      parts.push(box(0.18, 2.8, 0.18, 0x5a3a1a, { x: -1.9, y: 1.4, z: 1.4 }));
+      parts.push(box(0.18, 2.8, 0.18, 0x5a3a1a, { x: 1.9, y: 1.4, z: 1.4 }));
+      parts.push(box(0.18, 2.8, 0.18, 0x5a3a1a, { x: -1.9, y: 1.4, z: -1.4 }));
+      parts.push(box(0.18, 2.8, 0.18, 0x5a3a1a, { x: 1.9, y: 1.4, z: -1.4 }));
+      // Display area with large wood sculptures outside
+      parts.push(box(3.0, 0.2, 1.5, 0xa09080, { x: 0, y: 0.1, z: 2.0 })); // platform
+      // Giant wood elephant sculpture (三義 signature piece)
+      parts.push(sph(0.5, 0x8a6a3a, { ws: 6, hs: 4, x: -0.5, y: 0.7, z: 2.0 })); // body
+      parts.push(sph(0.3, 0x7a5a30, { ws: 5, hs: 3, x: -0.9, y: 0.85, z: 2.0 })); // head
+      parts.push(cyl(0.08, 0.04, 0.5, 5, 0x6a4a2a, { x: -1.15, y: 0.5, z: 2.0, rz: 0.5 })); // trunk
+      // Buddha figure
+      parts.push(cyl(0.25, 0.3, 0.6, 6, 0xa08050, { x: 0.6, y: 0.5, z: 2.0 }));
+      parts.push(sph(0.2, 0xa08050, { ws: 5, hs: 3, x: 0.6, y: 0.95, z: 2.0 }));
+      // Signage
+      parts.push(box(1.8, 0.5, 0.1, 0xc8a870, { y: 2.6, z: 1.52 }));
+      return finish(parts);
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall --------------------------------- */
+  /* ---- slot 3: 客家聚落 Hakka village cluster ---------------------------- */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'hakka_village_cluster',
+    displayName: '客家聚落',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff5a4a, 0x4ac8a0, 0xffd23d, 0xf0f2f6],
-    yOffset: -0.24,
+    palette: [0xc8b8a0, 0xe6d4b8, 0x8a7a5a, 0xb04030, 0x6a4a32],
+    yOffset: -0.45,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // LED billboard wall — Miaoli tourism ads (草莓, 桐花, 木雕, 舊山線).
-      const panel = [0xff5a4a, 0x4ac8a0, 0xffd23d, 0x60a8e0, 0xff8a5a];
-      const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard frame
-      ];
-      // 3 x 4 grid of glowing LED panels
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 }));
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // catwalk
+      // Traditional Hakka village compound (客家聚落) — multiple connected
+      // 夥房 structures typical of rural Miaoli, with central ancestral hall.
+      const parts = [];
+      // Central ancestral hall (正廳) — the largest building
+      parts.push(box(2.0, 2.0, 2.0, 0xffffff, { y: 1.0, hex2: 0xf0e8d8 }));
+      // Hip roof with sweeping eaves
+      parts.push(cyl(1.4, 1.4, 2.4, 4, 0x6a4a32, { theta0: Math.PI, rx: HALF_PI, sy: 0.5, y: 2.3 }));
+      parts.push(box(2.5, 0.15, 0.2, 0xb04030, { y: 2.6 })); // red ridge
+      // Left wing house
+      parts.push(box(1.6, 1.5, 1.6, 0xffffff, { x: -1.9, y: 0.75, hex2: 0xf0e8d8 }));
+      parts.push(box(1.8, 0.12, 1.8, 0x7a5a40, { x: -1.9, y: 1.56 }));
+      // Right wing house
+      parts.push(box(1.6, 1.5, 1.6, 0xffffff, { x: 1.9, y: 0.75, hex2: 0xf0e8d8 }));
+      parts.push(box(1.8, 0.12, 1.8, 0x7a5a40, { x: 1.9, y: 1.56 }));
+      // Rear row of houses
+      parts.push(box(1.4, 1.3, 1.4, 0xffffff, { x: -1.2, y: 0.65, z: -2.0, hex2: 0xe8dcc8 }));
+      parts.push(box(1.4, 1.3, 1.4, 0xffffff, { x: 1.2, y: 0.65, z: -2.0, hex2: 0xe8dcc8 }));
+      // Courtyard (禾埕) in front
+      parts.push(box(4.5, 0.1, 2.0, 0xb0a890, { y: 0.05, z: 1.8 }));
+      // Half-moon pond (風水池)
+      parts.push(cyl(0.6, 0.6, 0.15, 8, 0x4a7a8a, { y: 0.08, z: 2.8, thetaLen: Math.PI }));
+      // Dark wood entrance frame
+      parts.push(box(0.8, 1.3, 0.1, 0x5a3a2a, { y: 0.7, z: 1.0 }));
+      // Red door frame accent
+      parts.push(box(0.9, 0.15, 0.12, 0xb04030, { y: 1.4, z: 1.0 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 4: 商辦塔 business tower ------------------------------------ */
+  /* ---- slot 4: 舊山線隧道口 Old Mountain Line tunnel entrance ----------- */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'railway_tunnel',
+    displayName: '舊山線隧道口',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
-    yOffset: -0.19,
+    palette: [0xb8443a, 0x8a6a58, 0xa03a30, 0x4a6a4a, 0x5a4a3a],
+    yOffset: -0.40,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on stone podium — 苗栗科技園區 style.
-      return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop unit
-      ]);
+      // Iconic Old Mountain Line (舊山線) brick tunnel entrance — the
+      // heritage railway tunnels with their distinctive red brick portals.
+      const parts = [];
+      // Mountain / hillside mass
+      parts.push(sph(2.5, 0x4a6a4a, { ws: 6, hs: 4, y: 1.0, thetaLen: HALF_PI * 1.2, hex2: 0x3a5a3a }));
+      // Tunnel portal - brick arch entrance
+      // Brick portal frame
+      parts.push(box(2.4, 2.8, 0.5, 0xb8443a, { y: 1.4, z: 1.8, hex2: 0xa03a30 }));
+      // Dark tunnel opening
+      parts.push(cyl(0.8, 0.8, 0.6, 10, 0x1a1a1e, { y: 1.2, z: 1.95, rx: HALF_PI }));
+      // Arch over the opening
+      parts.push(cyl(0.95, 0.95, 0.55, 8, 0xb8443a, {
+        y: 1.5, z: 1.82, rx: HALF_PI, thetaLen: Math.PI, theta0: 0,
+      }));
+      // Decorative brick bands
+      parts.push(box(2.6, 0.15, 0.12, 0x8a5a40, { y: 2.7, z: 2.05 }));
+      parts.push(box(2.6, 0.15, 0.12, 0x8a5a40, { y: 0.3, z: 2.05 }));
+      // Keystone at arch top
+      parts.push(box(0.3, 0.35, 0.15, 0x9a8a78, { y: 2.35, z: 2.0 }));
+      // Rail tracks emerging from tunnel
+      parts.push(box(3.0, 0.08, 0.12, 0x5a5a5a, { y: 0.04, z: 2.6, x: 0.4 }));
+      parts.push(box(3.0, 0.08, 0.12, 0x5a5a5a, { y: 0.04, z: 2.6, x: -0.4 }));
+      // Cross ties
+      parts.push(box(0.15, 0.06, 1.0, 0x6a5040, { y: 0.03, z: 2.8 }));
+      parts.push(box(0.15, 0.06, 1.0, 0x6a5040, { y: 0.03, z: 3.3 }));
+      // Platform / ground
+      parts.push(box(4.0, 0.2, 2.5, 0x8a7a68, { y: 0.1, z: 3.0 }));
+      return finish(parts);
     },
   },
 
