@@ -106,61 +106,75 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ------------------------------- */
+  /* ---- slot 3: 淡水老街招牌牆 tamsui_signage_wall ---------------------- */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'tamsui_signage_wall',
+    displayName: '淡水老街招牌牆',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
+    palette: [0xc83030, 0xe8a020, 0xf8d848, 0x3a6ea0, 0xf0e8d8],
     yOffset: -0.239,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // A building face turned into a giant LED billboard wall: bright color panels.
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
+      // Tamsui old street commercial building with traditional signage
       const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building (dark)
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard backing frame
+        box(2.4, 3.2, 0.9, 0xf0e8d8, { y: 1.7, hex2: 0xe0d8c8 }), // building (cream)
+        box(2.5, 0.3, 0.95, 0x3a6ea0, { y: 0.15 }), // blue base
+        // Traditional shop signs (vertical banners)
+        box(0.4, 2.0, 0.1, 0xc83030, { x: -0.9, y: 2.0, z: 0.52 }),
+        box(0.35, 1.8, 0.06, 0xf8d848, { x: -0.9, y: 2.0, z: 0.58 }),
+        box(0.4, 2.0, 0.1, 0xe8a020, { x: 0.0, y: 2.2, z: 0.52 }),
+        box(0.35, 1.8, 0.06, 0xffffff, { x: 0.0, y: 2.2, z: 0.58 }),
+        box(0.4, 2.0, 0.1, 0xc83030, { x: 0.9, y: 1.9, z: 0.52 }),
+        box(0.35, 1.8, 0.06, 0xf8d848, { x: 0.9, y: 1.9, z: 0.58 }),
+        // Awning
+        box(2.6, 0.1, 0.6, 0x3a6ea0, { y: 1.0, z: 0.7 }),
+        // Shop windows with warm glow
+        box(0.6, 0.7, 0.06, 0xffd868, { x: -0.7, y: 0.6, z: 0.5 }),
+        box(0.6, 0.7, 0.06, 0xffd868, { x: 0.7, y: 0.6, z: 0.5 }),
+        // Roof tiles
+        box(2.5, 0.15, 1.0, 0x6a4030, { y: 3.4 }),
       ];
-      // 3 x 4 grid of glowing LED panels on the front face
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 })); // LED panel
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // ground catwalk
       return finish(parts);
     },
   },
 
-  /* ---- slot 4: 商辦塔 business tower ---------------------------------- */
+  /* ---- slot 4: 板橋車站大樓 banqiao_station_tower --------------------- */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'banqiao_station_tower',
+    displayName: '板橋車站大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
+    palette: [0x4a5a6a, 0x6a8aa0, 0xa0c8d8, 0xc8d8e4, 0xffd884],
     yOffset: -0.191,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
+      // Banqiao Station complex — modern transit tower with retail podium
       return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
+        // Wide station podium
+        box(3.0, 1.0, 2.0, 0xe8e8ee, { y: 0.5 }),
+        box(3.1, 0.12, 2.1, 0x3a6ea0, { y: 1.06 }), // blue trim
+        // Tower rising from podium
+        towerBanded(1.5, 3.2, 1.2, 10, 0x4a5a6a, 0xa0c8d8, 0xffd884, rng, { y: 2.6 }),
+        // Station entrance canopy
+        box(1.8, 0.1, 1.2, 0x6a8aa0, { y: 0.8, z: 1.2 }),
+        cyl(0.08, 0.08, 0.7, 6, 0xc8ccd2, { x: -0.6, y: 0.45, z: 1.4 }),
+        cyl(0.08, 0.08, 0.7, 6, 0xc8ccd2, { x: 0.6, y: 0.45, z: 1.4 }),
+        // Glass curtain entrance
+        box(1.4, 0.6, 0.08, 0x9fc4d8, { y: 0.4, z: 1.05 }),
+        // Crown with transit signage
+        box(1.6, 0.3, 1.3, 0x6a8aa0, { y: 4.35 }),
+        box(0.8, 0.2, 0.1, 0x3a6ea0, { y: 4.2, z: 0.66 }), // sign
+        // Antenna mast
+        cyl(0.04, 0.04, 0.8, 6, 0xc8ccd2, { y: 4.9 }),
       ]);
     },
   },
@@ -192,34 +206,37 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 新莊副都心大樓 xinzhuang_tower ------------------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'xinzhuang_tower',
+    displayName: '新莊副都心大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 68,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
+    palette: [0x4a6080, 0x6a8aa8, 0xa0c0d8, 0xc8d8e8, 0xffd884],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
+      // Xinzhuang Fuduxin office tower — modern glass tower
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        // Base podium
+        box(2.6, 1.2, 2.0, 0xe8e8ee, { y: 0.6 }),
+        box(2.7, 0.1, 2.1, 0x4a6080, { y: 1.25 }), // trim
+        // Glass tower shaft
+        towerBanded(1.6, 2.4, 1.4, 8, 0x4a6080, 0xa0c0d8, 0xffd884, rng, { y: 2.45 }),
+        // Crown setback
+        box(1.2, 0.4, 1.0, 0x6a8aa8, { y: 3.85 }),
+        // Rooftop equipment
+        box(0.5, 0.3, 0.4, 0x7a8a9a, { x: 0.3, y: 4.2 }),
+        cyl(0.15, 0.15, 0.3, 6, 0x9aa8b8, { x: -0.3, y: 4.2 }),
+        // Antenna
+        cyl(0.04, 0.04, 0.6, 6, 0xc8ccd2, { y: 4.6 }),
+        // Ground entrance
+        box(1.0, 0.6, 0.1, 0x9fc4d8, { y: 0.35, z: 1.02 }),
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
       return finish(parts);
     },
   },
