@@ -47,14 +47,14 @@ import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_BOBA } from './collectibles/boba.js';
 import { COL_CHICKEN } from './collectibles/chicken_cutlet.js';
 import { COL_GUABAO } from './collectibles/gua_bao.js';
-import { COL_XLB } from './collectibles/xiaolongbao.js';
-import { COL_PINEAPPLE } from './collectibles/pineapple_cake.js';
+import { COL_RICENOODLE } from './collectibles/longgang_ricenoodle.js';
+import { COL_YUEGUANG } from './collectibles/yueguang_bing.js';
 import { COL_SANTAIZI } from './collectibles/santaizi.js';
 import { COL_PUPPET } from './collectibles/budaixi.js';
-import { COL_YOUBIKE } from './collectibles/youbike.js';
-import { COL_PRES_TROPHY } from './collectibles/presidential_trophy.js';
-import { COL_GONDOLA } from './collectibles/maokong_gondola.js';
-import { COL_BIGCHICKEN } from './collectibles/shilin_big_chicken.js';
+import { COL_TOP } from './collectibles/daxi_top.js';
+import { COL_FISH } from './collectibles/shimen_fish.js';
+import { COL_PEACH } from './collectibles/lalashan_peach.js';
+import { COL_DOUHUA } from './collectibles/daxi_douhua.js';
 import { COL_MAZU } from './collectibles/mazu.js';
 
 // DE-TOKYO: 8 Taoyuan extended landmarks replace the leftover EXTRA slots (codes 90-93 + 95-98).
@@ -181,14 +181,14 @@ const _TAIWAN_COLLECTIBLES = [
   { code: 71, col: COL_BOBA },
   { code: 72, col: COL_CHICKEN },
   { code: 73, col: COL_GUABAO },
-  { code: 74, col: COL_XLB },
-  { code: 75, col: COL_PINEAPPLE },
+  { code: 74, col: COL_RICENOODLE },
+  { code: 75, col: COL_YUEGUANG },
   { code: 76, col: COL_SANTAIZI },
   { code: 77, col: COL_PUPPET },
-  { code: 78, col: COL_YOUBIKE },
-  { code: 79, col: COL_PRES_TROPHY },
-  { code: 80, col: COL_GONDOLA },
-  { code: 81, col: COL_BIGCHICKEN },
+  { code: 78, col: COL_TOP },
+  { code: 79, col: COL_FISH },
+  { code: 80, col: COL_PEACH },
+  { code: 81, col: COL_DOUHUA },
   { code: 94, col: COL_MAZU },
 ];
 for (const { code, col } of _TAIWAN_COLLECTIBLES) {

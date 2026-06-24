@@ -54,8 +54,8 @@ import { NM_SHIMEN_RESERVOIR } from './landmarks/shimen_reservoir.js';
  */
 const extraIds = [
   // indices 0..11 — codes 70..81: Taoyuan collectibles
-  'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'xiaolongbao', 'pineapple_cake',
-  'santaizi', 'budaixi', 'youbike', 'presidential_trophy', 'maokong_gondola', 'shilin_big_chicken',
+  'black_bear', 'boba', 'chicken_cutlet', 'gua_bao', 'longgang_ricenoodle', 'yueguang_bing',
+  'santaizi', 'budaixi', 'daxi_top', 'shimen_fish', 'lalashan_peach', 'daxi_douhua',
   // indices 12..19 — codes 82..89: Taoyuan core landmark ids
   NM_DAXI_BRIDGE.id,        // 82 大溪橋
   NM_DAXI_OLDSTREET.id,     // 83 大溪老街
