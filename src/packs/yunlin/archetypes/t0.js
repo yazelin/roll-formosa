@@ -53,28 +53,34 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] soy_sauce_cap 醬油蓋 — Xiluo soy sauce bottle cap              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'soy_sauce_cap',
+    displayName: '醬油蓋',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0xc83828, 0xd84838, 0xb82818, 0xe85848],
+    yOffset: -0.72, // cap lying flat
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Iconic red plastic cap from Xiluo soy sauce bottles
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // Main cap body (red plastic)
+        cyl(1.0, 1.0, 0.35, 10, 0xffffff, { y: 0.18 }),
+        // Ribbed grip texture around the side
+        cyl(1.05, 1.05, 0.28, 12, 0xd82818, { y: 0.18, open: true }),
+        // Top surface with spout hole
+        cyl(1.0, 1.0, 0.06, 10, 0xffffff, { y: 0.38 }),
+        // Central dispensing nozzle
+        cyl(0.25, 0.2, 0.18, 8, 0xffffff, { y: 0.5 }),
+        cyl(0.15, 0.15, 0.06, 8, 0x2a1a10, { y: 0.58 }), // dark hole
+        // Inner threading ridge
+        cyl(0.85, 0.85, 0.1, 10, 0xb82818, { y: 0.08 }),
       ]);
     },
   },

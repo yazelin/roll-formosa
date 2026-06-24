@@ -157,50 +157,47 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 濁水溪大橋 zhuoshui_bridge (Yunlin's river crossing) -- */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'zhuoshui_bridge',
+    displayName: '濁水溪大橋',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 16,
-    radiusJitter: 0.18,
+    radiusNominal: 35,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
-    yOffset: -0.57,
+    palette: [0xc8c0b0, 0x9aa098, 0xe0dcd0, 0x6a7068, 0x4a6a58],
+    yOffset: -0.52,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.65,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
+      // Zhuoshui River Bridge - major highway bridge crossing the Zhuoshui River
       const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
+        // main deck (long span)
+        box(8.0, 0.4, 2.2, 0xffffff, { y: 2.4 }), // road deck (tinted concrete)
+        // guardrails
+        box(8.0, 0.5, 0.1, 0x8a9088, { y: 2.85, z: 1.0 }),
+        box(8.0, 0.5, 0.1, 0x8a9088, { y: 2.85, z: -1.0 }),
+        // road surface markings
+        box(7.5, 0.02, 0.12, 0xf0f0e0, { y: 2.62, z: 0 }), // center line
+        // lamp posts along the bridge
+        cyl(0.08, 0.08, 1.8, 6, 0x7a8078, { x: -2.5, y: 3.5, z: 0.85 }),
+        cyl(0.08, 0.08, 1.8, 6, 0x7a8078, { x: 2.5, y: 3.5, z: 0.85 }),
+        sph(0.2, 0xf0e8c0, { ws: 5, hs: 3, x: -2.5, y: 4.5, z: 0.85 }), // lamp
+        sph(0.2, 0xf0e8c0, { ws: 5, hs: 3, x: 2.5, y: 4.5, z: 0.85 }), // lamp
       ];
-      // railing posts (sparse) + canopy supports
-      for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
+      // bridge piers (concrete columns in the river)
+      for (let i = 0; i < 3; i++) {
+        const x = -3.0 + i * 3.0;
+        // tapered pier
+        parts.push(box(0.8, 2.2, 1.6, 0xc0b8a8, { x, y: 1.1 }));
+        parts.push(box(1.0, 0.3, 1.8, 0xb0a898, { x, y: 2.25 })); // pier cap
       }
-      // twin stair / lift towers at the ends
-      for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
-          }));
-        }
-      }
+      // entrance structures at both ends
+      parts.push(box(1.2, 0.5, 2.4, 0xa8a090, { x: -4.2, y: 0.25 })); // abutment
+      parts.push(box(1.2, 0.5, 2.4, 0xa8a090, { x: 4.2, y: 0.25 })); // abutment
+      // bridge name sign
+      parts.push(box(1.0, 0.4, 0.1, 0x4a6a58, { x: -3.8, y: 2.9, z: 1.15 }));
       return finish(parts);
     },
   },
