@@ -183,48 +183,45 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 4 ── 公車候車亭 bus shelter (Taiwan Boulevard transit stop) ────────── */
+  /* 4 ── 逢甲攤車 fengjia_cart (TAICHUNG SWAP: 逢甲夜市 night-market cart) */
   {
-    id: 'bus_shelter',
-    displayName: '公車候車亭',
+    id: 'fengjia_cart',
+    displayName: '逢甲攤車',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.8,
+    radiusNominal: 1.6,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x6d7079, 0xbcd6e6, 0x2f6db0, 0xe8e8ee, 0x3a3d46, 0xfff04a],
-    yOffset: -0.32,
+    palette: [0xc4203a, 0xfff04a, 0x9a7a52, 0xe8e8ee, 0xff8c1a],
+    yOffset: -0.38,
     upright: true,
-    collisionScale: 0.66,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      const trim = rng() < 0.5 ? 0x2f6db0 : 0x39908a; // blue or teal civic trim
-      const glass = 0xbcd6e6;
-      const post = 0x6d7079;
+      const cart = rng() < 0.5 ? 0xc4203a : 0xff8c1a; // red or orange cart trim
+      const wood = 0x9a7a52;
       const parts = [];
-      // kerb plinth the shelter stands on
-      parts.push(box(2.6, 0.16, 1.0, 0x8c8a82, { x: 0, y: 0.08 }));
-      // four corner posts
-      const legs = [[-1.15, 0.4], [1.15, 0.4], [-1.15, -0.4], [1.15, -0.4]];
-      for (const [lx, lz] of legs) {
-        parts.push(cyl(0.07, 0.07, 1.9, 6, post, { x: lx, y: 1.1, z: lz }));
-      }
-      // rear glass wall + side glass panels (tinted, see-through look)
-      parts.push(box(2.5, 1.5, 0.06, glass, { x: 0, y: 1.05, z: -0.46 }));
-      parts.push(box(0.06, 1.5, 0.86, glass, { x: -1.18, y: 1.05 }));
-      parts.push(box(0.06, 1.5, 0.86, glass, { x: 1.18, y: 1.05 }));
-      // glass mullion frames
-      parts.push(box(2.5, 0.08, 0.08, 0x3a3d46, { x: 0, y: 1.78, z: -0.46 }));
-      parts.push(box(2.5, 0.08, 0.08, 0x3a3d46, { x: 0, y: 0.34, z: -0.46 }));
-      // waiting bench
-      parts.push(box(2.0, 0.1, 0.34, 0x3a3d46, { x: 0, y: 0.62, z: -0.28 }));
-      parts.push(box(2.0, 0.34, 0.06, 0x3a3d46, { x: 0, y: 0.86, z: -0.42 }));
-      // flat cantilever roof slab + colored fascia band
-      parts.push(box(2.8, 0.12, 1.2, 0xe8e8ee, { x: 0, y: 2.06 }));
-      parts.push(box(2.84, 0.16, 0.1, trim, { x: 0, y: 2.0, z: 0.6 }));
-      // route-info totem pole at one end (illuminated panel)
-      parts.push(cyl(0.06, 0.06, 2.4, 6, post, { x: 1.45, y: 1.2 }));
-      parts.push(box(0.1, 0.7, 0.42, trim, { x: 1.45, y: 2.2 }));
-      parts.push(box(0.04, 0.5, 0.3, 0xfff04a, { x: 1.51, y: 2.2 })); // glowing schedule
+      // cart body (wooden cabinet on wheels) — 逢甲夜市經典攤車
+      parts.push(box(2.2, 0.9, 1.1, wood, { y: 0.65, hex2: 0x8a6a42 }));
+      // stainless steel countertop
+      parts.push(box(2.3, 0.1, 1.2, 0xc8c4be, { y: 1.15 }));
+      // glass sneeze guard (simplified to single back panel)
+      parts.push(box(2.1, 0.5, 0.06, 0xbcd6e6, { y: 1.45, z: -0.48 }));
+      // front signboard (逢甲夜市攤販招牌)
+      parts.push(box(2.0, 0.5, 0.08, cart, { y: 0.7, z: 0.58 }));
+      parts.push(box(1.6, 0.16, 0.04, 0xfff04a, { y: 0.75, z: 0.64 })); // menu strip
+      // two cart wheels (reduced segments)
+      parts.push(cyl(0.3, 0.3, 0.14, 6, 0x2e3138, { rx: HALF_PI, x: -0.85, y: 0.3, z: 0 }));
+      parts.push(cyl(0.3, 0.3, 0.14, 6, 0x2e3138, { rx: HALF_PI, x: 0.85, y: 0.3, z: 0 }));
+      // parasol canopy (simplified)
+      parts.push(cyl(0.06, 0.06, 1.4, 5, wood, { y: 2.05 })); // center pole
+      parts.push(cone(1.5, 0.6, 6, cart, { y: 2.85, hex2: 0xfff04a })); // parasol
+      // string light bulbs (reduced count: 3 boxes instead of 6 spheres)
+      parts.push(box(0.14, 0.14, 0.14, 0xfff04a, { x: 1.2, z: 0, y: 2.55 }));
+      parts.push(box(0.14, 0.14, 0.14, 0xfff04a, { x: -0.6, z: 1.0, y: 2.55 }));
+      parts.push(box(0.14, 0.14, 0.14, 0xfff04a, { x: -0.6, z: -1.0, y: 2.55 }));
+      // food items on display (simplified: boxes instead of spheres)
+      parts.push(box(0.26, 0.18, 0.26, 0xe8c870, { x: -0.4, y: 1.29 })); // potato
+      parts.push(box(0.2, 0.14, 0.2, 0xd8a050, { x: 0.35, y: 1.27 })); // takoyaki
       return finish(parts);
     },
   },
@@ -266,48 +263,42 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 6 ── 天橋 pedestrian footbridge (Taiwan Boulevard overpass) ────────── */
+  /* 6 ── 大甲媽遶境旗 mazu_pilgrimage_flag (TAICHUNG SWAP: Dajia Mazu flag) */
   {
-    id: 'footbridge',
-    displayName: '天橋',
+    id: 'mazu_pilgrimage_flag',
+    displayName: '大甲媽遶境旗',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 2.3,
-    radiusJitter: 0.13,
+    radiusNominal: 2.0,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x9aa0ac, 0x6d7079, 0xc9ccd2, 0x55585f, 0x2f6db0],
-    yOffset: -0.46,
+    palette: [0xc4203a, 0xfff04a, 0xb01f2e, 0xe8b53a, 0x1f5c3a],
+    yOffset: -0.28,
     upright: true,
-    collisionScale: 0.62,
+    collisionScale: 0.55,
     buildGeometry(rng) {
-      const deck = 0x9aa0ac;
-      const rail = rng() < 0.5 ? 0x2f6db0 : 0xc4203a; // blue or red painted railing
-      const pier = 0x6d7079;
+      const flagRed = 0xc4203a;
+      const gold = 0xfff04a;
       const parts = [];
-      // two support piers
-      parts.push(box(0.34, 1.8, 0.55, pier, { x: -1.6, y: 0.9, hex2: 0x55585f }));
-      parts.push(box(0.34, 1.8, 0.55, pier, { x: 1.6, y: 0.9, hex2: 0x55585f }));
-      // pier footings
-      parts.push(box(0.6, 0.18, 0.8, 0x55585f, { x: -1.6, y: 0.09 }));
-      parts.push(box(0.6, 0.18, 0.8, 0x55585f, { x: 1.6, y: 0.09 }));
-      // span deck + underside girder
-      parts.push(box(4.4, 0.18, 0.85, deck, { x: 0, y: 1.92 }));
-      parts.push(box(4.0, 0.16, 0.5, 0x55585f, { x: 0, y: 1.76 }));
-      // side railings (top rail + mid rail + uprights), both sides
-      const railSide = (rz) => {
-        parts.push(box(4.2, 0.07, 0.07, rail, { x: 0, y: 2.34, z: rz }));
-        parts.push(box(4.2, 0.05, 0.05, rail, { x: 0, y: 2.12, z: rz }));
-        for (let i = 0; i < 7; i++) {
-          const ux = -1.8 + i * 0.6;
-          parts.push(box(0.05, 0.42, 0.05, 0xc9ccd2, { x: ux, y: 2.22, z: rz }));
-        }
-      };
-      railSide(0.4);
-      railSide(-0.4);
-      // stair flight descending at one end (stepped boxes)
-      for (let i = 0; i < 4; i++) {
-        parts.push(box(0.5, 0.12, 0.85, deck, { x: 2.35 + i * 0.42, y: 1.7 - i * 0.42 }));
-      }
+      // tall bamboo flagpole (大甲媽祖遶境進香旗)
+      parts.push(cyl(0.1, 0.14, 4.0, 8, 0x8a7a52, { y: 2.0, hex2: 0x6a5a3a }));
+      // pole finial — golden spearhead
+      parts.push(cone(0.16, 0.4, 6, gold, { y: 4.2 }));
+      // large rectangular banner flag (垂直神明旗)
+      parts.push(box(0.08, 2.8, 1.4, flagRed, { y: 2.2, z: 0.7, hex2: 0xb01f2e }));
+      // golden fringe trim at edges
+      parts.push(box(0.04, 2.8, 0.06, gold, { y: 2.2, z: 1.38 }));
+      parts.push(box(0.04, 2.8, 0.06, gold, { y: 2.2, z: 0.02 }));
+      parts.push(box(0.04, 0.06, 1.36, gold, { y: 0.82, z: 0.7 })); // bottom fringe
+      parts.push(box(0.04, 0.06, 1.36, gold, { y: 3.58, z: 0.7 })); // top fringe
+      // 媽祖 character plate / emblem circle
+      parts.push(cyl(0.5, 0.5, 0.08, 10, gold, { ry: HALF_PI, y: 2.6, z: 0.8 }));
+      parts.push(cyl(0.35, 0.35, 0.1, 8, 0xb01f2e, { ry: HALF_PI, y: 2.6, z: 0.82 }));
+      // dragon motif patterns (simplified geometric shapes)
+      parts.push(box(0.04, 0.6, 0.3, gold, { y: 1.6, z: 0.7 }));
+      parts.push(box(0.04, 0.6, 0.3, gold, { y: 3.0, z: 0.7 }));
+      // weighted stone base (插旗石座)
+      parts.push(box(0.7, 0.4, 0.7, 0x8a8278, { y: 0.2 }));
       return finish(parts);
     },
   },

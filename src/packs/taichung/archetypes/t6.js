@@ -20,7 +20,7 @@
  * Size band: 60-300 m radiusNominal (七期 skyscraper scale).
  */
 
-import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, sph, towerBanded, finish, PI, HALF_PI } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
@@ -186,61 +186,92 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 台中車站 taichung_station_bldg (TAICHUNG SWAP: Taichung Station)*/
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'taichung_station_bldg',
+    displayName: '台中車站',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 85,
-    radiusJitter: 0.18,
+    radiusNominal: 95,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
-    yOffset: -0.427,
+    palette: [0xe8dcc8, 0xc4b8a0, 0x9a8e72, 0x8a3a2a, 0x2a55a8],
+    yOffset: -0.42,
     upright: true,
-    collisionScale: 0.65,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
-      return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
-      ]);
+      // 台中車站舊站 — the historic red-brick Baroque Revival station (1917)
+      // with its iconic gable front and clock tower (now a heritage landmark).
+      const brick = 0xb05a3a; // warm red brick
+      const cream = 0xe8dcc8; // plaster band
+      const parts = [
+        // main station hall — wide brick block
+        box(3.6, 1.8, 2.0, brick, { y: 0.9, hex2: 0xc06a46 }),
+        // cream plaster banding at eave level
+        box(3.7, 0.2, 2.06, cream, { y: 1.88 }),
+        // central gable pediment (the iconic triangular front)
+        box(1.6, 0.1, 0.9, brick, { y: 2.4, z: 1.0, rx: 0.35 }), // gable slope R
+        box(1.6, 0.1, 0.9, brick, { y: 2.4, z: 1.0, rx: -0.35 }), // gable slope L
+        box(1.5, 0.8, 0.12, cream, { y: 2.4, z: 1.02 }), // pediment face
+        box(1.3, 0.16, 0.06, 0x2a55a8, { y: 2.45, z: 1.06 }), // name plaque
+        // arched entrance colonnade (3 arched bays)
+        box(2.4, 1.3, 0.4, brick, { y: 0.85, z: 1.15 }),
+      ];
+      // three entrance arches
+      for (let i = 0; i < 3; i++) {
+        const ax = -0.7 + i * 0.7;
+        parts.push(box(0.5, 0.9, 0.14, 0x2a1c14, { x: ax, y: 0.65, z: 1.35 })); // arch openings
+        parts.push(cyl(0.25, 0.25, 0.14, 6, 0x2a1c14, { x: ax, y: 1.1, z: 1.35 })); // arch top
+      }
+      // twin flanking wings
+      parts.push(box(1.1, 1.5, 1.4, brick, { x: -2.15, y: 0.75, hex2: 0xa85040 }));
+      parts.push(box(1.1, 1.5, 1.4, brick, { x: 2.15, y: 0.75, hex2: 0xa85040 }));
+      // central clock tower (台中車站的鐘樓)
+      parts.push(box(0.7, 0.8, 0.7, brick, { y: 2.8, z: 0.8 }));
+      parts.push(cyl(0.26, 0.26, 0.1, 10, cream, { y: 3.1, z: 0.8 })); // clock face
+      parts.push(cyl(0.2, 0.2, 0.08, 8, 0x2a2c30, { y: 3.12, z: 0.82 })); // clock dial
+      // pyramid roof cap on tower
+      parts.push(box(0.9, 0.1, 0.9, 0x8a3a2a, { y: 3.26, z: 0.8 })); // tower eave
+      parts.push(cyl(0.5, 0.0, 0.6, 4, 0x8a3a2a, { y: 3.6, z: 0.8, ry: 0.785 })); // pyramid cap
+      return finish(parts);
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 台中歌劇院 opera_house_bldg (TAICHUNG SWAP: NTT Opera House) */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'opera_house_bldg',
+    displayName: '台中歌劇院',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 68,
-    radiusJitter: 0.18,
+    radiusNominal: 80,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
-    yOffset: -0.38,
+    palette: [0xf0ebe2, 0xe8e0d0, 0xc4b8a0, 0x2a4868, 0x88c8e0],
+    yOffset: -0.42,
     upright: true,
-    collisionScale: 0.85,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
+      // 臺中國家歌劇院 (NTT) — Toyo Ito's organic "Sound Cave" building:
+      // a flowing white sculpted shell with curved cave-like apertures.
+      const shell = 0xf0ebe2; // white curved shell
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        // main organic mass — simplified as stacked curving boxes
+        box(3.2, 2.0, 2.4, shell, { y: 1.1, hex2: 0xe8e0d0 }),
+        box(2.8, 1.6, 2.0, shell, { y: 2.7 }),
+        box(2.4, 1.0, 1.6, shell, { y: 3.8 }),
+        // the curved cave openings / 洞窟入口 (simplified as dark recesses)
+        cyl(0.5, 0.5, 0.3, 8, 0x2a4868, { y: 0.8, z: 1.22, rx: HALF_PI }), // ground entrance
+        cyl(0.4, 0.4, 0.28, 8, 0x2a4868, { x: 1.1, y: 1.5, rx: HALF_PI, rz: 0.2 }),
+        cyl(0.35, 0.35, 0.26, 8, 0x2a4868, { x: -1.0, y: 2.0, rx: HALF_PI, rz: -0.15 }),
+        // rooftop garden terrace (the famous public roof garden)
+        box(2.0, 0.16, 1.4, 0x88c8e0, { y: 4.3 }), // sky pool / terrace
+        // soft curved roof edge (the flowing organic silhouette)
+        cyl(1.3, 1.3, 2.5, 6, shell, { y: 3.6, rx: HALF_PI, theta0: 0, thetaLen: PI }),
+        // reflecting pool in front
+        box(3.0, 0.08, 1.0, 0x88c8e0, { y: 0.06, z: 1.8, hex2: 0xaae0f0 }),
+        // ground plaza
+        box(3.8, 0.1, 3.2, 0xc4b8a0, { y: 0.05 }),
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
       return finish(parts);
     },
   },

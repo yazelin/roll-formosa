@@ -181,33 +181,35 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] miyahara_icecream_cup 宮原冰淇淋杯 — TAICHUNG SWAP: Miyahara ice */
+  /*     cream cup (宮原眼科 signature dessert, waffle cone + scoops)     */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'miyahara_icecream_cup',
+    displayName: '宮原冰淇淋杯',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.02,
+    radiusNominal: 0.025,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.85,
+    palette: [0xdaaa70, 0xf5d0a0, 0xc87850, 0xf8e0b8, 0x8a5030],
+    yOffset: -0.12, // cone standing upright (= -1 - minY of normalized geo)
+    upright: true,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
-      ]);
+      const parts = [
+        // waffle cone body (inverted cone shape, textured golden brown)
+        cone(0.75, 1.4, 8, 0xdaaa70, { rx: PI, y: 0.7, hex2: 0xc89050 }),
+        // cone rim ring
+        cyl(0.75, 0.78, 0.1, 10, 0xc89050, { y: 1.4 }),
+        // three scoops of ice cream stacked (宮原 signature triple-stack)
+        sph(0.5, 0xf5d0a0, { ws: 8, hs: 5, y: 1.7 }), // vanilla scoop
+        sph(0.44, 0xc87850, { ws: 8, hs: 5, x: 0.28, y: 2.1 }), // chocolate scoop
+        sph(0.42, 0x8abe70, { ws: 8, hs: 5, x: -0.24, y: 2.25 }), // matcha scoop
+        // wafer stick poked in at an angle (宮原的招牌插著威化餅)
+        cyl(0.06, 0.06, 0.7, 5, 0xe8c880, { x: 0.3, y: 2.5, rz: -0.3, rx: 0.2 }),
+      ];
+      return finish(parts);
     },
   },
 
@@ -240,34 +242,33 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] suncake 太陽餅 — TAICHUNG SWAP: the round puff-pastry sun cake  */
+  /*     (台中名產太陽餅, golden crust with layered pastry flakes)         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'suncake',
+    displayName: '太陽餅',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.011,
-    radiusJitter: 0.16,
+    radiusNominal: 0.03,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xf0c870, 0xe8b050, 0xdaa040, 0xf8d890, 0xc89030],
+    yOffset: -0.78, // flat pastry disc lying flat (= -1 - minY of normalized geo)
     upright: false,
-    collisionScale: 0.85,
+    collisionScale: 0.88,
     buildGeometry(rng) {
+      const crust = 0xffffff; // golden baked crust (tinted)
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        // main round pastry body (slightly domed top, flat bottom)
+        cyl(1.0, 1.0, 0.28, 14, crust, { y: 0.14 }),
+        sph(1.0, crust, { ws: 10, hs: 4, sy: 0.2, y: 0.28, thetaLen: HALF_PI }),
+        // darker baked center dot (the signature sun-branded mark)
+        cyl(0.3, 0.3, 0.04, 10, 0xc07828, { y: 0.38 }),
+        // concentric pastry layer ring hint (the laminated flaky layers showing)
+        cyl(0.78, 0.78, 0.06, 12, 0xe8b860, { y: 0.34, open: true }),
+        cyl(0.55, 0.55, 0.05, 10, 0xe0a848, { y: 0.36, open: true }),
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
       return finish(parts);
     },
   },
