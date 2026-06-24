@@ -178,38 +178,43 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5 ---- 消防栓 — squat red fire hydrant with side outlets + bonnet cap */
+  /* ---- slot 5 ---- 雞肉飯攤 — Chiayi turkey rice stall with steaming pot */
   {
-    id: 'fire_hydrant',
-    displayName: '消防栓',
+    id: 'turkey_rice_stall',
+    displayName: '雞肉飯攤',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.35,
+    radiusNominal: 0.45,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xd02a1f, 0xe23a2c, 0xb8241c, 0xffd000, 0xc4281f],
-    yOffset: -0.188,
+    palette: [0xd8b070, 0xc8a058, 0xe8c888, 0xb89048, 0xf0d898],
+    yOffset: -0.28,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const red = 0xffffff; // tinted red body
+      const wood = 0xffffff; // tinted wood
+      const steel = 0xc8c8c8;
       return finish([
-        // base foot
-        cyl(0.66, 0.72, 0.2, 8, 0x9a2018, { y: 0.1 }),
-        // barrel
-        cyl(0.52, 0.58, 1.1, 8, red, { y: 0.75 }),
-        // shoulder taper
-        cyl(0.42, 0.52, 0.24, 8, red, { y: 1.42 }),
-        // bonnet dome
-        sph(0.46, red, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 1.5 }),
-        // top cap nut (yellow, tint-resistant)
-        cyl(0.16, 0.2, 0.2, 6, 0xf0c020, { y: 1.92 }),
-        // front nozzle outlet
-        cyl(0.18, 0.2, 0.22, 6, red, { rx: HALF_PI, y: 1.0, z: 0.58 }),
-        cyl(0.22, 0.22, 0.06, 6, 0xf0c020, { rx: HALF_PI, y: 1.0, z: 0.7 }),
-        // two side outlets
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: -0.6, y: 0.85 }),
-        cyl(0.15, 0.17, 0.2, 6, red, { rz: HALF_PI, x: 0.6, y: 0.85 }),
+        // counter/table base (wood)
+        box(1.4, 0.7, 0.9, wood, { y: 0.35 }),
+        // stainless steel top
+        box(1.5, 0.08, 1.0, steel, { y: 0.74 }),
+        // large rice pot (cylindrical, with lid)
+        cyl(0.4, 0.38, 0.5, 8, steel, { x: -0.35, y: 1.0 }),
+        sph(0.36, steel, { ws: 8, hs: 4, thetaLen: HALF_PI, x: -0.35, y: 1.25 }), // lid dome
+        cyl(0.08, 0.08, 0.08, 6, 0x2a2a2a, { x: -0.35, y: 1.45 }), // lid knob
+        // turkey container (rectangular steel pan)
+        box(0.5, 0.25, 0.4, steel, { x: 0.3, y: 0.87 }),
+        // turkey meat inside (tan color)
+        box(0.45, 0.1, 0.35, 0xd8a060, { x: 0.3, y: 0.95 }),
+        // condiment bottles on side
+        cyl(0.06, 0.05, 0.2, 6, 0xc83020, { x: 0.6, y: 0.88, z: 0.3 }), // soy sauce
+        cyl(0.06, 0.05, 0.18, 6, 0xe8d090, { x: 0.6, y: 0.87, z: 0.15 }), // oil
+        // signboard above
+        box(0.8, 0.25, 0.05, 0xc04030, { y: 1.5, z: -0.4 }),
+        box(0.7, 0.18, 0.02, 0xf8f0e0, { y: 1.5, z: -0.38 }), // text area
+        // steam rising (simple white cylinder)
+        cyl(0.08, 0.04, 0.3, 6, 0xe8e8e8, { x: -0.35, y: 1.65, open: true }),
       ]);
     },
   },

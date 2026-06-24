@@ -229,35 +229,34 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] incense_coil 線香環 — Beigang spiral incense coil (北港香)       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'incense_coil',
+    displayName: '線香環',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.011,
+    radiusNominal: 0.015,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xc83a20, 0xd84a28, 0xb83018, 0xe85a38, 0xa82810],
+    yOffset: -0.90, // coil lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
-      ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      // Spiral incense coil - iconic Beigang temple product (low-seg for tri budget)
+      return finish([
+        // Outer coil ring (reduced segments)
+        torus(0.9, 0.08, 4, 8, 0xffffff, { y: 0.1 }),
+        // Middle coil ring
+        torus(0.65, 0.07, 4, 7, 0xffffff, { y: 0.1 }),
+        // Inner coil ring
+        torus(0.4, 0.06, 4, 6, 0xffffff, { y: 0.1 }),
+        // Center nub
+        cyl(0.15, 0.12, 0.12, 5, 0xffffff, { y: 0.1 }),
+        // Hanging string loop at center
+        torus(0.08, 0.02, 3, 5, 0xc8a060, { y: 0.2, rx: HALF_PI }),
+      ]);
     },
   },
 

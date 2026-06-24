@@ -1,5 +1,5 @@
 /**
- * @file packs/taipei/archetypes/t2.js — Roll Formosa Taipei pack, TIER 2 「騎樓邊」.
+ * @file packs/tainan/archetypes/t2.js — Roll Formosa Tainan pack, TIER 2 「正興街騎樓」.
  *
  * The 10 arcade-sidewalk (騎樓) rollable archetypes, authored in the FROZEN id
  * order of tiers.js T2.archetypeIds (slots [0..7] absorbable, slots [8..9] are

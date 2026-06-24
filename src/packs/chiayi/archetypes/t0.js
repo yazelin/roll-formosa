@@ -53,28 +53,34 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] hinoki_sachet 檜木香包 — aromatic hinoki wood sachet pouch     */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'hinoki_sachet',
+    displayName: '檜木香包',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0xd8b070, 0xc8a058, 0xe8c888, 0xb89048],
+    yOffset: -0.68, // pouch resting on table
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Small fabric pouch with hinoki wood chips inside, tied with string
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // main sachet body (rounded cloth pouch)
+        sph(0.9, 0xffffff, { ws: 8, hs: 6, sy: 0.7, y: 0.35 }), // cloth body (tinted)
+        // gathered top with tie
+        cyl(0.35, 0.2, 0.3, 6, 0xffffff, { y: 0.75 }), // gathered neck
+        // string tie wrapping
+        torus(0.25, 0.04, 4, 6, 0x8a6040, { y: 0.78 }), // brown string loop
+        // decorative wood chip peeking out top
+        box(0.15, 0.25, 0.08, 0xd8b070, { x: 0.05, y: 0.9, rz: 0.2 }), // hinoki chip
+        box(0.12, 0.2, 0.06, 0xc8a058, { x: -0.08, y: 0.88, rz: -0.15 }), // hinoki chip
+        // "檜木" print badge on pouch
+        box(0.35, 0.2, 0.05, 0xc04030, { y: 0.35, z: 0.55 }), // red print label
       ]);
     },
   },
