@@ -92,59 +92,90 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 其他摩天樓 other skyscraper --------------------------- */
+  /* ---- slot 2: 竹科研發大樓 HSIP R&D building ------------------------- */
   {
-    id: 'other_skyscraper',
-    displayName: '其他摩天樓',
+    id: 'hsip_rd_building',
+    displayName: '竹科研發大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 190,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x46566c, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
+    palette: [0x3a5a78, 0x5a7a98, 0x8ab0c8, 0xc8d8e0, 0x3a8ac0, 0xffd884],
     yOffset: -0.046,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic 風城 peer.
-      return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block (setback)
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
-      ]);
+      // Hsinchu Science Park R&D building: distinctive tech campus architecture
+      // with horizontal blue accent bands and clean-room style
+      const parts = [
+        // wide tech campus podium
+        box(2.6, 0.6, 1.6, 0xc8d0d8, { y: 0.3 }),
+        box(2.7, 0.15, 1.7, 0x3a8ac0, { y: 0.65 }), // blue tech band (竹科藍)
+        // main tower with horizontal sunshade fins
+        towerBanded(1.8, 2.4, 1.2, 8, 0x3a5a78, 0x8ab0c8, 0xffd884, rng, { y: 2.0 }),
+        // horizontal sunshade louvers (竹科建築特色)
+        box(1.9, 0.06, 1.24, 0x7a9ab0, { y: 1.4 }),
+        box(1.9, 0.06, 1.24, 0x7a9ab0, { y: 2.0 }),
+        box(1.9, 0.06, 1.24, 0x7a9ab0, { y: 2.6 }),
+        box(1.9, 0.06, 1.24, 0x7a9ab0, { y: 3.2 }),
+        // second setback tower
+        towerBanded(1.2, 1.4, 0.9, 5, 0x4a6a88, 0x9ac0d0, 0xffe0a0, rng, { y: 4.0 }),
+        // roof with blue accent
+        box(1.3, 0.15, 1.0, 0x3a8ac0, { y: 4.75 }), // blue roof band
+        box(0.8, 0.3, 0.6, 0x8a9aa8, { x: 0.2, y: 5.0 }), // rooftop mech unit
+        // company sign pylon
+        box(0.3, 0.5, 0.1, 0x3a8ac0, { x: -0.8, y: 3.5, z: 0.62 }),
+      ];
+      // vertical mullion accents
+      parts.push(box(0.06, 2.6, 0.06, 0x5a7a98, { x: -0.88, y: 2.1, z: 0.62 }));
+      parts.push(box(0.06, 2.6, 0.06, 0x5a7a98, { x: 0.88, y: 2.1, z: 0.62 }));
+      return finish(parts);
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant LED ad wall --------------------------- */
+  /* ---- slot 3: 竹科公司門牌 tech campus entrance sign ------------------ */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'tech_campus_sign',
+    displayName: '竹科公司門牌',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
+    palette: [0xd0d4dc, 0xe8ecf0, 0x3a8ac0, 0x2a6a90, 0xffffff],
     yOffset: -0.239,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // A building face turned into a giant LED billboard wall: bright color panels.
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
+      // Hsinchu Science Park company entrance sign (竹科公司門牌)
+      // Clean modern corporate entrance with blue accent branding
       const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building (dark)
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard backing frame
+        // low-rise entrance gatehouse
+        box(2.8, 1.8, 1.2, 0xe8ecf0, { y: 0.9, hex2: 0xd0d4dc }), // clean white building
+        // blue horizontal accent band (竹科藍企業識別)
+        box(2.9, 0.25, 1.25, 0x3a8ac0, { y: 1.85 }),
+        // glass entrance wall
+        box(2.6, 1.4, 0.06, 0x8ab8d0, { y: 0.75, z: 0.62 }),
+        box(2.6, 0.08, 0.07, 0x6a98b0, { y: 1.48, z: 0.64 }), // mullion
+        // automatic door
+        box(0.9, 1.2, 0.05, 0x7ab0c8, { x: 0, y: 0.65, z: 0.64 }),
+        // company name sign pylon (tall vertical sign)
+        box(0.4, 2.8, 0.3, 0xd0d4dc, { x: -1.8, y: 1.4 }),
+        box(0.35, 2.4, 0.08, 0x3a8ac0, { x: -1.8, y: 1.5, z: 0.16 }), // blue logo panel
+        box(0.28, 1.8, 0.05, 0xffffff, { x: -1.8, y: 1.5, z: 0.2 }), // white company name area
+        // horizontal company sign bar
+        box(1.8, 0.45, 0.1, 0x3a8ac0, { x: 0.5, y: 2.25, z: 0.65 }), // blue sign
+        box(1.6, 0.32, 0.06, 0xffffff, { x: 0.5, y: 2.25, z: 0.7 }), // white text area
+        // security booth
+        box(0.8, 1.4, 0.8, 0xd8dce2, { x: 1.6, y: 0.7 }),
+        box(0.7, 0.5, 0.06, 0x8ab8d0, { x: 1.6, y: 0.85, z: 0.42 }), // booth window
+        // parking lot barrier arm
+        cyl(0.06, 0.06, 0.8, 6, 0xc83020, { x: 1.0, y: 0.6, z: 1.0, rz: 0.3 }),
+        // landscaping planters
+        box(0.6, 0.3, 0.6, 0x6a8050, { x: -0.8, y: 0.15, z: 0.8 }),
+        box(0.6, 0.3, 0.6, 0x6a8050, { x: 0.8, y: 0.15, z: 0.8 }),
       ];
-      // 3 x 4 grid of glowing LED panels on the front face
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 })); // LED panel
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // ground catwalk
       return finish(parts);
     },
   },

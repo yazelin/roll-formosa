@@ -22,39 +22,45 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 北門老街屋 (Beimen traditional shophouse) ----------------- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'beimen_shophouse',
+    displayName: '北門老街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xd8c8b0, 0xc8b8a0, 0xe8d8c0, 0xb8a890, 0xa89878],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hsinchu Beimen old street traditional shophouse (北門老街屋)
+      // More ornate facade with decorative cornices, older style
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // tall narrow banded body with traditional plaster finish
+        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x4a5a6a, 0xffd88a, rng, { y: 1.4 }),
+        box(1.1, 0.12, 1.6, 0x9a8a7a, { y: 2.76 }), // flat roof slab
+        box(1.12, 0.22, 1.62, 0xc8b8a0, { y: 0.22 }), // ground-floor plinth
+        // decorative parapet top (北門老街特色)
+        box(1.15, 0.28, 0.1, 0xe8d8c0, { y: 2.9, z: 0.76 }), // front parapet
+        box(0.18, 0.35, 0.1, 0xd8c8b0, { x: -0.5, y: 2.93, z: 0.76 }), // decorative pilaster L
+        box(0.18, 0.35, 0.1, 0xd8c8b0, { x: 0.5, y: 2.93, z: 0.76 }), // decorative pilaster R
+        box(0.9, 0.08, 0.08, 0xc8a878, { y: 3.1, z: 0.78 }), // cornice trim
+        // traditional wooden signboard
+        box(0.8, 0.28, 0.06, 0x6a4a2a, { y: 0.92, z: 0.8 }), // wooden sign
+        box(0.7, 0.2, 0.04, 0xf0d890, { y: 0.92, z: 0.84 }), // gold text background
+        // street-level wooden door (old style)
+        box(0.7, 0.65, 0.06, 0x5a3a1a, { y: 0.5, z: 0.78 }), // wooden door
+        box(0.32, 0.55, 0.05, 0x4a2a1a, { x: -0.17, y: 0.5, z: 0.82 }), // door panel L
+        box(0.32, 0.55, 0.05, 0x4a2a1a, { x: 0.17, y: 0.5, z: 0.82 }), // door panel R
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
+      // traditional window grilles (old-style iron work)
+      for (let i = 0; i < 2; i++) {
+        const y = 1.4 + i * 0.7;
+        parts.push(box(0.4, 0.35, 0.08, 0x5a6a7a, { x: -0.3, y, z: 0.78 })); // window frame L
+        parts.push(box(0.4, 0.35, 0.08, 0x5a6a7a, { x: 0.3, y, z: 0.78 })); // window frame R
       }
       return finish(parts);
     },
@@ -131,43 +137,49 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 超商 (小七/全家 convenience store) --------------------- */
+  /* ---- slot 3: 米粉店 (Hsinchu rice noodle shop) ------------------------ */
   {
-    id: 'convenience_store',
-    displayName: '超商',
+    id: 'mifun_shop',
+    displayName: '米粉店',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 5.0,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xe8edf2, 0xf6f0e6, 0xdfeae2, 0xd8dee6],
+    palette: [0xf8f0e0, 0xe8dcc8, 0xfff8f0, 0xd8c8b0, 0xc8a878],
     yOffset: -0.6,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
+      // Traditional Hsinchu rice noodle shop (米粉店)
+      // A local eatery specializing in Hsinchu's famous rice noodles
       const parts = [
-        box(2.6, 0.95, 1.5, 0xffffff, { y: 0.48 }), // store box (tinted white)
-        // 小七 signature orange/green/red tricolor fascia stripe
-        box(2.66, 0.22, 1.54, 0xe06a1a, { y: 1.06 }), // orange band
-        box(2.66, 0.08, 1.54, 0x2a8a3a, { y: 1.21 }), // green stripe
-        box(2.66, 0.06, 1.54, 0xc83828, { y: 1.28 }), // red stripe
-        box(1.1, 0.16, 0.06, 0xfff2c0, { x: -0.5, y: 1.06, z: 0.79 }), // lit logo plate
-        box(2.72, 0.06, 1.6, 0x8a9098, { y: 1.34 }), // roof lip
-        box(0.42, 0.32, 0.32, 0xb8bec8, { x: 0.9, y: 1.46 }), // rooftop AC unit
-        // glass storefront with warm interior shelf glow
-        box(2.2, 0.6, 0.06, 0x9fc4d8, { y: 0.46, z: 0.76 }), // glass front
-        box(2.1, 0.1, 0.07, 0xffe9b0, { y: 0.62, z: 0.765 }), // top shelf glow
-        box(2.1, 0.08, 0.07, 0xf0d8a0, { y: 0.4, z: 0.765 }), // mid shelf glow
-        box(0.5, 0.66, 0.08, 0x7a8088, { x: 0.92, y: 0.36, z: 0.78 }), // auto door
-        box(0.46, 0.42, 0.05, 0x9fc4d8, { x: 0.92, y: 0.44, z: 0.81 }), // door glass
-        box(0.5, 0.7, 0.4, 0xd8dce2, { x: -1.0, y: 0.36, z: 0.95 }), // ATM / ice box by door
-        cyl(0.06, 0.06, 0.7, 6, 0xc8ccd2, { x: -1.25, y: 0.85, z: 0.7 }), // pole sign post
-        box(0.4, 0.34, 0.06, 0xe06a1a, { x: -1.25, y: 1.25, z: 0.7 }), // pole sign panel
+        box(2.6, 0.95, 1.5, 0xffffff, { y: 0.48, hex2: 0xf8f0e0 }), // shop box (cream tinted)
+        // traditional style fascia with warm wood tones
+        box(2.66, 0.26, 1.54, 0x8a5a2a, { y: 1.02 }), // dark wood fascia
+        box(2.66, 0.1, 1.54, 0xc8a050, { y: 1.18 }), // gold accent stripe
+        box(2.72, 0.06, 1.6, 0x9a8a7a, { y: 1.28 }), // roof lip
+        // traditional shop sign (新竹米粉 style)
+        box(1.4, 0.3, 0.08, 0xc83020, { x: -0.4, y: 1.05, z: 0.79 }), // red signboard
+        box(1.3, 0.22, 0.05, 0xf0d070, { x: -0.4, y: 1.05, z: 0.84 }), // gold text area
+        // open front with cooking area visible
+        box(2.0, 0.5, 0.06, 0x4a3a2a, { y: 0.35, z: 0.76 }), // dark wood frame
+        box(1.8, 0.4, 0.04, 0xb8d8e8, { y: 0.4, z: 0.78 }), // steamy glass
+        // rice noodle drying rack visible inside (新竹特色)
+        box(0.8, 0.5, 0.3, 0x9a8a78, { x: 0.7, y: 0.55, z: 0.4 }), // wooden rack
+        cyl(0.04, 0.04, 0.4, 5, 0xf8f0e0, { x: 0.6, y: 0.5, z: 0.5, rz: 0.1 }), // noodle bundle L
+        cyl(0.04, 0.04, 0.4, 5, 0xf8f0e0, { x: 0.8, y: 0.5, z: 0.5, rz: -0.1 }), // noodle bundle R
+        // steaming pot at entrance
+        cyl(0.25, 0.25, 0.3, 8, 0x6a6a7a, { x: -0.8, y: 0.5, z: 0.6 }), // pot
+        cyl(0.26, 0.26, 0.05, 8, 0x8a8a9a, { x: -0.8, y: 0.68, z: 0.6, open: true }), // pot rim
+        // hanging lantern
+        sph(0.15, 0xc83020, { ws: 6, hs: 4, x: 0.9, y: 0.95, z: 0.75 }),
+        // side awning
+        box(0.6, 0.08, 0.8, 0xc83020, { x: 1.15, y: 1.0, z: 0.3 }),
       ];
-      // mullions splitting the glass front
-      for (let i = 0; i < 3; i++) {
-        parts.push(box(0.06, 0.62, 0.08, 0xe8e4da, { x: -0.7 + i * 0.6, y: 0.44, z: 0.77 }));
-      }
+      // wooden posts at entrance
+      parts.push(cyl(0.06, 0.06, 0.7, 6, 0x6a4a2a, { x: -1.15, y: 0.65, z: 0.75 }));
+      parts.push(cyl(0.06, 0.06, 0.7, 6, 0x6a4a2a, { x: 0.55, y: 0.65, z: 0.75 }));
       return finish(parts);
     },
   },

@@ -157,47 +157,46 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 車站跨站天橋 station_overpass (Chiayi station style) -- */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'station_overpass',
+    displayName: '車站跨站天橋',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 16,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
+    palette: [0xe8d8c0, 0xd0c0a8, 0x8a7060, 0x5a4030, 0xf0e8d8],
     yOffset: -0.57,
     upright: true,
     collisionScale: 0.6,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
+      // Chiayi station overpass: Japanese colonial style with warm wood tones
       const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
+        // span deck (warm cream tones like station)
+        box(6.4, 0.32, 1.3, 0xfaf0e0, { y: 2.6 }),
+        // railings (dark wood style)
+        box(6.4, 0.08, 0.06, 0x5a4030, { y: 3.1, z: 0.6 }),
+        box(6.4, 0.08, 0.06, 0x5a4030, { y: 3.1, z: -0.6 }),
+        // peaked roof canopy (colonial station style)
+        box(6.4, 0.06, 0.9, 0x8a7060, { y: 3.55, z: 0.45, rx: 0.28 }),
+        box(6.4, 0.06, 0.9, 0x8a7060, { y: 3.55, z: -0.45, rx: -0.28 }),
+        box(6.4, 0.1, 0.2, 0x6a5040, { y: 3.85 }), // dark wood ridge
       ];
-      // railing posts (sparse) + canopy supports
-      for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
+      // railing posts (wood style) — fewer posts to save tris
+      for (let i = 0; i < 3; i++) {
+        const x = -2.4 + i * 2.4;
+        parts.push(box(0.06, 0.5, 0.06, 0x6a5040, { x, y: 2.85, z: 0.6 }));
+        parts.push(box(0.06, 0.5, 0.06, 0x6a5040, { x, y: 2.85, z: -0.6 }));
       }
-      // twin stair / lift towers at the ends
+      // twin stair towers (colonial cream/wood style) — simplified
       for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
+        parts.push(box(1.0, 2.7, 1.2, 0xf0e8d8, { x: sx, y: 1.35 }));
+        parts.push(box(1.02, 0.12, 1.22, 0x8a7060, { x: sx, y: 2.7 })); // cornice
+        // 2 stair treads instead of 3
+        for (let s = 0; s < 2; s++) {
+          parts.push(box(0.9, 0.07, 0.34, 0x8a7060, {
+            x: sx, y: 0.6 + s * 0.85, z: 0.7 + s * 0.3,
           }));
         }
       }

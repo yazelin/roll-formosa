@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 北門老街屋, 鐵皮屋, 老公寓, 米粉店, 公車, 垃圾車, 加油站, 騎樓柱
+      'beimen_shophouse', 'tin_roof_house', 'old_apartment', 'mifun_shop', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
       // chunk landmarks: 北門街屋, 長和宮
       'beimen_streethouse_mass', 'changhe_temple_mass',
     ],
@@ -194,8 +194,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 風力發電機, 其他摩天樓, 巨型廣告牆, 科技塔, 空橋, 屋頂機房, 清交大樓
-      'glass_highrise', 'wind_turbine', 'other_skyscraper', 'giant_ad_wall', 'tech_tower', 'sky_bridge', 'rooftop_plant_room', 'campus_block',
+      // 玻璃帷幕高樓, 風力發電機, 竹科研發大樓, 竹科公司門牌, 科技塔, 空橋, 屋頂機房, 清交大樓
+      'glass_highrise', 'wind_turbine', 'hsip_rd_building', 'tech_campus_sign', 'tech_tower', 'sky_bridge', 'rooftop_plant_room', 'campus_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

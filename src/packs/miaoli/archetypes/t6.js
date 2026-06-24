@@ -269,34 +269,57 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ------------------------------ */
+  /* ---- slot 6: 舊山線鐵橋 Old Mountain Railway bridge -------------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'old_mountain_rail_bridge',
+    displayName: '舊山線鐵橋',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 68,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
-    yOffset: -0.38,
+    palette: [0x8a5a40, 0xb8443a, 0xa03a30, 0x6a5040, 0x9a8a78],
+    yOffset: -0.56,
     upright: true,
-    collisionScale: 0.85,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // Plant-room penthouse with cooling towers and ducts — industrial rooftop.
+      // Old Mountain Railway (舊山線) iron truss bridge — heritage rail crossing
+      // over mountain valleys, with iconic red-brown steel trusses.
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // roof hatch
+        // Main deck (wooden ties on steel girders)
+        box(4.0, 0.12, 0.9, 0x6a5040, { y: 1.6 }), // deck
+        // Steel rail tracks
+        box(4.0, 0.06, 0.08, 0x4a4a4a, { y: 1.68, z: 0.3 }), // rail L
+        box(4.0, 0.06, 0.08, 0x4a4a4a, { y: 1.68, z: -0.3 }), // rail R
+        // Cross ties (reduced to 3)
+        box(0.12, 0.06, 0.8, 0x5a4030, { x: -1.2, y: 1.65 }),
+        box(0.12, 0.06, 0.8, 0x5a4030, { x: 0.0, y: 1.65 }),
+        box(0.12, 0.06, 0.8, 0x5a4030, { x: 1.2, y: 1.65 }),
       ];
-      // Cooling towers and ducting
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // rail
+      // Steel truss structure on both sides
+      for (const zs of [0.5, -0.5]) {
+        // Bottom chord
+        parts.push(box(4.0, 0.1, 0.08, 0x8a5a40, { y: 1.5, z: zs }));
+        // Top chord
+        parts.push(box(4.0, 0.1, 0.08, 0x8a5a40, { y: 2.4, z: zs }));
+        // Vertical posts (reduced to 4)
+        for (let i = 0; i < 4; i++) {
+          const x = -1.5 + i * 1.0;
+          parts.push(box(0.08, 0.9, 0.06, 0x9a6a48, { x, y: 1.95, z: zs }));
+        }
+        // Diagonal braces (reduced to 3)
+        for (let i = 0; i < 3; i++) {
+          const x = -1.0 + i * 1.0;
+          const dir = i % 2 === 0 ? 0.6 : -0.6;
+          parts.push(box(0.05, 1.0, 0.04, 0x7a5a38, { x, y: 1.95, z: zs, rz: dir }));
+        }
+      }
+      // Cross bracing on top
+      parts.push(box(0.06, 0.06, 1.0, 0x8a5a40, { x: -1.0, y: 2.42 }));
+      parts.push(box(0.06, 0.06, 1.0, 0x8a5a40, { x: 1.0, y: 2.42 }));
+      // Stone pier abutments
+      parts.push(box(1.0, 1.5, 1.1, 0x9a8a78, { x: -2.2, y: 0.75 }));
+      parts.push(box(1.0, 1.5, 1.1, 0x9a8a78, { x: 2.2, y: 0.75 }));
       return finish(parts);
     },
   },
