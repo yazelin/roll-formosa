@@ -53,53 +53,64 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] glass_bead_craft 玻璃珠工藝 — Hsinchu glass craft bead         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'glass_bead_craft',
+    displayName: '玻璃珠工藝',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0x3f8cff, 0xff5340, 0x49c45f, 0xffd84d, 0xa86adf],
+    yOffset: -0.68, // bead resting on table
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Hsinchu's famous glass craft industry — decorative glass bead
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // outer glass sphere (clear tinted) - reduced segments
+        sph(1.0, 0xffffff, { ws: 8, hs: 6 }),
+        // inner decorative swirls (Hsinchu glass craft signature) - reduced segments
+        torus(0.4, 0.1, 5, 6, 0xff5340, { y: 0.0 }),
+        torus(0.5, 0.08, 5, 6, 0x3f8cff, { y: 0.15, rx: 0.5 }),
+        // center golden sparkle core - reduced segments
+        sph(0.25, 0xffd84d, { ws: 5, hs: 3 }),
+        // threading hole suggestion
+        cyl(0.08, 0.08, 1.4, 5, 0x2a2a2a, { rz: HALF_PI }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] meatball_pick 貢丸籤 — Hsinchu meatball on toothpick          */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'meatball_pick',
+    displayName: '貢丸籤',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.01,
+    radiusNominal: 0.015,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.7,
+    palette: [0xd4a87a, 0xc89868, 0xe0b08a, 0xb88858, 0xf0c8a0],
+    yOffset: -0.15, // meatball standing on pick
+    upright: true,
+    collisionScale: 0.75,
     buildGeometry(rng) {
+      // Hsinchu famous 貢丸 (pork meatball) on a bamboo toothpick
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // meatball body (slightly irregular sphere)
+        sph(0.8, 0xffffff, { ws: 8, hs: 6, y: 0.9 }),
+        // surface texture bumps (cooked meatball texture)
+        sph(0.15, 0xc89868, { ws: 5, hs: 3, x: 0.4, y: 1.0, z: 0.3 }),
+        sph(0.12, 0xb88858, { ws: 5, hs: 3, x: -0.3, y: 1.1, z: 0.35 }),
+        sph(0.1, 0xd4a87a, { ws: 5, hs: 3, x: 0.2, y: 0.7, z: -0.4 }),
+        // bamboo toothpick
+        cyl(0.06, 0.04, 1.6, 5, 0xe8d2a6, { y: 0.1 }),
+        // pick tip (pointed bottom)
+        cone(0.04, 0.3, 5, 0xd8c296, { rx: PI, y: -0.6 }),
       ]);
     },
   },

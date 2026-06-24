@@ -144,37 +144,39 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 3 ── 霓虹招牌 neon sign (cantilever shop sign) ─────────────────────── */
+  /* 3 ── 米粉束 mifun_bundle — Hsinchu rice noodle bundle drying ─────────── */
   {
-    id: 'neon_sign',
-    displayName: '霓虹招牌',
+    id: 'mifun_bundle',
+    displayName: '米粉束',
     tier: 3,
     naturalBand: 3,
-    radiusNominal: 1.1,
+    radiusNominal: 1.2,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x14161f, 0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a],
-    yOffset: -0.27,
+    palette: [0xf4e8d0, 0xf0dcc0, 0xe8d4b8, 0xfff8f0, 0xd8c8a8],
+    yOffset: -0.30,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.65,
     buildGeometry(rng) {
-      const glow = [0xff3c78, 0x32d6ff, 0xfff04a, 0x39e08a][Math.floor(rng() * 4)];
-      const glow2 = 0x32d6ff;
+      // Hsinchu's famous rice noodles (米粉) bundled and drying
+      // The city is known for drying rice noodles in the famous Hsinchu wind
       const parts = [];
-      // wall mount bracket
-      parts.push(box(0.2, 1.8, 0.2, 0x2a2c34, { x: -1.05, y: 1.1 }));
-      // boom arm
-      parts.push(cyl(0.05, 0.05, 1.0, 6, 0x3a3d46, { x: -0.55, y: 1.7, rz: HALF_PI }));
-      // dark sign backing panel
-      parts.push(box(0.12, 1.5, 1.3, 0x14161f, { x: 0.1, y: 1.0 }));
-      // neon tube border (torus arc rings as glow strokes) — top & bottom bars
-      parts.push(box(0.06, 0.1, 1.16, glow, { x: 0.18, y: 1.66 }));
-      parts.push(box(0.06, 0.1, 1.16, glow2, { x: 0.18, y: 0.34 }));
-      parts.push(box(0.06, 1.36, 0.1, glow, { x: 0.18, y: 1.0, z: 0.6 }));
-      parts.push(box(0.06, 1.36, 0.1, glow2, { x: 0.18, y: 1.0, z: -0.6 }));
-      // neon glyph rings (two circular characters suggestion)
-      parts.push(torus(0.26, 0.05, 6, 10, glow, { x: 0.2, y: 1.28, ry: HALF_PI }));
-      parts.push(torus(0.26, 0.05, 6, 10, 0xfff04a, { x: 0.2, y: 0.68, ry: HALF_PI }));
+      // wooden drying rack frame
+      parts.push(cyl(0.08, 0.1, 2.2, 5, 0x7a5a3a, { x: -0.8, y: 1.1 })); // left post
+      parts.push(cyl(0.08, 0.1, 2.2, 5, 0x7a5a3a, { x: 0.8, y: 1.1 })); // right post
+      parts.push(cyl(0.06, 0.06, 1.8, 5, 0x8a6a4a, { y: 2.1, rz: HALF_PI })); // crossbar top
+      parts.push(cyl(0.06, 0.06, 1.8, 5, 0x8a6a4a, { y: 0.5, rz: HALF_PI })); // crossbar bottom
+      // rice noodle bundles hanging (draped white noodle threads)
+      const bundleX = [-0.5, 0.0, 0.5];
+      for (const bx of bundleX) {
+        // each bundle is a cylinder with white cream color
+        parts.push(cyl(0.22, 0.18, 1.4, 6, 0xffffff, { x: bx, y: 1.3 })); // noodle bundle
+        // highlight strands
+        parts.push(box(0.04, 1.3, 0.1, 0xf4e8d0, { x: bx - 0.08, y: 1.3, z: 0.12 }));
+        parts.push(box(0.04, 1.3, 0.1, 0xf0dcc0, { x: bx + 0.08, y: 1.3, z: -0.1 }));
+      }
+      // ground base / platform
+      parts.push(box(2.0, 0.12, 0.8, 0x8c8a82, { y: 0.06 }));
       return finish(parts);
     },
   },
