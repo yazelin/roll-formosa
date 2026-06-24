@@ -24,39 +24,41 @@ import {
 
 /** @type {ArchetypeDef[]} */
 export const T4_ARCHETYPES = [
-  /* 0 ── 透天厝 townhouse (narrow 3-5 story row house) ────────────────── */
+  /* 0 ── 醬油工坊 soy_sauce_workshop (Xiluo soy sauce factory building) ─ */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'soy_sauce_workshop',
+    displayName: '醬油工坊',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 5,
+    radiusNominal: 6,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xd8d0c0, 0xc4baa8, 0xb09c84, 0xa08868, 0xf0e8d8],
-    yOffset: -0.08,
+    palette: [0x8a5a30, 0xa87040, 0x6a4020, 0xc89050, 0xf0e0c0],
+    yOffset: -0.15,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const wall = 0xffffff;
+      // Xiluo soy sauce workshop - traditional building with fermentation area
       const parts = [];
-      // main box (4 stories)
-      parts.push(box(1.2, 3.0, 1.0, wall, { y: 1.5, hex2: 0xe0d8c8 }));
-      // ground-floor shop front (darker)
-      parts.push(box(1.22, 0.7, 0.08, 0x2a2c30, { y: 0.35, z: 0.5 }));
-      parts.push(box(0.8, 0.55, 0.04, 0x9fc8d4, { y: 0.4, z: 0.54 })); // shop glass
-      // window grid (3 upper floors)
-      for (let f = 1; f <= 3; f++) {
-        const y = 0.6 + f * 0.7;
-        parts.push(box(0.35, 0.35, 0.06, 0x5a788c, { x: -0.3, y, z: 0.52 }));
-        parts.push(box(0.35, 0.35, 0.06, 0x5a788c, { x: 0.3, y, z: 0.52 }));
-      }
-      // balcony rails (thin horizontal lines)
-      parts.push(box(1.1, 0.04, 0.2, 0x7a8898, { y: 1.3, z: 0.58 }));
-      parts.push(box(1.1, 0.04, 0.2, 0x7a8898, { y: 2.0, z: 0.58 }));
-      // roof parapet + water tank
-      parts.push(box(1.24, 0.2, 1.02, 0xa08868, { y: 3.1 }));
-      parts.push(cyl(0.2, 0.2, 0.35, 7, 0x6a7888, { x: 0.35, y: 3.38 })); // tank
+      // main building body (traditional brick)
+      parts.push(box(2.0, 2.4, 1.6, 0xffffff, { y: 1.2, hex2: 0xd8a868 }));
+      // sloped roof
+      parts.push(box(2.2, 0.15, 1.8, 0x6a4020, { y: 2.5, rx: 0.12 }));
+      // entrance with traditional signboard
+      parts.push(box(1.0, 1.4, 0.08, 0x4a3018, { y: 0.8, z: 0.82 })); // door
+      parts.push(box(1.4, 0.4, 0.06, 0xc83020, { y: 1.9, z: 0.84 })); // sign board
+      // soy sauce barrels/urns outside
+      parts.push(cyl(0.35, 0.3, 0.5, 7, 0x5a4028, { x: -0.7, y: 0.25, z: 0.95 }));
+      parts.push(cyl(0.3, 0.25, 0.45, 7, 0x6a5038, { x: -1.1, y: 0.22, z: 0.85 }));
+      parts.push(cyl(0.32, 0.28, 0.48, 7, 0x5a4028, { x: 0.8, y: 0.24, z: 0.9 }));
+      // fermentation area with covered vats
+      parts.push(box(0.8, 0.3, 0.8, 0x4a3018, { x: 1.2, y: 0.15, z: -0.3 })); // platform
+      parts.push(cyl(0.25, 0.25, 0.4, 6, 0x3a2818, { x: 1.0, y: 0.5, z: -0.3 })); // vat
+      parts.push(cyl(0.25, 0.25, 0.4, 6, 0x3a2818, { x: 1.4, y: 0.5, z: -0.3 })); // vat
+      // hanging drying rack suggestion
+      parts.push(box(0.06, 1.2, 0.06, 0x8a6040, { x: 0.5, y: 1.8, z: 0.9 }));
+      parts.push(box(0.06, 1.2, 0.06, 0x8a6040, { x: -0.5, y: 1.8, z: 0.9 }));
+      parts.push(box(1.1, 0.06, 0.06, 0x8a6040, { y: 2.4, z: 0.9 })); // crossbar
       return finish(parts);
     },
   },

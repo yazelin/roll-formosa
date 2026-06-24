@@ -34,39 +34,49 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 布袋戲劇場 puppet_theater (Yunlin puppet performance hall) */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'puppet_theater',
+    displayName: '布袋戲劇場',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 22,
+    radiusNominal: 25,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
-    yOffset: -0.06,
+    palette: [0xc83020, 0xe84830, 0x8a4020, 0xf0c040, 0xf8e8c0],
+    yOffset: -0.28,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
-      return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
-      ]);
+      // Yunlin puppet theater - grand traditional performance hall
+      const parts = [];
+      // main building body (traditional style with red accents)
+      parts.push(box(4.0, 3.2, 3.0, 0xffffff, { y: 1.8, hex2: 0xf0e0c8 }));
+      // sweeping traditional roof (green glazed tiles)
+      parts.push(box(4.6, 0.2, 3.6, 0x2e5a3a, { y: 3.5, rx: 0.15 }));
+      parts.push(box(4.6, 0.2, 3.6, 0x2e5a3a, { y: 3.5, rx: -0.15 }));
+      // ridge with ornaments
+      parts.push(box(4.6, 0.15, 0.2, 0xf0c040, { y: 3.85 })); // golden ridge
+      // swallowtail tips
+      parts.push(cone(0.2, 0.5, 6, 0xf0c040, { x: -2.3, y: 3.95, rz: 0.5 }));
+      parts.push(cone(0.2, 0.5, 6, 0xf0c040, { x: 2.3, y: 3.95, rz: -0.5 }));
+      // front entrance with grand signboard
+      parts.push(box(2.8, 0.6, 0.1, 0xc83020, { y: 3.0, z: 1.55 })); // sign
+      parts.push(box(2.4, 0.4, 0.05, 0xf0c040, { y: 3.0, z: 1.58 })); // gold text area
+      // entrance columns
+      parts.push(cyl(0.2, 0.24, 2.6, 6, 0xc83020, { x: -1.2, y: 1.5, z: 1.5 }));
+      parts.push(cyl(0.2, 0.24, 2.6, 6, 0xc83020, { x: 1.2, y: 1.5, z: 1.5 }));
+      // main doors
+      parts.push(box(1.6, 2.0, 0.1, 0x6a3020, { y: 1.2, z: 1.52 }));
+      // decorative lanterns
+      parts.push(sph(0.25, 0xd83028, { ws: 6, hs: 4, x: -1.5, y: 2.8, z: 1.7 }));
+      parts.push(sph(0.25, 0xd83028, { ws: 6, hs: 4, x: 1.5, y: 2.8, z: 1.7 }));
+      // stage area visible through windows
+      parts.push(box(3.2, 1.5, 0.06, 0x3a3028, { y: 1.8, z: 1.48 })); // dark stage bg
+      // side wing
+      parts.push(box(1.2, 2.4, 2.0, 0xf0e0c8, { x: 2.3, y: 1.4 }));
+      parts.push(box(1.3, 0.15, 2.2, 0x2e5a3a, { x: 2.3, y: 2.7 })); // side roof
+      return finish(parts);
     },
   },
 
