@@ -55,14 +55,6 @@ import { COL_MAZU } from './collectibles/mazu.js';
 // 8 Keelung extended landmarks for codes 90-93 + 95-98.
 import { NM_ZHENGBIN_COLORHOUSES } from './landmarks/zhengbin_colorhouses.js';
 // Reuse the goal monument and some shared structures
-import { NM_RAINBOW } from './landmarks/rainbow_bridge_tp.js';
-import { NM_SYSHALL } from './landmarks/syshall.js';
-import { NM_STATION } from './landmarks/main_station.js';
-import { NM_PALACE } from './landmarks/palace_museum.js';
-import { NM_XINGTIAN } from './landmarks/xingtian.js';
-import { NM_THEATER } from './landmarks/national_theater.js';
-import { NM_WHEEL } from './landmarks/miramar_wheel.js';
-import { NM_MK_STATION } from './landmarks/maokong_station.js';
 
 /* ================================================================== */
 /* 70 chunk archetypes, assembled in tier order (code = tier*10 + slot)*/
