@@ -53,28 +53,31 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] marlin_fishcake 旗魚黑輪 — iconic Kaohsiung marlin fishcake skewer */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'marlin_fishcake',
+    displayName: '旗魚黑輪',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.84,
+    palette: [0xc8a060, 0xd4a868, 0xb89050, 0xd0a060, 0xc49858],
+    yOffset: -0.15, // skewer upright (= -1 - minY of normalized geo)
+    upright: true,
+    collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // golden-brown fishcake cylinder (fried 黑輪)
+        cyl(0.55, 0.5, 1.4, 8, 0xffffff, { y: 1.0, hex2: 0xe8c898 }),
+        // fried crust texture bumps
+        sph(0.18, 0xd8b070, { ws: 5, hs: 3, x: 0.4, y: 0.8, z: 0.2 }),
+        sph(0.15, 0xd0a860, { ws: 5, hs: 3, x: -0.35, y: 1.2, z: 0.3 }),
+        // bamboo skewer poking through
+        cyl(0.06, 0.06, 2.6, 5, 0xe0c890, { y: 0.8 }),
+        // skewer tip
+        cone(0.06, 0.2, 5, 0xd8c088, { y: -0.55, rx: PI }),
       ]);
     },
   },
@@ -199,29 +202,34 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] papaya_milk_cup 木瓜牛奶杯 — iconic Kaohsiung papaya milk cup    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'papaya_milk_cup',
+    displayName: '木瓜牛奶杯',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.8,
+    palette: [0xffa060, 0xffb080, 0xff9050, 0xffc090, 0xffaa70],
+    yOffset: -0.12, // cup standing upright (= -1 - minY of normalized geo)
+    upright: true,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // plastic cup body (tapered, tinted orange for papaya)
+        cyl(0.6, 0.75, 2.0, 10, 0xffffff, { y: 1.0, hex2: 0xffe8d8 }),
+        // papaya-orange filling visible through cup
+        cyl(0.55, 0.7, 1.7, 8, 0xffa060, { y: 0.95 }),
+        // white foam/froth on top
+        cyl(0.68, 0.68, 0.2, 8, 0xfff8f0, { y: 1.95 }),
+        // dome lid
+        sph(0.72, 0xe8e8e8, { ws: 8, hs: 4, thetaLen: HALF_PI, y: 2.0 }),
+        // straw poking out
+        cyl(0.06, 0.06, 1.2, 6, 0xf06080, { y: 2.6, x: 0.15 }),
+        // cup bottom rim
+        cyl(0.62, 0.6, 0.1, 8, 0xd8d8d8, { y: 0.05 }),
       ]);
     },
   },
