@@ -210,29 +210,39 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] hinoki_ruler 檜木尺 — Chiayi hinoki wood ruler with markings    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'hinoki_ruler',
+    displayName: '檜木尺',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xd8b070, 0xc8a058, 0xe8c888, 0xb89048, 0xf0d898],
+    yOffset: -0.88, // ruler lying flat (= -1 - minY of normalized geo)
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
+      const wood = 0xffffff; // hinoki wood tint
+      const dark = 0x5a4030;
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // main ruler body (flat hinoki wood)
+        box(2.8, 0.12, 0.7, wood, { y: 0.06 }),
+        // measurement markings on top
+        box(2.6, 0.02, 0.04, dark, { y: 0.13, z: 0.25 }), // center line
+        // tick marks
+        box(0.02, 0.02, 0.15, dark, { x: -1.2, y: 0.13, z: 0.15 }),
+        box(0.02, 0.02, 0.15, dark, { x: -0.6, y: 0.13, z: 0.15 }),
+        box(0.02, 0.02, 0.15, dark, { x: 0.0, y: 0.13, z: 0.15 }),
+        box(0.02, 0.02, 0.15, dark, { x: 0.6, y: 0.13, z: 0.15 }),
+        box(0.02, 0.02, 0.15, dark, { x: 1.2, y: 0.13, z: 0.15 }),
+        // "嘉義檜木" branding stamp
+        box(0.5, 0.02, 0.2, 0xc04030, { x: 0.8, y: 0.13, z: -0.15 }),
+        // beveled edge (darker wood grain)
+        box(2.82, 0.04, 0.08, 0x8a6a48, { y: 0.02, z: 0.36 }),
+        box(2.82, 0.04, 0.08, 0x8a6a48, { y: 0.02, z: -0.36 }),
       ]);
     },
   },

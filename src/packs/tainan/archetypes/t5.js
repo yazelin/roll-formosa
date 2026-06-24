@@ -80,40 +80,44 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 百貨 department_store ------------------------------ */
+  /* ---- slot 1: 虱目魚店 milkfish_shop — Tainan's signature milkfish shop */
   {
-    id: 'department_store',
-    displayName: '百貨',
+    id: 'milkfish_shop',
+    displayName: '虱目魚店',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 28,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc8b8a0, 0xe8dcc8, 0x8a7a64, 0xb84a3a, 0xf0e8d8],
+    palette: [0x4a8ab0, 0x6ab0d0, 0x3a6a88, 0xf0f8fc, 0xc8e0f0],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Broad stone block with a glass display podium + a big vertical brand band.
+      // Tainan's iconic milkfish shop: low-rise seafood restaurant with tanks
       const parts = [
-        box(4.4, 4.6, 3.4, 0xffffff, { y: 2.5 }), // main stone mass (tinted)
-        box(4.5, 0.3, 3.5, 0x9a8a72, { y: 4.95 }), // cornice cap
-        // glass podium (ground 2 floors) wrapping the front
-        box(4.6, 1.5, 0.4, 0x2b3640, { y: 0.95, z: 1.7 }), // dark glass frame
-        box(4.2, 1.2, 0.06, 0xb9c8da, { y: 0.95, z: 1.92 }), // bright display glass
-        // entrance canopy
-        box(2.0, 0.18, 1.0, 0xb84a3a, { y: 1.9, z: 2.0 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: -0.8, y: 1.0, z: 2.4 }),
-        cyl(0.08, 0.08, 1.7, 6, 0x8a7a64, { x: 0.8, y: 1.0, z: 2.4 }),
-        // vertical brand band on the corner
-        box(0.5, 3.6, 0.12, 0xb84a3a, { x: -2.15, y: 2.9, z: 1.66 }),
-        box(0.34, 3.2, 0.06, 0xf0e0c8, { x: -2.15, y: 2.9, z: 1.73 }),
+        // main shop body (two-story)
+        box(4.4, 3.0, 3.4, 0xf0f8fc, { y: 1.7 }),
+        // blue-tiled lower facade (seafood shop style)
+        box(4.5, 1.2, 0.2, 0x4a8ab0, { y: 0.6, z: 1.72 }),
+        // large shop sign across the top
+        box(4.2, 0.8, 0.14, 0x3a6a88, { y: 2.9, z: 1.74 }),
+        box(3.8, 0.6, 0.06, 0xfff0c0, { y: 2.9, z: 1.82 }), // lit sign face
+        // awning over entrance
+        box(4.6, 0.12, 1.4, 0x6ab0d0, { y: 2.0, z: 2.3, rx: -0.1 }),
+        // fish tanks at ground level (stainless + glass)
+        box(1.6, 0.9, 0.8, 0xd8e4ea, { x: -1.2, y: 0.5, z: 1.5 }),
+        box(1.4, 0.7, 0.06, 0x8ac8e0, { x: -1.2, y: 0.55, z: 1.92 }), // glass front
+        box(1.6, 0.9, 0.8, 0xd8e4ea, { x: 1.2, y: 0.5, z: 1.5 }),
+        box(1.4, 0.7, 0.06, 0x8ac8e0, { x: 1.2, y: 0.55, z: 1.92 }), // glass front
+        // entrance door
+        box(1.0, 1.6, 0.08, 0x3a4a58, { y: 0.9, z: 1.76 }),
+        // rooftop water tank
+        cyl(0.5, 0.5, 0.7, 8, 0x3a6ea0, { x: 1.5, y: 3.55 }),
+        // second floor windows
+        box(1.2, 0.6, 0.06, 0x6a8aa0, { x: -1.3, y: 2.4, z: 1.74 }),
+        box(1.2, 0.6, 0.06, 0x6a8aa0, { x: 1.3, y: 2.4, z: 1.74 }),
       ];
-      // a row of square clerestory windows along the upper facade
-      for (let i = 0; i < 6; i++) {
-        const lit = rng() < 0.5 ? 0xfff0c8 : 0x6a7280;
-        parts.push(box(0.42, 0.5, 0.05, lit, { x: -1.7 + i * 0.68, y: 4.0, z: 1.72 }));
-      }
       return finish(parts);
     },
   },

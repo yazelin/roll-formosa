@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 瓶蓋, 花生, 尪仔標, 鉛筆, 線香環
-      'marble', 'eraser', 'pushpin', 'bottle_cap', 'peanut_pod', 'ngiauimia_card', 'pencil', 'incense_coil',
+      // 彈珠, 醬油蓋, 圖釘, 瓶蓋, 花生, 尪仔標, 鉛筆, 線香環
+      'marble', 'soy_sauce_cap', 'pushpin', 'bottle_cap', 'peanut_pod', 'ngiauimia_card', 'pencil', 'incense_coil',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 布袋戲偶盒, 雲林公車站牌
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'puppet_box', 'yunlin_bus_stop',
+      // 紅塑膠椅, 安全帽, 醬油甕, 瓦斯桶, 三角錐, 消防栓, 布袋戲偶盒, 雲林公車站牌
+      'red_plastic_chair', 'helmet', 'soy_sauce_urn', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'puppet_box', 'yunlin_bus_stop',
       // chunk landmarks: 戲棚推車, 廟前香爐
       'puppet_vendor_cart', 'temple_incense_burner',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 布袋戲劇場, 咖啡莊園, 斗六車站, 跨街天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'puppet_theater', 'coffee_estate', 'douliu_station_plaza', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 布袋戲劇場, 咖啡莊園, 斗六車站, 濁水溪大橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
+      'puppet_theater', 'coffee_estate', 'douliu_station_plaza', 'zhuoshui_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 車站商辦塔, 百貨大樓
       'station_office_tower', 'department_mass',
     ],

@@ -85,35 +85,35 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 蝦捲炸籃 — Tainan-style fried shrimp roll basket */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'shrimp_roll_basket',
+    displayName: '蝦捲炸籃',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
+    palette: [0xd8a050, 0xe8b060, 0xc89040, 0xa88030, 0xf0c070],
     yOffset: -0.253,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
+      // wire frying basket with golden shrimp rolls inside
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // basket wire rim (open cylinder for wire mesh look)
+        cyl(0.8, 0.85, 0.6, 10, 0xa0a098, { y: 0.4, open: true }),
+        // basket bottom disc
+        cyl(0.75, 0.75, 0.08, 10, 0xa0a098, { y: 0.1 }),
+        // handle loop
+        torus(0.2, 0.04, 4, 6, 0x808078, { x: 0, y: 0.85, z: 0.6 }),
+        // handle stem
+        cyl(0.04, 0.04, 0.3, 5, 0x909088, { y: 0.75, z: 0.75 }),
+        // several golden shrimp rolls inside (cylinders)
+        cyl(0.18, 0.16, 0.6, 6, 0xd8a050, { y: 0.4, rz: 0.2, x: -0.2 }),
+        cyl(0.18, 0.16, 0.6, 6, 0xe8b060, { y: 0.42, rz: -0.15, x: 0.2, z: 0.1 }),
+        cyl(0.16, 0.14, 0.55, 6, 0xc89040, { y: 0.38, rz: 0.1, x: 0.05, z: -0.2 }),
+        cyl(0.15, 0.14, 0.5, 6, 0xd8a050, { y: 0.35, rz: -0.1, x: -0.15, z: 0.15 }),
       ]);
     },
   },

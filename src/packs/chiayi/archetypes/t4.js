@@ -172,39 +172,44 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 公車 (city bus) ---------------------------------------- */
+  /* ---- slot 4: 嘉義BRT (Chiayi BRT bus — distinctive green livery) --- */
   {
-    id: 'city_bus',
-    displayName: '公車',
+    id: 'chiayi_brt',
+    displayName: '嘉義BRT',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 7.0,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xe8e8e2, 0x3a6ea0, 0xc94f46, 0xe0a83a, 0x8a9098],
+    palette: [0x28a060, 0x38b070, 0xf0f0e8, 0x208050, 0x48c080],
     yOffset: -0.63,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
+      // Chiayi BRT: distinctive green livery with white accents
       const parts = [
-        box(3.6, 1.0, 1.2, 0xffffff, { y: 0.95 }), // long bus body (tinted)
-        box(3.64, 0.18, 1.22, 0x3a6ea0, { y: 0.5 }), // lower livery band
+        box(3.6, 1.0, 1.2, 0xf0f0e8, { y: 0.95 }), // long bus body (white)
+        box(3.64, 0.35, 1.22, 0xffffff, { y: 0.5 }), // lower body band (green tint)
         box(3.5, 0.34, 1.24, 0x28323e, { y: 1.18 }), // continuous window band (dark)
         box(3.4, 0.06, 1.1, 0xd2d6dc, { y: 1.5 }), // roof
-        box(1.0, 0.18, 1.14, 0xe0a83a, { x: 1.4, y: 1.46 }), // roof route-number sign
-        box(3.66, 0.5, 0.04, 0xffffff, { z: 0.64, y: 0.95, hex2: 0xeef2f6 }), // side panel sheen
+        // BRT green stripe along the side
+        box(3.66, 0.22, 0.04, 0x28a060, { z: 0.64, y: 0.72, hex2: 0x38b070 }),
+        // "嘉義BRT" branding band on roof edge
+        box(1.2, 0.12, 1.14, 0x28a060, { x: 1.35, y: 1.44 }),
+        box(0.8, 0.08, 0.9, 0xf0f0e8, { x: 1.35, y: 1.47 }), // route number area
         // windshield + headlights front
         box(0.06, 0.4, 1.18, 0x35414e, { x: 1.83, y: 1.16 }), // windshield
         box(0.06, 0.12, 0.2, 0xffe9a0, { x: 1.85, y: 0.62, z: 0.42 }), // headlight R
         box(0.06, 0.12, 0.2, 0xffe9a0, { x: 1.85, y: 0.62, z: -0.42 }), // headlight L
-        box(0.05, 0.7, 0.5, 0x35414e, { x: -1.55, y: 0.9, z: 0.5 }), // folding door (rear)
-        box(0.05, 0.55, 0.06, 0xc94f46, { x: 0.2, y: 0.5 }), // hot-red accent stripe
+        box(0.05, 0.7, 0.5, 0x35414e, { x: -1.55, y: 0.9, z: 0.5 }), // folding door
+        // BRT logo accent (green rectangle)
+        box(0.4, 0.25, 0.04, 0x28a060, { x: 0.5, y: 1.0, z: 0.64 }),
       ];
-      // 6 wheels (front pair + dual rear), low-seg tires for tri budget
+      // 6 wheels (front pair + dual rear)
       const wx = [1.4, 1.4, -1.2, -1.2, -1.55, -1.55];
       const wz = [0.6, -0.6, 0.6, -0.6, 0.6, -0.6];
       for (let i = 0; i < 6; i++) {
-        parts.push(cyl(0.32, 0.32, 0.2, 7, 0x23262e, { rx: HALF_PI, x: wx[i], z: wz[i], y: 0.32 })); // tire
+        parts.push(cyl(0.32, 0.32, 0.2, 7, 0x23262e, { rx: HALF_PI, x: wx[i], z: wz[i], y: 0.32 }));
       }
       return finish(parts);
     },
@@ -293,41 +298,42 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 檜意騎樓 (Hinoki Village style arcade colonnade) ------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'hinoki_arcade',
+    displayName: '檜意騎樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xd8c8a8, 0xc8b898, 0xe8d8c0, 0xb8a888, 0xf0e0c8],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Chiayi Hinoki Village style: Japanese colonial era wood arcade
+      const wood = 0x5a4030; // dark hinoki wood
+      const cream = 0xfaf0e0;
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // the slab beam (Japanese colonial style, dark wood trim)
+        box(3.2, 0.3, 1.2, cream, { y: 2.0 }),
+        box(3.24, 0.12, 1.24, wood, { y: 2.2 }), // dark wood edge band
+        box(2.0, 0.5, 1.0, 0xf0e8d8, { z: -0.4, y: 1.4 }), // rear shop wall
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
+      // 3 square wood columns (simplified Japanese style)
+      const cx = [-1.2, 0, 1.2];
       for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+        parts.push(box(0.24, 1.7, 0.24, 0xffffff, { x: cx[i], y: 0.95 })); // square wood column (tinted)
+        parts.push(box(0.36, 0.12, 0.36, wood, { x: cx[i], y: 1.82 })); // dark wood capital
+        parts.push(box(0.36, 0.14, 0.36, 0x6a5040, { x: cx[i], y: 0.16 })); // dark wood base
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // Japanese-style shop noren (curtain) between columns
+      parts.push(box(0.8, 0.4, 0.04, 0xc04030, { x: -0.6, y: 1.65, z: 0.48 })); // noren
+      parts.push(box(0.82, 0.06, 0.05, wood, { x: -0.6, y: 1.86, z: 0.48 })); // noren rod
+      // hanging Japanese lanterns (box instead of sphere for tri budget)
+      parts.push(box(0.26, 0.32, 0.26, 0xffd080, { x: -0.9, y: 1.68 }));
+      parts.push(box(0.26, 0.32, 0.26, 0xffd080, { x: 0.9, y: 1.68 }));
       return finish(parts);
     },
   },

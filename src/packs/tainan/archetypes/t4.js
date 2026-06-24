@@ -95,38 +95,44 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 鹽田瓦厝 (Tainan-style salt field house) --------------- */
   {
-    id: 'apartment',
-    displayName: '公寓',
+    id: 'salt_field_house',
+    displayName: '鹽田瓦厝',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
+    palette: [0xe8dcc8, 0xd0c4b0, 0xc8b898, 0xb0a080, 0xf0e8d8],
     yOffset: -0.28,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional Tainan salt field worker house: low-rise, curved tile roof
       const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
+        // main body (earthen-plastered walls)
+        box(3.4, 1.6, 2.2, 0xffffff, { y: 0.9 }),
+        // traditional curved tile roof (half-cylinder)
+        cyl(1.8, 1.8, 3.6, 4, 0x8a6a4a, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 1.9 }),
+        // ridge beam
+        box(3.5, 0.12, 0.18, 0x6a5040, { y: 2.38 }),
+        // eave fascia
+        box(3.5, 0.08, 2.3, 0x7a5a40, { y: 1.72 }),
+        // wooden door
+        box(0.8, 1.2, 0.08, 0x6a4a30, { y: 0.7, z: 1.12 }),
+        // small windows on sides
+        box(0.5, 0.4, 0.08, 0x4a5a6a, { x: -1.2, y: 1.0, z: 1.12 }),
+        box(0.5, 0.4, 0.08, 0x4a5a6a, { x: 1.2, y: 1.0, z: 1.12 }),
+        // stone foundation
+        box(3.5, 0.3, 2.3, 0x9a9088, { y: 0.15 }),
+        // small outdoor shelter (salt drying area)
+        cyl(0.08, 0.08, 1.4, 5, 0x7a5a40, { x: -1.4, y: 0.8, z: -1.4 }),
+        cyl(0.08, 0.08, 1.4, 5, 0x7a5a40, { x: 0.8, y: 0.8, z: -1.4 }),
+        box(2.4, 0.06, 1.2, 0x9a7a50, { x: -0.3, y: 1.5, z: -1.4 }), // lean-to roof
+        // salt pile nearby
+        sph(0.5, 0xf0f0f0, { ws: 6, hs: 4, sy: 0.5, x: -0.3, y: 0.3, z: -1.6 }),
       ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
-      }
       return finish(parts);
     },
   },
