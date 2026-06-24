@@ -101,38 +101,51 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 客家老街屋 (Zhongli Hakka old shophouse) --------------- */
   {
-    id: 'apartment',
-    displayName: '公寓',
+    id: 'hakka_shophouse',
+    displayName: '客家老街屋',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 8.0,
+    radiusNominal: 7.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
-    yOffset: -0.28,
+    palette: [0x8a6a4a, 0xa07850, 0xd8c8a8, 0xc8a070, 0x5a4a3a],
+    yOffset: -0.32,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
-      ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
-      }
+      // Zhongli Hakka old street shophouse (中壢客家老街屋)
+      // Traditional Hakka architecture with distinctive earthy tones
+      const parts = [];
+      const hakka_brown = 0x8a6a4a;
+      const earth_wall = 0xd8c8a8;
+      // Main two-storey shophouse body (Hakka-style earthen walls)
+      parts.push(box(2.0, 2.0, 1.6, earth_wall, { y: 1.0, hex2: 0xc8b898 }));
+      // Hakka-style wooden facade (darker wood tones)
+      parts.push(box(2.1, 0.8, 0.12, hakka_brown, { y: 0.5, z: 0.78 }));
+      // Traditional wooden door with carved panels
+      parts.push(box(0.5, 1.2, 0.08, 0x5a4a3a, { y: 0.6, z: 0.82 }));
+      parts.push(box(0.08, 1.0, 0.06, 0x4a3a2a, { x: -0.22, y: 0.6, z: 0.86 })); // door divider
+      // Upper floor wooden windows (客家傳統格窗)
+      parts.push(box(0.5, 0.4, 0.06, 0x6a5a4a, { x: -0.55, y: 1.6, z: 0.82 }));
+      parts.push(box(0.5, 0.4, 0.06, 0x6a5a4a, { x: 0.55, y: 1.6, z: 0.82 }));
+      // Lattice window grilles
+      parts.push(box(0.4, 0.02, 0.04, 0x4a3a2a, { x: -0.55, y: 1.55, z: 0.86 }));
+      parts.push(box(0.4, 0.02, 0.04, 0x4a3a2a, { x: -0.55, y: 1.65, z: 0.86 }));
+      parts.push(box(0.4, 0.02, 0.04, 0x4a3a2a, { x: 0.55, y: 1.55, z: 0.86 }));
+      parts.push(box(0.4, 0.02, 0.04, 0x4a3a2a, { x: 0.55, y: 1.65, z: 0.86 }));
+      // Signboard (客家店招)
+      parts.push(box(1.2, 0.35, 0.08, 0x5a4a3a, { y: 1.95, z: 0.8 }));
+      parts.push(box(1.0, 0.25, 0.04, 0xc8a070, { y: 1.95, z: 0.86 })); // gold text
+      // Hakka-style sloped tile roof (黑瓦屋頂)
+      parts.push(box(2.2, 0.12, 1.8, 0x4a4a4a, { y: 2.1 }));
+      parts.push(box(2.3, 0.35, 1.9, 0x3a3a3a, { y: 2.25, rx: 0.12 })); // main roof slope
+      // Roof ridge ornament
+      parts.push(box(2.0, 0.08, 0.15, 0x5a5a5a, { y: 2.5 }));
+      // Side arcade column (騎樓柱)
+      parts.push(box(0.25, 1.2, 0.25, earth_wall, { x: -0.85, y: 0.6, z: 0.65 }));
+      parts.push(box(0.25, 1.2, 0.25, earth_wall, { x: 0.85, y: 0.6, z: 0.65 }));
       return finish(parts);
     },
   },
@@ -300,41 +313,47 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 龍岡市場攤位 (Longgang Market stall — Yunnan/Myanmar cuisine) ---- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'longgang_market_stall',
+    displayName: '龍岡市場攤位',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 4.5,
+    radiusNominal: 5.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
-    yOffset: -0.48,
+    palette: [0xc83828, 0xe04838, 0xffe8a8, 0xd8c090, 0x4a8a4a],
+    yOffset: -0.52,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
-      ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
-      }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // Longgang Market (龍岡市場) stall — famous for Yunnan & Myanmar cuisine
+      // A unique feature of Taoyuan's military dependents' village area
+      const parts = [];
+      // Market stall structure (open-front style)
+      parts.push(box(2.8, 1.5, 1.6, 0xd8d0c0, { y: 0.75 }));
+      // Distinctive red awning (Longgang market signature)
+      parts.push(box(3.0, 0.08, 2.0, 0xc83828, { y: 1.55, z: 0.3 }));
+      parts.push(box(3.0, 0.06, 0.15, 0xe04838, { y: 1.52, z: 1.2 })); // awning edge
+      // Support poles for awning
+      parts.push(cyl(0.08, 0.08, 1.5, 6, 0x8a8a88, { x: -1.3, y: 0.75, z: 1.1 }));
+      parts.push(cyl(0.08, 0.08, 1.5, 6, 0x8a8a88, { x: 1.3, y: 0.75, z: 1.1 }));
+      // Counter/service window
+      parts.push(box(2.4, 0.12, 0.5, 0xd8c090, { y: 0.9, z: 0.85 }));
+      // Noodle/food display steamer baskets (米線/米干蒸籠)
+      parts.push(cyl(0.25, 0.25, 0.12, 8, 0xc8b89a, { x: -0.7, y: 1.02, z: 0.9 }));
+      parts.push(cyl(0.25, 0.25, 0.08, 8, 0xd8c8a8, { x: -0.7, y: 1.14, z: 0.9 })); // lid
+      parts.push(cyl(0.25, 0.25, 0.12, 8, 0xc8b89a, { x: 0.0, y: 1.02, z: 0.9 }));
+      parts.push(cyl(0.25, 0.25, 0.08, 8, 0xd8c8a8, { x: 0.0, y: 1.14, z: 0.9 })); // lid
+      // Signboard with menu (米干/米線 Yunnan noodles)
+      parts.push(box(1.8, 0.5, 0.08, 0xffe8a8, { y: 1.35, z: 0.84 }));
+      parts.push(box(1.6, 0.4, 0.04, 0xc83828, { y: 1.35, z: 0.9 })); // red text
+      // Side display: dried goods / pickles (雲南醃菜)
+      parts.push(box(0.4, 0.4, 0.35, 0x4a8a4a, { x: 0.95, y: 0.65, z: 0.7 })); // jar
+      parts.push(cyl(0.18, 0.18, 0.35, 6, 0x8a6a4a, { x: -1.0, y: 0.65, z: 0.8 })); // pickle jar
+      // Plastic stools for customers
+      parts.push(box(0.25, 0.25, 0.25, 0xc83828, { x: -0.5, y: 0.12, z: 1.4 }));
+      parts.push(box(0.25, 0.25, 0.25, 0x3a6ea0, { x: 0.3, y: 0.12, z: 1.35 }));
       return finish(parts);
     },
   },
