@@ -23,30 +23,35 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, finish, PI, HALF_PI } from 
 /** @type {ArchetypeDef[]} */
 export const T1_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] 養樂多 — squat Yakult bottle: white body, pinched waist, red label */
+  /* [0] 客家擂茶杯 — Hakka Lei Cha (擂茶) ceramic cup with powder      */
   /* ---------------------------------------------------------------- */
   {
-    id: 'yakult',
-    displayName: '養樂多',
+    id: 'hakka_leicha_cup',
+    displayName: '客家擂茶杯',
     tier: 1,
     naturalBand: 1,
-    radiusNominal: 0.055,
+    radiusNominal: 0.06,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xf7f4ee, 0xe4d9c4, 0xc8442e, 0xb03828, 0xf0e8d8],
-    yOffset: -0.1645,
+    palette: [0xd8c8a0, 0xc8b890, 0x60883a, 0x508030, 0xe8d8b8],
+    yOffset: -0.25,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hakka Lei Cha (擂茶) is a traditional tea from Taoyuan's Hakka regions (Longtan/Xinwu)
       return finish([
-        cyl(0.62, 0.46, 0.5, 9, 0xf7f4ee, { y: 0.25 }), // tapered base
-        cyl(0.66, 0.62, 0.55, 9, 0xf7f4ee, { y: 0.78 }), // belly
-        cyl(0.5, 0.66, 0.3, 9, 0xf7f4ee, { y: 1.2 }), // shoulder pinch
-        cyl(0.46, 0.5, 0.18, 9, 0xf7f4ee, { y: 1.44 }), // neck
-        cyl(0.5, 0.5, 0.06, 9, 0xc8442e, { y: 1.55 }), // foil cap
-        // red label band wrapping the belly
-        cyl(0.69, 0.66, 0.34, 9, 0xc8442e, { y: 0.66, open: true }),
-        cyl(0.65, 0.63, 0.1, 9, 0xf7f4ee, { y: 0.78, open: true }), // white stripe in label
+        // ceramic tea bowl (wider at top)
+        cyl(0.8, 0.55, 0.7, 9, 0xffffff, { y: 0.35, hex2: 0xe8d8b8 }), // bowl body (tinted)
+        // rim
+        cyl(0.84, 0.82, 0.1, 9, 0xd8c8a0, { y: 0.72 }),
+        // green tea powder surface inside
+        cyl(0.72, 0.72, 0.08, 9, 0x60883a, { y: 0.62 }),
+        // small ceramic base ring
+        cyl(0.45, 0.5, 0.12, 9, 0xc8b890, { y: 0.06 }),
+        // visible ground tea leaves/nuts on surface (characteristic of Lei Cha)
+        sph(0.08, 0x508030, { ws: 5, hs: 4, x: 0.2, y: 0.68, z: 0.15 }),
+        sph(0.06, 0x70a048, { ws: 5, hs: 4, x: -0.25, y: 0.66, z: -0.1 }),
+        sph(0.07, 0x508030, { ws: 5, hs: 4, x: 0.0, y: 0.67, z: -0.2 }),
       ]);
     },
   },
