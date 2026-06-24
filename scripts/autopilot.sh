@@ -44,6 +44,8 @@ assert,vitest <id> 抓不到、超標會害 'npm run dev' 主遊戲開不了(pre
 ③ 河也要在地化(cityMap.js 的 water:名稱+centerline+註解,別留台北基隆河),結尾 ending.js 不要動(共用、自動點亮);\
 ④ **tier 名要在地化**(tiers.js 每階 name,尤其 tier 0 別留台北『柑仔店桌頭』、別照抄機車海/信義天際線);\
 ⑤ **ext 地標 codes 90-98 用這座城自己的地標**(reuse 主地標、id 加 _ext 後綴避免撞 82-89,並同步 index.js 的 codeMap),別借台北故宮/美麗華/中山堂、別留『預留欄位』。city-content-localization.test.js 會擋 ④⑤。\
+⑥ **所有放進 catalog(有 code 的)地標,其 landmarks/*.js 內容與幾何都要是這座城的,別只改 id 字串卻沿用台北 geometry**;改過的 landmark 檔頭 @file 要改成 packs/<本城>/...(別留 @file packs/taipei/)。新守衛會掃 catalog placed 地標的來源檔,含 @file packs/taipei/ 就 FAIL。\
+⑦ **新城是 cp -r taipei 起家,把沒用到的台北 landmarks/collectibles 死檔刪掉**(該城沒 import 的就 git rm),別把台北殘檔交出來。\
 天際線圖(skyline-<id>.webp)若沒能力產就別硬塞,列進 FINDINGS 讓它變 issue(人工批次補)。\
 做完把 NEXT.md 該行 [ ] 改成 [x]。\
 最後**精確**用這格式輸出(給腳本解析,別多話):\

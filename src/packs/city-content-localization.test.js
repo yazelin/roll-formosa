@@ -54,3 +54,26 @@ describe('extended landmarks (codes 90-98) localized (no taipei ids)', () => {
     });
   }
 });
+
+// The ext-id string check above only catches taipei *id strings* in the codeMap.
+// penghu slipped through by giving taipei landmarks penghu-flavoured ids while
+// keeping taipei geometry: catalog placed `nm: NM_PALACE` (故宮) / `NM_XINGTIAN`
+// (行天宮) imported from landmark files still headed `@file packs/taipei/`.
+// This gates the actual placed-landmark source files, not just the id strings.
+describe('placed catalog landmarks are localized (no taipei source files)', () => {
+  for (const c of others) {
+    it(`${c.id} places no landmark whose file is still taipei's`, () => {
+      const catalog = readFileSync(join(HERE, c.id, 'catalog.js'), 'utf8');
+      // NM_* symbols actually given a code (placed in the catalog, not just imported)
+      const placed = new Set([...catalog.matchAll(/\bnm:\s*(NM_[A-Z0-9_]+)/g)].map((m) => m[1]));
+      const offenders = [];
+      for (const m of catalog.matchAll(/import\s*\{([^}]+)\}\s*from\s*'(\.\/landmarks\/[a-z0-9_]+\.js)'/g)) {
+        const names = m[1].split(',').map((s) => s.trim());
+        if (!names.some((n) => placed.has(n))) continue; // imported but not placed → skip (dead import)
+        const body = readFileSync(join(HERE, c.id, m[2]), 'utf8');
+        if (body.includes('@file packs/taipei/')) offenders.push(m[2]);
+      }
+      expect(offenders, `${c.id} places taipei landmark file(s) ${offenders.join(', ')} — localize the geometry + @file header, don't reuse taipei`).toEqual([]);
+    });
+  }
+});
