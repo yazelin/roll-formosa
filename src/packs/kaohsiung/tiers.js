@@ -49,10 +49,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 旗魚黑輪, 圖釘, 黑松汽水蓋, 鹹酸甜, 尪仔標, 木瓜牛奶杯, 鈕扣
-      'marble', 'marlin_fishcake', 'pushpin', 'soda_cap', 'preserved_fruit', 'ngiauimia_card', 'papaya_milk_cup', 'button',
-      // chunk landmarks: 戳戳樂板, 籤筒
-      'scratch_card_board', 'fortune_stick_tube',
+      // 貨櫃鑰匙圈, 旗魚黑輪, 旗津貝殼, 黑松汽水蓋, 鹹酸甜, 港邊繩圈, 木瓜牛奶杯, 旗魚墜飾
+      'container_keychain', 'marlin_fishcake', 'cijin_shell', 'soda_cap', 'preserved_fruit', 'dock_rope_coil', 'papaya_milk_cup', 'marlin_charm',
+      // chunk landmarks: 渡輪票夾, 港邊浮球迷你版
+      'ferry_ticket_holder', 'harbor_buoy_mini',
     ],
     fogColor: 0x3a2616, // 暖色柑仔店燈霧
     skyTop: 0x180d06,
@@ -145,8 +145,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 鹽埕港邊街屋, 鐵皮屋, 鹽埕洋樓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'yancheng_townhouse', 'tin_roof_house', 'yancheng_colonial', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 鹽埕港邊街屋, 鐵皮屋, 鹽埕洋樓, 超商, 公車, 垃圾車, 加油站, 港邊倉庫棚架
+      'yancheng_townhouse', 'tin_roof_house', 'yancheng_colonial', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'harbor_warehouse_shed',
       // chunk landmarks: 鹽埕街屋, 大廟
       'saltfield_streethouse_mass', 'temple_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 屋頂機房, 灣區大樓
-      'glass_highrise', 'exhibition_hall', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'music_center', 'rooftop_plant_room', 'bayarea_block',
+      // 玻璃帷幕高樓, 展覽館, 其他摩天樓, 巨型廣告牆, 圖書館塔, 海音中心, 港邊客運站, 灣區大樓
+      'glass_highrise', 'exhibition_hall', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'music_center', 'harbor_ferry_terminal', 'bayarea_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

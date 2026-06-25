@@ -28,26 +28,33 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] container_keychain 貨櫃鑰匙圈 — mini shipping container charm   */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'container_keychain',
+    displayName: '貨櫃鑰匙圈',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xc2562b, 0x2f6db0, 0x3f8a47, 0xd8c24a, 0xe04a4a],
+    yOffset: -0.58, // box lying flat
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      const hull = 0xffffff; // tinted to container colors
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        // mini shipping container body
+        box(1.8, 0.7, 0.65, hull, { y: 0.35 }),
+        // corrugation ribs on side
+        box(0.04, 0.6, 0.02, 0x2a2c30, { x: -0.5, y: 0.35, z: 0.34 }),
+        box(0.04, 0.6, 0.02, 0x2a2c30, { x: 0.0, y: 0.35, z: 0.34 }),
+        box(0.04, 0.6, 0.02, 0x2a2c30, { x: 0.5, y: 0.35, z: 0.34 }),
+        // top rail
+        box(1.84, 0.06, 0.68, 0x2a2c30, { y: 0.72 }),
+        // keyring loop
+        torus(0.12, 0.025, 4, 8, 0xc8ccd4, { x: 0.95, y: 0.55, rz: HALF_PI }),
       ]);
     },
   },
@@ -83,26 +90,30 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] cijin_shell 旗津貝殼 — Cijin beach seashell souvenir            */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'cijin_shell',
+    displayName: '旗津貝殼',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0xf5e8d8, 0xe8d4c0, 0xd8c4b0, 0xf0dcc8, 0xc8b098],
+    yOffset: -0.65, // shell lying flat
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // scallop shell body (half sphere, flattened)
+        sph(1.0, 0xffffff, { ws: 8, hs: 5, thetaLen: HALF_PI, y: 0.3, sy: 0.5 }),
+        // radiating ribs on the shell
+        box(0.08, 0.06, 0.9, 0xd8c4a8, { x: -0.4, y: 0.32, rz: -0.15 }),
+        box(0.08, 0.06, 0.9, 0xd8c4a8, { x: 0.0, y: 0.35 }),
+        box(0.08, 0.06, 0.9, 0xd8c4a8, { x: 0.4, y: 0.32, rz: 0.15 }),
+        // hinge area at the back
+        sph(0.25, 0xc8b4a0, { ws: 5, hs: 3, y: 0.2, z: -0.8 }),
       ]);
     },
   },
@@ -171,33 +182,29 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] dock_rope_coil 港邊繩圈 — dockside mooring rope coil             */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'dock_rope_coil',
+    displayName: '港邊繩圈',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xc8a870, 0xb89860, 0xd8b880, 0xa88850, 0xc0a068],
+    yOffset: -0.75, // coil lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
-      ]);
+      const parts = [];
+      // coiled rope layers (concentric tori stacked)
+      parts.push(torus(0.75, 0.14, 6, 10, 0xffffff, { y: 0.14, rx: HALF_PI }));
+      parts.push(torus(0.55, 0.13, 6, 10, 0xffffff, { y: 0.26, rx: HALF_PI, hex2: 0xe8d4b0 }));
+      parts.push(torus(0.38, 0.12, 6, 8, 0xffffff, { y: 0.36, rx: HALF_PI }));
+      // loose rope end trailing off
+      cyl(0.08, 0.08, 0.6, 5, 0xc8a870, { x: 0.8, y: 0.12, rz: HALF_PI });
+      return finish(parts);
     },
   },
 
@@ -235,75 +242,74 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] marlin_charm 旗魚墜飾 — marlin fish charm keychain               */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'marlin_charm',
+    displayName: '旗魚墜飾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0x3070a0, 0x4080b0, 0x2060a0, 0x5090c0, 0x2858a0],
+    yOffset: -0.55, // fish charm lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
-      ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      return finish([
+        // marlin body (elongated tapered)
+        cyl(0.35, 0.15, 1.8, 6, 0xffffff, { rz: HALF_PI, y: 0.35, hex2: 0xc8d8e8 }),
+        // pointed bill/sword
+        cone(0.08, 0.7, 5, 0x4a6080, { rz: HALF_PI, x: 1.3, y: 0.35 }),
+        // dorsal fin
+        cone(0.18, 0.4, 4, 0x2858a0, { x: 0.0, y: 0.58, rz: 0.3 }),
+        // tail fin (forked)
+        cone(0.12, 0.35, 4, 0x3070a0, { x: -0.95, y: 0.48, rz: -0.6 }),
+        cone(0.12, 0.35, 4, 0x3070a0, { x: -0.95, y: 0.22, rz: 0.6 }),
+        // keyring loop
+        torus(0.1, 0.02, 4, 8, 0xc8ccd4, { x: -1.1, y: 0.35, rz: HALF_PI }),
+      ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [8] scratch_card_board 戳戳樂板 — CHUNK LANDMARK: poke-hole board    */
+  /* [8] ferry_ticket_holder 渡輪票夾 — CHUNK LANDMARK: ferry ticket rack */
   /* ---------------------------------------------------------------- */
   {
-    id: 'scratch_card_board',
-    displayName: '戳戳樂板',
+    id: 'ferry_ticket_holder',
+    displayName: '渡輪票夾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.05,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0xf4e3c0, 0xf6d4a0, 0xead9b6, 0xf2dcb0],
-    yOffset: -0.42, // board standing upright (= -1 - minY of normalized geo)
+    palette: [0x3a6a90, 0x4a7aa0, 0x2a5a80, 0x5a8ab0],
+    yOffset: -0.42, // board standing upright
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
       const parts = [
-        box(2.7, 1.9, 0.18, 0xffffff, { y: 0.95, z: 0.0 }), // cardboard backing (tinted)
-        box(2.7, 0.42, 0.2, 0xd83a2e, { y: 1.74, z: 0.02 }), // red header banner strip
-        box(2.7, 0.26, 0.2, 0xf0b429, { y: 0.18, z: 0.02 }), // gold footer prize strip
+        // ticket board backing (harbor blue)
+        box(2.5, 1.8, 0.16, 0xffffff, { y: 0.9 }),
+        // header with ferry icon
+        box(2.5, 0.36, 0.18, 0x3a6a90, { y: 1.66 }),
+        // boat silhouette on header
+        box(0.8, 0.18, 0.04, 0xf0f0e8, { y: 1.66, z: 0.1 }),
+        cone(0.15, 0.22, 4, 0xf0f0e8, { x: 0.45, y: 1.72, z: 0.12, rz: -0.3 }),
       ];
-      // grid of paper-covered poke holes (each a small open ring — capless to
-      // stay under the tri cap; the dark backing reads through as the hole)
-      const cols = 5;
+      // rows of ticket stubs in slots
       const rows = 3;
-      const x0 = -0.84;
-      const y0 = 0.62;
-      const dx = 0.42;
-      const dy = 0.38;
+      const cols = 4;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const popped = rng() < 0.28; // a few already poked
-          const px = x0 + c * dx;
-          const py = y0 + r * dy;
-          parts.push(
-            cyl(0.15, 0.15, 0.12, 6, popped ? 0x2a2a2e : 0xfff6e4, { rx: HALF_PI, x: px, y: py, z: 0.12, open: true })
-          );
+          const tx = -0.75 + c * 0.5;
+          const ty = 0.45 + r * 0.38;
+          const hasTicket = rng() > 0.3;
+          if (hasTicket) {
+            parts.push(box(0.38, 0.28, 0.08, 0xf8f4e8, { x: tx, y: ty, z: 0.12 })); // ticket
+            parts.push(box(0.32, 0.06, 0.04, 0x3a6a90, { x: tx, y: ty + 0.08, z: 0.16 })); // printed line
+          }
         }
       }
       return finish(parts);
@@ -311,50 +317,35 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [9] fortune_stick_tube 籤筒 — CHUNK LANDMARK: bamboo fortune tube    */
+  /* [9] harbor_buoy_mini 港邊浮球迷你版 — CHUNK LANDMARK: mini harbor buoy */
   /* ---------------------------------------------------------------- */
   {
-    id: 'fortune_stick_tube',
-    displayName: '籤筒',
+    id: 'harbor_buoy_mini',
+    displayName: '港邊浮球迷你版',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.05,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0xc24a2c, 0xd45a30, 0xb8431f, 0xcf5226],
-    yOffset: -0.10, // tube standing upright (= -1 - minY of normalized geo)
+    palette: [0xe06030, 0xf07040, 0xd05020, 0xff8050],
+    yOffset: -0.10, // buoy upright
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      const parts = [
-        cyl(0.92, 0.86, 2.3, 12, 0xffffff, { y: 1.15 }), // lacquered bamboo tube (tinted red)
-        cyl(0.98, 0.98, 0.22, 12, 0xf0b429, { y: 0.12 }), // gold base ring
-        cyl(0.98, 0.98, 0.22, 12, 0xf0b429, { y: 2.18 }), // gold mouth ring
-        cyl(0.78, 0.78, 0.18, 12, 0x2a1c14, { y: 2.2 }), // dark inner mouth (sticks emerge here)
-        // gold vertical accent stripes on the body
-        box(0.1, 1.9, 0.06, 0xf0b429, { x: 0.0, z: 0.9, y: 1.15 }),
-        box(0.1, 1.9, 0.06, 0xf0b429, { x: 0.9, z: 0.0, y: 1.15, ry: HALF_PI }),
-      ];
-      // bundle of fortune sticks poking out the top at slight angles
-      const sticks = 7;
-      for (let i = 0; i < sticks; i++) {
-        const a = (i / sticks) * PI * 2;
-        const lean = 0.18 + (i % 3) * 0.05;
-        const r = 0.32;
-        const tilt = (i % 2 === 0) ? lean : -lean;
-        // one stick = single 4-sided shaft with a red-painted top via gradient
-        parts.push(
-          cyl(0.055, 0.06, 1.6, 4, 0xe8d2a6, {
-            rz: tilt,
-            rx: Math.sin(a) * lean,
-            x: Math.cos(a) * r,
-            z: Math.sin(a) * r,
-            y: 3.1,
-            hex2: 0xc23a2e, // red-dipped fortune tip (top of gradient)
-          })
-        );
-      }
-      return finish(parts);
+      return finish([
+        // buoy body (tapered cylinder, orange)
+        cyl(0.7, 0.5, 1.6, 8, 0xffffff, { y: 0.9, hex2: 0xf8e8d8 }),
+        // white stripe band
+        cyl(0.72, 0.72, 0.3, 8, 0xf0f0e8, { y: 1.0, open: true }),
+        // top cap / reflector
+        sph(0.4, 0xf0f0e8, { ws: 6, hs: 4, y: 1.7, thetaLen: HALF_PI }),
+        // bottom weight / base
+        cyl(0.55, 0.6, 0.3, 8, 0x3a3a40, { y: 0.15 }),
+        // mounting ring on top
+        torus(0.25, 0.05, 4, 8, 0x4a4a50, { y: 1.85, rx: HALF_PI }),
+        // number decal (stylized)
+        box(0.3, 0.25, 0.04, 0x2a2a30, { y: 0.7, z: 0.52 }),
+      ]);
     },
   },
 ];

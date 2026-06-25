@@ -303,41 +303,40 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 港邊倉庫棚架 (harbor warehouse shed) -------------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'harbor_warehouse_shed',
+    displayName: '港邊倉庫棚架',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd6cbb6, 0xc6baa6, 0xded0be, 0xcdd4ce, 0xb6aa96],
+    palette: [0x7a8a9a, 0x8a9aa8, 0x9aaab8, 0x6a7a8a, 0x5a6a7a],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb6aa96, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcdd4ce, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // corrugated steel shed body (港邊倉庫風)
+        box(3.0, 1.5, 1.4, 0xffffff, { y: 0.85, hex2: 0xb8c0c8 }),
+        // gable roof (salt-weathered tin)
+        cyl(1.6, 1.6, 3.2, 4, 0x8a9aa8, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 1.8 }),
+        // large cargo door (sliding steel)
+        box(1.4, 1.1, 0.06, 0x5a6a78, { y: 0.6, z: 0.72 }),
+        box(1.38, 0.08, 0.04, 0x4a5a68, { y: 1.16, z: 0.74 }), // door rail
+        // dock loading platform
+        box(3.2, 0.2, 0.5, 0x9aa0a8, { y: 0.1, z: 0.95 }),
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc6baa6, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb6aa96, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+      // vertical corrugation ribs on the sides
+      for (let i = 0; i < 5; i++) {
+        const x = -1.2 + i * 0.6;
+        parts.push(box(0.04, 1.3, 0.04, 0x6a7a88, { x, y: 0.75, z: 0.72 }));
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // forklift pallet on the platform
+      parts.push(box(0.6, 0.1, 0.5, 0xc8b090, { x: -0.8, y: 0.25, z: 0.9 }));
+      // harbor signage
+      parts.push(box(0.9, 0.3, 0.04, 0x3a6a90, { y: 1.5, z: 0.73 }));
       return finish(parts);
     },
   },
