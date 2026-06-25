@@ -169,8 +169,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 老街牌樓, 扇形車庫庫房, 蚵殼堆, 花田, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'old_street_archway', 'roundhouse_bay', 'oyster_shell_mound', 'flower_field', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 老街牌樓, 扇形車庫庫房, 蚵殼堆, 花田, 碾米廠, 葡萄園棚架, 醬油工坊, 彰化火車站前
+      'old_street_archway', 'roundhouse_bay', 'oyster_shell_mound', 'flower_field', 'rice_mill', 'vineyard_trellis', 'soy_sauce_workshop', 'changhua_station_front',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 龍山寺塔, 鹿港街屋排, 大佛像, 花卉市場, 商辦塔, 空橋, 屋頂機房, 街區大樓
-      'longshan_pagoda', 'lukang_street_row', 'great_buddha', 'flower_market', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'skyline_block',
+      // 龍山寺塔, 鹿港街屋排, 大佛座, 田尾花市棚, 紡織廠, 穀倉群, 養殖場, 摩天大樓
+      'longshan_pagoda', 'lukang_street_row', 'great_buddha', 'flower_market', 'textile_factory', 'grain_silos', 'aquaculture_farm', 'skyline_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

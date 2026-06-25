@@ -186,88 +186,119 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 商辦塔 business tower ---------------------------------- */
+  /* ---- slot 4: 紡織廠 (Changhua textile factory) ----------------------- */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'textile_factory',
+    displayName: '紡織廠',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
-    yOffset: -0.191,
+    palette: [0xc8bca8, 0xb8a898, 0x9a8a78, 0x8a7a6a, 0xe0d8c8],
+    yOffset: -0.4,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
-      return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
-      ]);
+      // 彰化傳統紡織廠 (traditional textile factory building)
+      const parts = [
+        // main factory building
+        box(4.0, 2.5, 3.0, 0xffffff, { y: 1.25, hex2: 0xc8bca8 }), // brick body
+        // sawtooth factory roof (北向採光屋頂)
+        box(4.2, 0.15, 3.2, 0x9a8a78, { y: 2.6 }),
+        // sawtooth peaks
+        box(1.2, 0.6, 3.0, 0x9a8a78, { x: -1.2, y: 2.8, rz: 0.4 }),
+        box(1.2, 0.6, 3.0, 0x9a8a78, { x: 1.2, y: 2.8, rz: 0.4 }),
+        // glass skylights on north face
+        box(0.8, 0.4, 2.8, 0x9fc4d8, { x: -1.2, y: 3.0, rz: -0.4 }),
+        box(0.8, 0.4, 2.8, 0x9fc4d8, { x: 1.2, y: 3.0, rz: -0.4 }),
+        // tall loading doors
+        box(1.2, 1.8, 0.1, 0x6a5a4a, { y: 0.9, z: 1.55 }),
+        box(1.2, 1.8, 0.1, 0x6a5a4a, { x: 2.0, y: 0.9, z: 1.55 }),
+        // water tower on roof
+        cyl(0.5, 0.5, 1.0, 6, 0x3a6ea0, { x: -1.5, y: 3.5 }),
+        // chimney
+        cyl(0.25, 0.2, 1.5, 6, 0x8a7a6a, { x: 1.8, y: 3.5 }),
+        // loading dock
+        box(4.2, 0.3, 0.8, 0x9a8a78, { y: 0.15, z: 2.0 }),
+      ];
+      return finish(parts);
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 穀倉群 (Changhua grain silos) -------------------------- */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'grain_silos',
+    displayName: '穀倉群',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 85,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
-    yOffset: -0.427,
+    palette: [0xd8d4cc, 0xc8c4bc, 0x9a968e, 0xf0ece4, 0x6a5a4a],
+    yOffset: -0.35,
     upright: true,
-    collisionScale: 0.65,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
-      return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
-      ]);
+      // 彰化穀倉群 (agricultural grain storage silos)
+      const parts = [
+        // three tall cylindrical silos
+        cyl(1.0, 1.0, 3.5, 8, 0xffffff, { x: -1.5, y: 1.75, hex2: 0xd8d4cc }),
+        cyl(1.0, 1.0, 3.5, 8, 0xffffff, { x: 0, y: 1.75, hex2: 0xc8c4bc }),
+        cyl(1.0, 1.0, 3.5, 8, 0xffffff, { x: 1.5, y: 1.75, hex2: 0xd8d4cc }),
+        // conical roofs
+        cone(1.1, 0.8, 8, 0x9a968e, { x: -1.5, y: 3.9 }),
+        cone(1.1, 0.8, 8, 0x9a968e, { x: 0, y: 3.9 }),
+        cone(1.1, 0.8, 8, 0x9a968e, { x: 1.5, y: 3.9 }),
+        // connecting walkways between silos
+        box(1.2, 0.15, 0.4, 0x8a7a6a, { x: -0.75, y: 2.8 }),
+        box(1.2, 0.15, 0.4, 0x8a7a6a, { x: 0.75, y: 2.8 }),
+        // base platform
+        box(5.0, 0.3, 2.5, 0x9a8a7a, { y: 0.15 }),
+        // loading conveyor
+        box(0.3, 0.2, 2.0, 0x6a5a4a, { x: 2.2, y: 1.5, z: 0, rx: -0.5 }),
+        // small control room
+        box(1.2, 1.5, 1.0, 0xc8b8a8, { x: 2.8, y: 0.75 }),
+      ];
+      return finish(parts);
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 養殖場 (Changhua oyster/fish farm) --------------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'aquaculture_farm',
+    displayName: '養殖場',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 68,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
-    yOffset: -0.38,
+    palette: [0x4a8a9a, 0x3a7a8a, 0x5a9aaa, 0x9a8a7a, 0xe0d8c8],
+    yOffset: -0.55,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
+      // 彰化海岸養殖場 (coastal aquaculture farm with ponds)
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        // rectangular fish ponds
+        box(3.5, 0.3, 2.5, 0x9a8a7a, { y: 0.15 }), // earthen berm outline
+        box(3.2, 0.2, 2.2, 0x4a8a9a, { y: 0.1 }), // water surface (tinted)
+        // dividing berms
+        box(0.2, 0.35, 2.5, 0x8a7a6a, { x: 0, y: 0.18 }),
+        // aerator paddlewheels
+        cyl(0.3, 0.3, 0.15, 6, 0x6a6a6a, { rx: HALF_PI, x: -0.8, y: 0.4, z: 0.5 }),
+        cyl(0.3, 0.3, 0.15, 6, 0x6a6a6a, { rx: HALF_PI, x: 0.8, y: 0.4, z: -0.5 }),
+        // small pump house
+        box(0.8, 1.0, 0.8, 0xe0d8c8, { x: -2.0, y: 0.5 }),
+        box(0.85, 0.1, 0.85, 0x8a7a6a, { x: -2.0, y: 1.05 }),
+        // oyster racks in water (簡化蚵架)
+        box(0.08, 0.6, 1.5, 0x6a5a4a, { x: -1.0, y: 0.3, z: 0 }),
+        box(0.08, 0.6, 1.5, 0x6a5a4a, { x: 1.0, y: 0.3, z: 0 }),
+        // sorting area with baskets
+        box(1.2, 0.4, 0.8, 0x9a8a78, { x: 2.2, y: 0.2 }),
+        sph(0.25, 0xe8e4dc, { ws: 5, hs: 4, x: 2.0, y: 0.5, sy: 0.6 }),
+        sph(0.25, 0xe8e4dc, { ws: 5, hs: 4, x: 2.4, y: 0.5, sy: 0.6 }),
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
       return finish(parts);
     },
   },
