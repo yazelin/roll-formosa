@@ -179,37 +179,40 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 4 ── 鐵捲門 roll-up shutter (shopfront) ────────────────────────────── */
+  /* 4 ── 曬穀架 rice_drying_rack (蘭陽平原稻穀曬架) ───────────────────── */
   {
-    id: 'roll_shutter',
-    displayName: '鐵捲門',
+    id: 'rice_drying_rack',
+    displayName: '曬穀架',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.8,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xa9adb6, 0x7c818c, 0x5a5e68, 0xc9ccd2, 0x3a3d46],
-    yOffset: -0.3,
+    palette: [0xc8a860, 0xb89850, 0x8a6a3a, 0xd8b870, 0x6a5a38],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      const metal = rng() < 0.5 ? 0xa9adb6 : 0xb0a878; // grey or beige shutter
+      const wood = 0x8a6a3a;
       const parts = [];
-      // side frame channels
-      parts.push(box(0.14, 2.4, 0.14, 0x5a5e68, { x: -1.3, y: 1.2 }));
-      parts.push(box(0.14, 2.4, 0.14, 0x5a5e68, { x: 1.3, y: 1.2 }));
-      // shutter face = stack of horizontal slats (alternating shade)
-      const slats = 11;
-      for (let i = 0; i < slats; i++) {
-        const y = 0.25 + i * 0.2;
-        const shade = i % 2 === 0 ? metal : 0x7c818c;
-        parts.push(box(2.5, 0.18, 0.08, shade, { x: 0, y, z: 0 }));
+      // wooden A-frame supports
+      parts.push(cyl(0.08, 0.1, 2.0, 5, wood, { x: -1.2, y: 1.0, rz: 0.1 }));
+      parts.push(cyl(0.08, 0.1, 2.0, 5, wood, { x: 1.2, y: 1.0, rz: -0.1 }));
+      // cross beam
+      parts.push(box(2.6, 0.12, 0.12, wood, { y: 1.8 }));
+      // horizontal drying slats
+      for (let i = 0; i < 5; i++) {
+        parts.push(box(2.4, 0.05, 0.15, 0x6a5a38, { y: 0.4 + i * 0.32 }));
       }
-      // roll housing box on top
-      parts.push(box(2.7, 0.4, 0.34, 0x3a3d46, { x: 0, y: 2.5 }));
-      parts.push(cyl(0.18, 0.18, 2.5, 8, 0x4a4e58, { x: 0, y: 2.5, rz: HALF_PI }));
-      // bottom rail
-      parts.push(box(2.6, 0.16, 0.14, 0x3a3d46, { x: 0, y: 0.12 }));
+      // scattered rice grains (golden color) on slats
+      parts.push(box(2.0, 0.03, 0.1, 0xd8b870, { y: 0.45, z: 0.02 }));
+      parts.push(box(1.8, 0.03, 0.08, 0xc8a860, { y: 0.77, z: -0.02 }));
+      parts.push(box(2.1, 0.03, 0.09, 0xd8b870, { y: 1.09, z: 0.01 }));
+      // woven bamboo mat underneath
+      parts.push(box(2.3, 0.02, 0.5, 0xb89850, { y: 0.38 }));
+      // support legs
+      parts.push(cyl(0.06, 0.08, 0.4, 4, wood, { x: -1.0, y: 0.2 }));
+      parts.push(cyl(0.06, 0.08, 0.4, 4, wood, { x: 1.0, y: 0.2 }));
       return finish(parts);
     },
   },
@@ -291,42 +294,44 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 7 ── 石獅 stone guardian lion (temple-gate shishi) ─────────────────── */
+  /* 7 ── 蘭陽土地公廟 tudigong_shrine (田間小土地公廟) ───────────────── */
   {
-    id: 'stone_lion',
-    displayName: '石獅',
+    id: 'tudigong_shrine',
+    displayName: '蘭陽土地公廟',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.0,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xb9b3a4, 0x9c9686, 0xd8d3c5, 0x6e6a5e, 0xc4203a],
-    yOffset: -0.16,
+    palette: [0xc83020, 0xe8a030, 0xb8ac98, 0x3a6a4a, 0xd8d0c0],
+    yOffset: -0.18,
     upright: true,
-    collisionScale: 0.72,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      const stone = 0xb9b3a4;
-      const stone2 = 0xd8d3c5;
+      const red = 0xc83020;
+      const gold = 0xe8a030;
+      const stone = 0xb8ac98;
       const parts = [];
-      // plinth base
-      parts.push(box(0.9, 0.4, 0.7, 0x9c9686, { x: 0, y: 0.2, hex2: 0x6e6a5e }));
-      // haunches / seated body
-      parts.push(box(0.6, 0.7, 0.55, stone, { x: 0.1, y: 0.72, hex2: stone2 }));
-      // chest rising to head
-      parts.push(box(0.55, 0.6, 0.5, stone, { x: -0.18, y: 1.0, hex2: stone2 }));
-      // head
-      parts.push(sph(0.34, stone, { x: -0.3, y: 1.5, ws: 7, hs: 5, hex2: stone2 }));
-      // curled mane (icosphere collar) + brow ridges
-      parts.push(sph(0.4, 0x9c9686, { x: -0.18, y: 1.42, ws: 7, hs: 4 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: 0.16, ws: 5, hs: 3 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: -0.16, ws: 5, hs: 3 }));
-      // front legs
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: 0.2 }));
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: -0.2 }));
-      // paws on a ball (left) — the lion's embroidered ball
-      parts.push(sph(0.16, 0xc4203a, { x: -0.5, y: 0.32, z: 0.2, ws: 6, hs: 4 }));
-      // tail
-      parts.push(sph(0.22, stone2, { x: 0.42, y: 1.05, ws: 6, hs: 4 }));
+      // stone platform base
+      parts.push(box(1.2, 0.25, 1.0, stone, { y: 0.12 }));
+      // shrine body (small red brick building)
+      parts.push(box(0.9, 0.8, 0.7, red, { y: 0.65, hex2: 0xd83828 }));
+      // traditional curved roof (green glazed tiles)
+      parts.push(box(1.1, 0.08, 0.9, 0x3a6a4a, { y: 1.15, z: 0.2, rx: -0.25 }));
+      parts.push(box(1.1, 0.08, 0.9, 0x2a5a3a, { y: 1.15, z: -0.2, rx: 0.25 }));
+      // roof ridge with ornament
+      parts.push(box(1.1, 0.06, 0.1, gold, { y: 1.28 }));
+      // small swallowtail tips
+      parts.push(box(0.2, 0.04, 0.06, gold, { x: -0.55, y: 1.32, rz: 0.4 }));
+      parts.push(box(0.2, 0.04, 0.06, gold, { x: 0.55, y: 1.32, rz: -0.4 }));
+      // entrance (dark opening)
+      parts.push(box(0.35, 0.55, 0.06, 0x3a2a1a, { y: 0.52, z: 0.36 }));
+      // incense pot in front
+      parts.push(cyl(0.12, 0.1, 0.15, 6, 0x8a7a60, { y: 0.32, z: 0.6 }));
+      // small red offering table
+      parts.push(box(0.4, 0.08, 0.25, red, { y: 0.29, z: 0.55 }));
+      // golden plaque above door
+      parts.push(box(0.5, 0.15, 0.04, gold, { y: 0.95, z: 0.37 }));
       return finish(parts);
     },
   },

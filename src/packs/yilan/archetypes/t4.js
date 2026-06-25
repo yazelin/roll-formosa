@@ -101,38 +101,44 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 老公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 田寮磚造民宅 (Yilan countryside brick farmhouse) ---------- */
   {
-    id: 'old_apartment',
-    displayName: '老公寓',
+    id: 'field_brick_house',
+    displayName: '田寮磚造民宅',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
-    yOffset: -0.28,
+    palette: [0xc8a880, 0xb89870, 0xd8b890, 0xa88860, 0xe8c8a0],
+    yOffset: -0.32,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      const brick = 0xc8a880;
       const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
+        // main brick house body (低矮田寮風)
+        box(2.4, 1.4, 1.8, 0xffffff, { y: 0.7, hex2: 0xd8b890 }),
+        // steep pitched roof (宜蘭多雨,屋頂陡)
+        box(2.7, 0.12, 2.2, 0x5a4a30, { y: 1.65, z: 0.55, rx: -0.45 }),
+        box(2.7, 0.12, 2.2, 0x4a3a20, { y: 1.65, z: -0.55, rx: 0.45 }),
+        // high ridge for rain runoff
+        box(2.7, 0.1, 0.2, 0x3a2a18, { y: 2.05 }),
+        // brick pillar supports (紅磚柱)
+        box(0.2, 1.4, 0.2, brick, { x: -1.1, y: 0.7, z: 0.95 }),
+        box(0.2, 1.4, 0.2, brick, { x: 1.1, y: 0.7, z: 0.95 }),
+        // front porch overhang
+        box(2.6, 0.08, 0.7, 0x6a5a40, { y: 1.35, z: 1.25 }),
+        // wooden window frames
+        box(0.4, 0.5, 0.06, 0x5a4a3a, { x: -0.6, y: 0.8, z: 0.92 }),
+        box(0.4, 0.5, 0.06, 0x5a4a3a, { x: 0.6, y: 0.8, z: 0.92 }),
+        // wooden door
+        box(0.5, 0.9, 0.08, 0x4a3a28, { y: 0.5, z: 0.92 }),
+        // rainwater gutter at eaves
+        cyl(0.05, 0.05, 2.6, 6, 0x6a6a6a, { y: 1.4, z: 1.0, rz: HALF_PI }),
+        // water tank on side (鐵皮水塔)
+        cyl(0.25, 0.25, 0.5, 6, 0x4a6a8a, { x: 1.4, y: 0.5 }),
       ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
-      }
       return finish(parts);
     },
   },
