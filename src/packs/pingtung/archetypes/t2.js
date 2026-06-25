@@ -300,38 +300,43 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐(鼎) — temple incense burner */
+  /* ---- slot 9 (CHUNK LANDMARK) ---- 海灘躺椅組 — beach lounge chair set */
   {
-    id: 'temple_incense_burner',
-    displayName: '廟前香爐(鼎)',
+    id: 'beach_lounge_set',
+    displayName: '海灘躺椅組',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 1.5,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0x9a7b3a, 0xb89048, 0x7a5e2a, 0xc8a050, 0x6a4e22],
-    yOffset: -0.215,
+    palette: [0x40c0ff, 0xff6040, 0xffd040, 0x40ff80, 0xffffff],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const bronze = 0xffffff;
-      return finish([
-        sph(1.0, bronze, { ws: 8, hs: 4, y: 1.0, hex2: 0xead8b0 }),
-        cyl(1.02, 1.02, 0.2, 8, 0x8a6a30, { y: 1.6, open: true }),
-        cyl(0.92, 0.92, 0.1, 8, 0xc8b89a, { y: 1.62, open: true }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, z: 0.7 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: -0.6, z: -0.4 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: 0.6, z: -0.4 }),
-        torus(0.28, 0.07, 4, 5, bronze, { x: -1.0, y: 1.7 }),
-        torus(0.28, 0.07, 4, 5, bronze, { x: 1.0, y: 1.7 }),
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: -1.05, y: 1.0 }),
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: 1.05, y: 1.0 }),
-        cone(0.5, 0.5, 6, 0xc83020, { y: 2.0 }),
-        cyl(0.06, 0.06, 0.3, 5, 0xf0c020, { y: 2.35 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.2, z: 0.1 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: -0.18, z: 0.2 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.0, z: -0.2 }),
-      ]);
+      // Kenting beach lounge chair set
+      const parts = [
+        // Main lounge chair - reclined
+        box(2.2, 0.12, 0.9, 0xffffff, { y: 0.5, rz: -0.15, hex2: 0x40c0ff }),
+        // Chair legs - tubular frame
+        cyl(0.05, 0.05, 0.5, 5, 0xd8d8d8, { x: -0.9, y: 0.25, z: 0.35 }),
+        cyl(0.05, 0.05, 0.5, 5, 0xd8d8d8, { x: -0.9, y: 0.25, z: -0.35 }),
+        cyl(0.05, 0.05, 0.35, 5, 0xd8d8d8, { x: 0.8, y: 0.18, z: 0.35 }),
+        cyl(0.05, 0.05, 0.35, 5, 0xd8d8d8, { x: 0.8, y: 0.18, z: -0.35 }),
+        // Headrest
+        box(0.5, 0.35, 0.8, 0x40c0ff, { x: -1.0, y: 0.75, rz: 0.3 }),
+        // Small side table
+        cyl(0.4, 0.4, 0.08, 6, 0xffffff, { x: 1.4, y: 0.55 }),
+        cyl(0.08, 0.08, 0.55, 5, 0xd8d8d8, { x: 1.4, y: 0.27 }),
+        // Drink on table
+        cyl(0.12, 0.1, 0.25, 6, 0xff6040, { x: 1.4, y: 0.72 }),
+        // Beach umbrella folded nearby
+        cyl(0.04, 0.04, 1.5, 5, 0xd8d8d8, { x: 0.3, y: 0.75, rz: 0.4 }),
+        cone(0.4, 1.2, 6, 0xffd040, { x: -0.1, y: 1.5, rz: 0.4 }),
+        // Beach towel draped
+        box(1.0, 0.03, 0.6, 0xff6040, { x: 0.1, y: 0.58, rz: -0.1 }),
+      ];
+      return finish(parts);
     },
   },
 ];

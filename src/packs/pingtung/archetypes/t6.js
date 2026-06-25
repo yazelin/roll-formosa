@@ -109,32 +109,41 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ------------------------------- */
+  /* ---- slot 3: 墾丁度假村看板 resort billboard wall ------------------- */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'resort_billboard',
+    displayName: '墾丁度假村看板',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
+    palette: [0x40c0ff, 0x2080c0, 0xffd040, 0xff6040, 0xf8f8f8],
     yOffset: -0.239,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
+      // Kenting resort/beach billboard with tropical motifs
       const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }),
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }),
+        // Building structure with beach resort theme
+        box(2.4, 3.2, 0.9, 0xf8f4f0, { y: 1.7, hex2: 0xf0ece8 }),
+        // Main billboard with ocean blue background
+        box(2.55, 2.6, 0.12, 0x40c0ff, { y: 2.0, z: 0.5 }),
+        // Beach/sunset imagery panels
+        box(2.4, 1.2, 0.08, 0xff8040, { y: 2.8, z: 0.54 }), // sunset gradient
+        box(2.4, 0.8, 0.08, 0x2080c0, { y: 1.5, z: 0.54 }), // ocean
+        // Palm tree silhouettes
+        box(0.15, 1.0, 0.06, 0x206040, { x: -0.9, y: 2.2, z: 0.56 }),
+        cone(0.4, 0.6, 5, 0x308050, { x: -0.9, y: 2.9, z: 0.56 }),
+        box(0.12, 0.8, 0.06, 0x206040, { x: 0.95, y: 2.4, z: 0.56 }),
+        cone(0.35, 0.5, 5, 0x308050, { x: 0.95, y: 3.0, z: 0.56 }),
+        // Resort name banner
+        box(1.8, 0.35, 0.08, 0xffd040, { y: 1.9, z: 0.58 }),
+        // Decorative sun
+        sph(0.3, 0xffd040, { ws: 6, hs: 4, x: 0.0, y: 3.1, z: 0.56 }),
+        // Ground/entrance
+        box(2.6, 0.1, 0.16, 0xe0dcd0, { y: 0.5, z: 0.5 }),
       ];
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 }));
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 }));
       return finish(parts);
     },
   },

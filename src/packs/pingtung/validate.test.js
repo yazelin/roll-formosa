@@ -20,7 +20,7 @@ describe('taipei tier→catalog resolution seam', () => {
   });
 
   it('fails fast if a tier id is missing from the catalog id set', () => {
-    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== 'marble');
+    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== 'coral_fragment');
     expect(tierIdsResolveAgainst(all)).toBe(false);
   });
 });
