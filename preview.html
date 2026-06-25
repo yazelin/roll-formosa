@@ -40,7 +40,11 @@
     /* ---- top chrome ---- */
     #sc-top { position: fixed; top: 0; left: 0; right: 0; z-index: 20;
       display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
-      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0));
+      /* Top bar → respect the TOP notch inset, fixed bottom padding. (It used to
+         put safe-area-inset-BOTTOM in the bottom padding; on mobile that inset
+         changes as the browser chrome collapses during scroll, so the bar kept
+         growing/shrinking and the pills re-wrapped — a constant flicker.) */
+      padding: calc(12px + env(safe-area-inset-top, 0)) 16px 12px;
       padding-left: calc(16px + env(safe-area-inset-left, 0));
       background: linear-gradient(#0b0b16ee, #0b0b1600); pointer-events: none; }
     #sc-top > * { pointer-events: auto; }
