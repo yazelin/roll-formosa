@@ -270,6 +270,8 @@ function buildCityPills() {
     b.textContent = c.displayName;
     b.addEventListener('click', () => switchCity(c.id));
     citiesEl.appendChild(b);
+    // Keep the current city visible in the mobile horizontal-scroll pill row.
+    if (c.id === city) b.scrollIntoView({ inline: 'center', block: 'nearest' });
   }
 }
 
