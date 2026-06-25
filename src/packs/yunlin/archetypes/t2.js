@@ -23,64 +23,67 @@ import {
 
 /** @type {Archetype[]} */
 export const T2_ARCHETYPES = [
-  /* ---- slot 0 ---- 紅塑膠椅 — the ubiquitous stackable red night-market stool/chair */
+  /* ---- slot 0 ---- 廟口板凳 — temple courtyard wooden bench */
   {
-    id: 'red_plastic_chair',
-    displayName: '紅塑膠椅',
+    id: 'temple_bench',
+    displayName: '廟口板凳',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.45,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd83026, 0xe23a2c, 0xc4281f, 0xee5a3a, 0xb84a3a],
-    yOffset: -0.219,
+    palette: [0x8a5a30, 0xa06a38, 0x6a4020, 0xb07a48, 0x5a3018],
+    yOffset: -0.32,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.82,
     buildGeometry(rng) {
-      const r = 0xffffff; // body baked white -> instanceColor tints red
+      // Traditional wooden bench seen outside Beigang Mazu temple
       return finish([
-        // seat slab
-        box(0.9, 0.1, 0.85, r, { y: 0.85 }),
-        // seat lip front
-        box(0.9, 0.16, 0.06, r, { y: 0.78, z: 0.42 }),
-        // back rest
-        box(0.86, 0.7, 0.1, r, { y: 1.2, z: -0.4 }),
-        box(0.86, 0.12, 0.1, r, { y: 1.0, z: -0.36 }), // back lower rail
-        // four legs (slightly splayed)
-        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: 0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: 0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: -0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: -0.34 }),
+        // seat plank (thick wooden board)
+        box(1.4, 0.12, 0.5, 0xffffff, { y: 0.56, hex2: 0xb88050 }),
+        // two thick leg supports
+        box(0.12, 0.52, 0.46, 0x8a5a30, { x: -0.55, y: 0.26 }),
+        box(0.12, 0.52, 0.46, 0x8a5a30, { x: 0.55, y: 0.26 }),
+        // cross brace between legs
+        box(1.0, 0.08, 0.1, 0x6a4020, { y: 0.18 }),
+        // decorative carved ends (temple style)
+        box(0.08, 0.08, 0.5, 0xc87038, { x: -0.72, y: 0.56 }),
+        box(0.08, 0.08, 0.5, 0xc87038, { x: 0.72, y: 0.56 }),
+        // slight wear marks on seat
+        box(0.8, 0.02, 0.3, 0xa87040, { y: 0.63 }),
       ]);
     },
   },
 
-  /* ---- slot 1 ---- 安全帽 — scooter half-helmet (open-face), the daily commuter shell */
+  /* ---- slot 1 ---- 斗笠 — traditional bamboo farmer's hat (雲林農民標配) */
   {
-    id: 'helmet',
-    displayName: '安全帽',
+    id: 'bamboo_hat',
+    displayName: '斗笠',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.28,
-    radiusJitter: 0.18,
+    radiusNominal: 0.30,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf2f2ee, 0xe23a2c, 0x2a55a8, 0x2e6a48, 0x303338],
-    yOffset: -0.075,
+    palette: [0xc8a060, 0xd8b070, 0xb89050, 0xe8c080, 0xa08040],
+    yOffset: -0.75, // hat lying flat or upside down
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional woven bamboo conical hat - iconic for Yunlin farmers
       return finish([
-        // dome shell (upper hemisphere, baked near-white for tint)
-        sph(1.0, 0xffffff, { ws: 10, hs: 6, thetaLen: HALF_PI * 1.15, y: 0.0 }),
-        // brim/peak at the front
-        box(0.9, 0.06, 0.42, 0xffffff, { y: -0.02, z: 0.78, rx: -0.18 }),
-        // visor band (dark tint-resistant strip)
-        cyl(1.0, 1.0, 0.16, 10, 0x2a2c30, {
-          rx: HALF_PI, y: 0.02, thetaLen: PI, theta0: -HALF_PI,
-        }),
-        // chin strap stub
-        box(0.1, 0.5, 0.1, 0x303338, { x: -0.7, y: -0.5 }),
-        box(0.1, 0.5, 0.1, 0x303338, { x: 0.7, y: -0.5 }),
+        // conical woven bamboo body
+        cone(1.2, 0.7, 10, 0xffffff, { y: 0.35, hex2: 0xd8b070 }),
+        // rim edge (darker woven band)
+        cyl(1.22, 1.22, 0.08, 10, 0xa08040, { y: 0.02, open: true }),
+        // inner headband padding
+        cyl(0.35, 0.35, 0.12, 8, 0x8a7050, { y: 0.25 }),
+        // woven texture lines (radial)
+        box(1.1, 0.03, 0.05, 0xb89050, { y: 0.3, rz: 0.3 }),
+        box(1.1, 0.03, 0.05, 0xb89050, { y: 0.3, rz: -0.3 }),
+        box(0.05, 0.03, 1.1, 0xb89050, { y: 0.28 }),
+        // chin cord attachment points
+        sph(0.08, 0x6a5030, { ws: 4, hs: 3, x: -0.5, y: 0.1, z: 0.5 }),
+        sph(0.08, 0x6a5030, { ws: 4, hs: 3, x: 0.5, y: 0.1, z: 0.5 }),
       ]);
     },
   },

@@ -72,37 +72,48 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 跨橋 cross bridge (railway-style viaduct) ---------------- */
+  /* ---- slot 1: 勝興月台 shenxing_platform (heritage station platform) ---- */
   {
-    id: 'cross_bridge',
-    displayName: '跨橋',
+    id: 'shenxing_platform',
+    displayName: '勝興月台',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 200,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xb8a894, 0xc8b8a4, 0x8a3a2a, 0xd8d0c4, 0xffd25a],
-    yOffset: -0.56,
+    palette: [0x8a6a4a, 0xc8b090, 0x5a4a3a, 0xe8e0d0, 0xb04030],
+    yOffset: -0.54,
     upright: true,
-    collisionScale: 0.55,
+    collisionScale: 0.6,
     buildGeometry(rng) {
-      // Railway viaduct bridge evoking the 舊山線 heritage — brick arches + steel deck.
+      // Shenxing Station platform (勝興車站月台) — the heritage railway
+      // platform with wooden awning and historic signage, Taiwan's highest
+      // railway station on the Old Mountain Line.
       const parts = [
-        box(4.2, 0.18, 0.9, 0xc4b8a8, { y: 1.3 }), // deck (concrete/steel)
-        box(4.2, 0.08, 0.06, 0x9a8a78, { y: 1.42, z: 0.42 }), // parapet rail near
-        box(4.2, 0.08, 0.06, 0x9a8a78, { y: 1.42, z: -0.42 }), // parapet rail far
+        // long concrete platform
+        box(6.0, 0.4, 1.8, 0x9a8a78, { y: 0.2 }),
+        // yellow safety edge stripe
+        box(6.0, 0.42, 0.15, 0xffd84d, { y: 0.22, z: 0.88 }),
+        // wooden platform awning structure
+        box(5.5, 0.1, 1.5, 0x8a7a68, { y: 2.2 }),
+        // awning support posts (wooden)
+        cyl(0.12, 0.12, 2.0, 6, 0x6a4a32, { x: -2.2, y: 1.2, z: 0.6 }),
+        cyl(0.12, 0.12, 2.0, 6, 0x6a4a32, { x: 0, y: 1.2, z: 0.6 }),
+        cyl(0.12, 0.12, 2.0, 6, 0x6a4a32, { x: 2.2, y: 1.2, z: 0.6 }),
+        cyl(0.12, 0.12, 2.0, 6, 0x6a4a32, { x: -2.2, y: 1.2, z: -0.6 }),
+        cyl(0.12, 0.12, 2.0, 6, 0x6a4a32, { x: 2.2, y: 1.2, z: -0.6 }),
+        // station name sign board
+        box(1.6, 0.6, 0.08, 0xe8e0d0, { y: 1.8, z: 0.72 }),
+        box(1.4, 0.4, 0.04, 0x5a4a3a, { y: 1.8, z: 0.76 }), // text area
+        // red accent on sign
+        box(1.6, 0.08, 0.1, 0xb04030, { y: 2.02, z: 0.72 }),
+        // wooden benches on platform
+        box(1.0, 0.35, 0.4, 0x9a7a4a, { x: -1.5, y: 0.58, z: -0.4 }),
+        box(1.0, 0.35, 0.4, 0x9a7a4a, { x: 1.5, y: 0.58, z: -0.4 }),
+        // rail track alongside platform
+        box(6.2, 0.08, 0.1, 0x5a5a5a, { y: 0.04, z: 1.4 }),
+        box(6.2, 0.08, 0.1, 0x5a5a5a, { y: 0.04, z: 1.8 }),
       ];
-      // Brick arch piers reminiscent of Longteng Bridge
-      const piers = [-2.6, -0.9, 0.9, 2.6];
-      for (const px of piers) {
-        parts.push(box(0.5, 1.2, 0.7, 0x8a3a2a, { x: px, y: 0.6 })); // brick pier
-        parts.push(box(0.56, 0.12, 0.76, 0x7a3020, { x: px, y: 1.22 })); // pier cap
-      }
-      // Arch spans between piers (half-cylinder arches)
-      for (let i = 0; i < 3; i++) {
-        const ax = -1.75 + i * 1.7;
-        parts.push(cyl(0.4, 0.4, 0.75, 6, 0x9a4a38, { theta0: Math.PI, thetaLen: Math.PI, rx: HALF_PI, x: ax, y: 1.0 }));
-      }
       return finish(parts);
     },
   },
@@ -324,35 +335,47 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 街區大樓 skyline block ----------------------------------- */
+  /* ---- slot 7: 客家文化園區 hakka_cultural_complex ----------------------- */
   {
-    id: 'skyline_block',
-    displayName: '街區大樓',
+    id: 'hakka_cultural_complex',
+    displayName: '客家文化園區',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x36405a, 0x4a5670, 0x7a86a0, 0xb0bccc, 0xffd884],
-    yOffset: -0.31,
+    palette: [0xc8b8a0, 0x8a6a4a, 0xe8e0d0, 0x6a4a32, 0xb04030],
+    yOffset: -0.38,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      // Row of staggered lit towers — 苗栗市區 emerging skyline.
-      const parts = [box(3.6, 0.16, 1.4, 0x2a3142, { y: 0.08 })]; // ground slab
-      const hs = [2.4, 3.4, 1.8, 2.9, 2.2];
-      const floorsArr = [6, 8, 5, 7, 6];
-      const wallHex = [0x36405a, 0x3e4a64, 0x44506c, 0x3a4660, 0x404c66];
-      for (let i = 0; i < 5; i++) {
-        const h = hs[i];
-        const x = -1.4 + i * 0.7;
-        parts.push(
-          towerBanded(0.56, h, 0.78, floorsArr[i], wallHex[i], 0x7a86a0, 0xffd884, rng, {
-            x, y: 0.16 + h / 2, z: (i % 2) * 0.18 - 0.09,
-          })
-        );
-        parts.push(box(0.3, 0.16, 0.3, 0x6a7488, { x, y: 0.16 + h + 0.06, z: (i % 2) * 0.18 - 0.09 }));
-      }
+      // Taiwan Hakka Cultural Park complex (客家文化園區) — the curved-roof
+      // museum buildings that celebrate Hakka heritage in Miaoli.
+      const parts = [
+        // main exhibition hall (modern curved design)
+        box(4.0, 2.5, 3.0, 0xffffff, { y: 1.25, hex2: 0xf0e8d8 }),
+        // curved metal roof (characteristic wave form)
+        cyl(2.0, 2.0, 4.4, 6, 0xb0a890, { theta0: Math.PI * 0.8, thetaLen: Math.PI * 0.4, rx: HALF_PI, y: 2.8 }),
+        // entrance pavilion
+        box(2.0, 1.8, 2.0, 0xffffff, { x: 2.5, y: 0.9, hex2: 0xe8e0d0 }),
+        box(2.2, 0.12, 2.2, 0x8a6a4a, { x: 2.5, y: 1.88 }), // pavilion roof
+        // connecting gallery
+        box(1.5, 1.5, 0.8, 0xf0e8d8, { x: 1.3, y: 0.75 }),
+        // traditional Hakka elements — red accent pillars
+        cyl(0.12, 0.12, 1.8, 6, 0xb04030, { x: 1.6, y: 0.9, z: 1.52 }),
+        cyl(0.12, 0.12, 1.8, 6, 0xb04030, { x: 3.4, y: 0.9, z: 1.02 }),
+        // Hakka floral pattern panels
+        box(1.4, 1.2, 0.1, 0xe83050, { y: 1.0, z: 1.52 }),
+        box(0.8, 0.8, 0.08, 0xffd84d, { y: 1.0, z: 1.58 }), // flower center
+        // water feature courtyard
+        box(2.0, 0.15, 2.0, 0x4a7a8a, { x: 0, y: 0.08, z: 2.2 }),
+        // heritage signage
+        box(1.2, 0.5, 0.1, 0x6a4a32, { x: -1.5, y: 1.5, z: 1.52 }),
+        box(1.0, 0.3, 0.06, 0xf0e8d8, { x: -1.5, y: 1.5, z: 1.58 }),
+        // side wing (cultural workshops)
+        box(2.0, 2.0, 2.5, 0xffffff, { x: -2.0, y: 1.0, hex2: 0xf0e8d8 }),
+        box(2.2, 0.1, 2.7, 0x9a8a78, { x: -2.0, y: 2.05 }),
+      ];
       return finish(parts);
     },
   },

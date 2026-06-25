@@ -194,30 +194,43 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 商辦塔 biz_tower -------------------------------------- */
+  /* ---- slot 4: 糖廠煙囪 sugar_factory_stack (舊糖廠遺跡) ------------- */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'sugar_factory_stack',
+    displayName: '糖廠煙囪',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 140,
+    radiusNominal: 120,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
-    yOffset: -0.191,
+    palette: [0x8a5a30, 0xa06a38, 0xc08048, 0xd8a868, 0x5a4028],
+    yOffset: -0.06,
     upright: true,
-    collisionScale: 0.8,
+    collisionScale: 0.45,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
-      return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
-      ]);
+      // Historic sugar factory smokestack - iconic industrial heritage in Yunlin
+      const parts = [
+        // main brick chimney stack (tapered)
+        cyl(0.8, 1.2, 6.0, 10, 0xffffff, { y: 3.0, hex2: 0xc08048 }),
+        // brick bands / rings (decorative)
+        cyl(1.25, 1.25, 0.2, 10, 0x8a5a30, { y: 0.1, open: true }),
+        cyl(1.1, 1.1, 0.15, 10, 0x8a5a30, { y: 1.5, open: true }),
+        cyl(0.95, 0.95, 0.12, 10, 0x8a5a30, { y: 3.0, open: true }),
+        cyl(0.85, 0.85, 0.1, 10, 0x8a5a30, { y: 4.5, open: true }),
+        // top crown ring
+        cyl(0.82, 0.78, 0.25, 10, 0x5a4028, { y: 6.0 }),
+        // lightning rod
+        cyl(0.04, 0.04, 0.8, 5, 0x707078, { y: 6.5 }),
+        // attached factory building base
+        box(2.0, 1.5, 1.8, 0xc8b898, { x: 1.5, y: 0.75 }),
+        box(2.1, 0.12, 1.9, 0x8a6a40, { x: 1.5, y: 1.55 }), // roof
+        // windows on factory
+        box(0.4, 0.5, 0.06, 0x4a5a68, { x: 1.2, y: 0.9, z: 0.92 }),
+        box(0.4, 0.5, 0.06, 0x4a5a68, { x: 1.8, y: 0.9, z: 0.92 }),
+        // historical plaque
+        box(0.6, 0.4, 0.04, 0xf0e0c0, { y: 1.5, z: 1.22 }),
+      ];
+      return finish(parts);
     },
   },
 
