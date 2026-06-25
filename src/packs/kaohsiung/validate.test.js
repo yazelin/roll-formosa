@@ -20,7 +20,7 @@ describe('kaohsiung tier→catalog resolution seam', () => {
   });
 
   it('fails fast if a tier id is missing from the catalog id set', () => {
-    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== 'marble');
+    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== 'container_keychain');
     expect(tierIdsResolveAgainst(all)).toBe(false);
   });
 });
