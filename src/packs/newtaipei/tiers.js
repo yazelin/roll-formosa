@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 淡水鐵蛋包, 礦工油燈, 尪仔標, 鉛筆, 阿給小盤
-      'marble', 'eraser', 'pushpin', 'iron_egg_pack', 'miner_lamp_vintage', 'ngiauimia_card', 'pencil', 'agei_mini',
+      // 鶯歌陶片, 煤礦塊, 迷你天燈, 淡水鐵蛋包, 礦工油燈, 尪仔標, 鉛筆, 阿給小盤
+      'yingge_pottery_shard', 'coal_chunk', 'mini_sky_lantern', 'iron_egg_pack', 'miner_lamp_vintage', 'ngiauimia_card', 'pencil', 'agei_mini',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -145,8 +145,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 紅磚屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'redbrick_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 九份山城屋, 紅磚屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 淡水老街騎樓
+      'jiufen_hillside_house', 'redbrick_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'tamsui_arcade',
       // chunk landmarks: 三峽老街屋, 大廟
       'sanxia_streethouse', 'temple_mass',
     ],
@@ -193,8 +193,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 跨河大橋, 其他摩天樓, 淡水老街招牌牆, 板橋車站大樓, 空橋, 新莊副都心大樓, 河岸大樓
-      'glass_highrise', 'river_bridge', 'other_skyscraper', 'tamsui_signage_wall', 'banqiao_station_tower', 'sky_bridge', 'xinzhuang_tower', 'riverside_block',
+      // 新板特區大樓, 跨河大橋, 中和環球大樓, 淡水老街招牌牆, 板橋車站大樓, 林口長庚醫療城, 新莊副都心大樓, 汐止科學園區大樓
+      'banqiao_special_tower', 'river_bridge', 'zhonghe_global_tower', 'tamsui_signage_wall', 'banqiao_station_tower', 'linkou_changgung', 'xinzhuang_tower', 'xizhi_scipark_tower',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

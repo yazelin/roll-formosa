@@ -22,40 +22,40 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 九份山城屋 (Jiufen hillside house — narrow multi-story) -- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'jiufen_hillside_house',
+    displayName: '九份山城屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xd8c8b0, 0xc8a890, 0xa88870, 0xe8d8c0, 0xb89878],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Jiufen-style hillside house with traditional elements and red lanterns
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // Main body — aged plaster with dark wood trim
+        box(1.1, 2.4, 1.4, 0xffffff, { y: 1.3, hex2: 0xe8d8c0 }),
+        box(1.14, 0.2, 1.44, 0x6a5040, { y: 0.15 }), // dark wood base
+        // Traditional sloped roof
+        cyl(1.2, 1.2, 1.2, 4, 0x5a4030, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 2.7, z: 0 }),
+        box(1.3, 0.08, 0.12, 0x4a3020, { y: 2.95 }), // roof ridge
+        // Wooden balcony/veranda (characteristic Jiufen)
+        box(1.2, 0.1, 0.5, 0x7a6050, { y: 1.5, z: 0.95 }),
+        box(0.08, 0.5, 0.08, 0x6a5040, { x: -0.5, y: 1.25, z: 1.1 }), // post L
+        box(0.08, 0.5, 0.08, 0x6a5040, { x: 0.5, y: 1.25, z: 1.1 }), // post R
+        box(1.1, 0.06, 0.06, 0x7a6050, { y: 1.52, z: 1.12 }), // rail
+        // Hanging red lantern (Jiufen signature)
+        sph(0.15, 0xc83030, { ws: 6, hs: 4, x: 0, y: 1.4, z: 1.2 }),
+        // Shop window with warm glow
+        box(0.6, 0.5, 0.05, 0xffd868, { y: 0.8, z: 0.72 }),
+        box(0.08, 0.55, 0.08, 0x5a4030, { x: -0.35, y: 0.8, z: 0.74 }), // frame L
+        box(0.08, 0.55, 0.08, 0x5a4030, { x: 0.35, y: 0.8, z: 0.74 }), // frame R
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
-      }
       return finish(parts);
     },
   },
@@ -299,41 +299,43 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 淡水老街騎樓 (Tamsui old street arcade) ----------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'tamsui_arcade',
+    displayName: '淡水老街騎樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xa84a32, 0xc8bca8, 0xd8cdb8, 0x8a3a28, 0xe0d2c0],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Tamsui old street arcade with red brick and traditional shop fronts
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // Red brick upper structure
+        box(3.2, 1.2, 1.2, 0xa84a32, { y: 1.6, hex2: 0x8a3a28 }),
+        // Arcade ceiling
+        box(3.2, 0.2, 1.2, 0xd8cdb8, { y: 1.0 }),
+        box(3.24, 0.12, 1.24, 0xc8bca8, { y: 2.26 }), // parapet cap
       ];
-      // 4 square arcade columns with capital + base
+      // 4 arcade columns (round, colonial style)
       const cx = [-1.35, -0.45, 0.45, 1.35];
       for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+        parts.push(cyl(0.16, 0.18, 0.9, 8, 0xd8cdb8, { x: cx[i], y: 0.55, z: 0.5 }));
+        parts.push(box(0.4, 0.1, 0.4, 0xc8bca8, { x: cx[i], y: 0.08, z: 0.5 })); // base
+        parts.push(box(0.35, 0.08, 0.35, 0xe0d2c0, { x: cx[i], y: 0.98, z: 0.5 })); // capital
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // Shop signs (Tamsui specialties)
+      parts.push(box(0.6, 0.4, 0.06, 0xc83030, { x: -0.9, y: 0.75, z: 0.65 })); // 阿給 sign
+      parts.push(box(0.55, 0.3, 0.04, 0xf8d848, { x: -0.9, y: 0.75, z: 0.7 }));
+      parts.push(box(0.6, 0.4, 0.06, 0x3a6ea0, { x: 0.9, y: 0.75, z: 0.65 })); // 鐵蛋 sign
+      parts.push(box(0.55, 0.3, 0.04, 0xf8f8f0, { x: 0.9, y: 0.75, z: 0.7 }));
+      // Brick texture lines
+      parts.push(box(3.22, 0.04, 1.22, 0x7a2a18, { y: 1.4 }));
+      parts.push(box(3.22, 0.04, 1.22, 0x7a2a18, { y: 1.8 }));
       return finish(parts);
     },
   },
