@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 剉冰杯, 圖釘, 黑松汽水蓋, 鹹酸甜, 尪仔標, 鼎邊趖碗, 鈕扣
-      'marble', 'shaved_ice_cup', 'pushpin', 'soda_cap', 'preserved_fruit', 'ngiauimia_card', 'ding_bian_cuo_bowl', 'button',
+      // 廟口花生, 剉冰杯, 雨港糖, 黑松汽水蓋, 鹹酸甜, 魚鱗, 鼎邊趖碗, 魚鉤
+      'miaokou_peanut', 'shaved_ice_cup', 'rain_candy', 'soda_cap', 'preserved_fruit', 'fish_scale', 'ding_bian_cuo_bowl', 'fishing_hook',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -97,8 +97,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 魚簍, 漁燈, 雨傘架
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fish_basket', 'fishing_lantern', 'umbrella_stand',
+      // 漁船浮球, 安全帽, 雨傘, 瓦斯桶, 三角錐, 魚簍, 漁燈, 雨傘架
+      'fishing_buoy', 'helmet', 'folded_umbrella', 'gas_cylinder', 'traffic_cone', 'fish_basket', 'fishing_lantern', 'umbrella_stand',
       // chunk landmarks: 基隆推車, 廟前香爐
       'keelung_vendor_cart', 'temple_incense_burner',
     ],
@@ -145,8 +145,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 魚市場攤位, 公車, 垃圾車, 漁船配件店, 騎樓柱
-      'townhouse', 'tin_roof_house', 'old_apartment', 'fish_market_stall', 'city_bus', 'garbage_truck', 'boat_parts_shop', 'arcade_pillar',
+      // 港邊街屋, 漁寮, 老公寓, 魚市場攤位, 公車, 垃圾車, 漁船配件店, 騎樓柱
+      'harbor_townhouse', 'fisherman_shed', 'old_apartment', 'fish_market_stall', 'city_bus', 'garbage_truck', 'boat_parts_shop', 'arcade_pillar',
       // chunk landmarks: 港邊街屋, 大廟
       'harbor_streethouse_mass', 'temple_mass',
     ],

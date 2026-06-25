@@ -24,34 +24,30 @@ import {
 
 /** @type {Archetype[]} */
 export const T2_ARCHETYPES = [
-  /* ---- slot 0 ---- 紅塑膠椅 — the ubiquitous stackable red night-market stool/chair */
+  /* ---- slot 0 ---- 漁船浮球 — orange fishing buoy float (Keelung harbor) */
   {
-    id: 'red_plastic_chair',
-    displayName: '紅塑膠椅',
+    id: 'fishing_buoy',
+    displayName: '漁船浮球',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.45,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd83026, 0xe23a2c, 0xc4281f, 0xee5a3a, 0xb84a3a],
-    yOffset: -0.219,
-    upright: true,
-    collisionScale: 0.8,
+    palette: [0xe87030, 0xff8848, 0xd06028, 0xff7038, 0xc85020],
+    yOffset: 0,
+    upright: false,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const r = 0xffffff; // body baked white -> instanceColor tints red
       return finish([
-        // seat slab
-        box(0.9, 0.1, 0.85, r, { y: 0.85 }),
-        // seat lip front
-        box(0.9, 0.16, 0.06, r, { y: 0.78, z: 0.42 }),
-        // back rest
-        box(0.86, 0.7, 0.1, r, { y: 1.2, z: -0.4 }),
-        box(0.86, 0.12, 0.1, r, { y: 1.0, z: -0.36 }), // back lower rail
-        // four legs (slightly splayed)
-        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: 0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: 0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: -0.36, y: 0.42, z: -0.34 }),
-        cyl(0.05, 0.06, 0.85, 6, r, { x: 0.36, y: 0.42, z: -0.34 }),
+        // main buoy sphere
+        sph(1.0, 0xffffff, { ws: 8, hs: 6 }),
+        // equator band (darker ring)
+        cyl(1.02, 1.02, 0.15, 8, 0x8a5020, { y: 0 }),
+        // top attachment ring
+        cyl(0.3, 0.3, 0.15, 6, 0x6a6068, { y: 0.9 }),
+        torus(0.2, 0.06, 4, 8, 0x8a8088, { y: 1.1 }),
+        // rope stub
+        cyl(0.08, 0.08, 0.3, 5, 0xc8b896, { y: 1.25, rz: 0.3 }),
       ]);
     },
   },
@@ -86,35 +82,31 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 雨傘 — folded umbrella (Keelung rainy city icon) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'folded_umbrella',
+    displayName: '雨傘',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
-    upright: true,
-    collisionScale: 0.9,
+    palette: [0x2f6db0, 0x3a8080, 0xc94f46, 0x5080a0, 0x4a6a8a],
+    yOffset: -0.65,
+    upright: false,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // folded canopy (elongated cone)
+        cone(0.35, 2.0, 8, 0xffffff, { rz: HALF_PI, x: 0.3 }),
+        // canopy tip
+        cone(0.12, 0.3, 6, 0x3a3a40, { rz: HALF_PI, x: 1.4 }),
+        // velcro strap band
+        cyl(0.36, 0.36, 0.12, 8, 0x2a2a30, { rz: HALF_PI, x: 0.0 }),
+        // handle shaft
+        cyl(0.08, 0.08, 0.6, 6, 0x4a3a2a, { rz: HALF_PI, x: -0.85 }),
+        // curved handle (J-hook)
+        torus(0.15, 0.06, 4, 6, 0x4a3a2a, { x: -1.15, ry: HALF_PI, arc: PI }),
       ]);
     },
   },

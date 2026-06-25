@@ -22,74 +22,74 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 港邊街屋 (Keelung harbor-district narrow shophouse) ------ */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'harbor_townhouse',
+    displayName: '港邊街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xd8e0e8, 0xc8d0d8, 0xd0d8e0, 0xc0c8d0, 0xb8c0c8],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // tall narrow banded body with cooler maritime colors
+        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x3a5068, 0xd0e0f0, rng, { y: 1.4 }),
+        box(1.1, 0.12, 1.6, 0x7a8a9a, { y: 2.76 }), // flat roof slab
+        box(1.12, 0.22, 1.62, 0xb8c0c8, { y: 0.22 }), // ground-floor plinth
+        // rooftop weathered by rain (more grey-green patina)
+        box(0.8, 0.5, 1.1, 0x6a8a7a, { y: 3.06, hex2: 0x7a9a8a }),
+        cyl(0.95, 0.95, 1.2, 4, 0x5a7a6a, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.5 }),
+        cyl(0.16, 0.16, 0.5, 6, 0xa0a8b0, { x: 0.45, y: 3.55 }),
+        box(0.36, 0.32, 0.36, 0x3a6ea0, { x: -0.25, y: 3.4 }), // blue water tank
+        // seafood shop sign (harbor district)
+        box(0.92, 0.6, 0.06, 0x5a6870, { y: 0.5, z: 0.78 }),
+        box(0.78, 0.18, 0.05, 0x2f6db0, { y: 0.94, z: 0.8 }), // blue maritime sign
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
       for (let i = 0; i < 3; i++) {
         const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
+        parts.push(box(1.06, 0.1, 0.12, 0xc8d0d8, { y, z: 0.78 }));
+        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xd0d8e0, { x: 0.36, y: y + 0.16, z: 0.74 }));
       }
       return finish(parts);
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 漁寮 (Keelung fisherman's shed/workshop) ---------------- */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'fisherman_shed',
+    displayName: '漁寮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.0,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
+    palette: [0x7090a0, 0x6080a8, 0x8aa0b0, 0x5080a0, 0x90b0c0],
     yOffset: -0.42,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
+        box(2.4, 1.0, 1.7, 0xc0c8d0, { y: 0.5 }), // weathered concrete walls
+        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xb0c0d0 }), // faded blue-grey tin walls
+        // single-slope tin roof (weathered green-grey)
         box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
       ];
       for (let i = 0; i < 4; i++) {
         const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
+        parts.push(box(0.06, 0.04, 1.9, 0x6a8a7a, { rz: 0.16, x, y: 1.69 + x * 0.16 }));
       }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof (typical 違建 detail)
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
+      parts.push(box(2.74, 0.06, 0.12, 0x5a7a6a, { rz: 0.16, y: 1.7, z: 0.92 }));
+      parts.push(box(0.7, 0.7, 0.05, 0x3a5060, { x: 0.6, y: 0.5, z: 0.86 })); // dark blue door
+      parts.push(box(0.4, 0.45, 0.06, 0x8ab0c8, { x: -0.7, y: 0.55, z: 0.86 })); // window
+      // fishing gear outside: net rolls, buoys
+      parts.push(cyl(0.35, 0.35, 0.4, 8, 0x4a7060, { x: -0.85, y: 0.2, z: 1.0 })); // net roll
+      parts.push(sph(0.18, 0xe87030, { ws: 6, hs: 4, x: -0.4, y: 0.18, z: 1.1 })); // orange buoy
+      parts.push(sph(0.15, 0xff8848, { ws: 5, hs: 3, x: 0.5, y: 0.15, z: 1.05 })); // buoy
       return finish(parts);
     },
   },

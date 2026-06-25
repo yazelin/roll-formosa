@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 黑松汽水蓋, 王子麵, 宮原冰淇淋杯, 鳳梨酥, 太陽餅
-      'marble', 'eraser', 'pushpin', 'heysong_cap', 'prince_noodle', 'miyahara_icecream_cup', 'fengli_pineapple', 'suncake',
+      // 珍奶封膜, 珍珠粉圓, 荔枝籽, 黑松汽水蓋, 王子麵, 宮原冰淇淋杯, 鳳梨酥, 太陽餅
+      'bubble_tea_seal', 'tapioca_pearl', 'lychee_seed', 'heysong_cap', 'prince_noodle', 'miyahara_icecream_cup', 'fengli_pineapple', 'suncake',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -144,8 +144,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 老街街屋, 公寓, 超商, 公車, 打鐵爐, 廟前金爐, 廟埕戲台
-      'townhouse', 'oldstreet_shophouse', 'apartment', 'convenience_store', 'city_bus', 'blacksmith_forge', 'temple_gold_furnace', 'temple_opera_stage',
+      // 犁頭店街屋, 老街街屋, 東海藝術街樓, 超商, 公車, 打鐵爐, 廟前金爐, 廟埕戲台
+      'litoudian_streethouse', 'oldstreet_shophouse', 'donghai_artstreet_bldg', 'convenience_store', 'city_bus', 'blacksmith_forge', 'temple_gold_furnace', 'temple_opera_stage',
       // chunk landmarks: 老街街屋, 萬和宮
       'oldstreet_row_mass', 'wanhe_temple_mass',
     ],
@@ -168,10 +168,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 審計新村, 巨型看板, 玻璃帷幕街屋, 建國市場
-      'office_tower', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'shengjicun', 'giant_billboard', 'glass_curtain_house', 'jianguo_market',
-      // chunk landmarks: 商辦塔樓, 百貨大樓
-      'commercial_tower', 'department_mass',
+      // 七期商辦, 勤美綠園道, 捷運綠線高架, 草悟道綠廊樹, 審計新村, 巨型看板, 精明一街店舖, 建國市場
+      'qiqi_office', 'green_facade_mall', 'mrt_green_viaduct', 'greenway_tree', 'shengjicun', 'giant_billboard', 'jingming_shop', 'jianguo_market',
+      // chunk landmarks: 新光三越塔, 大遠百
+      'shinkong_tower', 'dayuanbai',
     ],
     fogColor: 0x1c1e48, // T5 夜店電光藍(俱樂部)
     skyTop: 0x16163a,

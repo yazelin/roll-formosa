@@ -34,78 +34,86 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] bubble_tea_seal 珍奶封膜 — TAICHUNG SWAP: boba tea plastic seal  */
+  /*     (台中春水堂發源地 signature — the iconic round seal disc)          */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'bubble_tea_seal',
+    displayName: '珍奶封膜',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xf5e8d0, 0xf0d8b0, 0xe8c890, 0xfff2dc, 0xd8c4a0],
+    yOffset: -0.92, // flat seal lying on table
     upright: false,
-    collisionScale: 0.82,
+    collisionScale: 0.85,
     buildGeometry(rng) {
+      // 珍奶封膜 — the round plastic seal from a bubble tea cup (春水堂發源於台中)
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        cyl(1.0, 1.0, 0.06, 14, 0xffffff, { y: 0.03 }), // translucent plastic seal disc (tinted)
+        // punctured X pattern from straw poke
+        box(0.08, 0.07, 0.5, 0xb8a070, { y: 0.05, rz: 0.4 }),
+        box(0.08, 0.07, 0.5, 0xb8a070, { y: 0.05, rz: -0.4 }),
+        // printed brand ring around edge
+        cyl(0.85, 0.85, 0.065, 12, 0xd4a050, { y: 0.035, open: true }),
+        // center brand dot
+        cyl(0.2, 0.2, 0.07, 8, 0xc09040, { y: 0.04 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] tapioca_pearl 珍珠粉圓 — TAICHUNG SWAP: single boba pearl        */
+  /*     (台中珍珠奶茶發源地 — the chewy tapioca ball from 春水堂)           */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'tapioca_pearl',
+    displayName: '珍珠粉圓',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.018,
-    radiusJitter: 0.16,
+    radiusNominal: 0.008,
+    radiusJitter: 0.2,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0x3a2a1a, 0x4a3a28, 0x2a1c10, 0x5a4a38, 0x3a3020],
+    yOffset: 0, // sphere sitting on surface
     upright: false,
-    collisionScale: 0.84,
+    collisionScale: 0.85,
     buildGeometry(rng) {
+      // 珍珠粉圓 — a single glossy black tapioca pearl (台中春水堂招牌)
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // translucent pearl body (tinted brown-black)
+        // glossy highlight
+        sph(0.35, 0xe0d0c0, { ws: 6, hs: 4, x: 0.4, y: 0.5, z: 0.3 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] lychee_seed 荔枝籽 — TAICHUNG SWAP: shiny lychee pit             */
+  /*     (霧峰/太平荔枝產區 — the glossy dark-brown lychee seed)            */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'lychee_seed',
+    displayName: '荔枝籽',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
-    radiusJitter: 0.18,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0x4a2818, 0x5a3420, 0x3a2010, 0x6a4430, 0x4a3020],
+    yOffset: -0.2, // oval seed lying on table
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.8,
     buildGeometry(rng) {
+      // 荔枝籽 — the glossy dark-brown seed from 霧峰/太平 lychees
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        sph(1.0, 0xffffff, { ws: 10, hs: 7, sy: 0.7 }), // oval seed body (tinted)
+        // glossy highlight on top
+        sph(0.3, 0x9a7a60, { ws: 6, hs: 4, x: 0.3, y: 0.35, z: 0.2 }),
+        // pale hilum (seed scar) on one end
+        cyl(0.25, 0.25, 0.06, 8, 0xd8c8b0, { x: 0.75, y: 0, rz: HALF_PI }),
       ]);
     },
   },
