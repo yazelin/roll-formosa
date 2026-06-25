@@ -48,8 +48,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 碗粿小碗, 圖釘, 瓶蓋, 蜜餞, 尪仔標, 擔仔麵小碗, 棺材板小份
-      'marble', 'wagui_bowl', 'pushpin', 'bottle_cap', 'preserved_plum', 'ngiauimia_card', 'danzai_mian', 'coffin_bread',
+      // 椪糖, 碗粿小碗, 蝦卷, 劍獅鑰匙圈, 蜜餞, 蝦餅, 擔仔麵小碗, 棺材板小份
+      'yizai_candy', 'wagui_bowl', 'shrimp_roll', 'sword_lion', 'preserved_plum', 'shrimp_cracker', 'danzai_mian', 'coffin_bread',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -168,8 +168,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 林百貨風格樓, 虱目魚店, 台鐵高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'linbai_tower', 'milkfish_shop', 'tainan_railway', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 林百貨風格樓, 虱目魚店, 台鐵高架, 神農街街屋, 停車塔, 巨型看板, 安平老街商家, 德記洋行
+      'linbai_tower', 'milkfish_shop', 'tainan_railway', 'shennong_street', 'parking_tower', 'giant_billboard', 'anping_old_shop', 'deji_trading',
       // chunk landmarks: 商辦塔樓, 百貨大樓
       'commercial_tower', 'department_mass',
     ],

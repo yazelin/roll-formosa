@@ -163,50 +163,42 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 天橋 pedestrian_bridge ----------------------------- */
+  /* ---- slot 3: 神農街街屋 shennong_street — historic Tainan street row */
   {
-    id: 'pedestrian_bridge',
-    displayName: '天橋',
+    id: 'shennong_street',
+    displayName: '神農街街屋',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 16,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc6ccd2, 0x9aa0a8, 0xe0e4ea, 0x6a7078, 0x4a8a5a],
-    yOffset: -0.57,
+    palette: [0xd8c8a8, 0xe8dcc0, 0xc8b8a0, 0x9a8a70, 0xf0e8d0],
+    yOffset: -0.48,
     upright: true,
-    collisionScale: 0.6,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      // Overpass: a flat span with railings + roof canopy, twin stair towers.
-      const parts = [
-        // span deck
-        box(6.4, 0.32, 1.3, 0xffffff, { y: 2.6 }), // walkway (tinted)
-        // railings (perforated read = thin top rail + posts)
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: 0.6 }),
-        box(6.4, 0.08, 0.06, 0x8a9098, { y: 3.1, z: -0.6 }),
-        // arched roof canopy (two leaning panels)
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: 0.45, rx: 0.22 }),
-        box(6.4, 0.06, 0.9, 0xc6ccd2, { y: 3.55, z: -0.45, rx: -0.22 }),
-        box(6.4, 0.06, 0.16, 0x9aa0a8, { y: 3.78 }), // ridge
-      ];
-      // railing posts (sparse) + canopy supports
+      // Historic Shennong Street row: 3-4 low narrow shop-houses with traditional facades
+      const parts = [];
+      const heights = [2.4, 2.8, 2.2, 2.6];
+      const xs = [-2.4, -0.8, 0.8, 2.4];
+      const wallTints = [0xe8dcc0, 0xd8c8a8, 0xf0e4d0, 0xc8b8a0];
       for (let i = 0; i < 4; i++) {
-        const x = -2.4 + i * 1.6;
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: 0.6 }));
-        parts.push(box(0.05, 0.5, 0.05, 0x7a8088, { x, y: 2.85, z: -0.6 }));
-        if (i % 2 === 0) parts.push(box(0.07, 0.95, 0.07, 0x9aa0a8, { x, y: 3.1, z: 0 }));
-      }
-      // twin stair / lift towers at the ends
-      for (const sx of [-3.4, 3.4]) {
-        parts.push(box(1.0, 2.7, 1.2, 0xb6bcc4, { x: sx, y: 1.35 }));
-        parts.push(box(0.9, 0.5, 0.06, 0x8fd0a0, { x: sx, y: 1.6, z: 0.63 })); // green-glass panel
-        // a couple of diagonal stair treads
-        for (let s = 0; s < 3; s++) {
-          parts.push(box(0.9, 0.07, 0.34, 0x7a8088, {
-            x: sx, y: 0.6 + s * 0.7, z: 0.7 + s * 0.24,
-          }));
+        const h = heights[i];
+        // narrow traditional shop-house body
+        parts.push(box(1.4, h, 1.8, wallTints[i], { x: xs[i], y: h / 2 }));
+        // dark wooden door frame at ground level
+        parts.push(box(0.7, 1.2, 0.08, 0x5a4a30, { x: xs[i], y: 0.7, z: 0.92 }));
+        // traditional horizontal window above door
+        parts.push(box(1.0, 0.4, 0.06, 0x4a5a6a, { x: xs[i], y: h * 0.7, z: 0.92 }));
+        // parapet / simple cornice
+        parts.push(box(1.5, 0.15, 1.9, 0x9a8a70, { x: xs[i], y: h + 0.08 }));
+        // hanging red lantern (every other shop)
+        if (i % 2 === 0) {
+          parts.push(sph(0.2, 0xc83020, { ws: 6, hs: 4, x: xs[i] + 0.4, y: h * 0.55, z: 1.0 }));
         }
       }
+      // continuous ground-level stone pavement
+      parts.push(box(6.6, 0.12, 2.0, 0xa89880, { y: 0.06, z: 0.2 }));
       return finish(parts);
     },
   },
@@ -291,76 +283,92 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 玻璃帷幕街屋 glass_curtain_house ------------------- */
+  /* ---- slot 6: 安平老街商家 anping_old_shop — Anping old street shop row */
   {
-    id: 'glass_curtain_house',
-    displayName: '玻璃帷幕街屋',
+    id: 'anping_old_shop',
+    displayName: '安平老街商家',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 14,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6fbfd0, 0xbfeaf0, 0x3a6a78, 0x2e3744, 0xe8f4f6],
-    yOffset: -0.1,
+    palette: [0xc8b898, 0xd8c8a8, 0xa89878, 0x8a7a58, 0xe8d8c0],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Narrow mid-rise street shophouse with a full glass curtain wall front.
+      // Traditional Anping old street shop: low-rise with awning and displays
       const parts = [
-        box(2.2, 5.2, 2.0, 0xffffff, { y: 2.8 }), // body (tinted concrete sides)
-        // glass curtain wall on the front (proud, gridded)
-        box(2.0, 4.6, 0.14, 0x2e3744, { y: 2.9, z: 1.02 }), // mullion grid (dark)
-        box(1.8, 4.4, 0.06, 0x8fd6e2, { y: 2.9, z: 1.1 }), // glass (tinted blue-green)
-        // ground-floor shop entrance
-        box(2.0, 0.9, 0.1, 0x20262c, { y: 0.5, z: 1.06 }),
-        box(1.2, 0.7, 0.06, 0xbfeaf0, { y: 0.5, z: 1.12 }), // bright entry glass
-        // parapet + a small rooftop water tank
-        box(2.3, 0.24, 2.1, 0x4a8090, { y: 5.5 }),
-        cyl(0.4, 0.4, 0.6, 7, 0x9aa0a8, { x: 0.5, y: 5.9 }),
+        // main shop body (weathered plaster walls)
+        box(3.2, 3.4, 2.4, 0xffffff, { y: 1.9 }),
+        // sloped tile roof
+        cyl(1.4, 1.4, 3.4, 4, 0x8a6a4a, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.8 }),
+        // front awning (striped canvas)
+        box(3.4, 0.08, 1.2, 0xc83828, { y: 2.6, z: 1.6, rx: -0.15 }),
+        box(3.4, 0.06, 0.15, 0xf0f0e0, { y: 2.55, z: 2.15 }), // awning edge
+        // open storefront display
+        box(2.8, 1.4, 0.08, 0x3a3a30, { y: 0.9, z: 1.22 }), // dark open front
+        // display tables with goods (shrimp crackers, dried fruit)
+        box(1.2, 0.4, 0.6, 0x9a8a70, { x: -0.7, y: 0.4, z: 1.5 }), // table
+        box(1.2, 0.4, 0.6, 0x9a8a70, { x: 0.7, y: 0.4, z: 1.5 }), // table
+        // merchandise on tables (colored boxes/baskets)
+        box(0.4, 0.2, 0.4, 0xd8a050, { x: -0.9, y: 0.7, z: 1.5 }),
+        box(0.4, 0.2, 0.4, 0xc83020, { x: -0.5, y: 0.7, z: 1.5 }),
+        box(0.4, 0.2, 0.4, 0x4a8a40, { x: 0.5, y: 0.7, z: 1.5 }),
+        box(0.4, 0.2, 0.4, 0xe8b860, { x: 0.9, y: 0.7, z: 1.5 }),
+        // shop sign above
+        box(2.6, 0.5, 0.1, 0xc83020, { y: 2.9, z: 1.26 }),
+        box(2.2, 0.35, 0.06, 0xf0e8c0, { y: 2.9, z: 1.32 }), // lit sign face
+        // second floor window
+        box(2.0, 0.5, 0.06, 0x5a6a7a, { y: 2.3, z: -1.18 }),
       ];
-      // horizontal floor-line mullions across the glass (5 floors)
-      for (let f = 1; f < 5; f++) {
-        parts.push(box(1.85, 0.07, 0.04, 0x223038, { y: 0.6 + f * 0.95, z: 1.14 }));
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 德記洋行 deji_trading — Tainan's historic trading house */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'deji_trading',
+    displayName: '德記洋行',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
-    yOffset: -0.4,
+    palette: [0xf0f0e8, 0xe8e0d0, 0xc8c0b0, 0x4a8a50, 0x8a7a60],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // Historic white colonial trading house with arched veranda (德記洋行 style)
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        // main two-story white body
+        box(4.4, 3.8, 3.2, 0xffffff, { y: 2.1 }),
+        // green shuttered windows (upper floor)
+        box(0.6, 0.9, 0.08, 0x4a8a50, { x: -1.4, y: 3.0, z: 1.62 }),
+        box(0.6, 0.9, 0.08, 0x4a8a50, { x: 0.0, y: 3.0, z: 1.62 }),
+        box(0.6, 0.9, 0.08, 0x4a8a50, { x: 1.4, y: 3.0, z: 1.62 }),
+        // arched arcade/veranda at ground floor
+        box(4.6, 1.4, 1.0, 0xe8e0d0, { y: 0.9, z: 1.2 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
+      // arcade arches (3 bays)
+      for (let i = 0; i < 3; i++) {
+        const ax = -1.4 + i * 1.4;
+        // dark archway opening
+        parts.push(box(0.9, 1.0, 0.12, 0x3a3a30, { x: ax, y: 0.7, z: 1.72 }));
+        // arch top (half cylinder)
+        parts.push(cyl(0.45, 0.45, 0.12, 6, 0x3a3a30, { x: ax, y: 1.2, z: 1.72, rx: HALF_PI, thetaLen: PI, theta0: 0 }));
       }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
+      // columns between arches
+      parts.push(cyl(0.15, 0.15, 1.4, 6, 0xe8e0d0, { x: -0.7, y: 0.9, z: 1.68 }));
+      parts.push(cyl(0.15, 0.15, 1.4, 6, 0xe8e0d0, { x: 0.7, y: 0.9, z: 1.68 }));
+      // low-pitched roof
+      box(4.6, 0.3, 3.4, 0x8a7a60, { y: 4.15 });
+      parts.push(box(4.6, 0.15, 3.4, 0x8a6a50, { y: 4.32 }));
+      // cornice band
+      parts.push(box(4.5, 0.15, 3.3, 0xc8c0b0, { y: 4.0 }));
+      // entrance steps
+      parts.push(box(2.0, 0.2, 0.5, 0xa89878, { y: 0.1, z: 2.0 }));
       return finish(parts);
     },
   },

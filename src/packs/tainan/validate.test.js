@@ -13,14 +13,16 @@ function tierIdsResolveAgainst(knownIds) {
   return true;
 }
 
-describe('taipei tier→catalog resolution seam', () => {
+describe('tainan tier→catalog resolution seam', () => {
   it('all 70 tier ids resolve when the full id set is present', () => {
     const all = TIERS.flatMap((t) => t.archetypeIds);
     expect(tierIdsResolveAgainst(all)).toBe(true);
   });
 
   it('fails fast if a tier id is missing from the catalog id set', () => {
-    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== 'marble');
+    // Use the first ID from T0 (city-specific) instead of hardcoding 'marble'
+    const firstId = TIERS[0].archetypeIds[0];
+    const all = TIERS.flatMap((t) => t.archetypeIds).filter((id) => id !== firstId);
     expect(tierIdsResolveAgainst(all)).toBe(false);
   });
 });
