@@ -110,37 +110,39 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 2 ── 變電箱 transformer / pad-mount box ────────────────────────────── */
+  /* 2 ── 擂茶磨盤 Hakka Lei Cha grinding stone (客家擂茶研磨器) ───────────── */
   {
-    id: 'transformer_box',
-    displayName: '變電箱',
+    id: 'leicha_grinder',
+    displayName: '擂茶磨盤',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 0.7,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0x4f7d52, 0x3a5e3c, 0xd8d2a8, 0x2a2c30, 0xb0a060],
-    yOffset: -0.18,
+    palette: [0x8a8a82, 0x6a6a62, 0xaa9a8a, 0x4a4a42, 0x9a8a7a],
+    yOffset: -0.30,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      const green = 0x4f7d52;
+      // Hakka Lei Cha (擂茶) traditional grinding bowl and pestle
+      // Common in Longtan and Taoyuan Hakka areas
+      const stone = 0x8a8a82;
       const parts = [];
-      // concrete plinth
-      parts.push(box(1.05, 0.18, 0.85, 0x8c8a82, { x: 0, y: 0.09 }));
-      // main cabinet body (gradient to a darker top)
-      parts.push(box(0.95, 1.5, 0.75, green, { x: 0, y: 0.95, hex2: 0x3a5e3c }));
-      // louver vents (front strips)
-      for (let i = 0; i < 4; i++) {
-        parts.push(box(0.7, 0.06, 0.02, 0x2a2c30, { x: 0, y: 0.55 + i * 0.22, z: 0.385 }));
-      }
-      // hazard plate
-      parts.push(box(0.3, 0.3, 0.02, 0xd8d2a8, { x: 0.28, y: 1.05, z: 0.39 }));
-      // lid / roof lip
-      parts.push(box(1.02, 0.1, 0.82, 0x3a5e3c, { x: 0, y: 1.74 }));
-      // bushing knobs on roof
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: -0.25, y: 1.86 }));
-      parts.push(cyl(0.07, 0.09, 0.18, 8, 0xb0a060, { x: 0.25, y: 1.86 }));
+      // grooved grinding bowl (擂缽)
+      cyl(0.8, 0.9, 0.5, 10, stone, { y: 0.25, hex2: 0xaa9a8a });
+      parts.push(cyl(0.8, 0.9, 0.5, 10, stone, { y: 0.25, hex2: 0xaa9a8a }));
+      // bowl rim
+      parts.push(cyl(0.92, 0.92, 0.12, 10, 0x6a6a62, { y: 0.52, open: true }));
+      // interior grooves (simplified as dark ring)
+      parts.push(cyl(0.7, 0.7, 0.06, 10, 0x4a4a42, { y: 0.15 }));
+      // green tea powder/paste inside
+      parts.push(cyl(0.6, 0.6, 0.08, 9, 0x4a6a3a, { y: 0.35 }));
+      // wooden pestle (擂棍) resting across
+      parts.push(cyl(0.08, 0.1, 1.4, 6, 0x8a6a48, { rz: 0.4, y: 0.7, x: 0.15 }));
+      // pestle head (thicker end)
+      parts.push(sph(0.14, 0x6a4a32, { x: -0.45, y: 0.9, ws: 6, hs: 4 }));
+      // wooden base stand
+      parts.push(box(1.2, 0.15, 1.2, 0x6a4a32, { y: 0.07 }));
       return finish(parts);
     },
   },
@@ -297,42 +299,42 @@ export const T3_ARCHETYPES = [
     },
   },
 
-  /* 7 ── 石獅 stone guardian lion (temple-gate shishi) ─────────────────── */
+  /* 7 ── 大溪老街神桌 Daxi Old Street altar table (神明桌) ──────────────── */
   {
-    id: 'stone_lion',
-    displayName: '石獅',
+    id: 'daxi_altar_table',
+    displayName: '大溪老街神桌',
     tier: 3,
     naturalBand: 3,
     radiusNominal: 1.0,
     radiusJitter: 0.13,
     spawnWeight: 1.0,
-    palette: [0xb9b3a4, 0x9c9686, 0xd8d3c5, 0x6e6a5e, 0xc4203a],
-    yOffset: -0.16,
+    palette: [0x8a3824, 0x5a2818, 0x6a3020, 0xd8b048, 0xc04030],
+    yOffset: -0.28,
     upright: true,
-    collisionScale: 0.72,
+    collisionScale: 0.75,
     buildGeometry(rng) {
-      const stone = 0xb9b3a4;
-      const stone2 = 0xd8d3c5;
+      // Traditional Daxi woodcraft altar table (神明桌) - Daxi is famous for these
+      const wood = 0x8a3824;
       const parts = [];
-      // plinth base
-      parts.push(box(0.9, 0.4, 0.7, 0x9c9686, { x: 0, y: 0.2, hex2: 0x6e6a5e }));
-      // haunches / seated body
-      parts.push(box(0.6, 0.7, 0.55, stone, { x: 0.1, y: 0.72, hex2: stone2 }));
-      // chest rising to head
-      parts.push(box(0.55, 0.6, 0.5, stone, { x: -0.18, y: 1.0, hex2: stone2 }));
-      // head
-      parts.push(sph(0.34, stone, { x: -0.3, y: 1.5, ws: 7, hs: 5, hex2: stone2 }));
-      // curled mane (icosphere collar) + brow ridges
-      parts.push(sph(0.4, 0x9c9686, { x: -0.18, y: 1.42, ws: 7, hs: 4 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: 0.16, ws: 5, hs: 3 }));
-      parts.push(sph(0.1, 0x6e6a5e, { x: -0.5, y: 1.62, z: -0.16, ws: 5, hs: 3 }));
-      // front legs
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: 0.2 }));
-      parts.push(cyl(0.11, 0.13, 0.55, 6, stone, { x: -0.32, y: 0.55, z: -0.2 }));
-      // paws on a ball (left) — the lion's embroidered ball
-      parts.push(sph(0.16, 0xc4203a, { x: -0.5, y: 0.32, z: 0.2, ws: 6, hs: 4 }));
-      // tail
-      parts.push(sph(0.22, stone2, { x: 0.42, y: 1.05, ws: 6, hs: 4 }));
+      // main table top
+      parts.push(box(1.8, 0.15, 0.9, wood, { y: 1.05, hex2: 0x6a3020 }));
+      // front apron (carved panel)
+      parts.push(box(1.7, 0.35, 0.08, 0x5a2818, { y: 0.85, z: 0.42 }));
+      // gold trim lines on apron
+      parts.push(box(1.65, 0.04, 0.02, 0xd8b048, { y: 1.0, z: 0.47 }));
+      parts.push(box(1.65, 0.04, 0.02, 0xd8b048, { y: 0.72, z: 0.47 }));
+      // carved legs (cabriole style)
+      parts.push(box(0.15, 0.9, 0.12, wood, { x: -0.75, y: 0.52, z: 0.35 }));
+      parts.push(box(0.15, 0.9, 0.12, wood, { x: 0.75, y: 0.52, z: 0.35 }));
+      parts.push(box(0.15, 0.9, 0.12, wood, { x: -0.75, y: 0.52, z: -0.35 }));
+      parts.push(box(0.15, 0.9, 0.12, wood, { x: 0.75, y: 0.52, z: -0.35 }));
+      // incense holder on top
+      parts.push(cyl(0.12, 0.1, 0.2, 6, 0xd8b048, { y: 1.22 }));
+      // small offerings (fruit)
+      parts.push(sph(0.1, 0xe08020, { x: -0.4, y: 1.2, z: 0.15, ws: 5, hs: 4 })); // orange
+      parts.push(sph(0.1, 0xe08020, { x: 0.4, y: 1.2, z: 0.15, ws: 5, hs: 4 })); // orange
+      // red cloth drape
+      parts.push(box(1.9, 0.08, 0.06, 0xc04030, { y: 1.1, z: 0.48 }));
       return finish(parts);
     },
   },

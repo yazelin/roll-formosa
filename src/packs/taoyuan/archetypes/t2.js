@@ -92,66 +92,74 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 大溪豆乾蒸籠 — Daxi dried tofu steamer basket (大溪特產) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'daxi_steamer',
+    displayName: '大溪豆乾蒸籠',
     tier: 2,
     naturalBand: 2,
-    radiusNominal: 0.3,
+    radiusNominal: 0.35,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
+    palette: [0xc8a870, 0xb89858, 0xd8b880, 0xa88848, 0xe8c890],
+    yOffset: -0.25,
     upright: true,
-    collisionScale: 0.9,
+    collisionScale: 0.88,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
+      // Traditional bamboo steamer used to steam Daxi tofu (大溪豆乾)
+      const bamboo = 0xffffff; // tinted bamboo color
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // bottom steamer basket
+        cyl(0.8, 0.8, 0.4, 10, bamboo, { y: 0.2, hex2: 0xd8b880 }),
+        // middle steamer layer
+        cyl(0.8, 0.8, 0.4, 10, bamboo, { y: 0.6, hex2: 0xe8c890 }),
+        // top lid (domed)
+        cyl(0.8, 0.75, 0.2, 10, bamboo, { y: 1.0 }),
+        sph(0.6, 0xc8a870, { ws: 8, hs: 4, thetaLen: HALF_PI * 0.6, y: 1.05 }),
+        // lid handle knob
+        cyl(0.12, 0.1, 0.1, 6, 0xa88848, { y: 1.28 }),
+        // horizontal bamboo banding on each layer
+        cyl(0.82, 0.82, 0.05, 10, 0xb89858, { y: 0.35, open: true }),
+        cyl(0.82, 0.82, 0.05, 10, 0xb89858, { y: 0.75, open: true }),
+        // visible steam holes (simplified as dark circles)
+        cyl(0.05, 0.05, 0.1, 5, 0x604830, { x: 0.3, y: 0.02, z: 0.2 }),
+        cyl(0.05, 0.05, 0.1, 5, 0x604830, { x: -0.25, y: 0.02, z: -0.3 }),
       ]);
     },
   },
 
-  /* ---- slot 3 ---- 瓦斯桶 — the steel LPG cylinder chained outside every eatery */
+  /* ---- slot 3 ---- 花生油桶 — Taoyuan peanut oil tin (花生油桶, 農特產) */
   {
-    id: 'gas_cylinder',
-    displayName: '瓦斯桶',
+    id: 'peanut_oil_tin',
+    displayName: '花生油桶',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.32,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xd0c8b8, 0xc94f46, 0xa8a098, 0xb84a3a, 0x9aa0aa],
-    yOffset: -0.121,
+    palette: [0xd8a848, 0xc89838, 0xe8b858, 0xb88828, 0xf0c060],
+    yOffset: -0.20,
     upright: true,
-    collisionScale: 0.92,
+    collisionScale: 0.88,
     buildGeometry(rng) {
-      const steel = 0xffffff; // tinted steel grey/red
+      // Taoyuan peanut oil tin - local agricultural product
+      const tin = 0xffffff; // tinted golden/yellow
       return finish([
-        // foot ring
-        cyl(0.62, 0.66, 0.16, 10, 0x8a8278, { y: 0.08 }),
-        // tank body
-        cyl(0.6, 0.6, 1.5, 10, steel, { y: 0.9, hex2: 0xe2dccc }),
-        // domed top shoulder
-        sph(0.6, steel, { ws: 10, hs: 5, thetaLen: HALF_PI, y: 1.6 }),
-        // collar guard ring around the valve
-        cyl(0.34, 0.34, 0.34, 8, 0x6a6258, { y: 2.18, open: true }),
-        // valve knob
-        cyl(0.1, 0.1, 0.14, 6, 0xc4281f, { y: 2.18 }),
-        cyl(0.04, 0.04, 0.18, 5, 0x9aa0aa, { y: 2.34 }),
+        // rectangular tin body (cooking oil tin shape)
+        box(0.8, 1.4, 0.6, tin, { y: 0.7, hex2: 0xf0c060 }),
+        // reinforced edges
+        box(0.84, 0.08, 0.64, 0xc89838, { y: 0.08 }),
+        box(0.84, 0.08, 0.64, 0xc89838, { y: 1.35 }),
+        // carrying handle on top
+        torus(0.18, 0.035, 5, 6, 0x8a8078, { y: 1.6, rz: HALF_PI }),
+        // spout cap at top
+        cyl(0.12, 0.12, 0.15, 6, 0xc04030, { y: 1.48, x: 0.25 }),
+        // label area (cream colored)
+        box(0.6, 0.5, 0.04, 0xf8f0e0, { y: 0.75, z: 0.32 }),
+        // peanut illustration simplified (oval blob)
+        sph(0.12, 0xc8a060, { ws: 5, hs: 4, sy: 0.7, y: 0.75, z: 0.36 }),
+        // text band (red stripe typical of Taiwan oil tins)
+        box(0.62, 0.1, 0.05, 0xc04030, { y: 0.55, z: 0.33 }),
       ]);
     },
   },
