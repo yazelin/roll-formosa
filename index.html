@@ -40,7 +40,7 @@
        they used to be preloaded here and Chrome flagged them "preloaded but not
        used"; they load on demand / from the SW precache when commentary fires. -->
   <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/bungee.woff2" crossorigin />
-  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/notosanstc.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/notosanstc-ui.woff2" crossorigin />
 
   <style>
     /* ================================================================
@@ -1006,6 +1006,19 @@
       font-family: 'Bungee';
       src: url('/assets/fonts/bungee.woff2') format('woff2');
       font-weight: 400; font-style: normal; font-display: swap;
+    }
+    /* Noto Sans TC is split by glyph so the first screen loads fast (priority,
+       not all-at-once): the UI subset covers only title/menu/result text and is
+       preloaded; the full font (every in-game glyph) is declared second with no
+       range, so the browser only fetches it when text outside the UI subset is
+       rendered (i.e. once you're in the game). Same family name → transparent to
+       every font-family stack. The unicode-range is injected by
+       scripts/gen-fonts.sh — do not hand-edit between the markers. */
+    @font-face {
+      font-family: 'Noto Sans TC';
+      src: url('/assets/fonts/notosanstc-ui.woff2') format('woff2');
+      font-weight: 100 900; font-style: normal; font-display: swap;
+      unicode-range: /*RF_UI_RANGE_START*/U+0020-007E,U+00A7,U+00B7,U+2014,U+2026-2027,U+2192,U+23F1,U+2B50,U+3000-3002,U+3008-3011,U+3014-3015,U+30A1,U+30A4,U+30AF,U+30B9,U+30BF,U+30C1,U+30C3,U+30C8,U+30D0,U+30D5,U+30E2-30E3,U+30EB,U+30F3,U+30FC,U+4E00,U+4E09-4E0B,U+4E16,U+4E2D,U+4E4B,U+4E86,U+4E9E,U+4EAB,U+4EBA,U+4ECB,U+4ED4,U+4ED9,U+4EF6,U+4F5B-4F5C,U+4F60,U+4F73,U+4F86,U+500B,U+50CF,U+5149,U+5165,U+5168,U+516B-516C,U+518D,U+51FA,U+5206,U+5230,U+523A,U+52A0,U+52D5,U+5316-5317,U+5357,U+5366,U+5373,U+539F,U+53E3,U+53F0,U+5403-5404,U+540C,U+5473,U+5496,U+54EA,U+554A,U+5561,U+559D,U+55AE,U+5609,U+5712,U+5716,U+5728,U+5730,U+57CE,U+57FA,U+5854,U+591C,U+5927,U+5929-592A,U+5976,U+59CB,U+5ABD,U+5B89,U+5B9C,U+5C04,U+5C07,U+5C0E-5C0F,U+5C4B,U+5C4F,U+5C71,U+5CF6,U+5DE8,U+5E02,U+5E74,U+5E97,U+5EA7,U+5EDF,U+5F48,U+5F69,U+5F70,U+5F9E,U+6069,U+60C5,U+6148,U+6210,U+6232,U+6295,U+62DB,U+62F1,U+6372,U+6392,U+63A8,U+63DB,U+6416,U+6469,U+649E,U+64C7,U+6536,U+6578,U+65B0,U+65B7,U+65E5,U+6642,U+6700,U+6708-6709,U+6728,U+676F,U+6771,U+6797,U+67D1,U+6817,U+6843,U+684C,U+6A13,U+6A19,U+6A23,U+6A4B,U+6B21,U+6B63,U+6C34,U+6C5F,U+6C99,U+6D77,U+6DE1,U+6E2F,U+6E56,U+6EAA,U+6EF7,U+6EFE,U+6F01,U+6F6D,U+6F8E,U+6FA4,U+6FF1,U+7063,U+718A,U+71C8,U+723E,U+724C,U+7259,U+7269,U+73A9,U+73CD,U+73E0,U+7403,U+754C,U+767E,U+7684,U+78BC,U+7956,U+795E,U+798F,U+79FB,U+7A00,U+7AF9,U+7D39,U+7D42,U+7DDA,U+7E23,U+7FA9,U+8001,U+8005,U+820A,U+8272,U+82B1,U+82D7,U+8392,U+84EE,U+85CF,U+862D,U+8679,U+87BA,U+8857,U+885D,U+88DD,U+897F,U+8ACB,U+8CA8,U+8D70,U+8DE8,U+8DEF,U+9019,U+901F,U+9023,U+904A,U+904D-904E,U+9078,U+908A,U+90E8,U+90FD,U+91CC,U+91D1,U+91D8,U+9451,U+947D-947E,U+9580,U+958B,U+9593,U+95A3,U+963F,U+966A,U+9686,U+968D,U+969B,U+96C4,U+96DE,U+96E8,U+96F2,U+9713,U+975C,U+97F3,U+982D,U+9846,U+98A8,U+99AC,U+9A30,U+9AD8,U+9B6F,U+9D5D,U+9E7F,U+9ED1,U+9EDE,U+9F3B,U+9F8D,U+9F9C,U+FF01,U+FF05,U+FF08-FF09,U+FF0C,U+FF0E,U+FF1A-FF1B,U+FF1F,U+FF5E,U+1F3EF,U+1F4CF,U+1F50A,U+1F5FC/*RF_UI_RANGE_END*/;
     }
     @font-face {
       font-family: 'Noto Sans TC';
