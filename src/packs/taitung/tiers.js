@@ -51,8 +51,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 小米酒蓋, 釋迦糖, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'millet_wine_cap', 'sugar_apple_candy', 'ngiauimia_card', 'pencil', 'button',
+      // 彈珠, 橡皮擦, 圖釘, 小米酒蓋, 釋迦糖, 尪仔標, 鉛筆, 月桃編墊
+      'marble', 'eraser', 'pushpin', 'millet_wine_cap', 'sugar_apple_candy', 'ngiauimia_card', 'pencil', 'moon_peach_coaster',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
