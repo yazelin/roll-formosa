@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 大理石珠, 原民編織繩, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'marble_bead', 'tribal_weave_cord', 'ngiauimia_card', 'pencil', 'button',
+      // 七星潭鵝卵石, 飛魚乾片, 貝殼, 大理石珠, 原民編織繩, 玉墜, 竹筷, 原民琉璃珠
+      'qixingtan_pebble', 'flying_fish_chip', 'seashell', 'marble_bead', 'tribal_weave_cord', 'jade_pendant', 'bamboo_chopstick', 'tribal_bead',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 石雕工坊, 公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'marble_workshop', 'apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 花蓮石屋, 石雕工坊, 原民公寓, 超商, 公車, 垃圾車, 加油站, 石藝廊道
+      'hualien_stonehouse', 'marble_workshop', 'tribal_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'marble_arcade',
       // chunk landmarks: 石藝街屋, 大廟
       'marble_shop_mass', 'temple_mass',
     ],
