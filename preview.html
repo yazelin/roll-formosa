@@ -115,9 +115,12 @@
       #sc-kicker { font-size: 11px; } #sc-header { font-size: 11px; }
       /* One non-wrapping row that scrolls sideways — fixed height, so the bar
          can't grow/shrink or re-wrap as the mobile browser chrome moves during
-         scroll (20 wrapping pills were the flicker). */
+         scroll (20 wrapping pills were the flicker). The edge fade hints that
+         the strip scrolls; the active city is scrolled into view by preview.js. */
       #sc-cities { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow-x: auto;
-        justify-content: flex-start; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        justify-content: flex-start; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%); }
       #sc-cities::-webkit-scrollbar { display: none; }
       .sc-pill { font-size: 13px; padding: 6px 14px; flex: 0 0 auto; }
       .sc-band { font-size: 14px; } .lbl { font-size: 11px; }
