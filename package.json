@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/gen-precache.mjs",
     "preview": "vite preview",
     "predeploy": "bash scripts/verify-donack-assets.sh",
     "test": "vitest run",
