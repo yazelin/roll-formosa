@@ -91,7 +91,7 @@ Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(
 - [x] 加深 miaoli 街頭物 round3:33→≤25
 - [x] 加深 penghu 街頭物 round3:33→≤25
 - [ ] 加深 tainan 街頭物 round3:32→≤25
-- [ ] 加深 hualien 街頭物 round3:32→≤25
+- [x] 加深 hualien 街頭物 round3:32→≤25 (done: 23/70)
 - [ ] 加深 changhua 街頭物 round3:32→≤25
 - [ ] 加深 pingtung 街頭物 round3:30→≤25
 - [ ] 加深 taitung 街頭物 round3:26→≤25
