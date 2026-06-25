@@ -50,7 +50,12 @@ self.addEventListener('fetch', (e) => {
         const c = await caches.open(CACHE); c.put(req, res.clone());
         return res;
       } catch {
-        return (await caches.match(req)) || (await caches.match('index.html')) || Response.error();
+        // Offline. ignoreSearch so a query'd nav (preview.html?city=tainan,
+        // /?city=X) matches its cached query-less page — otherwise the gallery
+        // link fell through to the index.html fallback and opened the game.
+        return (await caches.match(req, { ignoreSearch: true }))
+          || (await caches.match('index.html'))
+          || Response.error();
       }
     })());
     return;
