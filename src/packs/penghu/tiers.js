@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 貝殼, 仙人掌糖, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'seashell', 'cactus_candy', 'ngiauimia_card', 'pencil', 'button',
+      // 珊瑚珠, 風獅爺吊飾, 魚鉤, 貝殼, 仙人掌糖, 石敢當小牌, 小卷乾, 貝殼釦
+      'coral_bead', 'windlion_charm', 'fish_hook', 'seashell', 'cactus_candy', 'stone_tablet', 'dried_squid_snack', 'shell_button',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -97,10 +97,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 風獅爺小像, 漁網捲
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'windlion_mini', 'fishing_net_roll',
-      // chunk landmarks: 漁村推車, 廟前香爐
-      'fishing_vendor_cart', 'temple_incense_burner',
+      // 紅塑膠椅, 安全帽, 漁網浮球, 瓦斯桶, 三角錐, 消防栓, 風獅爺小像, 漁網捲
+      'red_plastic_chair', 'helmet', 'fishing_float', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'windlion_mini', 'fishing_net_roll',
+      // chunk landmarks: 漁村推車, 石敢當碑
+      'fishing_vendor_cart', 'shigandang_stele',
     ],
     fogColor: 0x341e34, // 漁村騎樓傍晚 灰粉
     skyTop: 0x180c1a,
@@ -145,10 +145,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 咾咕石厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'coral_house', 'tin_roof_house', 'old_apartment', 'convenience_store', 'island_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
-      // chunk landmarks: 咾咕石街屋, 大廟
-      'coral_streethouse_mass', 'temple_mass',
+      // 咾咕石厝, 漁寮, 老公寓, 超商, 公車, 垃圾車, 加油站, 漁港涼亭
+      'coral_house', 'fishing_shed', 'old_apartment', 'convenience_store', 'island_bus', 'garbage_truck', 'gas_station', 'harbor_pavilion',
+      // chunk landmarks: 咾咕石街屋, 漁港牌樓
+      'coral_streethouse_mass', 'harbor_gate',
     ],
     fogColor: 0x201a44, // 古厝街屋暮色 藍紫
     skyTop: 0x0e0c26,
@@ -193,10 +193,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 橋墩, 其他摩天樓, 巨型廣告牆, 圖書館塔, 遊客中心, 屋頂機房, 灣區大樓
-      'glass_highrise', 'bridge_pier', 'other_skyscraper', 'giant_ad_wall', 'library_tower', 'visitor_center', 'rooftop_plant_room', 'bayarea_block',
-      // chunk landmarks: 跨街空橋, 屋頂機房塔
-      'crossstreet_skybridge', 'rooftop_mech_tower',
+      // 跨海橋塔, 橋墩, 其他摩天樓, 風力發電機, 圖書館塔, 遊客中心, 屋頂機房, 灣區大樓
+      'bridge_tower', 'bridge_pier', 'other_skyscraper', 'wind_turbine', 'library_tower', 'visitor_center', 'rooftop_plant_room', 'bayarea_block',
+      // chunk landmarks: 漁港聯外橋, 屋頂機房塔
+      'fishing_harbor_connector', 'rooftop_mech_tower',
     ],
     fogColor: 0x18183e, // 跨海大橋夜空 深藍紫 (the finale band)
     skyTop: 0x121238,

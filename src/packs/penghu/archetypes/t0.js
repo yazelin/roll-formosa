@@ -15,76 +15,97 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] coral_bead 珊瑚珠 — Penghu red coral bead trinket               */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'coral_bead',
+    displayName: '珊瑚珠',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
+    palette: [0xd83040, 0xc82838, 0xe84050, 0xf05060, 0xb82030],
     yOffset: 0,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
       return finish([
+        // red coral bead body with natural coral texture
         sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }),
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }),
+        // natural coral grain patterns
+        cyl(0.08, 0.08, 1.8, 4, 0xf8c0b0, { rz: 0.3, y: 0.1 }),
+        cyl(0.06, 0.06, 1.5, 4, 0xf8d0c0, { rz: -0.4, ry: HALF_PI }),
+        // through-hole for stringing
+        cyl(0.12, 0.12, 2.2, 6, 0x2a2024, { y: 0, open: true }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with printed sleeve               */
+  /* [1] windlion_charm 風獅爺吊飾 — tiny Penghu windlion guardian charm */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'windlion_charm',
+    displayName: '風獅爺吊飾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68,
-    upright: false,
+    palette: [0xc8a868, 0xb89858, 0xd4b878, 0xe0c088, 0xa88848],
+    yOffset: -0.55,
+    upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }),
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }),
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }),
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }),
+        // body base (seated lion form)
+        cyl(0.5, 0.6, 0.8, 6, 0xffffff, { y: 0.4 }),
+        // rounded back
+        sph(0.48, 0xffffff, { ws: 6, hs: 4, thetaLen: HALF_PI, y: 0.8 }),
+        // head
+        sph(0.36, 0xffffff, { ws: 6, hs: 4, y: 1.1 }),
+        // mane ridge
+        cyl(0.32, 0.38, 0.16, 6, 0xffffff, { y: 1.0 }),
+        // two ears
+        cone(0.1, 0.14, 4, 0xffffff, { x: -0.22, y: 1.35, rz: -0.2 }),
+        cone(0.1, 0.14, 4, 0xffffff, { x: 0.22, y: 1.35, rz: 0.2 }),
+        // snout
+        box(0.14, 0.1, 0.12, 0xffffff, { y: 1.05, z: 0.3 }),
+        // eyes (dark)
+        sph(0.04, 0x2a2820, { ws: 4, hs: 3, x: -0.12, y: 1.15, z: 0.26 }),
+        sph(0.04, 0x2a2820, { ws: 4, hs: 3, x: 0.12, y: 1.15, z: 0.26 }),
+        // hanging loop
+        torus(0.12, 0.03, 4, 6, 0xc8a060, { y: 1.55 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + steel spike                         */
+  /* [2] fish_hook 魚鉤 — Penghu fishing hook with barb                  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'fish_hook',
+    displayName: '魚鉤',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03,
+    palette: [0xc8ccd4, 0xb8bcc4, 0xd8dce4, 0xa8acb4, 0xe8ecf4],
+    yOffset: -0.15,
     upright: false,
     collisionScale: 0.7,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }),
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }),
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }),
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }),
+        // hook shank (straight part)
+        cyl(0.12, 0.1, 1.4, 6, 0xffffff, { y: 0.7 }),
+        // hook eye (loop at top)
+        torus(0.18, 0.06, 4, 6, 0xffffff, { y: 1.5 }),
+        // hook bend (curved part using quarter torus)
+        torus(0.5, 0.1, 4, 8, 0xffffff, { y: -0.1, ry: HALF_PI, theta0: 0, thetaLen: PI * 0.7 }),
+        // barb point
+        cone(0.08, 0.3, 4, 0xffffff, { rz: 0.3, x: 0.3, y: 0.2 }),
       ]);
     },
   },
@@ -139,82 +160,102 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed play-card                 */
+  /* [5] stone_tablet 石敢當小牌 — miniature Penghu stone tablet amulet   */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'stone_tablet',
+    displayName: '石敢當小牌',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95,
-    upright: false,
+    palette: [0xa89880, 0x988870, 0xb8a890, 0xc8b8a0, 0x887860],
+    yOffset: -0.72,
+    upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }),
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }),
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }),
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }),
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }),
+        // stone tablet body (rectangular upright)
+        box(0.9, 1.6, 0.25, 0xffffff, { y: 0.8 }),
+        // top cap (traditional rounded/peaked)
+        box(0.95, 0.2, 0.28, 0xffffff, { y: 1.65 }),
+        sph(0.35, 0xffffff, { ws: 6, hs: 4, thetaLen: HALF_PI, y: 1.75 }),
+        // carved "石敢當" characters (represented by relief lines)
+        box(0.6, 0.12, 0.04, 0x5a4a3a, { y: 1.2, z: 0.14 }),
+        box(0.6, 0.12, 0.04, 0x5a4a3a, { y: 0.95, z: 0.14 }),
+        box(0.6, 0.12, 0.04, 0x5a4a3a, { y: 0.7, z: 0.14 }),
+        // base platform
+        box(1.0, 0.12, 0.35, 0x9a8a78, { y: 0.06 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + tip + eraser                          */
+  /* [6] dried_squid_snack 小卷乾 — Penghu dried squid snack strip       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'dried_squid_snack',
+    displayName: '小卷乾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
+    palette: [0xd8a878, 0xc89868, 0xe8b888, 0xb88858, 0xf0c898],
     yOffset: -0.85,
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }),
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }),
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }),
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }),
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }),
+        // dried squid body (elongated, flat, slightly curled)
+        box(2.2, 0.18, 0.6, 0xffffff, { rz: 0.05, x: -0.1 }),
+        // tapered tail end
+        box(0.8, 0.14, 0.4, 0xffffff, { x: 1.3, rz: 0.1 }),
+        cone(0.2, 0.5, 4, 0xffffff, { rz: -HALF_PI, x: 1.85 }),
+        // head end (wider)
+        box(0.6, 0.16, 0.7, 0xffffff, { x: -1.2 }),
+        // tentacle hints
+        cyl(0.06, 0.04, 0.4, 4, 0xffffff, { rz: HALF_PI, x: -1.6, z: 0.15 }),
+        cyl(0.06, 0.04, 0.4, 4, 0xffffff, { rz: HALF_PI, x: -1.6, z: -0.15 }),
+        // surface texture ridges
+        box(0.1, 0.04, 0.55, 0xe0c090, { x: 0.3 }),
+        box(0.1, 0.04, 0.55, 0xe0c090, { x: -0.3 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat button with 4 holes                          */
+  /* [7] shell_button 貝殼釦 — Penghu mother-of-pearl shell button       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'shell_button',
+    displayName: '貝殼釦',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
+    palette: [0xf0e8e0, 0xe8e0d8, 0xf8f0e8, 0xf0d8d0, 0xe0d8d0],
     yOffset: -0.80,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }),
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }),
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }),
+        // shell button body (iridescent mother-of-pearl)
+        cyl(1.0, 1.0, 0.24, 12, 0xffffff, { y: 0.14 }),
+        // natural shell edge variation
+        cyl(0.98, 0.95, 0.08, 12, 0xf8f0e8, { y: 0.26 }),
+        // center depression
+        cyl(0.55, 0.55, 0.16, 10, 0xe8e0d8, { y: 0.28 }),
+        // iridescent shimmer layers
+        cyl(0.8, 0.8, 0.02, 10, 0xd8f0f8, { y: 0.18 }),
+        cyl(0.6, 0.6, 0.02, 8, 0xf0e8f8, { y: 0.22 }),
       ];
-      const d = 0.2;
-      const holes = [[d, d], [-d, d], [d, -d], [-d, -d]];
+      // two holes (shell button style)
+      const holes = [[0.15, 0], [-0.15, 0]];
       for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
+        parts.push(cyl(0.08, 0.08, 0.2, 6, 0x2a2428, { x: hx, z: hz, y: 0.3 }));
       }
       return finish(parts);
     },

@@ -61,37 +61,41 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 漁寮 (Penghu fishing shed / boat shelter) ---------------- */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'fishing_shed',
+    displayName: '漁寮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.0,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
+    palette: [0x5a8888, 0x4a7878, 0xc8b8a0, 0x6a9898, 0x3a6868],
     yOffset: -0.42,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
-        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
-        // corrugation ridges suggested by thin batten boxes along the slope
+        // coral stone low wall base (咾咕石)
+        box(2.4, 0.7, 1.7, 0xc8b8a0, { y: 0.35 }),
+        // upper wooden plank walls (weathered fishing shed)
+        box(2.42, 0.6, 1.72, 0x8a7a62, { y: 1.0, hex2: 0xa89878 }),
+        // simple pitched tin roof (faded blue-green, salt-weathered)
+        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.14, y: 1.48 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
+      for (let i = 0; i < 3; i++) {
+        const x = -0.8 + i * 0.8;
+        parts.push(box(0.04, 0.05, 1.85, 0x6a8a8a, { rz: 0.14, x, y: 1.54 + x * 0.14 })); // roof ribs
       }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
+      // wide boat door opening (dark)
+      parts.push(box(1.4, 0.9, 0.05, 0x3a3a38, { y: 0.55, z: 0.86 }));
+      // fishing net drying rack on side
+      parts.push(cyl(0.06, 0.06, 1.0, 4, 0x7a6a52, { x: 1.3, y: 0.8, z: 0.4 }));
+      parts.push(cyl(0.06, 0.06, 1.0, 4, 0x7a6a52, { x: 1.3, y: 0.8, z: -0.4 }));
+      parts.push(box(0.06, 0.8, 0.9, 0x4a7878, { x: 1.3, y: 1.2, rz: 0.15 })); // net draped
+      // buoys hanging outside
+      parts.push(sph(0.12, 0xf26a1f, { ws: 5, hs: 3, x: -1.2, y: 0.8, z: 0.7 }));
+      parts.push(sph(0.1, 0xf0f0e8, { ws: 5, hs: 3, x: -1.0, y: 0.7, z: 0.75 }));
       return finish(parts);
     },
   },
@@ -292,41 +296,40 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 漁港涼亭 (Penghu harbor pavilion / resting shelter) ----- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱',
+    id: 'harbor_pavilion',
+    displayName: '漁港涼亭',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xc8b8a0, 0xb8a890, 0xa89878, 0xd0c0a8, 0x9a8a70],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // traditional Chinese-style pavilion roof (curved eaves)
+        cyl(1.4, 1.4, 2.6, 4, 0xb85a3a, { theta0: PI, rx: HALF_PI, sy: 0.45, y: 2.1 }), // curved roof
+        box(2.8, 0.12, 2.1, 0xc86a4a, { y: 1.9 }), // eave edge
+        // 4 coral stone support columns
+        cyl(0.16, 0.18, 1.8, 6, 0xc8b8a0, { x: -1.0, z: 0.7, y: 0.9 }),
+        cyl(0.16, 0.18, 1.8, 6, 0xc8b8a0, { x: 1.0, z: 0.7, y: 0.9 }),
+        cyl(0.16, 0.18, 1.8, 6, 0xc8b8a0, { x: -1.0, z: -0.7, y: 0.9 }),
+        cyl(0.16, 0.18, 1.8, 6, 0xc8b8a0, { x: 1.0, z: -0.7, y: 0.9 }),
+        // coral stone base platform
+        box(2.6, 0.2, 1.9, 0xa89878, { y: 0.1 }),
+        // bench seating inside (stone benches)
+        box(1.8, 0.35, 0.4, 0xb8a890, { y: 0.35, z: -0.5 }),
+        box(1.8, 0.35, 0.4, 0xb8a890, { y: 0.35, z: 0.5 }),
+        // central small stone table
+        box(0.6, 0.5, 0.6, 0xc8b8a0, { y: 0.4 }),
+        // roof ridge with finial
+        box(2.6, 0.1, 0.15, 0xd04838, { y: 2.45 }),
+        sph(0.15, 0xe0a83a, { ws: 5, hs: 3, y: 2.6 }),
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
-      }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
       return finish(parts);
     },
   },
@@ -375,54 +378,46 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9: 大廟 (chunk landmark — Tianhou temple mass, 媽祖廟) ----- */
+  /* ---- slot 9: 漁港牌樓 (chunk landmark — Penghu fishing harbor gate) -- */
   {
-    id: 'temple_mass',
-    displayName: '大廟',
+    id: 'harbor_gate',
+    displayName: '漁港牌樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 12,
     radiusJitter: 0.15,
     spawnWeight: 0.3,
-    palette: [0xc23a26, 0xd2402a, 0xe0a83a, 0xb83422, 0x3a6a4a],
+    palette: [0xc8b8a0, 0xb8a890, 0x2a6a8a, 0xa89878, 0xf0c050],
     yOffset: -0.42,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Penghu Tianhou Temple (澎湖天后宮) style — oldest Mazu temple in Taiwan
+      // Penghu fishing harbor entrance gate (漁港牌樓) — welcomes boats back
       const parts = [
-        // raised stone platform (廟埕台基) — coral stone base characteristic of Penghu
-        box(4.2, 0.45, 2.8, 0xc8b8a0, { y: 0.22 }),
-        // main hall body — red walls + warm interior glow
-        box(3.4, 1.3, 2.0, 0xffffff, { y: 1.1, hex2: 0xd2402a }),
-        // front vermilion columns (龍柱) of the portico
+        // main gate structure — two tall coral stone pillar + arch
+        box(0.8, 2.8, 0.8, 0xc8b8a0, { x: -1.8, y: 1.4 }), // left pillar
+        box(0.8, 2.8, 0.8, 0xc8b8a0, { x: 1.8, y: 1.4 }), // right pillar
+        // connecting beam
+        box(4.5, 0.5, 0.7, 0xb8a890, { y: 2.5 }),
+        // curved traditional roof on top
+        cyl(1.2, 1.2, 4.8, 4, 0xb85a3a, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.0 }),
+        // roof ridge
+        box(4.8, 0.12, 0.15, 0xc86a4a, { y: 3.3 }),
+        // upswept eave ends
+        box(0.5, 0.1, 0.14, 0xe0a83a, { rz: 0.4, x: -2.5, y: 3.15 }),
+        box(0.5, 0.1, 0.14, 0xe0a83a, { rz: -0.4, x: 2.5, y: 3.15 }),
+        // harbor name signboard (lit)
+        box(2.4, 0.6, 0.1, 0xffffff, { y: 2.7 }),
+        box(2.2, 0.5, 0.05, 0xf0c050, { y: 2.7, z: 0.08 }), // golden text area
+        // side decorative fish motifs (澎湖漁港 theme)
+        sph(0.2, 0x2a6a8a, { ws: 5, hs: 3, x: -1.8, y: 2.1, z: 0.45 }), // fish decoration L
+        sph(0.2, 0x2a6a8a, { ws: 5, hs: 3, x: 1.8, y: 2.1, z: 0.45 }), // fish decoration R
+        // coral stone base
+        box(4.8, 0.3, 1.2, 0xa89878, { y: 0.15 }),
+        // anchor decorations at pillar bases
+        torus(0.25, 0.05, 4, 6, 0x5a5248, { x: -1.8, y: 0.5, z: 0.5, rz: HALF_PI }),
+        torus(0.25, 0.05, 4, 6, 0x5a5248, { x: 1.8, y: 0.5, z: 0.5, rz: HALF_PI }),
       ];
-      const cx = [-1.4, -0.5, 0.5, 1.4];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(cyl(0.14, 0.16, 1.3, 6, 0xffffff, { x: cx[i], z: 1.0, y: 1.1 })); // vermilion column (tinted)
-      }
-      // sweeping double-eave hip roof — wide lower eave + narrower upper ridge
-      // low-seg cyl(seg=4) half-cylinders give the curved tiled slopes
-      parts.push(cyl(1.6, 1.6, 3.8, 4, 0x2e5a3a, { theta0: PI, rx: HALF_PI, sy: 0.5, y: 2.0 })); // lower eave roof (green-glaze tint)
-      parts.push(box(3.9, 0.12, 2.5, 0xe0a83a, { y: 1.83 })); // golden eave fascia under lower roof
-      parts.push(cyl(1.1, 1.1, 3.4, 4, 0x2e5a3a, { theta0: PI, rx: HALF_PI, sy: 0.5, y: 2.6 })); // upper roof tier
-      // central ridge beam with ornament
-      parts.push(box(3.6, 0.18, 0.22, 0xc94f46, { y: 3.0 })); // main ridge
-      // 燕尾脊 — upswept swallow-tail ridge ends (the defining temple silhouette)
-      parts.push(box(0.7, 0.14, 0.2, 0xe0a83a, { rz: 0.55, x: -1.95, y: 3.1 })); // swallowtail L
-      parts.push(box(0.7, 0.14, 0.2, 0xe0a83a, { rz: -0.55, x: 1.95, y: 3.1 })); // swallowtail R
-      parts.push(box(0.7, 0.14, 0.2, 0xe0a83a, { rz: 0.55, x: -1.6, y: 2.67, z: 0 })); // lower-eave tail L
-      parts.push(box(0.7, 0.14, 0.2, 0xe0a83a, { rz: -0.55, x: 1.6, y: 2.67, z: 0 })); // lower-eave tail R
-      // central roof ornament (寶塔 / 葫蘆 finial) — Tianhou temple characteristic
-      parts.push(sph(0.24, 0xe0a83a, { ws: 6, hs: 4, y: 3.25 }));
-      parts.push(cone(0.18, 0.45, 6, 0xe0a83a, { y: 3.58 }));
-      // entrance steps + dark double doors (coral stone steps)
-      parts.push(box(3.0, 0.18, 0.55, 0xc8b8a0, { y: 0.5, z: 1.38 })); // coral stone steps
-      parts.push(box(1.0, 0.9, 0.08, 0x6a2a1a, { y: 0.9, z: 1.02 })); // temple doors (dark red)
-      parts.push(box(1.04, 0.18, 0.1, 0xe0a83a, { y: 1.4, z: 1.02 })); // door lintel plaque (gold)
-      // side stone lions (石獅) — characteristic of Tianhou temples
-      parts.push(box(0.35, 0.4, 0.35, 0xb8a890, { x: -1.7, y: 0.65, z: 1.2 })); // lion base L
-      parts.push(box(0.35, 0.4, 0.35, 0xb8a890, { x: 1.7, y: 0.65, z: 1.2 })); // lion base R
       return finish(parts);
     },
   },
