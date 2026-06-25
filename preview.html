@@ -5,9 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>物件圖鑑 — Roll Formosa</title>
   <meta name="description" content="搖滾·福爾摩沙 物件圖鑑 — 看看每座城市裡有哪些可以滾的物件。" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@500;700;900&display=swap" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <!-- Self-hosted fonts (was Google Fonts CDN, which is cross-origin → the SW
+       can't cache it → re-downloaded every visit + broken offline). The gallery
+       shows object names = lots of CJK, so it preloads the full Noto subset
+       directly (no UI split here, to avoid a second unicode-range to keep in
+       sync). Both files are SW-precached. Regenerate via scripts/gen-fonts.sh. -->
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/bungee.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/notosanstc.woff2" crossorigin />
+  <style>
+    @font-face {
+      font-family: 'Bungee';
+      src: url('/assets/fonts/bungee.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Noto Sans TC';
+      src: url('/assets/fonts/notosanstc.woff2') format('woff2');
+      font-weight: 100 900; font-style: normal; font-display: swap;
+    }
+  </style>
   <style>
     :root {
       --c-cyan: #00e0ff; --c-pink: #ff2a78; --c-gold: #ffd86b;
@@ -127,5 +145,13 @@
   </div>
 
   <script type="module" src="/src/preview.js"></script>
+  <!-- Register the SW here too, so opening preview.html directly (not via the
+       title screen) still installs the offline cache. Same scope ('./') as
+       index.html — if the SW is already registered this is a no-op. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
 </body>
 </html>
