@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 客家花布香包, 圖釘, 草莓糖, 擂茶粉包, 尪仔標, 鉛筆, 陶瓷碗
-      'marble', 'hakka_flower_sachet', 'pushpin', 'strawberry_candy', 'leicha_packet', 'ngiauimia_card', 'pencil', 'ceramic_bowl',
+      // 桐花瓣, 客家花布香包, 圖釘, 草莓糖, 擂茶粉包, 客家圓牌, 木雕屑, 苗栗陶瓷碗
+      'tung_blossom_petal', 'hakka_flower_sachet', 'pushpin', 'strawberry_candy', 'leicha_packet', 'hakka_round_tag', 'wood_carving_chip', 'ceramic_bowl',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 客家夥房, 客家米店, 公車, 垃圾車, 加油站, 木雕騎樓
-      'townhouse', 'tin_roof_house', 'hakka_house', 'hakka_rice_shop', 'city_bus', 'garbage_truck', 'gas_station', 'woodcarving_arcade',
+      // 客家老屋, 茶廠寮, 客家夥房, 客家米店, 公車, 垃圾車, 加油站, 木雕騎樓
+      'hakka_old_house', 'tea_processing_shed', 'hakka_house', 'hakka_rice_shop', 'city_bus', 'garbage_truck', 'gas_station', 'woodcarving_arcade',
       // chunk landmarks: 客家街屋, 大廟
       'hakka_streethouse', 'temple_mass',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 舊車站, 鐵道高架, 天橋, 停車塔, 鐵道看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'old_station', 'rail_viaduct', 'pedestrian_bridge', 'parking_tower', 'rail_billboard', 'glass_curtain_house', 'bank',
+      // 舊山線商號, 舊車站, 鐵道高架, 天橋, 停車塔, 鐵道看板, 玻璃帷幕街屋, 銀行
+      'old_mountain_shophouse', 'old_station', 'rail_viaduct', 'pedestrian_bridge', 'parking_tower', 'rail_billboard', 'glass_curtain_house', 'bank',
       // chunk landmarks: 舊山線車站塔, 倉庫
       'mountain_rail_station', 'warehouse_mass',
     ],
@@ -194,8 +194,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 龍騰斷橋拱門, 跨橋, 木雕工廠, 客家聚落, 舊山線隧道口, 空橋, 舊山線鐵橋, 街區大樓
-      'longteng_arch', 'cross_bridge', 'woodcarving_factory', 'hakka_village_cluster', 'railway_tunnel', 'sky_bridge', 'old_mountain_rail_bridge', 'skyline_block',
+      // 龍騰斷橋拱門, 勝興月台, 木雕工廠, 客家聚落, 舊山線隧道口, 空橋, 舊山線鐵橋, 客家文化園區
+      'longteng_arch', 'shenxing_platform', 'woodcarving_factory', 'hakka_village_cluster', 'railway_tunnel', 'sky_bridge', 'old_mountain_rail_bridge', 'hakka_cultural_complex',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],

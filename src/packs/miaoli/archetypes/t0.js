@@ -32,27 +32,45 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] tung_blossom_petal 桐花瓣 — fallen white tung blossom petal    */
+  /*     The iconic 油桐花 petals that blanket Miaoli in spring          */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'tung_blossom_petal',
+    displayName: '桐花瓣',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.012,
-    radiusJitter: 0.18,
+    radiusNominal: 0.02,
+    radiusJitter: 0.2,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xffffff, 0xfff8f0, 0xfff0e8, 0xf8f4f0, 0xffeee0],
+    yOffset: -0.92, // flat petal lying on ground
     upright: false,
-    collisionScale: 0.82,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
-      ]);
+      // White tung blossom petal (油桐花瓣) — the "May snow" symbol of Miaoli.
+      // Five-petaled flower form, each petal is a rounded elongated shape.
+      const parts = [];
+      // Five petals radiating from center
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * PI * 2;
+        parts.push(
+          sph(0.35, 0xffffff, {
+            ws: 5, hs: 3,
+            sx: 0.8, sy: 0.15, sz: 0.45,
+            x: Math.cos(a) * 0.5,
+            z: Math.sin(a) * 0.5,
+            y: 0.08,
+            ry: a,
+          })
+        );
+      }
+      // Yellow stamen center
+      parts.push(cyl(0.15, 0.15, 0.1, 6, 0xffd84d, { y: 0.1 }));
+      // tiny red-orange stamens
+      parts.push(sph(0.06, 0xff6040, { ws: 4, hs: 2, x: 0.08, y: 0.15, z: 0.05 }));
+      parts.push(sph(0.06, 0xff6040, { ws: 4, hs: 2, x: -0.06, y: 0.15, z: 0.08 }));
+      return finish(parts);
     },
   },
 
@@ -185,61 +203,69 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] hakka_round_tag 客家圓牌 — Hakka village blessing tag           */
+  /*     Traditional red round blessing tags hung at Hakka temples       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'hakka_round_tag',
+    displayName: '客家圓牌',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.02,
-    radiusJitter: 0.14,
+    radiusNominal: 0.025,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xc83828, 0xe84838, 0xb82818, 0xf4e8c8, 0xd84030],
+    yOffset: -0.92, // flat tag lying down
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional Hakka blessing tag (客家圓牌) — red with gold characters,
+      // often seen at 義民廟 and other Hakka temples in Miaoli.
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        cyl(1.0, 1.0, 0.08, 14, 0xffffff, { y: 0.04 }), // main red disc (tinted)
+        cyl(0.88, 0.88, 0.09, 14, 0xf4e8c8, { y: 0.05 }), // cream inner field
+        cyl(0.78, 0.78, 0.095, 12, 0xc83828, { y: 0.055 }), // red blessing text area
+        // simplified 福 character (blessing) as cross pattern
+        box(0.5, 0.1, 0.08, 0xf0b429, { y: 0.06 }), // horizontal gold stroke
+        box(0.08, 0.1, 0.5, 0xf0b429, { y: 0.06 }), // vertical gold stroke
+        box(0.35, 0.1, 0.06, 0xf0b429, { y: 0.065, z: 0.18 }), // top stroke
+        box(0.35, 0.1, 0.06, 0xf0b429, { y: 0.065, z: -0.18 }), // bottom stroke
+        // hanging hole at top
+        cyl(0.08, 0.08, 0.12, 6, 0x2a2a2e, { y: 0.04, z: 0.85 }),
+        // red tassel hint
+        box(0.06, 0.06, 0.3, 0xc83828, { y: 0.03, z: 1.1 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] wood_carving_chip 木雕屑 — curled wood shaving/chip from carving */
+  /*     The byproduct of 三義's famous woodcarving industry              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'wood_carving_chip',
+    displayName: '木雕屑',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.045,
-    radiusJitter: 0.12,
+    radiusNominal: 0.03,
+    radiusJitter: 0.2,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xc8a870, 0xe8d8b0, 0x9a7a4a, 0xb89860, 0xd8c090],
+    yOffset: -0.75, // curled chip lying on surface
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.7,
     buildGeometry(rng) {
-      return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
-      ]);
+      // Curled wood shaving (木雕屑) — the fragrant camphor/hinoki chips
+      // found around Sanyi's woodcarving workshops.
+      const parts = [];
+      // Main curled shaving — a partial torus with thin cross-section
+      parts.push(torus(0.7, 0.08, 4, 10, 0xffffff, { arc: PI * 1.5, y: 0.3, rz: 0.3 }));
+      // second thinner curl
+      parts.push(torus(0.5, 0.06, 4, 8, 0xc8a870, { arc: PI, y: 0.25, x: 0.2, rz: -0.4 }));
+      // a few small chip fragments
+      parts.push(box(0.3, 0.05, 0.12, 0xe8d8b0, { x: -0.4, y: 0.05, z: 0.3, ry: 0.5 }));
+      parts.push(box(0.25, 0.04, 0.1, 0xd8c090, { x: 0.35, y: 0.04, z: -0.25, ry: -0.3 }));
+      return finish(parts);
     },
   },
 
