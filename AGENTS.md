@@ -44,7 +44,7 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
    `archetypes/t0–t6.js`(70 chunk 幾何,**內容要在地化、別留台北的**;`check-city.mjs` 會擋)、`narration.js`、`locale.js`、`ending.js`、
    `cityData.js`/`cityMap.js`(SHOP/ZONES/PLACEMENTS/water/GOAL_POS/DEV_STARTS)。
    也放一張 `public/assets/title/skyline-<id>.webp`(標題頁霓虹天際線剪影,透明背景;
-   `main.js` 依 active pack id 自動切換,缺檔自動退回 `skyline-taipei.webp`)。
+   標題頁的 pre-paint inline script(index.html)+ `engine.js` 依 active pack id 自動切換,缺檔自動退回 `skyline-taipei.webp`)。
    注意:curated 收藏(collectibles)若幾何 > 350 tris 要在 `catalog.js` 設
    `heroTriCap: HERO_TRI_CAP`(同地標),否則 DEV boot 會被 geometryFactory 擋。
 3. 在 `src/packs/manifest.js` 城市登錄表加一筆(`{ id, displayName, tagline, status }`,`status:'ready'` 才可玩、`'soon'` 在選單顯示「即將推出」);`active.js` 會自動可選,**縣市選單**(`src/ui/citySelect.js`)也會自動長出對應卡片。
@@ -52,8 +52,8 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 
 ### 選城市(`?city=` + 縣市選單)
 - 玩家選城市走 **`src/ui/citySelect.js`** 的 `#city-select` overlay(夜市霓虹風,卡片由 `manifest.js` 的 `CITIES` 渲染)。
-- 進站決策(`src/main.js` boot):**網址 `?city=` 最優先** → 否則讀 `localStorage` 的 `rf_city` 直接進該城市 → 都沒有(首次造訪)才跳選單。選城市 = `rf_city` 寫入 + 用新的 `?city=` 重新載入(引擎在載入時烘 active pack,**無執行期熱抽換**)。
-- **城市感字串**:`document.title`、標題頁副標(`title.subtitle`)、結算頁標題(`win.title`/`win.subtitle`)在 `main.js` boot 時從 `activePack.locale.t()` 覆寫 —— index.html 的硬寫值是 taipei 預設,別在那裡改死城市名,改 pack 的 `locale.js`。
+- 進站決策(`src/engine.js` boot):**網址 `?city=` 最優先**(全 20 城任一 id)→ 否則讀 `localStorage` 的 `rf_city` 直接進該城市 → 都沒有(首次造訪)才跳選單。選城市 = `rf_city` 寫入 + 用新的 `?city=` 重新載入(引擎在載入時烘 active pack,**無執行期熱抽換**)。
+- **城市感字串**:`document.title`、標題頁副標(`title.subtitle`)、結算頁標題(`win.title`/`win.subtitle`)先由 index.html 的 pre-paint inline script(`RF_CHROME` 對照表,首屏前就設好天際線/標題/副標)設定,再由 `engine.js` boot 從 `activePack.locale.t()` 確認 —— index.html 硬寫值是 taipei 預設,別在那改死城市名,改 pack 的 `locale.js`;**加 ready 城市要同步 `RF_CHROME`**(`src/packs/prepaint-chrome.test.js` 會把關)。
 
 ## 驗證關卡(動完必過)
 - `npm run build` 過、`npx vitest run` 全綠(含 `src/packs/localization.test.js` —— 每座 ready 城市 chunk 在地化深度自動把關)。
@@ -63,7 +63,13 @@ Vite 6 + vanilla ESM JS,靜態部署 GitHub Pages。Live:https://yazelin.github.
 - pack:`validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
 
 ## 目錄地圖
-- `src/main.js` 引擎入口;`src/world/` 物理/地形/spawner;`src/render/` 渲染;
-  `src/packs/<city>/` 城市內容;`src/config/tuning.js`/`tiers.js` 引擎常數。
+- `src/main.js` = 極小 bootstrap(**不含 three**);首屏標題顯示後才動態 `import('./engine.js')`。
+  `src/engine.js` = 真正引擎入口(three + 世界建構,獨立 lazy chunk);`src/world/` 物理/地形/spawner;
+  `src/render/` 渲染;`src/packs/<city>/` 城市內容;`src/config/tuning.js`/`tiers.js` 引擎常數。
 - `preview.html` + `src/preview.js`:玩家可見的**物件圖鑑**(Vite 第二入口,見 `vite.config.js`;
   標題畫面「物件圖鑑」鈕進入,可切城市/捲動/點物件放大;同時是 dev 幾何藝廊 `?kind`/`?item`)。
+
+## 啟動 / 資源(別破壞)
+- **標題優先**:`main.js` 只是 bootstrap;three.js + 3D 世界建構都在 `engine.js`,首屏 paint 後才 lazy import(idle / 首次 pointer 觸發)。**別把 three 或引擎 import 靜態塞回 `main.js`** —— 會讓首屏重新等整包 bundle。「開始」鈕在引擎就緒前顯示 loading 態。
+- **自架字型**:`index.html` / `preview.html` 都用 `public/assets/fonts/` 的自架 woff2,**別改回 Google Fonts CDN**(跨域 → SW 不能快取 → 離線壞 + 首屏連外網)。Noto 切 `notosanstc-ui`(首屏 preload)/ `notosanstc`(全字)兩份,同 family 用 unicode-range;新增 UI 文字後跑 `scripts/gen-fonts.sh`(會重新 subset 並把 UI unicode-range 注入 index.html)。
+- **PWA**:`public/sw.js` 安裝時全量 precache(清單由 `scripts/gen-precache.mjs` build 後注入);HTML network-first、其餘 cache-first;導覽 fallback 用 `{ignoreSearch:true}`(讓 `preview.html?city=` 等帶 query 的路由離線也命中)。動到 build 產物結構後確認 precache 仍涵蓋。
