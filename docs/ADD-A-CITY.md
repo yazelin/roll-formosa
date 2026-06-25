@@ -129,7 +129,10 @@ node scripts/headless-check.mjs http://localhost:4173/?city=<id> /tmp/x.png   # 
 
 - pack `validate()` true、99 codes、`displayNameByCode` 全 zh-TW 無日文。
 - **`check-city.mjs` 要 OK** —— 它比對這座城市的 70 個 chunk id 與台北,整包照抄(>=60/70 同台北)就 FAIL。
-  別把它的「保留 N 個泛台灣通用物」當壞事(高雄 37/70、台中 44/70 都正常);它擋的是**整包沒換**。
+  **現況基準(全 20 城已達到,新城/加深請對齊)**:街頭物與台北重複 **≤25/70**(deepen 三輪磨到的,最在地南投 18);
+  收藏冊各城**最多 3 個全台通用物**(黑熊/媽祖這種真共通的才留)、其餘全在地、零台北專屬地標。
+  原則:**想得到在地版的就換在地的**(連童玩彈珠都換成麵茶包/貢糖之類),只留真．全台共通街景(機車/紅綠燈/超商/公車/加油站/路樹)。
+  加深既有城用 autopilot「加深」模式(`NEXT.md` 寫 `加深 <id> 街頭物:N→≤25`)。
 - **headless-check 的「0 console error」非跑不可** —— buildGeometry 錯誤與**收藏/地標**的 tri cap(350 / hero `HERO_TRI_CAP`)
   是**執行期** assert,`npm run build` 不會抓;只有實際 boot(headless-check / 藝廊 / 瀏覽器)才會炸。
   (**chunk(t0–t6)的 ≤350 由 `catalog.test` 在 vitest 就驗**,不靠 boot;收藏/地標才是執行期那種。)藝廊截圖也會在 console 報 build 錯。

@@ -55,6 +55,8 @@ npm test         # vitest
 - **幾何 tri cap**:`node scripts/check-hero-tris.mjs <id>` —— 地標/收藏超 tri cap(DEV boot assert)會列出來。
 - **無頭驗證**:`node scripts/headless-check.mjs <url> out.png`(自帶 headless chrome,輸出截圖)。
 - **自動化(加城 / 加深)**:`scripts/autopilot.sh`(單條)/`scripts/autopilot-drain.sh`(整批)讀 `NEXT.md` backlog,讓 headless agent 自動加新城或加深既有城街頭物,過 `npm test` gate 後開 PR(人工 merge)。
+- **天際線素材**:`public/assets/title/skyline-<id>.webp`(20 城各一張霓虹剪影,標題頁用;缺檔會 fallback 台北)。
+- **OG 分享卡(可重現)**:`og-card.html` 是 1200×630 的 HTML 排版卡(多城天際線底圖 `public/assets/og-skyline.webp` + 真字型標題/副標/月牙);用 headless chrome 截圖 → `public/assets/og.jpg`。要改 OG 就改 HTML 重截,不必動 AI 圖。
 
 ## 部署
 
