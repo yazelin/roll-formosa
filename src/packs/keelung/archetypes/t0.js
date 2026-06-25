@@ -12,24 +12,28 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
-  /* [0] marble 彈珠 */
+  /* [0] miaokou_peanut 廟口花生 — Keelung temple street roasted peanut snack */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'miaokou_peanut',
+    displayName: '廟口花生',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0,
+    palette: [0xb8906a, 0xa07850, 0xc8a070, 0x9a7048, 0xd0b080],
+    yOffset: -0.45,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }),
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }),
+        // peanut shell (elongated oval, bumpy texture)
+        sph(1.0, 0xffffff, { ws: 8, hs: 6, sx: 1.5, sy: 0.8, sz: 0.7 }),
+        // shell texture ridges
+        box(0.12, 0.8, 0.05, 0x9a7048, { x: 0.3, rz: 0.2 }),
+        box(0.12, 0.8, 0.05, 0x9a7048, { x: -0.3, rz: -0.2 }),
+        // center crease
+        box(0.06, 0.6, 0.7, 0xa08060, { y: 0.35 }),
       ]);
     },
   },
@@ -63,25 +67,28 @@ export const T0_ARCHETYPES = [
     },
   },
 
-  /* [2] pushpin 圖釘 */
+  /* [2] rain_candy 雨港糖 — Keelung rain-themed hard candy */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'rain_candy',
+    displayName: '雨港糖',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03,
+    palette: [0x6fb0d0, 0x5090b8, 0x80c0e0, 0x70a8d0, 0x90d0f0],
+    yOffset: -0.5,
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }),
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }),
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }),
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }),
+        // raindrop-shaped candy body (teardrop)
+        sph(0.9, 0xffffff, { ws: 8, hs: 6, y: 0.3, sy: 1.2 }),
+        cone(0.5, 0.7, 6, 0xffffff, { y: 1.1 }),
+        // wrapper twist
+        cone(0.4, 0.5, 6, 0xe8f4f8, { y: -0.4, rx: PI }),
+        // shine highlight
+        box(0.1, 0.4, 0.08, 0xd0f0ff, { x: 0.25, y: 0.5, z: 0.2 }),
       ]);
     },
   },
@@ -140,30 +147,28 @@ export const T0_ARCHETYPES = [
     },
   },
 
-  /* [5] ngiauimia_card 尪仔標 */
+  /* [5] fish_scale 魚鱗 — Keelung harbor fish scale (fishmonger discard) */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'fish_scale',
+    displayName: '魚鱗',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
+    palette: [0xa8c0d0, 0x90b0c8, 0xb8d0e0, 0x80a0b8, 0xc8e0f0],
     yOffset: -0.95,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }),
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }),
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }),
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }),
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        // fish scale (thin oval disc with iridescent sheen)
+        cyl(1.0, 1.0, 0.04, 10, 0xffffff, { y: 0.02, sx: 1.2, sz: 0.8 }),
+        // subtle concentric rings
+        cyl(0.75, 0.75, 0.05, 8, 0xc8e0f0, { y: 0.03, sx: 1.2, sz: 0.8 }),
+        cyl(0.5, 0.5, 0.055, 8, 0xd0e8f8, { y: 0.035, sx: 1.2, sz: 0.8 }),
+        // shiny highlight
+        box(0.2, 0.06, 0.12, 0xe8f4ff, { x: 0.2, z: 0.1, y: 0.04 }),
       ]);
     },
   },
@@ -200,31 +205,32 @@ export const T0_ARCHETYPES = [
     },
   },
 
-  /* [7] button 鈕扣 */
+  /* [7] fishing_hook 魚鉤 — Keelung harbor fishing hook */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'fishing_hook',
+    displayName: '魚鉤',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80,
+    palette: [0xc8ccd4, 0xa8b0b8, 0xd8dce4, 0x9aa0a8, 0xe8ecf0],
+    yOffset: -0.20,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }),
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }),
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }),
-      ];
-      const d = 0.2;
-      const holes = [[d, d], [-d, d], [d, -d], [-d, -d]];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      return finish([
+        // hook shank (straight part)
+        cyl(0.12, 0.12, 1.4, 6, 0xc8ccd4, { y: 0.8 }),
+        // hook eye (loop at top)
+        torus(0.2, 0.06, 4, 8, 0xc8ccd4, { y: 1.55 }),
+        // hook bend (curved part)
+        torus(0.35, 0.1, 4, 6, 0xffffff, { y: 0.0, rx: HALF_PI, arc: PI }),
+        // hook point
+        cone(0.12, 0.4, 5, 0xd8dce4, { x: 0.35, y: 0.3, rz: -0.6 }),
+        // barb
+        box(0.08, 0.15, 0.04, 0xa8b0b8, { x: 0.45, y: 0.45, rz: 0.3 }),
+      ]);
     },
   },
 
