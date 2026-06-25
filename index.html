@@ -9,6 +9,7 @@
   <!-- PWA: installable + offline-playable -->
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Roll Formosa" />
@@ -33,16 +34,13 @@
   <meta name="twitter:description" content="台灣風味的滾物成球遊戲:全台 20 城,從圖釘滾到各城招牌地標。" />
   <meta name="twitter:image" content="https://yazelin.github.io/roll-formosa/assets/og.jpg" />
 
-  <!-- v3 Donack frames (the ONLY 8 shipped webp assets — Stream E prunes the
-       16 surplus frames; scripts/verify-donack-assets.sh enforces the set) -->
-  <link rel="preload" as="image" href="/assets/donack/idle-0.webp" />
-  <link rel="preload" as="image" href="/assets/donack/idle-3.webp" />
-  <link rel="preload" as="image" href="/assets/donack/happy-0.webp" />
-  <link rel="preload" as="image" href="/assets/donack/happy-3.webp" />
-  <link rel="preload" as="image" href="/assets/donack/thinking-0.webp" />
-  <link rel="preload" as="image" href="/assets/donack/thinking-3.webp" />
-  <link rel="preload" as="image" href="/assets/donack/speaking-0.webp" />
-  <link rel="preload" as="image" href="/assets/donack/speaking-3.webp" />
+  <!-- Preload ONLY first-screen-critical resources: the two title fonts, so
+       "ROLL FORMOSA" + the Chinese subtitle render in the right face on first
+       paint (no FOUT). The donack mascot frames are NOT on the first screen —
+       they used to be preloaded here and Chrome flagged them "preloaded but not
+       used"; they load on demand / from the SW precache when commentary fires. -->
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/bungee.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/notosanstc.woff2" crossorigin />
 
   <style>
     /* ================================================================
@@ -587,6 +585,11 @@
     }
     .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 36px rgba(255, 190, 80, 0.5); }
     .btn:active { transform: translateY(0) scale(0.98); }
+    /* 開始 while the engine chunk loads in the background (main.js sets this). */
+    .btn.is-loading { cursor: progress; opacity: 0.72; filter: saturate(0.6); animation: btn-pulse 1.1s ease-in-out infinite; }
+    .btn.is-loading:hover { transform: none; box-shadow: none; }
+    @keyframes btn-pulse { 0%,100% { opacity: 0.55; } 50% { opacity: 0.85; } }
+    @media (prefers-reduced-motion:reduce){ .btn.is-loading { animation: none; } }
     /* the 物件圖鑑 entry is an <a> styled as a button — kill the link underline + box it */
     a.btn { text-decoration: none; display: inline-block; text-align: center; }
     .title-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
