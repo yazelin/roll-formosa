@@ -3,7 +3,7 @@
 Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(merge 由人工)。
 做完那條在 PR 裡把它改成 `[x]`。一行一條,範圍寫清楚。
 
-> 已上線且在地化:台北 / 高雄 / 台中 / 台南。不要重做。
+> 已上線且在地化:全台 20 城(收藏物全 ≤3 通用、街頭物與台北重複 ≤25)。不要重做。
 > 加城市一律照 `docs/ADD-A-CITY.md` 全流程(scaffold → 8 地標 + 13 收藏在地化 →
 > archetypes t0–t6 換成在地小物別沿用台北 → finale 終點地標 → 補 active.js →
 > `public/assets/title/skyline-<id>.webp` 天際線剪影)。`npm test` 要綠。
