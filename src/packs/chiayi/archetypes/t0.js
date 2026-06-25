@@ -28,26 +28,31 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] alishan_tea_bag 阿里山茶包 — small triangle Alishan tea bag     */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'alishan_tea_bag',
+    displayName: '阿里山茶包',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0x58a848, 0x78c868, 0x486838, 0x98d888, 0x3a8830],
+    yOffset: -0.35, // pyramid bag resting on surface
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // Triangular tea bag with Alishan high mountain oolong
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        // main pyramid bag body (nylon mesh texture suggested by color)
+        cone(0.9, 1.4, 4, 0xffffff, { y: 0.5 }), // pyramid tea bag (tinted green)
+        // visible tea leaves inside (darker patch)
+        sph(0.45, 0x3a5828, { ws: 5, hs: 3, y: 0.55 }), // tea leaves
+        // string and tag
+        cyl(0.03, 0.03, 0.7, 4, 0xd8d0c0, { y: 1.4, rz: 0.3 }), // string
+        box(0.35, 0.25, 0.02, 0xe8d8c0, { x: 0.35, y: 1.65 }), // paper tag
+        box(0.25, 0.15, 0.025, 0x58a848, { x: 0.35, y: 1.65 }), // green print "阿里山"
       ]);
     },
   },
@@ -179,32 +184,33 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] turkey_rice_token 火雞肉飯代幣 — Chiayi turkey rice meal token  */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'turkey_rice_token',
+    displayName: '火雞肉飯代幣',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xe8c868, 0xd8b048, 0xf0d890, 0xc8a040],
+    yOffset: -0.95, // flat token lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Round meal token used at traditional Chiayi turkey rice shops
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        cyl(1.0, 1.0, 0.1, 12, 0xffffff, { y: 0.05 }), // brass/copper token (tinted)
+        cyl(0.85, 0.85, 0.11, 12, 0xd8a838, { y: 0.055 }), // inner raised disc
+        // turkey silhouette in center (simplified)
+        sph(0.25, 0x8a5020, { ws: 5, hs: 3, y: 0.12 }), // turkey body
+        cone(0.12, 0.2, 4, 0x8a5020, { x: 0.2, y: 0.14, rz: -0.5 }), // neck/head
+        // "火雞肉飯" characters (simplified as bars)
+        box(0.4, 0.08, 0.08, 0x6a4020, { y: 0.12, z: 0.5 }),
+        box(0.4, 0.08, 0.08, 0x6a4020, { y: 0.12, z: -0.5 }),
+        // rim edge detail
+        cyl(1.02, 1.02, 0.04, 12, 0xc89830, { y: 0.02, open: true }),
       ]);
     },
   },
@@ -248,34 +254,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] hinoki_coaster 檜木杯墊 — Chiayi hinoki wood coaster disc        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'hinoki_coaster',
+    displayName: '檜木杯墊',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xd8b070, 0xc8a058, 0xe8c888, 0xb89048, 0xf0d898],
+    yOffset: -0.80, // disc lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Round hinoki wood coaster with carved tree ring pattern
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        cyl(1.0, 1.0, 0.18, 12, 0xffffff, { y: 0.09 }), // main hinoki wood body (tinted)
+        cyl(0.92, 0.92, 0.04, 12, 0xc8a058, { y: 0.19 }), // top surface detail
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
+      // concentric tree ring pattern
+      parts.push(cyl(0.7, 0.7, 0.02, 10, 0xb89048, { y: 0.2, open: true }));
+      parts.push(cyl(0.45, 0.45, 0.02, 8, 0xa88038, { y: 0.2, open: true }));
+      parts.push(cyl(0.2, 0.2, 0.02, 6, 0x987028, { y: 0.2, open: true }));
+      // beveled edge
+      cyl(1.02, 0.98, 0.05, 12, 0xb89048, { y: 0.03 });
       return finish(parts);
     },
   },
