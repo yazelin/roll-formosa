@@ -37,38 +37,38 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 竹科辦公樓 hsip_office — HSIP-style tech office ------- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'hsip_office',
+    displayName: '竹科辦公樓',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
+    palette: [0x3a5a78, 0x5a7a98, 0x8ab0c8, 0x3a8ac0, 0xffd884],
     yOffset: -0.06,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
+      // Hsinchu Science Park office building — clean modern with blue tech branding
       return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
+        towerBanded(2.6, 7.2, 2.0, 14, 0x3a5a78, 0x8ab0c8, 0xffd884, rng, { y: 3.6 }),
+        // HSIP blue accent bands (竹科藍)
+        box(2.65, 0.25, 2.05, 0x3a8ac0, { y: 1.0 }),
+        box(2.65, 0.25, 2.05, 0x3a8ac0, { y: 5.5 }),
+        // horizontal sunshade louvers (tech building feature)
+        box(2.7, 0.08, 2.1, 0x7a9ab0, { y: 2.5 }),
+        box(2.7, 0.08, 2.1, 0x7a9ab0, { y: 4.5 }),
+        // ground-floor lobby with blue accent
+        box(2.8, 0.9, 2.2, 0x2a3a48, { y: 0.45 }),
+        box(1.0, 0.7, 0.06, 0x9fd0e8, { y: 0.4, z: 1.12 }), // lit lobby glass
+        // setback crown with tech styling
+        box(2.2, 0.7, 1.7, 0xc8d8e8, { y: 7.55 }),
+        box(2.2, 0.15, 1.7, 0x3a8ac0, { y: 7.96 }), // blue crown band
+        // rooftop unit + antenna
+        box(1.0, 0.5, 0.8, 0x5a7080, { y: 8.15 }),
+        cyl(0.05, 0.05, 1.2, 6, 0xd0d4dc, { y: 9.0 }),
       ]);
     },
   },
@@ -202,38 +202,40 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 竹科停車場 hsip_parking — HSIP parking structure ----- */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'hsip_parking',
+    displayName: '竹科停車場',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
+    palette: [0xb8c0c8, 0x9aa0a8, 0xd0d8e0, 0x3a8ac0, 0xe8f0f4],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
+      // HSIP modern parking structure with tech blue branding
       const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
+        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted light)
+        // corner columns with tech styling
+        box(0.22, 7.0, 0.22, 0x5a7080, { x: -0.95, y: 3.6, z: 1.15 }),
+        box(0.22, 7.0, 0.22, 0x5a7080, { x: 0.95, y: 3.6, z: 1.15 }),
+        box(0.22, 7.0, 0.22, 0x5a7080, { x: -0.95, y: 3.6, z: -1.15 }),
+        box(0.22, 7.0, 0.22, 0x5a7080, { x: 0.95, y: 3.6, z: -1.15 }),
+        // blue tech accent bands
+        box(2.05, 0.25, 2.45, 0x3a8ac0, { y: 0.3 }),
+        box(2.05, 0.25, 2.45, 0x3a8ac0, { y: 7.1 }),
+        box(2.0, 0.4, 2.4, 0x9aa8b0, { y: 7.3 }), // roof slab
+        box(1.0, 0.7, 0.1, 0x3a8ac0, { y: 0.5, z: 1.22 }), // entry gate (blue)
       ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
+      // deck floors with tech company car colors
+      const carHex = [0x3a8ac0, 0xe8e8e8, 0x3a8ac0, 0xe8e8e8, 0x3a8ac0, 0xe8e8e8];
       for (let f = 0; f < 6; f++) {
         const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
+        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 }));
+        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 }));
       }
       return finish(parts);
     },
@@ -317,40 +319,42 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 新竹銀行 hsinchu_bank — Hsinchu local bank style ----- */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'hsinchu_bank',
+    displayName: '新竹銀行',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
+    palette: [0xd8e0e8, 0xc8d8e8, 0x3a8ac0, 0x2a6a90, 0xffd884],
     yOffset: -0.4,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // Hsinchu style bank — modern tech-influenced architecture with blue branding
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment apex (low triangular prism)
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }),
-        // stylobate / steps
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }),
+        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted light)
+        // tech blue accent bands (竹科藍影響)
+        box(4.1, 0.25, 3.1, 0x3a8ac0, { y: 0.3 }),
+        box(4.1, 0.25, 3.1, 0x3a8ac0, { y: 3.55 }),
+        box(4.2, 0.2, 3.2, 0x9ab0c0, { y: 3.7 }), // roof edge
+        // modern glass entrance (not classical columns)
+        box(2.8, 2.4, 0.1, 0x8ab8d0, { y: 1.4, z: 1.52 }), // glass curtain front
+        box(2.8, 0.08, 0.12, 0x6a98b0, { y: 2.7, z: 1.56 }), // mullion
+        box(2.8, 0.08, 0.12, 0x6a98b0, { y: 1.8, z: 1.56 }), // mullion
+        // entrance canopy
+        box(3.2, 0.15, 1.0, 0xd8e0e8, { y: 2.85, z: 1.9 }),
+        // columns supporting canopy (modern square)
+        box(0.25, 2.6, 0.25, 0xc8d0d8, { x: -1.3, y: 1.45, z: 1.8 }),
+        box(0.25, 2.6, 0.25, 0xc8d0d8, { x: 1.3, y: 1.45, z: 1.8 }),
+        // bank sign with blue background
+        box(2.2, 0.4, 0.08, 0x3a8ac0, { y: 3.2, z: 1.58 }),
+        box(2.0, 0.3, 0.05, 0xffd884, { y: 3.2, z: 1.62 }), // gold text
+        // ATM booth at side
+        box(0.8, 1.2, 0.6, 0x3a8ac0, { x: -1.8, y: 0.75, z: 1.3 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
-      }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
       return finish(parts);
     },
   },

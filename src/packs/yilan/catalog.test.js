@@ -94,8 +94,8 @@ describe('yilan catalog surface', () => {
 
   it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (no Japanese kana)', () => {
     expect(DISPLAY_NAME_BY_CODE.length).toBe(99);
-    // code 0 = T0 slot 0 = marble = 彈珠
-    expect(DISPLAY_NAME_BY_CODE[0]).toBe('彈珠');
+    // code 0 = T0 slot 0 = green_onion_seed = 三星蔥種子
+    expect(DISPLAY_NAME_BY_CODE[0]).toBe('三星蔥種子');
     // EVERY code (0..98) is non-empty AND contains no Japanese kana (zero Tokyo).
     const kana = /[぀-ゟ゠-ヿ]/;
     for (let c = 0; c < 99; c++) {

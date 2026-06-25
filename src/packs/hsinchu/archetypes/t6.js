@@ -24,28 +24,34 @@ import { box, cyl, cone, sph, towerBanded, finish, PI, HALF_PI } from '../geomHe
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 竹科大樓 hsip_highrise — HSIP tech highrise -------------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'hsip_highrise',
+    displayName: '竹科大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 180,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x2f5478, 0x4a7aa0, 0x6fb0cc, 0x9fd0e4, 0xffe08a],
+    palette: [0x3a5a78, 0x5a8ab0, 0x8ac0d8, 0x3a8ac0, 0xffd884],
     yOffset: -0.04,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and vertical mullion seams.
+      // Hsinchu Science Park highrise — with signature blue tech branding
       return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6fb0cc, 0xffe08a, rng, { y: 1.7 }), // glass shaft (風城藍 + lit windows)
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
+        towerBanded(0.95, 3.4, 0.95, 12, 0x3a5a78, 0x8ac0d8, 0xffd884, rng, { y: 1.7 }),
+        // HSIP blue accent bands (竹科藍)
+        box(1.0, 0.15, 1.0, 0x3a8ac0, { y: 0.3 }),
+        box(1.0, 0.15, 1.0, 0x3a8ac0, { y: 2.5 }),
+        towerBanded(0.78, 0.9, 0.78, 4, 0x4a6a88, 0x9ad0e0, 0xffe6a0, rng, { y: 3.85 }),
+        // horizontal sunshade fins (竹科建築特色)
+        box(1.0, 0.06, 1.0, 0x7a9ab0, { y: 1.0 }),
+        box(1.0, 0.06, 1.0, 0x7a9ab0, { y: 2.0 }),
+        box(1.0, 0.06, 1.0, 0x7a9ab0, { y: 3.0 }),
+        // rooftop with tech styling
+        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }),
+        box(0.4, 0.14, 0.4, 0x5a7080, { y: 4.32 }),
       ]);
     },
   },
@@ -356,36 +362,38 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9 (chunk landmark): 屋頂機房塔 rooftop_mech_tower --------- */
+  /* ---- slot 9 (chunk landmark): 竹科機房塔 hsip_mech_tower — HSIP mech tower */
   {
-    id: 'rooftop_mech_tower',
-    displayName: '屋頂機房塔',
+    id: 'hsip_mech_tower',
+    displayName: '竹科機房塔',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 260,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x42505e, 0x646c7a, 0x8a92a0, 0xb8bcc6, 0xe0c860],
+    palette: [0x3a5a78, 0x5a7a98, 0x8ab0c8, 0x3a8ac0, 0xffd884],
     yOffset: -0.044,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // A tall tower crowned by a dense mechanical/antenna mast head — the kind of
-      // rooftop mech stack that tops 風城's tallest service towers.
+      // HSIP tech tower with mechanical penthouse — blue-branded science park style
       const parts = [
-        towerBanded(1.4, 3.4, 1.4, 11, 0x42505e, 0x8a92a0, 0xe0c860, rng, { y: 1.7 }), // main shaft
-        box(1.5, 0.2, 1.5, 0x363c46, { y: 3.5 }), // roof slab
-        box(1.1, 1.0, 1.1, 0x646c7a, { y: 4.1, hex2: 0x8a92a0 }), // mech penthouse
-        box(0.7, 0.7, 0.7, 0xb8bcc6, { y: 4.85 }), // upper mech box
+        towerBanded(1.4, 3.4, 1.4, 11, 0x3a5a78, 0x8ab0c8, 0xffd884, rng, { y: 1.7 }),
+        // HSIP blue accent bands
+        box(1.45, 0.18, 1.45, 0x3a8ac0, { y: 0.3 }),
+        box(1.45, 0.18, 1.45, 0x3a8ac0, { y: 3.4 }),
+        box(1.5, 0.2, 1.5, 0x4a6a88, { y: 3.5 }), // roof slab
+        box(1.1, 1.0, 1.1, 0x5a7a98, { y: 4.1, hex2: 0x8ab0c8 }), // mech penthouse
+        box(0.7, 0.7, 0.7, 0xc8d8e8, { y: 4.85 }), // upper mech box
       ];
-      // antenna mast cluster on top
-      parts.push(cyl(0.05, 0.05, 1.4, 6, 0xd0d4dc, { y: 5.6 })); // central mast
-      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: 0.28, y: 5.3 })); // side mast
-      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: -0.28, y: 5.3 })); // side mast
-      parts.push(sph(0.12, 0xe0c860, { ws: 6, hs: 4, y: 6.3 })); // aircraft warning light (lit)
-      // three mech-platform rings up the mast
+      // antenna mast cluster (tech infrastructure)
+      parts.push(cyl(0.05, 0.05, 1.4, 6, 0xd0d4dc, { y: 5.6 }));
+      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: 0.28, y: 5.3 }));
+      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: -0.28, y: 5.3 }));
+      parts.push(sph(0.12, 0xffd884, { ws: 6, hs: 4, y: 6.3 })); // warning light (golden)
+      // mech platforms
       for (let i = 0; i < 3; i++) {
-        parts.push(box(0.5, 0.04, 0.5, 0x9aa0aa, { y: 5.1 + i * 0.45 })); // mast platform
+        parts.push(box(0.5, 0.04, 0.5, 0x9ab0c0, { y: 5.1 + i * 0.45 }));
       }
       return finish(parts);
     },

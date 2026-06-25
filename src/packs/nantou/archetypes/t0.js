@@ -28,78 +28,85 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] plum_candy 梅子糖 — Xinyi plum candy (南投信義特產)              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'plum_candy',
+    displayName: '梅子糖',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0x9a3060, 0xb04070, 0x7a2050, 0xc05080, 0x6a1840],
+    yOffset: -0.49,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        // plum candy body (oval, plum-colored)
+        sph(0.9, 0xffffff, { ws: 10, hs: 7, x: 0.0, sx: 1.2 }),
+        // sugar coating shimmer
+        torus(0.5, 0.12, 6, 10, 0xffffff, { ry: HALF_PI, x: 0.0 }),
+        // wrapper twist ends (clear cellophane)
+        cone(0.4, 0.6, 8, 0xf8f0e8, { rz: -HALF_PI, x: 1.0 }),
+        cone(0.4, 0.6, 8, 0xf8f0e8, { rz: HALF_PI, x: -1.0 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] oolong_tea_ball 凍頂烏龍茶球 — rolled oolong tea ball            */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'oolong_tea_ball',
+    displayName: '凍頂烏龍茶球',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0x3a5030, 0x4a6040, 0x2a4020, 0x5a7050, 0x6a8060],
+    yOffset: 0,
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        // tightly rolled oolong tea ball (南投鹿谷特產)
+        sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
+        // subtle leaf texture ridges
+        box(0.1, 0.9, 0.1, 0x2a4020, { rz: 0.3, ry: 0.2 }),
+        box(0.1, 0.85, 0.1, 0x2a4020, { rz: -0.4, ry: 1.0 }),
+        box(0.1, 0.8, 0.1, 0x2a4020, { rz: 0.5, ry: 2.0 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] bamboo_shoot_tip 筍尖 — small bamboo shoot tip (竹山特產)         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'bamboo_shoot_tip',
+    displayName: '筍尖',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0xc8b090, 0xd8c0a0, 0xb8a080, 0xe8d0b0, 0xa89070],
+    yOffset: -0.03,
     upright: false,
     collisionScale: 0.7,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // bamboo shoot tip (竹山筍)
+        cone(0.7, 1.6, 8, 0xffffff, { y: 0.8 }), // main body
+        // layered husk rings
+        cyl(0.72, 0.68, 0.2, 8, 0xb8a080, { y: 0.3 }),
+        cyl(0.65, 0.58, 0.18, 8, 0xc8b090, { y: 0.5 }),
+        cyl(0.55, 0.45, 0.16, 8, 0xd8c0a0, { y: 0.7 }),
+        // tip
+        cone(0.2, 0.4, 6, 0xe8d8c0, { y: 1.5 }),
       ]);
     },
   },
@@ -163,94 +170,92 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] sun_cake 太陽餅 — Nantou/Taichung sun cake piece                */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'sun_cake',
+    displayName: '太陽餅',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xf4d8a0, 0xe8c890, 0xf0e0b0, 0xdab878],
+    yOffset: -0.85,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        // flaky pastry disc
+        cyl(1.0, 1.0, 0.3, 12, 0xffffff, { y: 0.15 }),
+        // golden baked top
+        cyl(0.95, 0.95, 0.08, 12, 0xe8c070, { y: 0.32 }),
+        // flaky layers on edge
+        cyl(1.02, 1.02, 0.06, 12, 0xf0d8a0, { y: 0.08 }),
+        cyl(1.02, 1.02, 0.06, 12, 0xf4e0b0, { y: 0.18 }),
+        // center stamp mark
+        cyl(0.3, 0.3, 0.04, 8, 0xd8a060, { y: 0.35 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] incense_stick 線香 — temple incense stick (南投廟宇)             */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'incense_stick',
+    displayName: '線香',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xc83020, 0xd84030, 0xb82818, 0xe05040, 0xa82010],
+    yOffset: -0.85,
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // red incense stick body
+        cyl(0.08, 0.08, 2.4, 6, 0xffffff, { rz: HALF_PI, x: 0.0 }),
+        // bamboo stick core at base
+        cyl(0.05, 0.05, 0.8, 6, 0xc8b090, { rz: HALF_PI, x: -1.5 }),
+        // ash tip (grey)
+        cyl(0.07, 0.04, 0.3, 6, 0x8a8a8a, { rz: HALF_PI, x: 1.4 }),
+        // glowing ember end
+        sph(0.08, 0xf06020, { ws: 6, hs: 4, x: 1.55 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] deer_antler_slice 鹿茸片 — deer antler slice (埔里特產)           */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'deer_antler_slice',
+    displayName: '鹿茸片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xa87850, 0xb88860, 0x986840, 0xc89870, 0x886038],
+    yOffset: -0.80,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
-      ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
-      return finish(parts);
+      return finish([
+        // oval antler slice
+        cyl(1.0, 1.0, 0.15, 12, 0xffffff, { y: 0.08, sx: 1.2 }),
+        // outer ring (darker bone)
+        cyl(1.02, 1.02, 0.12, 12, 0x886040, { y: 0.08, sx: 1.2, open: true }),
+        // center spongy core pattern
+        cyl(0.5, 0.5, 0.16, 10, 0xc8a080, { y: 0.08, sx: 1.2 }),
+        // small pores
+        cyl(0.12, 0.12, 0.17, 6, 0x9a7050, { x: 0.2, z: 0.15, y: 0.08 }),
+        cyl(0.1, 0.1, 0.17, 6, 0x9a7050, { x: -0.15, z: -0.1, y: 0.08 }),
+        cyl(0.08, 0.08, 0.17, 6, 0x9a7050, { x: 0.1, z: -0.2, y: 0.08 }),
+      ]);
     },
   },
 

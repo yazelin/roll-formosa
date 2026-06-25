@@ -173,88 +173,91 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 商辦塔 biz_tower ---------------------------------- */
+  /* ---- slot 4: 日月潭遊客中心 visitor_center ------------------------ */
   {
-    id: 'biz_tower',
-    displayName: '商辦塔',
+    id: 'visitor_center',
+    displayName: '日月潭遊客中心',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
+    palette: [0x8a7a60, 0x9a8a70, 0x6a9080, 0xc8d4dc, 0xffd884],
     yOffset: -0.191,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // 埔里/日月潭商業大樓
+      // 日月潭遊客中心 - 木造+現代玻璃風格
       return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
+        box(2.4, 0.55, 1.6, 0x8a7a60, { y: 0.28 }), // 木造基座
+        towerBanded(1.9, 2.9, 1.0, 9, 0x5a7068, 0x6a9080, 0xffd884, rng, { y: 2.0 }), // 玻璃帷幕+木框
+        box(2.0, 0.1, 1.06, 0x7a6a58, { y: 1.45 }), // 木飾條
+        box(2.0, 0.1, 1.06, 0x7a6a58, { y: 2.55 }), // 木飾條
+        box(2.0, 0.1, 1.06, 0x7a6a58, { y: 3.45 }), // 木飾條
+        box(1.4, 0.2, 0.7, 0x6a5a48, { y: 3.6 }), // 木造屋頂
+        cyl(0.4, 0.4, 0.6, 8, 0x5a8a70, { x: 0.5, y: 3.9 }), // 觀景台綠化
       ]);
     },
   },
 
-  /* ---- slot 5: 空橋 sky_bridge ---------------------------------------- */
+  /* ---- slot 5: 木棧觀景橋 wooden_bridge --------------------------------- */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'wooden_bridge',
+    displayName: '木棧觀景橋',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 85,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a6a8a, 0x6a96b8, 0xa0d0e4, 0xc8d0d8, 0xffe0a0],
+    palette: [0x8a7a60, 0x9a8a70, 0x6a5a48, 0xc8d0d8, 0xffe0a0],
     yOffset: -0.427,
     upright: true,
     collisionScale: 0.65,
     buildGeometry(rng) {
-      // 日月潭遊客中心空橋風格: Two podium towers joined by glazed sky bridge
+      // 日月潭環湖木棧橋: 兩端觀景亭+木橋連接
       return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
+        box(0.9, 2.6, 0.9, 0x8a7a60, { x: -1.5, y: 1.3 }), // 觀景亭 A
+        box(0.9, 2.4, 0.9, 0x8a7a60, { x: 1.5, y: 1.2 }), // 觀景亭 B
+        box(2.2, 0.2, 0.6, 0x9a8a70, { y: 1.8 }), // 木棧橋面
+        box(2.2, 0.5, 0.08, 0x7a6a58, { y: 2.0, z: 0.28 }), // 木欄杆
+        box(2.2, 0.5, 0.08, 0x7a6a58, { y: 2.0, z: -0.28 }), // 木欄杆
+        // 亭頂
+        cyl(0.7, 0.7, 0.8, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.4, x: -1.5, y: 2.9 }),
+        cyl(0.7, 0.7, 0.8, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 1.5, y: 2.7 }),
       ]);
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop_plant_room ---------------------------- */
+  /* ---- slot 6: 清境觀山亭 mountain_pavilion --------------------------- */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'mountain_pavilion',
+    displayName: '清境觀山亭',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 68,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
+    palette: [0x8a7a60, 0x9a8a70, 0x5a8060, 0xc8ccd2, 0xe0c860],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // 大型建築屋頂機房區
+      // 清境農場觀山亭
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        box(2.6, 0.3, 2.0, 0x9a8a70, { y: 0.15 }), // 木平台
+        // 四角亭柱
+        cyl(0.15, 0.15, 2.0, 6, 0x7a6a50, { x: -1.1, z: 0.8, y: 1.0 }),
+        cyl(0.15, 0.15, 2.0, 6, 0x7a6a50, { x: 1.1, z: 0.8, y: 1.0 }),
+        cyl(0.15, 0.15, 2.0, 6, 0x7a6a50, { x: -1.1, z: -0.8, y: 1.0 }),
+        cyl(0.15, 0.15, 2.0, 6, 0x7a6a50, { x: 1.1, z: -0.8, y: 1.0 }),
+        // 傳統斜屋頂
+        cyl(1.4, 1.4, 2.8, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.5, y: 2.3 }),
+        // 屋脊飾
+        box(2.9, 0.1, 0.15, 0x5a4a38, { y: 2.8 }),
+        // 觀景木欄杆
+        box(2.4, 0.4, 0.08, 0x8a7a60, { y: 0.5, z: 0.95 }),
+        box(2.4, 0.4, 0.08, 0x8a7a60, { y: 0.5, z: -0.95 }),
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
       return finish(parts);
     },
   },
@@ -293,70 +296,81 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8 (chunk landmark): 跨街空橋 crossstreet_skybridge ------- */
+  /* ---- slot 8 (chunk landmark): 日月潭環湖步道 lake_trail --------------- */
   {
-    id: 'crossstreet_skybridge',
-    displayName: '跨街空橋',
+    id: 'lake_trail',
+    displayName: '日月潭環湖步道',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 280,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x3c5876, 0x5a86a8, 0x9fd0e4, 0xc8d0d8, 0xffe0a0],
+    palette: [0x8a7a60, 0x9a8a70, 0x5a8060, 0xc8d0d8, 0xffe0a0],
     yOffset: -0.485,
     upright: true,
     collisionScale: 0.75,
     buildGeometry(rng) {
-      // 日月潭遊客中心風格: wide multi-level glazed skybridge
+      // 日月潭環湖木棧步道 + 觀景亭群
       const parts = [
-        towerBanded(1.3, 2.8, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: -2.0, y: 1.4 }), // block A
-        towerBanded(1.3, 3.0, 1.3, 9, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: 2.0, y: 1.5 }), // block B
-        box(2.8, 0.6, 0.9, 0x9fd0e4, { y: 1.6, hex2: 0xc8e8f4 }), // lower glazed span
-        box(2.8, 0.55, 0.85, 0x9fd0e4, { y: 2.4, hex2: 0xc8e8f4 }), // upper glazed span
-        box(2.8, 0.05, 0.92, 0x88a0b4, { y: 1.32 }), // lower span floor
-        box(2.8, 0.05, 0.92, 0x88a0b4, { y: 2.7 }), // upper span roof
+        // 長木棧道
+        box(5.0, 0.15, 1.0, 0x9a8a70, { y: 0.08 }),
+        // 欄杆
+        box(5.0, 0.4, 0.06, 0x8a7a60, { y: 0.35, z: 0.48 }),
+        box(5.0, 0.4, 0.06, 0x8a7a60, { y: 0.35, z: -0.48 }),
+        // 涼亭 A
+        box(1.2, 2.0, 1.2, 0x8a7a60, { x: -1.8, y: 1.1 }),
+        cyl(0.9, 0.9, 1.4, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.5, x: -1.8, y: 2.4 }),
+        // 涼亭 B
+        box(1.2, 2.2, 1.2, 0x8a7a60, { x: 1.8, y: 1.2 }),
+        cyl(0.9, 0.9, 1.4, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.5, x: 1.8, y: 2.6 }),
+        // 觀景平台
+        box(1.5, 0.2, 1.8, 0x7a6a58, { x: 0, y: 0.2, z: 1.2 }),
       ];
-      // diagonal truss struts under the lower span
-      for (let i = 0; i < 4; i++) {
-        const sx = -1.1 + i * 0.73;
-        parts.push(box(0.05, 0.85, 0.05, 0xb8c0c8, { rz: (i % 2 ? 1 : -1) * 0.5, x: sx, y: 1.25 })); // truss strut
+      // 步道欄杆柱
+      for (let i = 0; i < 6; i++) {
+        const sx = -2.2 + i * 0.88;
+        parts.push(cyl(0.05, 0.05, 0.5, 5, 0x7a6a58, { x: sx, y: 0.35, z: 0.48 }));
+        parts.push(cyl(0.05, 0.05, 0.5, 5, 0x7a6a58, { x: sx, y: 0.35, z: -0.48 }));
       }
-      parts.push(box(0.7, 0.26, 0.7, 0x7a8492, { x: -2.0, y: 2.95 })); // block A roof unit
-      parts.push(box(0.7, 0.26, 0.7, 0x7a8492, { x: 2.0, y: 3.15 })); // block B roof unit
       return finish(parts);
     },
   },
 
-  /* ---- slot 9 (chunk landmark): 屋頂機房塔 rooftop_mech_tower --------- */
+  /* ---- slot 9 (chunk landmark): 清境觀星台 stargazing_tower ------------ */
   {
-    id: 'rooftop_mech_tower',
-    displayName: '屋頂機房塔',
+    id: 'stargazing_tower',
+    displayName: '清境觀星台',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 260,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x4a5260, 0x646c7a, 0x8a92a0, 0xb8bcc6, 0xe0c860],
+    palette: [0x8a7a60, 0x9a8a70, 0x5a4a38, 0xb8bcc6, 0xe0c860],
     yOffset: -0.044,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // 大型建築頂層機房塔 — mechanical/antenna mast tower
+      // 清境農場觀星塔 — 木造高塔觀景台
       const parts = [
-        towerBanded(1.4, 3.4, 1.4, 11, 0x42505e, 0x8a92a0, 0xe0c860, rng, { y: 1.7 }), // main shaft
-        box(1.5, 0.2, 1.5, 0x363c46, { y: 3.5 }), // roof slab
-        box(1.1, 1.0, 1.1, 0x646c7a, { y: 4.1, hex2: 0x8a92a0 }), // mech penthouse
-        box(0.7, 0.7, 0.7, 0xb8bcc6, { y: 4.85 }), // upper mech box
+        // 主塔身 (木造)
+        box(1.4, 3.4, 1.4, 0x8a7a60, { y: 1.7 }),
+        // 橫木飾條
+        box(1.5, 0.1, 1.5, 0x7a6a58, { y: 0.8 }),
+        box(1.5, 0.1, 1.5, 0x7a6a58, { y: 1.8 }),
+        box(1.5, 0.1, 1.5, 0x7a6a58, { y: 2.8 }),
+        // 頂層觀景台
+        box(1.8, 0.2, 1.8, 0x9a8a70, { y: 3.5 }),
+        // 觀景欄杆
+        box(1.8, 0.5, 0.08, 0x8a7a60, { y: 3.75, z: 0.86 }),
+        box(1.8, 0.5, 0.08, 0x8a7a60, { y: 3.75, z: -0.86 }),
+        box(0.08, 0.5, 1.7, 0x8a7a60, { x: 0.86, y: 3.75 }),
+        box(0.08, 0.5, 1.7, 0x8a7a60, { x: -0.86, y: 3.75 }),
+        // 斜屋頂
+        cyl(1.2, 1.2, 2.0, 4, 0x6a5a48, { theta0: PI, rx: HALF_PI, sy: 0.5, y: 4.3 }),
+        // 屋頂風向標
+        cyl(0.04, 0.04, 0.8, 5, 0x9aa0aa, { y: 4.9 }),
+        sph(0.1, 0xe0c860, { ws: 6, hs: 4, y: 5.35 }), // 頂燈
       ];
-      // antenna mast cluster on top
-      parts.push(cyl(0.05, 0.05, 1.4, 6, 0xd0d4dc, { y: 5.6 })); // central mast
-      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: 0.28, y: 5.3 })); // side mast
-      parts.push(cyl(0.035, 0.035, 0.9, 6, 0xc8ccd4, { x: -0.28, y: 5.3 })); // side mast
-      parts.push(sph(0.12, 0xe0c860, { ws: 6, hs: 4, y: 6.3 })); // aircraft warning light (lit)
-      // three mech-platform rings up the mast
-      for (let i = 0; i < 3; i++) {
-        parts.push(box(0.5, 0.04, 0.5, 0x9aa0aa, { y: 5.1 + i * 0.45 })); // mast platform
-      }
       return finish(parts);
     },
   },

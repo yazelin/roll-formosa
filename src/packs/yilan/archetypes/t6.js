@@ -17,7 +17,7 @@
  * Size band: 60-300 m radiusNominal (Xinyi skyscraper scale).
  */
 
-import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, sph, towerBanded, finish, HALF_PI } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
@@ -174,29 +174,41 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 圖書館塔 library tower ---------------------------------- */
+  /* ---- slot 4: 龜山島燈塔 guishan_lighthouse (龜山島燈塔意象) ---------- */
   {
-    id: 'library_tower',
-    displayName: '圖書館塔',
+    id: 'guishan_lighthouse',
+    displayName: '龜山島燈塔',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 140,
     radiusJitter: 0.17,
     spawnWeight: 1.0,
-    palette: [0x405068, 0x5878a0, 0x88b0c8, 0xc8d4dc, 0xffd884],
+    palette: [0xe8e4dc, 0xc8c4bc, 0x3a5a7a, 0xffd884, 0x2a4a6a],
     yOffset: -0.191,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Wide glass office slab on a granite podium with a horizontal sunshade band.
+      // 龜山島燈塔: tall white lighthouse tower with observation deck and beacon
       return finish([
-        box(2.4, 0.55, 1.6, 0xb8b2a6, { y: 0.28, hex2: 0xc8c2b6 }), // granite podium
-        towerBanded(1.9, 2.9, 1.0, 9, 0x3a4c64, 0x88b0c8, 0xffd884, rng, { y: 2.0 }), // glass slab
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 1.45 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 2.55 }), // sunshade band
-        box(2.0, 0.1, 1.06, 0x9aa6b4, { y: 3.45 }), // sunshade band
-        box(1.4, 0.2, 0.7, 0x6a7484, { y: 3.6 }), // rooftop parapet box
-        box(0.55, 0.28, 0.55, 0x7e8a98, { x: 0.5, y: 3.84 }), // rooftop cooling unit
+        // base platform (rocky island base)
+        box(2.0, 0.4, 2.0, 0x6a7a88, { y: 0.2, hex2: 0x8a9aa8 }),
+        // main lighthouse tower body (white)
+        cyl(0.7, 0.6, 3.5, 8, 0xe8e4dc, { y: 2.0, hex2: 0xf0ece4 }),
+        // red band stripes (navigation marking)
+        cyl(0.72, 0.72, 0.15, 8, 0xc83030, { y: 1.0 }),
+        cyl(0.68, 0.68, 0.15, 8, 0xc83030, { y: 2.5 }),
+        // gallery deck (observation platform)
+        cyl(0.9, 0.9, 0.12, 8, 0xc8c4bc, { y: 3.8 }),
+        // gallery railing
+        cyl(0.92, 0.92, 0.2, 8, 0x2a4a6a, { y: 3.95, open: true }),
+        // lantern room (glass enclosure)
+        cyl(0.55, 0.55, 0.6, 8, 0x8fc8e8, { y: 4.2 }),
+        // dome roof
+        sph(0.56, 0x3a5a7a, { ws: 6, hs: 4, y: 4.55, theta0: 0, thetaLen: HALF_PI }),
+        // beacon light (glowing)
+        sph(0.2, 0xffd884, { ws: 5, hs: 4, y: 4.2 }),
+        // lightning rod
+        cyl(0.03, 0.03, 0.5, 4, 0x8a8a8a, { y: 5.0 }),
       ]);
     },
   },

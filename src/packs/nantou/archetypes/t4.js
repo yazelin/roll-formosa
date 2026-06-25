@@ -22,110 +22,106 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 茶行街屋 (Puli/Zhushan tea-shop streethouse) ------------ */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'tea_shop_house',
+    displayName: '茶行街屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xe8ddc8, 0xd9c8b0, 0x5a7050, 0xe0d2c0, 0x8a6a50],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // 南投茶行風格街屋 - 深色木框+茶色調
+        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x3a5040, 0xc8a060, rng, { y: 1.4 }),
+        box(1.1, 0.12, 1.6, 0x6a5a48, { y: 2.76 }), // dark wood roof trim
+        box(1.12, 0.22, 1.62, 0x8a7a60, { y: 0.22 }), // wood plinth
+        // 傳統騎樓茶行風格招牌
+        box(0.92, 0.6, 0.06, 0x5a4a38, { y: 0.5, z: 0.78 }), // wood panel door
+        box(0.88, 0.3, 0.08, 0x3a5030, { y: 1.0, z: 0.8 }), // green tea sign
+        box(0.6, 0.2, 0.06, 0xf0d8a0, { y: 1.0, z: 0.84 }), // gold text panel
+        // 傳統木窗花格
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
       for (let i = 0; i < 3; i++) {
         const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
+        parts.push(box(1.06, 0.1, 0.12, 0x8a7a60, { y, z: 0.78 })); // wood balcony rail
+        parts.push(box(0.8, 0.35, 0.06, 0x6a5a48, { y: y + 0.2, z: 0.78 })); // wood lattice window
       }
       return finish(parts);
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 製茶工寮 (tea processing shed) --------------------------- */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'tea_processing_shed',
+    displayName: '製茶工寮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.0,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
+    palette: [0x8a7a60, 0x9a8a70, 0x6a6050, 0x7a9060, 0x5a5040],
     yOffset: -0.42,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
-        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
-        // corrugation ridges suggested by thin batten boxes along the slope
+        box(2.4, 1.0, 1.7, 0x8a7a60, { y: 0.5 }), // 木板牆壁
+        box(2.42, 0.5, 1.72, 0x6a5a48, { y: 1.2 }), // 深色上層
+        // 傳統竹編斜屋頂
+        box(2.7, 0.1, 1.9, 0x9a8a60, { rz: 0.16, y: 1.62 }),
       ];
       for (let i = 0; i < 4; i++) {
         const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
+        parts.push(box(0.06, 0.04, 1.9, 0x7a6a50, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // bamboo rib
       }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof (typical 違建 detail)
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
+      parts.push(box(2.74, 0.06, 0.12, 0x5a4a38, { rz: 0.16, y: 1.7, z: 0.92 })); // eave
+      parts.push(box(0.7, 0.7, 0.05, 0x5a4a38, { x: 0.6, y: 0.5, z: 0.86 })); // wood door
+      parts.push(box(0.4, 0.45, 0.06, 0x7a9a7a, { x: -0.7, y: 0.55, z: 0.86 })); // 竹簾窗
+      // 曬茶架
+      parts.push(box(1.8, 0.06, 0.8, 0xb8a880, { x: -0.2, y: 0.3, z: 1.2 })); // tea drying rack
+      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x6a5a48, { x: -1.0, y: 0.15, z: 1.2 })); // rack leg
+      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x6a5a48, { x: 0.6, y: 0.15, z: 1.2 })); // rack leg
       return finish(parts);
     },
   },
 
-  /* ---- slot 2: 老公寓 (5-storey 老公寓 walk-up) ------------------------- */
+  /* ---- slot 2: 埔里民宿 (Puli guesthouse/B&B) -------------------------- */
   {
-    id: 'old_apartment',
-    displayName: '老公寓',
+    id: 'puli_minsu',
+    displayName: '埔里民宿',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
+    palette: [0xe2d8c8, 0xd0d8e0, 0x7a9070, 0xd6ddd0, 0xc8bca8],
     yOffset: -0.28,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
+        // 埔里民宿風格 - 鄉村風木造+白牆
+        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x5a7060, 0xffe0a0, rng, { y: 1.25 }),
+        box(2.08, 0.12, 1.38, 0x7a6a58, { y: 2.5 }), // wood roof trim
+        box(2.04, 0.22, 1.34, 0x8a7a68, { y: 0.16 }), // wood plinth
+        // 南投民宿特色: 木造涼亭/陽台
+        box(1.2, 0.1, 0.6, 0x9a8a70, { x: -0.4, y: 2.68, z: 0.9 }), // 木造觀景台
+        cyl(0.08, 0.08, 0.5, 6, 0x8a7a60, { x: -0.9, y: 2.45, z: 0.9 }), // 台柱
+        cyl(0.08, 0.08, 0.5, 6, 0x8a7a60, { x: 0.1, y: 2.45, z: 0.9 }), // 台柱
+        box(0.5, 0.5, 0.05, 0x6a5a48, { y: 0.55, z: 0.7 }), // wood entrance
+        box(2.06, 0.12, 0.06, 0x5a8050, { y: 2.18, z: 0.66 }), // green trim
       ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
+      // 木窗框 + 花台
       for (let f = 0; f < 4; f++) {
         const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
+        parts.push(box(0.5, 0.34, 0.12, 0x9a8a70, { x: -0.55, y, z: 0.68 })); // wood window frame
+        parts.push(box(0.5, 0.34, 0.12, 0x9a8a70, { x: 0.55, y, z: 0.68 })); // wood window frame
       }
       return finish(parts);
     },
@@ -293,41 +289,36 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 竹山老街騎樓 (Zhushan old street arcade) ---------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'zhushan_arcade',
+    displayName: '竹山老街騎樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0x8a7a60, 0x9a8a70, 0x6a5a48, 0x7a6a58, 0x5a4a38],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // 竹山老街特色木造騎樓 (簡化版)
+        box(3.2, 0.3, 1.2, 0x8a7a60, { y: 2.0 }), // 木樑
+        box(3.24, 0.12, 1.24, 0x6a5a48, { y: 2.2 }), // 深色木簷
+        box(2.0, 0.5, 1.0, 0x9a8a70, { z: -0.4, y: 1.4 }), // 後方竹製品店
       ];
-      // 4 square arcade columns with capital + base
-      const cx = [-1.35, -0.45, 0.45, 1.35];
-      for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+      // 木柱 (減少數量 + 用方柱取代圓柱節省 tris)
+      const cx = [-1.2, 0, 1.2];
+      for (const x of cx) {
+        parts.push(box(0.2, 1.7, 0.2, 0x7a6a50, { x, y: 0.95 })); // 方柱
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // 茶行招牌
+      parts.push(box(0.8, 0.35, 0.06, 0x4a6040, { x: 0, y: 1.6, z: 0.55 }));
+      parts.push(box(0.65, 0.22, 0.04, 0xf0d8a0, { x: 0, y: 1.6, z: 0.58 }));
+      // 紅燈籠 (減為一個)
+      parts.push(sph(0.18, 0xc83020, { ws: 6, hs: 4, x: 0, y: 1.75 }));
       return finish(parts);
     },
   },

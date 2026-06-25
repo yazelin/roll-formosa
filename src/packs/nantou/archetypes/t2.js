@@ -85,35 +85,35 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker */
+  /* ---- slot 2 ---- 製茶揉捻桶 — tea rolling barrel (南投製茶工藝) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'tea_rolling_barrel',
+    displayName: '製茶揉捻桶',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
+    palette: [0x7a6a50, 0x8a7a60, 0x6a5a48, 0x9a8a70, 0x5a4a38],
     yOffset: -0.253,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // wooden barrel base
+        cyl(0.78, 0.82, 0.16, 10, 0x5a4a38, { y: 0.08 }),
+        // main barrel body
+        cyl(0.74, 0.78, 0.9, 10, 0xffffff, { y: 0.6, hex2: 0x9a8a70 }),
+        // metal bands
+        cyl(0.8, 0.8, 0.08, 10, 0x6a6a6a, { y: 0.3, open: true }),
+        cyl(0.8, 0.8, 0.08, 10, 0x6a6a6a, { y: 0.9, open: true }),
+        // rim
+        cyl(0.76, 0.76, 0.1, 10, 0x6a5a48, { y: 1.1 }),
+        // tea leaves inside (green)
+        cyl(0.65, 0.65, 0.1, 10, 0x4a6040, { y: 1.05 }),
+        // handles
+        box(0.16, 0.1, 0.1, 0x5a4a38, { x: -0.82, y: 0.7 }),
+        box(0.16, 0.1, 0.1, 0x5a4a38, { x: 0.82, y: 0.7 }),
       ]);
     },
   },

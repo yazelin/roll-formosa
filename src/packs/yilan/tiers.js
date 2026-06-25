@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 鴨鴨哨子, 圖釘, 牛舌餅, 三星蔥, 尪仔標, 幾米明信片, 蘭陽飯糰
-      'marble', 'duck_call_toy', 'pushpin', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'jimmy_postcard', 'lanyang_rice_ball',
+      // 三星蔥種子, 鴨鴨哨子, 礁溪溫泉皂, 牛舌餅, 三星蔥, 尪仔標, 幾米明信片, 蘭陽飯糰
+      'green_onion_seed', 'duck_call_toy', 'jiaoxi_soap', 'ox_tongue_biscuit', 'sanxing_scallion', 'ngiauimia_card', 'jimmy_postcard', 'lanyang_rice_ball',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -122,8 +122,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 小貨車, 稻草捆, 雨量筒, 鐵捲門, 田間棕櫚, 棚架, 石獅
-      'scooter', 'mini_truck', 'rice_bale', 'rain_gauge', 'roll_shutter', 'field_palm', 'awning_frame', 'stone_lion',
+      // 機車, 小貨車, 稻草捆, 雨量筒, 曬穀架, 田間棕櫚, 棚架, 蘭陽土地公廟
+      'scooter', 'mini_truck', 'rice_bale', 'rain_gauge', 'rice_drying_rack', 'field_palm', 'awning_frame', 'tudigong_shrine',
       // chunk landmarks: 傳藝牌樓, 田間水車
       'chuanyi_pailou', 'waterwheel',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 農舍, 宜蘭厝, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'farmhouse', 'yilan_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 農舍, 宜蘭厝, 田寮磚造民宅, 超商, 公車, 垃圾車, 加油站, 騎樓柱
+      'farmhouse', 'yilan_house', 'field_brick_house', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
       // chunk landmarks: 宜蘭街屋, 大廟
       'yilan_streethouse_mass', 'temple_mass',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 漁倉, 漁港高架, 跨港天橋, 停車塔, 港區看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'fish_warehouse', 'harbor_viaduct', 'harbor_bridge', 'parking_tower', 'port_billboard', 'glass_curtain_house', 'bank',
+      // 漁會大樓, 漁倉, 漁港高架, 跨港天橋, 漁港貨櫃堆, 港區看板, 南方澳漁港旅館, 漁港拍賣場
+      'suao_fishery_building', 'fish_warehouse', 'harbor_viaduct', 'harbor_bridge', 'container_stack', 'port_billboard', 'nanfangao_inn', 'fish_auction_hall',
       // chunk landmarks: 漁港商辦塔, 漁港倉庫
       'fishing_port_tower', 'warehouse_mass',
     ],
@@ -194,8 +194,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 蘭陽博物館塔, 展覽館, 龜山島觀景台, 衝浪塔, 圖書館塔, 海音中心, 屋頂機房, 灣區大樓
-      'lanyang_tower', 'exhibition_hall', 'guishan_platform', 'surfing_tower', 'library_tower', 'tourism_center', 'rooftop_plant_room', 'bayarea_block',
+      // 蘭陽博物館塔, 展覽館, 龜山島觀景台, 衝浪塔, 龜山島燈塔, 海音中心, 屋頂機房, 灣區大樓
+      'lanyang_tower', 'exhibition_hall', 'guishan_platform', 'surfing_tower', 'guishan_lighthouse', 'tourism_center', 'rooftop_plant_room', 'bayarea_block',
       // chunk landmarks: 跨街空橋, 屋頂機房塔
       'crossstreet_skybridge', 'rooftop_mech_tower',
     ],
