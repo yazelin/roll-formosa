@@ -992,9 +992,22 @@
       #donack-bubble { max-width: 360px; font-size: 14px; }
     }
   </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans+TC:wght@500;700;900&display=swap" />
+  <!-- Self-hosted fonts (was Google Fonts CDN): subset to the glyphs actually used
+       in-repo so the whole UI works offline + boots with no cross-origin round-trip.
+       The service worker precaches these like any same-origin asset. Re-subset via
+       scripts/gen-fonts.sh if new text glyphs are added. -->
+  <style>
+    @font-face {
+      font-family: 'Bungee';
+      src: url('/assets/fonts/bungee.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Noto Sans TC';
+      src: url('/assets/fonts/notosanstc.woff2') format('woff2');
+      font-weight: 100 900; font-style: normal; font-display: swap;
+    }
+  </style>
   <style>
     /* ============ 夜市霓虹 — Roll Formosa title (night-market neon) ============ */
     #title-overlay {
@@ -1309,31 +1322,57 @@
         <img class="ny-skyline-glow" src="/assets/title/skyline-taipei.webp" alt="" />
         <img class="ny-skyline-img" src="/assets/title/skyline-taipei.webp" alt="城市天際線" />
       </div>
-      <script>
-        /* Pre-paint city chrome: swap the skyline src + document.title to the
-           resolved city BEFORE the title screen paints, so reloading 高雄 never
-           flashes 台北. Runs synchronously during HTML parse (before main.js's
-           ~950KB bundle loads). Keep the city ids/names in sync with
-           src/packs/manifest.js + the pack displayNames. */
-        (function () {
-          try {
-            var c = new URLSearchParams(location.search).get('city')
-              || (window.localStorage && localStorage.getItem('rf_city')) || 'taipei';
-            if (c !== 'taipei' && c !== 'kaohsiung') c = 'taipei';
-            var imgs = document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img');
-            for (var i = 0; i < imgs.length; i++) {
-              imgs[i].src = imgs[i].src.replace(/skyline-[a-z0-9_]+\.webp/i, 'skyline-' + c + '.webp');
-            }
-            var names = { taipei: '台北', kaohsiung: '高雄' };
-            if (names[c]) document.title = 'Roll Formosa — 捲遍全' + names[c];
-          } catch (e) { /* fall back to the taipei HTML defaults + main.js swap */ }
-        })();
-      </script>
       <div class="ny-grain"></div>
     </div>
     <span class="ny-kicker">夜市 · NIGHT MARKET</span>
     <h1 class="game-title">ROLL<br />FORMOSA</h1>
     <p class="game-subtitle">捲啊捲，捲遍這座城市。 / Roll up the whole city.</p>
+    <script>
+      /* Pre-paint city chrome: set skyline + <title> + visible subtitle to the
+         resolved city BEFORE the title screen paints, so reloading/switching to
+         any city never flashes the taipei default. Runs synchronously during
+         HTML parse (before main.js's ~950KB module bundle). Placed AFTER the
+         skyline imgs + .game-subtitle so both elements already exist.
+         RF_CHROME mirrors each pack's displayName + locale 'title.subtitle';
+         prepaint-chrome.test.js fails if they drift. main.js re-confirms. */
+      window.RF_CHROME = {
+        taipei:    { name: '台北',     sub: '捲啊捲，捲遍全台北。 / Roll up all of Taipei.' },
+        newtaipei: { name: '新北',     sub: '捲啊捲，捲遍全新北。 / Roll up all of New Taipei.' },
+        keelung:   { name: '基隆',     sub: '捲啊捲，捲遍雨都基隆。 / Roll up all of Keelung.' },
+        taoyuan:   { name: '桃園',     sub: '捲啊捲，捲遍全桃園。 / Roll up all of Taoyuan.' },
+        hsinchu:   { name: '新竹',     sub: '捲啊捲，捲遍全新竹。 / Roll up all of Hsinchu.' },
+        miaoli:    { name: '苗栗',     sub: '捲啊捲，捲遍全苗栗。 / Roll up all of Miaoli.' },
+        taichung:  { name: '台中',     sub: '捲啊捲，捲遍全台中。 / Roll up all of Taichung.' },
+        changhua:  { name: '彰化',     sub: '捲啊捲，捲遍鹿港老街。 / Roll up all of Changhua.' },
+        nantou:    { name: '南投',     sub: '捲啊捲，捲遍全南投。 / Roll up all of Nantou.' },
+        yunlin:    { name: '雲林',     sub: '捲啊捲，捲遍全雲林。 / Roll up all of Yunlin.' },
+        chiayi:    { name: '嘉義',     sub: '捲啊捲，捲遍全嘉義。 / Roll up all of Chiayi.' },
+        tainan:    { name: '台南',     sub: '捲啊捲，捲遍全台南。 / Roll up all of Tainan.' },
+        kaohsiung: { name: '高雄',     sub: '捲啊捲，捲遍全高雄。 / Roll up all of Kaohsiung.' },
+        pingtung:  { name: '屏東',     sub: '捲啊捲，捲遍全屏東。 / Roll up all of Pingtung.' },
+        yilan:     { name: '宜蘭',     sub: '捲啊捲，捲遍全宜蘭。 / Roll up all of Yilan.' },
+        hualien:   { name: '花蓮',     sub: '捲啊捲，捲遍花蓮。 / Roll up all of Hualien.' },
+        taitung:   { name: '台東',     sub: '捲啊捲，捲遍全台東。 / Roll up all of Taitung.' },
+        penghu:    { name: '澎湖',     sub: '捲啊捲，捲遍全澎湖。 / Roll up all of Penghu.' },
+        kinmen:    { name: '金門',     sub: '捲啊捲，捲遍全金門。 / Roll up all of Kinmen.' },
+        matsu:     { name: '連江馬祖', sub: '捲啊捲，捲遍連江馬祖。 / Roll up all of Matsu.' },
+      };
+      (function () {
+        try {
+          var c = new URLSearchParams(location.search).get('city')
+            || (window.localStorage && localStorage.getItem('rf_city')) || 'taipei';
+          var info = window.RF_CHROME[c] || window.RF_CHROME.taipei;
+          if (!window.RF_CHROME[c]) c = 'taipei';
+          var imgs = document.querySelectorAll('#title-overlay .ny-skyline-glow, #title-overlay .ny-skyline-img');
+          for (var i = 0; i < imgs.length; i++) {
+            imgs[i].src = imgs[i].src.replace(/skyline-[a-z0-9_]+\.webp/i, 'skyline-' + c + '.webp');
+          }
+          document.title = 'Roll Formosa — 捲遍全' + info.name;
+          var sub = document.querySelector('#title-overlay .game-subtitle');
+          if (sub) sub.textContent = info.sub;
+        } catch (e) { /* fall back to the taipei HTML defaults + main.js swap */ }
+      })();
+    </script>
     <button id="start-button" class="btn" type="button">開始 / START</button>
     <!-- v3: bear mascot commentary toggle (screens.js wires + persists LS_DONACK_KEY) -->
     <button id="donack-toggle" class="btn btn-secondary" type="button" aria-pressed="true"><img class="donack-toggle-face" src="/assets/donack/idle-0.webp" alt="月牙(台灣黑熊)" width="30" height="30" /><span id="donack-toggle-label">月牙·導遊 ON</span></button>

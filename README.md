@@ -57,6 +57,7 @@ npm test         # vitest
 - **無頭驗證**:`node scripts/headless-check.mjs <url> out.png`(自帶 headless chrome,輸出截圖)。
 - **自動化(加城 / 加深)**:`scripts/autopilot.sh`(單條)/`scripts/autopilot-drain.sh`(整批)讀 `NEXT.md` backlog,讓 headless agent 自動加新城或加深既有城街頭物,過 `npm test` gate 後開 PR(人工 merge)。
 - **天際線素材**:`public/assets/title/skyline-<id>.webp`(20 城各一張霓虹剪影,標題頁用;缺檔會 fallback 台北)。
+- **自架字型(離線用)**:UI 字型(Bungee + Noto Sans TC)自架在 `public/assets/fonts/`,只 subset repo 內出現過的字 → 離線可用、啟動不連外網。加了新城/新旁白等**新字**後跑 `scripts/gen-fonts.sh` 重新 subset(否則新字退回系統字)。
 - **OG 分享卡(可重現)**:`og-card.html` 是 1200×630 的 HTML 排版卡(多城天際線底圖 `public/assets/og-skyline.webp` + 真字型標題/副標/月牙);用 headless chrome 截圖 → `public/assets/og.jpg`。要改 OG 就改 HTML 重截,不必動 AI 圖。
 
 ## 部署
