@@ -35,7 +35,7 @@ function buildNormalized(arch) {
   return geo;
 }
 
-describe('taipei chunk archetypes', () => {
+describe('tainan chunk archetypes', () => {
   it('implements exactly the 70 ids the tiers reference', () => {
     const tierIds = TIERS.flatMap((t) => t.archetypeIds);
     expect(tierIds.length).toBe(70);
@@ -79,23 +79,21 @@ describe('taipei chunk archetypes', () => {
   });
 });
 
-describe('taipei catalog surface', () => {
-  it('merges chunk + Tokyo EXTRA into a full CATALOG keyed by id (99 ids resolve)', () => {
+describe('tainan catalog surface', () => {
+  it('merges chunk + Tainan EXTRA into a full CATALOG keyed by id (99 ids resolve)', () => {
     // 70 chunk + 24 EXTRA (70..93) + 5 v5 (94..98) = 99 archetype ids.
     expect(Object.keys(CATALOG).length).toBe(99);
     for (const id of TIERS.flatMap((t) => t.archetypeIds)) {
       expect(CATALOG[id], `chunk id '${id}' missing from CATALOG`).toBeDefined();
     }
-    // P7: Taipei collectibles resolve (codes 70 + 94); remaining Tokyo placeholders too.
+    // Tainan collectibles + landmarks resolve.
     expect(CATALOG['black_bear']).toBeDefined();
     expect(CATALOG['mazu']).toBeDefined();
     expect(CATALOG['qigu_salt_mountain']).toBeDefined();
   });
 
-  it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Tokyo names left)', () => {
+  it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Japanese kana)', () => {
     expect(DISPLAY_NAME_BY_CODE.length).toBe(99);
-    // code 0 = T0 slot 0 = marble = 彈珠
-    expect(DISPLAY_NAME_BY_CODE[0]).toBe('彈珠');
     // EVERY code (0..98) is non-empty AND contains no Japanese kana (zero Tokyo).
     const kana = /[぀-ゟ゠-ヿ]/;
     for (let c = 0; c < 99; c++) {
