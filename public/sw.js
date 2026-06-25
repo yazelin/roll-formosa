@@ -6,16 +6,22 @@
  * - HTML navigations are network-first (fresh on deploy, cached as offline fallback).
  * Bump CACHE to force-refresh everything on a new release.
  */
-const CACHE = 'rollformosa-v1';
+const CACHE = 'rollformosa-v2';
 const SHELL = [
   './', 'index.html', 'preview.html', 'manifest.webmanifest',
   'assets/icon-192.png', 'assets/icon-512.png', 'assets/icon-512-maskable.png', 'assets/apple-touch-icon.png',
 ];
+// Full build asset list, injected at build time by scripts/gen-precache.mjs.
+// This makes the FIRST visit (when the SW installs) download the WHOLE game —
+// all hashed JS/CSS + every city's skyline/mascot/audio webp — so it is fully
+// playable offline immediately, not only the parts you happened to open.
+const PRECACHE = [];
 
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
     const c = await caches.open(CACHE);
-    await Promise.allSettled(SHELL.map((u) => c.add(u))); // best-effort; one miss won't fail install
+    const all = [...new Set([...SHELL, ...PRECACHE])];
+    await Promise.allSettled(all.map((u) => c.add(u))); // best-effort; one miss won't fail install
     await self.skipWaiting();
   })());
 });
