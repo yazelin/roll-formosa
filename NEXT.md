@@ -84,7 +84,7 @@ Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(
 - [ ] 加深 newtaipei 街頭物 round3:33→≤25
 - [ ] 加深 taoyuan 街頭物 round3:33→≤25
 - [ ] 加深 chiayi 街頭物 round3:33→≤25
-- [ ] 加深 hsinchu 街頭物 round3:33→≤25
+- [x] 加深 hsinchu 街頭物 round3:33→≤25
 - [ ] 加深 yilan 街頭物 round3:33→≤25
 - [ ] 加深 nantou 街頭物 round3:33→≤25
 - [ ] 加深 yunlin 街頭物 round3:33→≤25

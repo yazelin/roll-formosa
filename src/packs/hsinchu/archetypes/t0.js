@@ -28,26 +28,28 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] hsinchu_glass_marble 新竹玻璃珠 — Hsinchu glass craft marble    */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'hsinchu_glass_marble',
+    displayName: '新竹玻璃珠',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
+    palette: [0x3fbfff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
     yOffset: 0, // sphere sitting on the ground = centered
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // Hsinchu's famous glass industry — artisan glass marble
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear glass body (tinted by palette)
+        // internal decorative spiral (Hsinchu glass craft signature)
+        torus(0.4, 0.08, 5, 6, 0x3fbfff, { y: 0.1, rx: 0.3 }), // inner glass ring
+        torus(0.5, 0.06, 5, 6, 0xffd84d, { y: -0.1, rx: -0.2 }), // golden accent
+        sph(0.2, 0xff5340, { ws: 5, hs: 4 }), // colored core
       ]);
     },
   },
@@ -180,93 +182,101 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] mifun_chip 米粉餅乾 — Hsinchu rice noodle chip snack            */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'mifun_chip',
+    displayName: '米粉餅乾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xf8f0e0, 0xf4e8d0, 0xe8dcc8, 0xfff8f0],
+    yOffset: -0.90, // flat chip lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hsinchu rice noodle chip — a local snack made from dried mifun
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        // thin crispy rice chip (irregular round shape)
+        cyl(1.0, 0.95, 0.08, 10, 0xffffff, { y: 0.04 }), // main chip (tinted cream)
+        // surface texture - dried rice noodle pattern
+        box(0.7, 0.02, 0.06, 0xe8dcc8, { y: 0.08, rz: 0.1 }),
+        box(0.6, 0.02, 0.05, 0xf4e8d0, { y: 0.08, x: 0.2, rz: -0.2 }),
+        box(0.5, 0.02, 0.04, 0xe8dcc8, { y: 0.08, x: -0.15, rz: 0.15 }),
+        // slightly raised edge (fried crispy edge)
+        cyl(1.02, 0.95, 0.04, 10, 0xd8c8b0, { y: 0.09, open: true }),
+        // sesame seed specks
+        sph(0.04, 0xc8b090, { ws: 4, hs: 3, x: 0.3, y: 0.1, z: 0.2 }),
+        sph(0.03, 0xc8b090, { ws: 4, hs: 3, x: -0.25, y: 0.1, z: -0.15 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] bamboo_chopstick 竹筷 — Hsinchu bamboo chopstick               */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'bamboo_chopstick',
+    displayName: '竹筷',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xd4a86a, 0xc49858, 0xe4c080, 0xb48848, 0xf0d8a8],
+    yOffset: -0.85, // chopstick lying on its side
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
+      // Hsinchu bamboo chopstick — local bamboo craft
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // main shaft (square bamboo profile, tapered)
+        cyl(0.22, 0.14, 2.8, 4, 0xffffff, { rz: HALF_PI, x: 0.0 }), // bamboo stick (tinted)
+        // bamboo node rings (natural bamboo texture)
+        cyl(0.24, 0.24, 0.08, 4, 0xb48848, { rz: HALF_PI, x: -0.6 }),
+        cyl(0.23, 0.23, 0.08, 4, 0xc49858, { rz: HALF_PI, x: 0.4 }),
+        // decorative carved end (traditional Hsinchu craft)
+        cyl(0.25, 0.22, 0.25, 4, 0xd4a86a, { rz: HALF_PI, x: -1.3 }),
+        box(0.18, 0.05, 0.05, 0xa07040, { rz: HALF_PI, x: -1.35 }), // carved pattern
+        // tip (eating end, slightly pointed)
+        cone(0.14, 0.2, 4, 0xe4c080, { rz: -HALF_PI, x: 1.5 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] glass_ornament 玻璃飾品 — Hsinchu glass craft ornament         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'glass_ornament',
+    displayName: '玻璃飾品',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0x6fbfff, 0xbf6fff, 0xff6f9f, 0x6fff9f, 0xffd84d],
+    yOffset: -0.75, // ornament lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hsinchu glass ornament — decorative glass craft piece
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        // main glass disc (clear with color tint)
+        cyl(1.0, 1.0, 0.18, 10, 0xffffff, { y: 0.12 }), // glass base (tinted)
+        // decorative swirl pattern on top (Hsinchu glass craft)
+        torus(0.5, 0.08, 5, 6, 0x6fbfff, { y: 0.22, rx: 0.1 }),
+        torus(0.3, 0.06, 5, 5, 0xffd84d, { y: 0.24, rx: -0.1 }),
+        // central flower/star motif
+        sph(0.18, 0xff6f9f, { ws: 5, hs: 4, y: 0.26 }),
+        // four petal accents
+        sph(0.1, 0x6fff9f, { ws: 4, hs: 3, x: 0.35, y: 0.2, z: 0 }),
+        sph(0.1, 0x6fff9f, { ws: 4, hs: 3, x: -0.35, y: 0.2, z: 0 }),
+        sph(0.1, 0xbf6fff, { ws: 4, hs: 3, x: 0, y: 0.2, z: 0.35 }),
+        sph(0.1, 0xbf6fff, { ws: 4, hs: 3, x: 0, y: 0.2, z: -0.35 }),
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
       return finish(parts);
     },
   },
