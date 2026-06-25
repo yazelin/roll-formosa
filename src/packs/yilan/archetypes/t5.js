@@ -34,38 +34,39 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 漁會大樓 suao_fishery_building (蘇澳漁會) ------------- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'suao_fishery_building',
+    displayName: '漁會大樓',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
+    palette: [0x4a6a8a, 0x6a8aa8, 0x8aaac8, 0x2e4a68, 0xc8d8e8],
     yOffset: -0.06,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
+      // 蘇澳漁會 style building: ocean-blue tones, maritime motifs
       return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
+        towerBanded(2.6, 6.0, 2.0, 12, 0xffffff, 0x2e4a68, 0xffe8a0, rng, { y: 3.0 }),
+        // blue maritime stripe bands
+        box(2.7, 0.2, 2.1, 0x2a5a8a, { y: 1.2 }),
+        box(2.7, 0.2, 2.1, 0x3a6a9a, { y: 3.5 }),
+        box(2.7, 0.2, 2.1, 0x4a7aaa, { y: 5.8 }),
+        // ground-floor entrance (漁會風格大門)
+        box(2.8, 0.9, 2.2, 0x2a3a48, { y: 0.45 }),
+        box(1.2, 0.8, 0.06, 0x8fc4e0, { y: 0.45, z: 1.12 }), // glass entrance
+        // wave-motif awning over entrance
+        box(1.8, 0.08, 0.6, 0x4a8ac0, { y: 0.95, z: 1.3 }),
+        // rooftop fish auction sign structure
+        box(1.6, 0.8, 0.1, 0x2a5a8a, { y: 6.5, z: 0.0 }),
+        // antenna mast
+        cyl(0.05, 0.05, 1.0, 6, 0x8a8a8a, { y: 7.1 }),
+        // flag pole with fishing flag
+        cyl(0.03, 0.03, 0.8, 5, 0x6a6a6a, { x: 0.8, y: 6.9 }),
+        box(0.4, 0.25, 0.02, 0x2a5a9a, { x: 0.8, y: 7.2 }),
       ]);
     },
   },
@@ -193,39 +194,43 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 漁港貨櫃堆 container_stack (蘇澳港區貨櫃) ------------ */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'container_stack',
+    displayName: '漁港貨櫃堆',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0x2a6a9a, 0xc83030, 0x4a8a4a, 0xe0a030, 0x6a6a6a],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
-      const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
-      ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
+      // Stacked shipping containers at Suao port
+      const colors = [0x2a6a9a, 0xc83030, 0x4a8a4a, 0xe0a030, 0x8a6a4a, 0x6a6a9a];
+      const parts = [];
+      // ground level containers (2 side by side)
+      parts.push(box(2.8, 1.1, 1.1, colors[0], { x: -0.7, y: 0.55 }));
+      parts.push(box(2.8, 1.1, 1.1, colors[1], { x: 0.7, y: 0.55 }));
+      // second level
+      parts.push(box(2.8, 1.1, 1.1, colors[2], { x: -0.35, y: 1.65 }));
+      parts.push(box(2.8, 1.1, 1.1, colors[3], { x: 0.35, y: 1.65 }));
+      // third level (single container)
+      parts.push(box(2.8, 1.1, 1.1, colors[4], { y: 2.75 }));
+      // container ridges (corrugation detail)
+      for (let i = 0; i < 3; i++) {
+        const y = 0.55 + i * 1.1;
+        parts.push(box(2.82, 0.04, 1.12, 0x4a4a4a, { y: y + 0.5, x: (i % 2 - 0.5) * 0.7 }));
       }
+      // container doors (rear end detail)
+      parts.push(box(0.06, 0.9, 0.9, 0x3a3a3a, { x: -2.1, y: 0.55 }));
+      parts.push(box(0.06, 0.9, 0.9, 0x3a3a3a, { x: 2.1, y: 0.55 }));
+      // forklift (small vehicle nearby)
+      parts.push(box(0.6, 0.5, 0.4, 0xe0a030, { x: -1.5, y: 0.25, z: 1.2 }));
+      parts.push(cyl(0.12, 0.12, 0.1, 6, 0x2a2a2a, { x: -1.7, y: 0.12, z: 1.2, rx: HALF_PI }));
+      parts.push(cyl(0.12, 0.12, 0.1, 6, 0x2a2a2a, { x: -1.3, y: 0.12, z: 1.2, rx: HALF_PI }));
       return finish(parts);
     },
   },
@@ -273,76 +278,85 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 玻璃帷幕街屋 glass_curtain_house ------------------- */
+  /* ---- slot 6: 南方澳漁港旅館 nanfangao_inn (南方澳風格民宿) ------- */
   {
-    id: 'glass_curtain_house',
-    displayName: '玻璃帷幕街屋',
+    id: 'nanfangao_inn',
+    displayName: '南方澳漁港旅館',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 14,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6fbfd0, 0xbfeaf0, 0x3a6a78, 0x2e3744, 0xe8f4f6],
+    palette: [0x4a7a9a, 0x6a9aba, 0x8abada, 0x2a5a7a, 0xc8e0f0],
     yOffset: -0.1,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Narrow mid-rise street shophouse with a full glass curtain wall front.
+      // 南方澳 fishing village style inn: nautical colors, balconies facing sea
       const parts = [
-        box(2.2, 5.2, 2.0, 0xffffff, { y: 2.8 }), // body (tinted concrete sides)
-        // glass curtain wall on the front (proud, gridded)
-        box(2.0, 4.6, 0.14, 0x2e3744, { y: 2.9, z: 1.02 }), // mullion grid (dark)
-        box(1.8, 4.4, 0.06, 0x8fd6e2, { y: 2.9, z: 1.1 }), // glass (tinted blue-green)
-        // ground-floor shop entrance
-        box(2.0, 0.9, 0.1, 0x20262c, { y: 0.5, z: 1.06 }),
-        box(1.2, 0.7, 0.06, 0xbfeaf0, { y: 0.5, z: 1.12 }), // bright entry glass
-        // parapet + a small rooftop water tank
-        box(2.3, 0.24, 2.1, 0x4a8090, { y: 5.5 }),
-        cyl(0.4, 0.4, 0.6, 7, 0x9aa0a8, { x: 0.5, y: 5.9 }),
+        box(2.2, 4.5, 2.0, 0xffffff, { y: 2.4, hex2: 0xc8e0f0 }), // main body
+        // ocean-blue accent bands
+        box(2.3, 0.15, 2.1, 0x2a5a8a, { y: 1.2 }),
+        box(2.3, 0.15, 2.1, 0x3a6a9a, { y: 2.8 }),
+        box(2.3, 0.15, 2.1, 0x4a7aaa, { y: 4.4 }),
+        // balconies on each floor (facing the sea view)
+        box(2.0, 0.08, 0.4, 0xe8e4e0, { y: 1.5, z: 1.2 }),
+        box(2.0, 0.08, 0.4, 0xe8e4e0, { y: 2.5, z: 1.2 }),
+        box(2.0, 0.08, 0.4, 0xe8e4e0, { y: 3.5, z: 1.2 }),
+        // balcony railings (glass panels, sea-view)
+        box(2.0, 0.3, 0.04, 0x8fc8e8, { y: 1.65, z: 1.38 }),
+        box(2.0, 0.3, 0.04, 0x8fc8e8, { y: 2.65, z: 1.38 }),
+        box(2.0, 0.3, 0.04, 0x8fc8e8, { y: 3.65, z: 1.38 }),
+        // ground floor entrance
+        box(1.0, 0.9, 0.08, 0x3a4a58, { y: 0.5, z: 1.04 }),
+        // rooftop with sea-view deck
+        box(2.3, 0.12, 2.1, 0x7a8a98, { y: 4.75 }),
+        // small rooftop structure (lookout)
+        box(1.0, 0.6, 0.8, 0x5a7a9a, { y: 5.1 }),
+        // fish-shaped wind vane
+        box(0.3, 0.15, 0.04, 0xe0a040, { y: 5.55 }),
       ];
-      // horizontal floor-line mullions across the glass (5 floors)
-      for (let f = 1; f < 5; f++) {
-        parts.push(box(1.85, 0.07, 0.04, 0x223038, { y: 0.6 + f * 0.95, z: 1.14 }));
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 漁港拍賣場 fish_auction_hall (蘇澳漁市場) ----------- */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'fish_auction_hall',
+    displayName: '漁港拍賣場',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
+    palette: [0x3a6a8a, 0x5a8aaa, 0x7aaaca, 0x2a5a7a, 0xc8d8e8],
     yOffset: -0.4,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // 蘇澳魚市拍賣場: wide industrial hall with arched roof, loading docks
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        // main hall body
+        box(4.5, 2.8, 3.2, 0xffffff, { y: 1.6, hex2: 0xc8d8e8 }),
+        // arched corrugated roof
+        cyl(2.4, 2.4, 4.7, 8, 0x6a8aa8, { y: 2.5, rx: HALF_PI, theta0: 0, thetaLen: PI }),
+        // entrance canopy (ocean blue)
+        box(3.0, 0.1, 1.2, 0x3a6a8a, { y: 1.8, z: 2.2 }),
+        // large loading dock doors
+        box(1.4, 2.0, 0.08, 0x4a5a68, { x: -1.2, y: 1.0, z: 1.62 }),
+        box(1.4, 2.0, 0.08, 0x4a5a68, { x: 1.2, y: 1.0, z: 1.62 }),
+        // dock platform
+        box(4.0, 0.2, 1.0, 0x8a8a8a, { y: 0.1, z: 2.0 }),
+        // 魚市 signage
+        box(2.5, 0.5, 0.08, 0x2a5a8a, { y: 3.0, z: 1.65 }),
+        box(2.3, 0.35, 0.06, 0xfff0c0, { y: 3.0, z: 1.7 }), // lit sign text
+        // ice machine / refrigeration unit
+        box(0.8, 1.2, 0.7, 0x8a9aa8, { x: 2.0, y: 0.6 }),
+        cyl(0.15, 0.15, 0.4, 6, 0x6a7a88, { x: 2.0, y: 1.4 }), // exhaust
+        // fish crates stacked nearby
+        box(0.5, 0.3, 0.4, 0x4a8aba, { x: -1.8, y: 0.15, z: 1.8 }),
+        box(0.5, 0.3, 0.4, 0x5a9aca, { x: -1.5, y: 0.15, z: 1.7 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
-      }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
       return finish(parts);
     },
   },
