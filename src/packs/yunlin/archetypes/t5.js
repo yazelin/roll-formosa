@@ -202,39 +202,42 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 大糧倉 large_granary (industrial rice storage) ----- */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'large_granary',
+    displayName: '大糧倉',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 18,
+    radiusNominal: 20,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0xc8b898, 0xb8a888, 0xd8c8a8, 0xa89878, 0x7a6848],
+    yOffset: -0.08,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
-      const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
-      ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
+      // Large industrial rice storage facility - typical in Yunlin's agricultural zone
+      const parts = [];
+      // main cylindrical silos (row of 3)
+      for (let i = 0; i < 3; i++) {
+        const x = -1.6 + i * 1.6;
+        parts.push(cyl(0.7, 0.7, 5.0, 9, 0xffffff, { x, y: 2.5, hex2: 0xe0d0c0 }));
+        // conical roof
+        parts.push(cone(0.8, 0.6, 9, 0x8a7858, { x, y: 5.3 }));
+        // ventilation cap
+        parts.push(cyl(0.1, 0.08, 0.2, 5, 0x6a5838, { x, y: 5.7 }));
       }
+      // connecting walkway at top
+      parts.push(box(4.0, 0.15, 0.5, 0x9a8a78, { y: 4.5 }));
+      // loading/unloading building
+      parts.push(box(2.0, 2.0, 1.5, 0xd8c8b0, { x: 0, y: 1.0, z: -1.5 }));
+      parts.push(box(2.1, 0.12, 1.6, 0x8a7858, { y: 2.1, z: -1.5 })); // roof
+      // grain conveyor system
+      parts.push(box(0.2, 0.2, 3.0, 0x7a6a58, { x: 0.8, y: 3.5, z: -0.5, rx: -0.3 }));
+      // loading dock
+      parts.push(box(3.0, 0.2, 1.0, 0x9a9088, { y: 0.1, z: -2.5 }));
+      // truck at dock (simplified)
+      parts.push(box(1.2, 0.6, 0.6, 0xf0c020, { x: -0.5, y: 0.5, z: -2.8 }));
       return finish(parts);
     },
   },
