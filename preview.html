@@ -113,9 +113,13 @@
     @media (max-width: 600px) {
       #sc-top { gap: 6px 8px; padding: 8px 10px; }
       #sc-kicker { font-size: 11px; } #sc-header { font-size: 11px; }
-      /* pills drop to their own full-width centred row so they're never pushed off-screen */
-      #sc-cities { margin-left: 0; width: 100%; justify-content: center; }
-      .sc-pill { font-size: 13px; padding: 6px 14px; }
+      /* One non-wrapping row that scrolls sideways — fixed height, so the bar
+         can't grow/shrink or re-wrap as the mobile browser chrome moves during
+         scroll (20 wrapping pills were the flicker). */
+      #sc-cities { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow-x: auto;
+        justify-content: flex-start; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      #sc-cities::-webkit-scrollbar { display: none; }
+      .sc-pill { font-size: 13px; padding: 6px 14px; flex: 0 0 auto; }
       .sc-band { font-size: 14px; } .lbl { font-size: 11px; }
       #sc-hint { font-size: 11px; bottom: 10px; }
       #sc-focus-card { padding: 12px 20px; } #sc-focus-name { font-size: 19px; }
