@@ -19,36 +19,43 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 咾咕石屋 (coral-stone house — Hengchun/Kenting traditional) ---- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'coral_stone_house',
+    displayName: '咾咕石屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xe0d8c8, 0xd0c8b8, 0xc8c0b0, 0xdad0c0, 0xb8b0a0],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional Hengchun coral stone house (咾咕石屋)
+      const coral = 0xffffff; // tinted grey coral stone
       const parts = [
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }),
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }),
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }),
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }),
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }),
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }),
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }),
+        // Main house body - coral stone walls with textured surface
+        box(1.6, 1.8, 1.5, coral, { y: 1.0, hex2: 0xe0d8c8 }),
+        // Coral stone texture (random bumps)
+        box(0.2, 0.15, 0.1, 0xc8c0b0, { x: -0.7, y: 0.6, z: 0.76 }),
+        box(0.15, 0.18, 0.1, 0xd0c8b8, { x: 0.5, y: 1.2, z: 0.76 }),
+        box(0.18, 0.12, 0.1, 0xc0b8a8, { x: 0.1, y: 0.8, z: 0.76 }),
+        // Traditional sloped tile roof
+        box(1.8, 0.15, 1.7, 0x8a6040, { y: 2.0 }),
+        cyl(1.0, 1.0, 1.9, 4, 0x9a5030, { theta0: PI, rx: HALF_PI, sy: 0.35, y: 2.25 }),
+        // Roof ridge
+        box(0.15, 0.1, 1.6, 0x7a5030, { y: 2.45 }),
+        // Traditional wooden door
+        box(0.5, 0.9, 0.08, 0x6a4020, { y: 0.55, z: 0.78 }),
+        // Small window
+        box(0.35, 0.3, 0.08, 0x4a3a30, { x: 0.5, y: 1.1, z: 0.78 }),
+        // Stone base foundation
+        box(1.7, 0.25, 1.6, 0xa8a098, { y: 0.12 }),
+        // Low coral stone fence section
+        box(0.8, 0.5, 0.2, 0xc8c0b0, { x: 1.1, y: 0.25, z: 0.3 }),
       ];
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 }));
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 }));
-      }
       return finish(parts);
     },
   },
@@ -85,35 +92,45 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 老公寓 (old 5-storey walk-up - Hengchun style) ---------- */
+  /* ---- slot 2: 恆春老洋樓 (Hengchun colonial-era villa) --------------- */
   {
-    id: 'old_apartment',
-    displayName: '老公寓',
+    id: 'hengchun_villa',
+    displayName: '恆春老洋樓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
+    palette: [0xf8f0e0, 0xe8dcc8, 0xd8d0c0, 0xf0e8d8, 0xc8c0b0],
     yOffset: -0.28,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Japanese/colonial era villa typical of Hengchun Old Town
       const parts = [
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }),
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }),
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }),
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }),
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }),
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }),
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }),
+        // Main 2-storey villa body - cream/white wash walls
+        box(2.4, 2.0, 1.6, 0xffffff, { y: 1.2, hex2: 0xf8f0e0 }),
+        // Arched windows on 2nd floor (colonial style)
+        box(0.4, 0.5, 0.08, 0x3a4a5a, { x: -0.7, y: 1.8, z: 0.82 }),
+        sph(0.2, 0x3a4a5a, { ws: 6, hs: 3, x: -0.7, y: 2.05, z: 0.82, thetaLen: HALF_PI }),
+        box(0.4, 0.5, 0.08, 0x3a4a5a, { x: 0.7, y: 1.8, z: 0.82 }),
+        sph(0.2, 0x3a4a5a, { ws: 6, hs: 3, x: 0.7, y: 2.05, z: 0.82, thetaLen: HALF_PI }),
+        // Ground floor entrance - wooden doors
+        box(0.6, 0.9, 0.08, 0x6a4a30, { y: 0.55, z: 0.82 }),
+        // Colonial balustrade on 2nd floor balcony
+        box(2.5, 0.1, 0.5, 0xe0d8c8, { y: 1.35, z: 1.0 }),
+        box(2.5, 0.3, 0.06, 0xe8e0d0, { y: 1.55, z: 1.2 }),
+        // Roof with Japanese-style tiles
+        box(2.6, 0.18, 1.8, 0x8a5a3a, { y: 2.25 }),
+        cyl(1.1, 1.1, 2.7, 4, 0x9a6a4a, { theta0: PI, rx: HALF_PI, sy: 0.35, y: 2.6 }),
+        // Decorative cornices
+        box(2.55, 0.08, 0.15, 0xd8d0c0, { y: 2.18, z: 0.88 }),
+        // Stone base
+        box(2.5, 0.25, 1.7, 0xb8b0a0, { y: 0.12 }),
+        // Small garden palm
+        cyl(0.06, 0.06, 0.8, 5, 0x6a5040, { x: 1.4, y: 0.4, z: 0.8 }),
+        cone(0.3, 0.5, 5, 0x40a048, { x: 1.4, y: 0.95, z: 0.8 }),
       ];
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 }));
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 }));
-      }
       return finish(parts);
     },
   },

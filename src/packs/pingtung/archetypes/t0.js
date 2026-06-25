@@ -28,25 +28,32 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] coral_fragment 珊瑚碎片 — small piece of Kenting coral          */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'coral_fragment',
+    displayName: '珊瑚碎片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0,
+    palette: [0xf8e8e0, 0xffd8d0, 0xe0d0c8, 0xf0e0d8, 0xd8c8c0],
+    yOffset: -0.3,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // Small coral fragment from Kenting beach
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }),
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }),
+        // Main coral body - irregular branching shape
+        sph(0.7, 0xffffff, { ws: 6, hs: 5, hex2: 0xf8e8e0 }),
+        // Coral branches
+        cyl(0.2, 0.15, 0.8, 5, 0xffd8d0, { x: 0.4, y: 0.3, rz: 0.4 }),
+        cyl(0.18, 0.12, 0.6, 5, 0xf0e0d8, { x: -0.3, y: 0.4, rz: -0.5 }),
+        cyl(0.15, 0.1, 0.5, 5, 0xe8d8d0, { x: 0.1, y: 0.5, rz: 0.2 }),
+        // Coral texture bumps
+        sph(0.15, 0xe0d0c8, { ws: 4, hs: 3, x: 0.5, y: 0.0, z: 0.2 }),
+        sph(0.12, 0xd8c8c0, { ws: 4, hs: 3, x: -0.4, y: -0.1, z: 0.3 }),
       ]);
     },
   },
@@ -172,57 +179,65 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] fish_scale 飛魚鱗片 — iridescent flying fish scale               */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'fish_scale',
+    displayName: '飛魚鱗片',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95,
+    palette: [0x70b0d0, 0x90d0e8, 0x60a0c0, 0xa0e0f0, 0x5090b0],
+    yOffset: -0.92,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Flying fish scale - iridescent and slightly curved
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }),
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }),
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }),
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }),
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        // Main scale body - oval and thin
+        sph(1.0, 0xffffff, { ws: 8, hs: 5, sy: 0.08, hex2: 0x90d0e8 }),
+        // Iridescent shimmer layer
+        sph(0.9, 0xa0e0f0, { ws: 6, hs: 4, sy: 0.04, y: 0.05 }),
+        // Scale ridge texture
+        box(0.6, 0.02, 0.05, 0x60a0c0, { y: 0.08, z: 0.3 }),
+        box(0.5, 0.02, 0.05, 0x70b0d0, { y: 0.07, z: 0.0 }),
+        box(0.4, 0.02, 0.05, 0x5090b0, { y: 0.06, z: -0.25 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] shell_keychain 貝殼鑰匙圈 — souvenir shell keychain from Kenting */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'shell_keychain',
+    displayName: '貝殼鑰匙圈',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
     radiusJitter: 0.12,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85,
+    palette: [0xf8e8d8, 0xffd0c0, 0xe8d0c0, 0xf0e0d0, 0xd8c0b0],
+    yOffset: -0.55,
     upright: false,
     collisionScale: 0.8,
     buildGeometry(rng) {
+      // Kenting souvenir shell keychain
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }),
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }),
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }),
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }),
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }),
+        // Main cowrie shell body
+        sph(0.8, 0xffffff, { ws: 8, hs: 6, sy: 0.6, hex2: 0xf8e8d8 }),
+        // Shell lip opening
+        box(0.5, 0.15, 0.3, 0xffd0c0, { y: -0.2, z: 0.3 }),
+        // Shell spots pattern
+        sph(0.1, 0xd8b8a0, { ws: 4, hs: 3, x: 0.2, y: 0.15, z: 0.1 }),
+        sph(0.08, 0xd0b098, { ws: 4, hs: 3, x: -0.15, y: 0.2, z: 0.15 }),
+        sph(0.09, 0xd8c0a8, { ws: 4, hs: 3, x: 0.0, y: 0.1, z: -0.1 }),
+        // Metal keychain ring
+        torus(0.25, 0.04, 4, 8, 0xc0c0c0, { x: 0.6, y: 0.0, ry: HALF_PI }),
+        // Small metal connector
+        cyl(0.06, 0.06, 0.15, 5, 0xb0b0b0, { x: 0.45, rz: HALF_PI }),
       ]);
     },
   },
