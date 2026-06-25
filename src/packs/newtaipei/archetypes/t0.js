@@ -28,78 +28,93 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] yingge_pottery_shard 鶯歌陶片 — broken pottery shard from Yingge */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'yingge_pottery_shard',
+    displayName: '鶯歌陶片',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.012,
+    radiusNominal: 0.015,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xc8a868, 0xd8b878, 0xa88848, 0xe8c888, 0xb89858],
+    yOffset: -0.72,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // Broken pottery shard from Yingge ceramics (terracotta/glazed)
+      const CLAY = 0xc8a868;
+      const GLAZE = 0x4a7a9a;
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        box(1.4, 0.2, 1.0, CLAY, { y: 0.1, rz: 0.1, hex2: 0xd8b878 }), // irregular shard shape
+        box(1.0, 0.18, 0.7, CLAY, { y: 0.12, x: 0.3, rz: -0.15 }),
+        // Glazed surface on top
+        box(1.2, 0.05, 0.8, GLAZE, { y: 0.22, hex2: 0x5a8aaa }),
+        // Broken edge detail
+        box(0.3, 0.16, 0.25, 0xb89858, { x: -0.6, y: 0.1, rz: 0.3 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] eraser 橡皮擦 — rounded block with a printed paper sleeve band  */
+  /* [1] coal_chunk 煤礦塊 — coal chunk from Pingxi mining heritage      */
   /* ---------------------------------------------------------------- */
   {
-    id: 'eraser',
-    displayName: '橡皮擦',
+    id: 'coal_chunk',
+    displayName: '煤礦塊',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.018,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xffffff, 0xfbe3ec, 0xeaf3ff, 0xfff4cf],
-    yOffset: -0.68, // block resting on the table (= -1 - minY of normalized geo)
+    palette: [0x1a1a1a, 0x2a2a2a, 0x0a0a0a, 0x3a3a3a],
+    yOffset: -0.58,
     upright: false,
     collisionScale: 0.84,
     buildGeometry(rng) {
+      // Coal chunk from Pingxi/Ruifang mining heritage
+      const COAL = 0x1a1a1a;
+      const COAL_HI = 0x3a3a3a;
       return finish([
-        box(2.0, 0.7, 1.0, 0xffffff, { y: 0.35 }), // rubber body (tinted off-white/pastel)
-        // paper sleeve wrapping the middle (printed blue band + white edge stripes)
-        box(0.94, 0.74, 1.04, 0x2f64c8, { x: 0.0, y: 0.35 }), // blue sleeve
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: -0.5, y: 0.35 }), // white edge stripe
-        box(0.1, 0.76, 1.06, 0xf4f6fb, { x: 0.5, y: 0.35 }), // white edge stripe
-        box(0.6, 0.18, 1.06, 0xf0c23a, { x: 0.0, y: 0.35 }), // tiny gold label flash
+        box(1.2, 0.8, 0.9, COAL, { y: 0.4, rz: 0.1, hex2: COAL_HI }),
+        box(0.8, 0.6, 0.7, COAL, { x: 0.4, y: 0.35, rz: -0.15, hex2: 0x2a2a2a }),
+        box(0.5, 0.4, 0.5, COAL_HI, { x: -0.3, y: 0.5, rz: 0.2 }),
+        // Shiny facet (coal luster)
+        box(0.4, 0.05, 0.3, 0x5a5a5a, { y: 0.82, rz: 0.1 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] mini_sky_lantern 迷你天燈 — miniature Pingxi sky lantern        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'mini_sky_lantern',
+    displayName: '迷你天燈',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.01,
+    radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
-    upright: false,
-    collisionScale: 0.7,
+    palette: [0xc83030, 0xe8a020, 0xf8d848, 0xff6040, 0xf0c030],
+    yOffset: -0.15,
+    upright: true,
+    collisionScale: 0.75,
     buildGeometry(rng) {
+      // Miniature Pingxi sky lantern (天燈)
+      const PAPER = 0xffffff; // tinted by palette
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // Lantern body (oval paper balloon)
+        sph(0.8, PAPER, { ws: 8, hs: 6, y: 0.9, sy: 1.4 }),
+        // Bottom opening ring
+        cyl(0.5, 0.5, 0.15, 8, 0x8a6a4a, { y: 0.1 }),
+        // Wire frame ribs (simplified)
+        box(0.04, 1.8, 0.04, 0x6a5a4a, { y: 0.9, z: 0.35 }),
+        box(0.04, 1.8, 0.04, 0x6a5a4a, { y: 0.9, z: -0.35 }),
+        box(0.04, 1.8, 0.04, 0x6a5a4a, { y: 0.9, x: 0.35 }),
+        // Decorative character hint (simplified as a colored band)
+        box(0.5, 0.3, 0.02, 0xc83030, { y: 1.0, z: 0.42 }),
       ]);
     },
   },

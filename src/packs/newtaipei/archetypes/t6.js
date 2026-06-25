@@ -17,34 +17,40 @@
  * Size band: 60-300 m radiusNominal (Tamsui riverfront skyscraper scale).
  */
 
-import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, sph, towerBanded, finish, HALF_PI, PI } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise ----------------- */
+  /* ---- slot 0: 新板特區大樓 Banqiao special district tower -------------- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'banqiao_special_tower',
+    displayName: '新板特區大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 180,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
+    palette: [0x4a6a8a, 0x6a8aaa, 0x8ab0c8, 0xc0d8e8, 0xffd884],
     yOffset: -0.04,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Slender all-glass slab with a stepped glass crown and a vertical mullion seam.
+      // Banqiao Special District style tower — modern mixed-use with retail podium
       return finish([
-        towerBanded(0.95, 3.4, 0.95, 12, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.7 }), // glass shaft (cool blue + lit windows)
-        towerBanded(0.78, 0.9, 0.78, 4, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 3.85 }), // setback crown box
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        box(0.05, 3.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.7, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.7, 6, 0xd0d6dc, { y: 4.6 }), // rooftop mast
-        box(0.4, 0.14, 0.4, 0x556270, { y: 4.32 }), // mast base plinth
+        // Wide retail podium
+        box(1.4, 0.8, 1.2, 0xe8e8ee, { y: 0.4 }),
+        box(1.5, 0.1, 1.3, 0x4a6a8a, { y: 0.85 }), // blue trim
+        // Main tower shaft
+        towerBanded(0.9, 3.0, 0.9, 10, 0x4a6a8a, 0x8ab0c8, 0xffd884, rng, { y: 2.3 }),
+        // Crown with New Taipei modern style
+        box(0.7, 0.5, 0.7, 0x6a8aaa, { y: 4.05 }),
+        box(0.5, 0.3, 0.5, 0xc0d8e8, { y: 4.45 }),
+        // Antenna
+        cyl(0.04, 0.04, 0.8, 6, 0xd0d6dc, { y: 5.0 }),
+        // Ground level entrance
+        box(0.8, 0.4, 0.1, 0x9fc4d8, { y: 0.25, z: 0.62 }),
       ]);
     },
   },
@@ -81,27 +87,34 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 其他摩天樓 other skyscraper --------------------------- */
+  /* ---- slot 2: 中和環球大樓 Zhonghe Global Mall tower ------------------- */
   {
-    id: 'other_skyscraper',
-    displayName: '其他摩天樓',
+    id: 'zhonghe_global_tower',
+    displayName: '中和環球大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 190,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x4a5466, 0x5a6678, 0x8a96a8, 0xc0c8d4, 0xffd884],
+    palette: [0x4a5a6a, 0x6a7a8a, 0x9aaaba, 0xc8d8e8, 0xffd040],
     yOffset: -0.046,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Tapered three-tier office tower with a slim antenna — a generic New Taipei peer.
+      // Zhonghe Global Mall style commercial tower — rounded corners, mall base
       return finish([
-        towerBanded(1.25, 1.9, 1.25, 6, 0x46566c, 0x8a96a8, 0xffd884, rng, { y: 0.95 }), // base block
-        towerBanded(0.95, 1.5, 0.95, 5, 0x4c5e76, 0x96a2b4, 0xffe0a0, rng, { y: 2.65 }), // mid block (setback)
-        towerBanded(0.68, 1.1, 0.68, 4, 0x546880, 0xa4b0c2, 0xffe6ac, rng, { y: 3.95 }), // upper block (setback)
-        box(0.5, 0.18, 0.5, 0x7a8494, { y: 4.6 }), // crown cap
-        cyl(0.035, 0.035, 0.9, 6, 0xcdd4dc, { y: 5.15 }), // antenna
+        // Large mall podium
+        box(1.8, 1.2, 1.5, 0xe8e8ee, { y: 0.6 }),
+        box(1.9, 0.15, 1.6, 0xffd040, { y: 1.25 }), // yellow trim (Global branding)
+        // Curved glass atrium
+        cyl(0.8, 0.8, 1.3, 8, 0x9fc4d8, { y: 0.65, z: 0.85, rx: HALF_PI, theta0: -HALF_PI, thetaLen: PI }),
+        // Office tower
+        towerBanded(1.0, 2.2, 1.0, 8, 0x4a5a6a, 0x9aaaba, 0xffd884, rng, { y: 2.35 }),
+        // Crown
+        box(0.8, 0.4, 0.8, 0x6a7a8a, { y: 3.65 }),
+        cyl(0.04, 0.04, 0.7, 6, 0xc8ccd2, { y: 4.2 }),
+        // Rooftop signage
+        box(0.6, 0.25, 0.1, 0xffd040, { y: 3.5, z: 0.52 }),
       ]);
     },
   },
@@ -179,10 +192,10 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 5: 空橋 sky bridge ---------------------------------------- */
+  /* ---- slot 5: 林口長庚醫療城 Linkou Chang Gung medical complex --------- */
   {
-    id: 'sky_bridge',
-    displayName: '空橋',
+    id: 'linkou_changgung',
+    displayName: '林口長庚醫療城',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 85,
@@ -193,15 +206,23 @@ export const T6_ARCHETYPES = [
     upright: true,
     collisionScale: 0.65,
     buildGeometry(rng) {
-      // Two podium towers joined high up by a glazed enclosed pedestrian sky bridge.
+      // Linkou Chang Gung Medical Center style complex — hospital towers connected
       return finish([
-        towerBanded(0.9, 2.6, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: -1.5, y: 1.3 }), // tower A
-        towerBanded(0.9, 2.4, 0.9, 8, 0x3c5876, 0x6a96b8, 0xffe0a0, rng, { x: 1.5, y: 1.2 }), // tower B
-        box(2.2, 0.5, 0.6, 0xa0d0e4, { y: 2.0, hex2: 0xc8e4f0 }), // glazed sky bridge tube
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 2.26 }), // bridge roof cap
-        box(2.2, 0.05, 0.62, 0x88a0b4, { y: 1.74 }), // bridge floor slab
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: -1.5, y: 2.7 }), // tower A roof unit
-        box(0.5, 0.2, 0.5, 0x7a8492, { x: 1.5, y: 2.5 }), // tower B roof unit
+        // Main hospital tower
+        towerBanded(1.0, 2.8, 1.0, 9, 0xe8e8ee, 0x6a96b8, 0xffe0a0, rng, { x: -1.2, y: 1.4 }),
+        // Secondary tower
+        towerBanded(0.8, 2.2, 0.8, 7, 0xe8e8ee, 0x7aa8c8, 0xfff0c0, rng, { x: 1.2, y: 1.1 }),
+        // Connecting bridge
+        box(1.6, 0.4, 0.5, 0xa0d0e4, { y: 1.8, hex2: 0xc8e4f0 }),
+        // Medical cross symbol (simplified)
+        box(0.3, 0.5, 0.06, 0xc83030, { x: -1.2, y: 2.5, z: 0.52 }),
+        box(0.5, 0.15, 0.06, 0xc83030, { x: -1.2, y: 2.6, z: 0.52 }),
+        // Helipad on main tower
+        cyl(0.35, 0.35, 0.05, 8, 0x4a5a6a, { x: -1.2, y: 2.88 }),
+        box(0.25, 0.02, 0.05, 0xffffff, { x: -1.2, y: 2.92 }),
+        box(0.05, 0.02, 0.25, 0xffffff, { x: -1.2, y: 2.92 }),
+        // Roof equipment
+        box(0.4, 0.15, 0.3, 0x7a8a9a, { x: 1.2, y: 2.35 }),
       ]);
     },
   },
@@ -241,32 +262,36 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 河岸大樓 riverside block -------------------------------- */
+  /* ---- slot 7: 汐止科學園區大樓 Xizhi Science Park tower ---------------- */
   {
-    id: 'riverside_block',
-    displayName: '河岸大樓',
+    id: 'xizhi_scipark_tower',
+    displayName: '汐止科學園區大樓',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 230,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x36405a, 0x4a5670, 0x7a86a0, 0xb0bccc, 0xffd884],
+    palette: [0x3a5a7a, 0x5a7a9a, 0x8ab0c8, 0xc8e0f0, 0xffd884],
     yOffset: -0.308,
     upright: true,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      // 淡水河岸大樓 — simplified riverside development
+      // Xizhi Science Park style tech campus tower
       const parts = [
-        box(3.5, 0.16, 1.5, 0x2a3142, { y: 0.08 }), // ground slab
+        // Large campus base with green landscaping
+        box(3.5, 0.2, 1.8, 0x4a8a5a, { y: 0.1 }), // green landscaping base
+        box(3.0, 0.15, 1.5, 0xe8e8ee, { y: 0.22 }), // plaza
       ];
-      // Two simplified towers
-      parts.push(box(1.0, 2.8, 0.8, 0x36405a, { x: -0.8, y: 1.5, z: 0.2, hex2: 0x4a5670 }));
-      parts.push(box(1.0, 3.4, 0.8, 0x3e4a64, { x: 0.8, y: 1.8, z: 0.2, hex2: 0x4a5670 }));
-      // Rooftop caps
-      parts.push(box(0.4, 0.12, 0.4, 0x6a7488, { x: -0.8, y: 2.96 }));
-      parts.push(box(0.4, 0.12, 0.4, 0x6a7488, { x: 0.8, y: 3.56 }));
-      // Riverside edge
-      parts.push(box(3.2, 0.06, 0.1, 0x6080a0, { y: 0.14, z: -0.75 }));
+      // Twin office towers (tech park style)
+      parts.push(towerBanded(0.9, 2.6, 0.8, 8, 0x3a5a7a, 0x8ab0c8, 0xffd884, rng, { x: -0.9, y: 1.6 }));
+      parts.push(towerBanded(0.9, 3.0, 0.8, 9, 0x3a5a7a, 0x9ac0d8, 0xffe0a0, rng, { x: 0.9, y: 1.8 }));
+      // Modern glass lobby
+      box(2.2, 0.8, 0.5, 0x9fc4d8, { y: 0.7, z: 0.65, hex2: 0xc8e0f0 });
+      // Rooftop equipment
+      parts.push(box(0.4, 0.2, 0.3, 0x6a7a8a, { x: -0.9, y: 2.95 }));
+      parts.push(box(0.5, 0.25, 0.4, 0x5a6a7a, { x: 0.9, y: 3.35 }));
+      // Antenna mast
+      parts.push(cyl(0.04, 0.04, 0.6, 6, 0xc8ccd2, { x: 0.9, y: 3.8 }));
       return finish(parts);
     },
   },
