@@ -16,25 +16,34 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] green_onion_seed 三星蔥種子 — tiny green onion seed packet     */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'green_onion_seed',
+    displayName: '三星蔥種子',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0,
+    palette: [0x4a8a3a, 0x3a7a2a, 0x5a9a4a, 0x2a6a1a, 0x6aaa5a],
+    yOffset: -0.75,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }),
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }),
+        // seed packet envelope
+        box(1.4, 1.0, 0.12, 0xf8f4e8, { y: 0.5 }),
+        // green header with 三星蔥 branding
+        box(1.4, 0.35, 0.13, 0x4a8a3a, { y: 0.82 }),
+        // scallion illustration (simple green stalks)
+        box(0.08, 0.5, 0.02, 0x3a7a2a, { x: -0.25, y: 0.4 }),
+        box(0.08, 0.45, 0.02, 0x4a8a3a, { x: 0.0, y: 0.38 }),
+        box(0.08, 0.5, 0.02, 0x3a7a2a, { x: 0.25, y: 0.42 }),
+        // white roots
+        box(0.06, 0.1, 0.02, 0xf0f0e8, { x: -0.25, y: 0.12 }),
+        box(0.06, 0.1, 0.02, 0xf0f0e8, { x: 0.0, y: 0.12 }),
+        box(0.06, 0.1, 0.02, 0xf0f0e8, { x: 0.25, y: 0.14 }),
       ]);
     },
   },
@@ -72,26 +81,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] jiaoxi_soap 礁溪溫泉皂 — small round hot spring soap bar       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'jiaoxi_soap',
+    displayName: '礁溪溫泉皂',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.01,
-    radiusJitter: 0.18,
+    radiusNominal: 0.015,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03,
+    palette: [0xe8d0a8, 0xd8c098, 0xf0e0b8, 0xc8b088, 0xf8f0c8],
+    yOffset: -0.35,
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.85,
     buildGeometry(rng) {
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }),
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }),
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }),
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }),
+        // rounded rectangular soap bar (warm beige/sulfur tint)
+        box(1.2, 0.4, 0.8, 0xffffff, { y: 0.2 }),
+        // rounded edges simulation
+        sph(0.35, 0xffffff, { ws: 6, hs: 4, x: -0.55, y: 0.2 }),
+        sph(0.35, 0xffffff, { ws: 6, hs: 4, x: 0.55, y: 0.2 }),
+        // embossed 溫泉 text area on top
+        box(0.6, 0.08, 0.4, 0xd0b888, { y: 0.42 }),
+        // faint sulfur mineral specks
+        sph(0.04, 0xc8a060, { ws: 3, hs: 2, x: 0.3, y: 0.35, z: 0.2 }),
+        sph(0.03, 0xc8a060, { ws: 3, hs: 2, x: -0.25, y: 0.38, z: -0.15 }),
       ]);
     },
   },
