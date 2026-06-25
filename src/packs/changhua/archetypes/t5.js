@@ -204,156 +204,172 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 碾米廠 (Changhua rice mill) ------------------------ */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'rice_mill',
+    displayName: '碾米廠',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0xb8a898, 0x9a8a78, 0xc8b8a8, 0x6a5a4a, 0xf0e8d0],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
+      // 彰化碾米廠 (traditional rice mill building)
       const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
+        // main mill building
+        box(3.0, 3.5, 2.5, 0xffffff, { y: 1.75, hex2: 0xc8b8a8 }), // brick body
+        // corrugated tin roof
+        box(3.2, 0.15, 2.7, 0x9a8a78, { y: 3.6, rx: 0.1 }),
+        // roof ridge
+        box(3.3, 0.2, 0.3, 0x8a7a6a, { y: 3.75 }),
+        // large sliding doors
+        box(1.4, 2.0, 0.1, 0x6a5a4a, { y: 1.0, z: 1.3 }),
+        // rice silo/hopper
+        cyl(0.8, 0.6, 2.5, 6, 0xb8a898, { x: -1.8, y: 2.5 }),
+        cone(0.6, 0.5, 6, 0x9a8a78, { x: -1.8, y: 3.8 }),
+        // conveyor chute
+        box(0.3, 0.2, 1.5, 0x8a7a6a, { x: -1.8, y: 1.5, z: 0.5, rx: 0.3 }),
+        // rice bags stacked outside
+        box(0.6, 0.4, 0.4, 0xf0e8d0, { x: 1.2, y: 0.2, z: 1.5 }),
+        box(0.6, 0.4, 0.4, 0xf0e8d0, { x: 1.8, y: 0.2, z: 1.5 }),
+        box(0.6, 0.4, 0.4, 0xf0e8d0, { x: 1.5, y: 0.6, z: 1.5 }),
+        // ventilation
+        cyl(0.15, 0.15, 0.4, 5, 0x8a8a8a, { x: 1.0, y: 3.9 }),
+        // signage
+        box(1.5, 0.4, 0.08, 0xfff2c0, { y: 3.2, z: 1.3 }),
       ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 5: 巨型看板 giant_billboard --------------------------- */
+  /* ---- slot 5: 葡萄園棚架 (Changhua vineyard trellis) -------------- */
   {
-    id: 'giant_billboard',
-    displayName: '巨型看板',
+    id: 'vineyard_trellis',
+    displayName: '葡萄園棚架',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 20,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46, 0xf2f2ee],
-    yOffset: -0.21,
+    palette: [0x6a8a4a, 0x5a7a3a, 0x8a6a4a, 0x9a5a8a, 0xf0e8d0],
+    yOffset: -0.45,
     upright: true,
-    collisionScale: 0.5,
+    collisionScale: 0.8,
     buildGeometry(rng) {
-      // A rooftop / roadside billboard: big bright panel on a lattice gantry.
+      // 彰化大村葡萄園棚架 (Dacun grape vineyard trellis) - simplified for tri budget
       const parts = [
-        // gantry legs (wide A-stance)
-        box(0.22, 4.6, 0.22, 0x44484f, { x: -1.7, y: 2.3, rz: 0.06 }),
-        box(0.22, 4.6, 0.22, 0x44484f, { x: 1.7, y: 2.3, rz: -0.06 }),
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 1.4 }), // cross brace
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 3.0, rz: 0 }), // cross brace
-        // diagonal brace
-        box(4.0, 0.14, 0.14, 0x5a6068, { y: 2.2, rz: 0.78 }),
-        // billboard frame + bright face
-        box(5.2, 2.4, 0.18, 0x2e3138, { y: 5.4 }), // frame
-        box(5.0, 2.2, 0.06, 0xffffff, { y: 5.4, z: 0.13 }), // ad face (tinted bright)
-        box(5.2, 0.2, 0.3, 0x222428, { y: 6.7 }), // top spotlight bar
+        // ground / soil
+        box(5.0, 0.15, 4.0, 0x6a5040, { y: 0.08 }),
       ];
-      // color blocks on the ad face (deterministic mock graphic)
-      const adHex = [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46];
-      for (let i = 0; i < 4; i++) {
-        const w = 0.9 + (i % 2) * 0.4;
-        parts.push(box(w, 1.6 - (i % 2) * 0.6, 0.04, adHex[i], {
-          x: -1.7 + i * 1.15, y: 5.4, z: 0.17,
-        }));
+      // wooden support posts (reduced to 4)
+      const posts = [[-2.0, -1.5], [-2.0, 1.5], [2.0, -1.5], [2.0, 1.5]];
+      for (const [px, pz] of posts) {
+        parts.push(cyl(0.12, 0.12, 2.5, 4, 0x8a6a4a, { x: px, z: pz, y: 1.25 }));
       }
-      // spotlights
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: -1.6, y: 6.6, rx: 0.6 }));
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: 1.6, y: 6.6, rx: 0.6 }));
+      // horizontal trellis framework (reduced)
+      parts.push(box(4.5, 0.1, 0.1, 0x7a5a3a, { y: 2.4, z: -1.5 }));
+      parts.push(box(4.5, 0.1, 0.1, 0x7a5a3a, { y: 2.4, z: 1.5 }));
+      parts.push(box(0.1, 0.1, 3.2, 0x7a5a3a, { y: 2.4, x: -2.0 }));
+      parts.push(box(0.1, 0.1, 3.2, 0x7a5a3a, { y: 2.4, x: 2.0 }));
+      // grape vine canopy (simplified - fewer segments)
+      parts.push(sph(1.8, 0x6a8a4a, { ws: 5, hs: 3, y: 2.6, sy: 0.3 }));
+      parts.push(sph(1.4, 0x5a7a3a, { ws: 5, hs: 3, x: 1.0, y: 2.5, sy: 0.3 }));
+      // grape bunches (reduced to 2)
+      parts.push(sph(0.3, 0x9a5a8a, { ws: 4, hs: 3, x: -0.5, y: 2.1, z: 0.3 }));
+      parts.push(sph(0.28, 0x8a4a7a, { ws: 4, hs: 3, x: 0.8, y: 2.0, z: -0.4 }));
+      // harvest basket
+      parts.push(cyl(0.4, 0.35, 0.3, 5, 0xc8a868, { x: 1.5, y: 0.25, z: 1.2 }));
       return finish(parts);
     },
   },
 
-  /* ---- slot 6: 玻璃帷幕街屋 glass_curtain_house ------------------- */
+  /* ---- slot 6: 醬油工坊 (Changhua soy sauce workshop) ------------- */
   {
-    id: 'glass_curtain_house',
-    displayName: '玻璃帷幕街屋',
+    id: 'soy_sauce_workshop',
+    displayName: '醬油工坊',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 14,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6fbfd0, 0xbfeaf0, 0x3a6a78, 0x2e3744, 0xe8f4f6],
-    yOffset: -0.1,
+    palette: [0x6a4a32, 0x8a6a4a, 0x4a3a2a, 0xc8a060, 0xf0e8d0],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Narrow mid-rise street shophouse with a full glass curtain wall front.
+      // 彰化傳統醬油工坊 (traditional soy sauce workshop)
       const parts = [
-        box(2.2, 5.2, 2.0, 0xffffff, { y: 2.8 }), // body (tinted concrete sides)
-        // glass curtain wall on the front (proud, gridded)
-        box(2.0, 4.6, 0.14, 0x2e3744, { y: 2.9, z: 1.02 }), // mullion grid (dark)
-        box(1.8, 4.4, 0.06, 0x8fd6e2, { y: 2.9, z: 1.1 }), // glass (tinted blue-green)
-        // ground-floor shop entrance
-        box(2.0, 0.9, 0.1, 0x20262c, { y: 0.5, z: 1.06 }),
-        box(1.2, 0.7, 0.06, 0xbfeaf0, { y: 0.5, z: 1.12 }), // bright entry glass
-        // parapet + a small rooftop water tank
-        box(2.3, 0.24, 2.1, 0x4a8090, { y: 5.5 }),
-        cyl(0.4, 0.4, 0.6, 7, 0x9aa0a8, { x: 0.5, y: 5.9 }),
+        // main building
+        box(2.5, 2.8, 2.2, 0xffffff, { y: 1.4, hex2: 0xd8ccc0 }), // brick body
+        // traditional tiled roof
+        cyl(1.5, 1.5, 2.8, 4, 0x8a5030, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.0 }),
+        // roof ridge
+        box(2.9, 0.15, 0.2, 0x6a3a20, { y: 3.3 }),
+        // wooden entrance
+        box(0.8, 1.5, 0.1, 0x6a4a32, { y: 0.75, z: 1.15 }),
+        // soy sauce fermentation vats (露天醬缸)
+        cyl(0.5, 0.45, 0.6, 6, 0x4a3a2a, { x: -1.8, y: 0.3, z: 0 }),
+        cyl(0.5, 0.45, 0.6, 6, 0x4a3a2a, { x: -1.8, y: 0.3, z: 0.9 }),
+        cyl(0.5, 0.45, 0.6, 6, 0x4a3a2a, { x: -1.8, y: 0.3, z: -0.9 }),
+        // vat covers (bamboo woven lids)
+        cyl(0.52, 0.52, 0.08, 6, 0xc8a868, { x: -1.8, y: 0.65, z: 0 }),
+        cyl(0.52, 0.52, 0.08, 6, 0xc8a868, { x: -1.8, y: 0.65, z: 0.9 }),
+        // signboard
+        box(1.2, 0.5, 0.08, 0x4a3a2a, { y: 2.4, z: 1.15 }),
+        box(1.0, 0.35, 0.05, 0xfff2c0, { y: 2.4, z: 1.2 }),
+        // drying rack with bottles
+        box(1.5, 1.2, 0.1, 0x8a6a4a, { x: 1.5, y: 0.6, z: 0 }),
+        box(0.15, 0.4, 0.15, 0x4a3a2a, { x: 1.3, y: 0.3, z: 0 }),
+        box(0.15, 0.4, 0.15, 0x4a3a2a, { x: 1.7, y: 0.3, z: 0 }),
       ];
-      // horizontal floor-line mullions across the glass (5 floors)
-      for (let f = 1; f < 5; f++) {
-        parts.push(box(1.85, 0.07, 0.04, 0x223038, { y: 0.6 + f * 0.95, z: 1.14 }));
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 彰化火車站前 (Changhua train station front) ------- */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'changhua_station_front',
+    displayName: '彰化火車站前',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
+    palette: [0xd8ccc0, 0xc8b8a8, 0x8a5030, 0xe0a83a, 0x3a4a3a],
     yOffset: -0.4,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // 彰化火車站 (historic Changhua Railway Station)
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        // main station building
+        box(4.5, 2.8, 2.8, 0xffffff, { y: 1.4, hex2: 0xd8ccc0 }), // cream plaster body
+        // colonial-style arched entrance portico
+        box(2.0, 0.3, 0.8, 0xc8b8a8, { y: 2.9, z: 1.5 }), // portico top
+        // three arched openings
+        cyl(0.5, 0.5, 0.8, 5, 0x4a3a2a, { theta0: 0, thetaLen: PI, rx: HALF_PI, x: -0.7, y: 1.5, z: 1.5 }),
+        cyl(0.5, 0.5, 0.8, 5, 0x4a3a2a, { theta0: 0, thetaLen: PI, rx: HALF_PI, x: 0, y: 1.5, z: 1.5 }),
+        cyl(0.5, 0.5, 0.8, 5, 0x4a3a2a, { theta0: 0, thetaLen: PI, rx: HALF_PI, x: 0.7, y: 1.5, z: 1.5 }),
+        // entrance columns
+        cyl(0.12, 0.12, 2.0, 5, 0xd8ccc0, { x: -1.0, y: 1.0, z: 1.45 }),
+        cyl(0.12, 0.12, 2.0, 5, 0xd8ccc0, { x: 1.0, y: 1.0, z: 1.45 }),
+        // traditional tiled roof (hipped)
+        cyl(1.6, 1.6, 4.8, 4, 0x8a5030, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 3.2 }),
+        // roof ridge
+        box(4.6, 0.15, 0.2, 0x6a3a20, { y: 3.5 }),
+        // station clock
+        cyl(0.35, 0.35, 0.1, 8, 0xf0ece4, { y: 2.5, z: 1.45 }),
+        // platform canopy extending to side
+        box(3.5, 0.12, 1.5, 0x8a8a8a, { x: 0, y: 2.2, z: -1.5 }),
+        cyl(0.08, 0.08, 1.8, 5, 0x6a6a6a, { x: -1.5, y: 1.1, z: -2.0 }),
+        cyl(0.08, 0.08, 1.8, 5, 0x6a6a6a, { x: 1.5, y: 1.1, z: -2.0 }),
+        // station name sign
+        box(1.8, 0.35, 0.08, 0xe0a83a, { y: 2.7, z: 1.45 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
-      }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
       return finish(parts);
     },
   },
