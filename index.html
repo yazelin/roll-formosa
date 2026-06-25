@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#0b0c14" />
   <title>Roll Formosa — 搖滾·福爾摩沙</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23ff2a78' stroke='%2300e0ff' stroke-width='2.5'/%3E%3C/svg%3E" />
+  <!-- PWA: installable + offline-playable -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Roll Formosa" />
 
   <!-- SEO / social. NOTE: absolute URLs assume the GitHub Pages deploy at
        https://yazelin.github.io/roll-formosa/ — change the host if you deploy elsewhere. -->
@@ -1337,6 +1343,8 @@
       <button id="change-city-button" class="btn btn-secondary" type="button">換城市 / CITY</button>
       <!-- main.js sets href to preview.html?city=<current>. -->
       <a id="showcase-button" class="btn btn-secondary" href="./preview.html">物件圖鑑 / GALLERY</a>
+      <!-- PWA install: shown only when the browser fires beforeinstallprompt. -->
+      <button id="install-button" class="btn btn-secondary" type="button" hidden>安裝 App / INSTALL</button>
     </div>
     <div class="key-hints" id="key-hints">
       <span><kbd>W A S D</kbd><kbd>&#8592;&#8593;&#8595;&#8594;</kbd>移動 / Move</span>
@@ -1430,5 +1438,26 @@
   <div id="debug-overlay" class="hidden"></div>
 
   <script type="module" src="/src/main.js"></script>
+  <!-- PWA: register the service worker (offline + fast repeat loads) and wire the install button. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+    let rfInstallPrompt = null;
+    const rfInstallBtn = document.getElementById('install-button');
+    addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      rfInstallPrompt = e;
+      if (rfInstallBtn) rfInstallBtn.hidden = false;
+    });
+    if (rfInstallBtn) rfInstallBtn.addEventListener('click', async () => {
+      if (!rfInstallPrompt) return;
+      rfInstallPrompt.prompt();
+      try { await rfInstallPrompt.userChoice; } catch {}
+      rfInstallPrompt = null;
+      rfInstallBtn.hidden = true;
+    });
+    addEventListener('appinstalled', () => { if (rfInstallBtn) rfInstallBtn.hidden = true; });
+  </script>
 </body>
 </html>
