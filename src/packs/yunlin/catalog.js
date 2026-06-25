@@ -46,7 +46,7 @@ import { NM_XILUO_BRIDGE } from './landmarks/xiluo_bridge.js';
 import { COL_BLACK_BEAR } from './collectibles/black_bear.js';
 import { COL_SOY_SAUCE } from './collectibles/soy_sauce.js';
 import { COL_PEANUT } from './collectibles/peanut.js';
-import { COL_PUPPET } from './collectibles/puppet.js';
+import { COL_MULLET } from './collectibles/mullet_roe.js';
 import { COL_COFFEE_CUP } from './collectibles/coffee_cup.js';
 import { COL_RICE_BOWL } from './collectibles/rice_bowl.js';
 import { COL_SANTAIZI } from './collectibles/santaizi.js';
@@ -168,7 +168,7 @@ const _YUNLIN_COLLECTIBLES = [
   { code: 70, col: COL_BLACK_BEAR },
   { code: 71, col: COL_SOY_SAUCE },
   { code: 72, col: COL_PEANUT },
-  { code: 73, col: COL_PUPPET },
+  { code: 73, col: COL_MULLET },
   { code: 74, col: COL_COFFEE_CUP },
   { code: 75, col: COL_RICE_BOWL },
   { code: 76, col: COL_SANTAIZI },

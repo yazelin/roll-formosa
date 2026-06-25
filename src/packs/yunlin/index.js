@@ -53,7 +53,7 @@ import { NM_YUNLIN_PUPPET_CENTER } from './landmarks/yunlin_puppet_center.js';
  */
 const extraIds = [
   // indices 0..11 — codes 70..81: Yunlin collectibles (P7)
-  'black_bear', 'soy_sauce', 'peanut', 'puppet', 'coffee_cup', 'rice_bowl',
+  'black_bear', 'soy_sauce', 'peanut', 'mullet_roe', 'coffee_cup', 'rice_bowl',
   'santaizi', 'budaixi', 'straw_hat', 'taro', 'watermelon', 'sugarcane',
   // indices 12..19 — codes 82..89: Yunlin landmark ids (P6b)
   NM_BEIGANG_CHAOTIAN.id,    // 82 北港朝天宮
