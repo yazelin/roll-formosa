@@ -225,33 +225,36 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] moon_peach_coaster 月桃編墊 — woven alpinia leaf coaster       */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'moon_peach_coaster',
+    displayName: '月桃編墊',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.011,
+    radiusNominal: 0.012,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat
+    palette: [0xc8b080, 0xb8a070, 0xd0b890, 0xa89060, 0xe0c898],
+    yOffset: -0.92, // flat woven mat lying flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        // circular woven base
+        cyl(1.0, 1.0, 0.08, 12, 0xffffff, { y: 0.04 }), // woven mat body (tinted)
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
+      // concentric weave pattern rings
+      parts.push(cyl(0.78, 0.78, 0.085, 12, 0xb8a070, { y: 0.045 }));
+      parts.push(cyl(0.56, 0.56, 0.09, 10, 0xd0b890, { y: 0.05 }));
+      parts.push(cyl(0.34, 0.34, 0.095, 8, 0xa89060, { y: 0.055 }));
+      // center accent
+      cyl(0.14, 0.14, 0.1, 6, 0x8a7050, { y: 0.06 });
+      // subtle radial weave texture (4 radiating lines)
+      const spokes = 4;
+      for (let i = 0; i < spokes; i++) {
+        const a = (i / spokes) * PI * 2;
+        parts.push(box(0.06, 0.1, 0.9, 0x9a8060, { x: Math.cos(a) * 0.45, z: Math.sin(a) * 0.45, ry: -a, y: 0.05 }));
       }
       return finish(parts);
     },
