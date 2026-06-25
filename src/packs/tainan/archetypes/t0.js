@@ -28,26 +28,29 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] yizai_candy 椪糖 — Tainan's classic yizai caramelized sugar disc */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'yizai_candy',
+    displayName: '椪糖',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xd89040, 0xc88030, 0xe8a050, 0xf0b060, 0xb87028],
+    yOffset: -0.85,
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // flat round caramelized sugar candy (椪糖/椪餅) with stamped shape
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        cyl(1.0, 1.0, 0.12, 12, 0xffffff, { y: 0.06 }), // caramel disc (tinted amber)
+        cyl(0.95, 0.95, 0.04, 12, 0xd08030, { y: 0.12 }), // slightly darker top
+        // stamped heart/umbrella outline (simplified as a small disc pattern)
+        cyl(0.5, 0.5, 0.03, 8, 0xc07020, { y: 0.14 }),
+        // tiny needle mark (the traditional breaking-out game)
+        cyl(0.03, 0.03, 0.04, 4, 0x4a3020, { y: 0.15, x: 0.2 }),
       ]);
     },
   },
@@ -84,57 +87,70 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] shrimp_roll 蝦卷 — Tainan's signature fried shrimp roll         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'shrimp_roll',
+    displayName: '蝦卷',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0xd8a050, 0xc89040, 0xe8b060, 0xb88030, 0xf0c070],
+    yOffset: -0.5,
     upright: false,
     collisionScale: 0.7,
     buildGeometry(rng) {
+      // cylindrical fried shrimp roll (蝦卷), golden-brown fried bean curd skin
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        cyl(0.4, 0.4, 2.0, 8, 0xffffff, { rz: HALF_PI }), // roll body (tinted golden)
+        // crispy fried skin texture (darker bands)
+        cyl(0.42, 0.42, 0.2, 8, 0xb07030, { rz: HALF_PI, x: -0.5 }),
+        cyl(0.42, 0.42, 0.2, 8, 0xb07030, { rz: HALF_PI, x: 0.5 }),
+        // visible pink shrimp filling at ends
+        cyl(0.35, 0.35, 0.1, 8, 0xf0a0a0, { rz: HALF_PI, x: 0.98 }),
+        cyl(0.35, 0.35, 0.1, 8, 0xf0a0a0, { rz: HALF_PI, x: -0.98 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] bottle_cap 瓶蓋 — shallow crimped soda-bottle cap              */
+  /* [3] sword_lion 劍獅鑰匙圈 — Tainan's iconic sword-biting lion charm */
   /* ---------------------------------------------------------------- */
   {
-    id: 'bottle_cap',
-    displayName: '瓶蓋',
+    id: 'sword_lion',
+    displayName: '劍獅鑰匙圈',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.013,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xd83a2e, 0x2f64c8, 0x1f9e4a, 0xf0b429, 0xcfd4da],
-    yOffset: -0.76, // crown sitting flat-down (= -1 - minY of normalized geo)
+    palette: [0xc83828, 0xe04838, 0xd83828, 0xf05040, 0xb02818],
+    yOffset: -0.6,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // 劍獅 (sword lion) face keychain charm - Anping's guardian symbol
       const parts = [
-        cyl(1.0, 1.0, 0.16, 14, 0xffffff, { y: 0.42 }), // top disc (printed face, tinted)
-        cyl(1.04, 1.04, 0.4, 14, 0xffffff, { y: 0.2 }), // crimped skirt (tinted)
-        cyl(0.6, 0.6, 0.06, 12, 0xf2f2f4, { y: 0.51 }), // pale logo medallion
+        // lion face disc (red)
+        cyl(1.0, 1.0, 0.2, 10, 0xffffff, { y: 0.0 }), // main body (tinted red)
+        // mane ring around the face
+        cyl(1.1, 1.1, 0.12, 10, 0xd8a040, { y: 0.0, open: true }),
+        // eyes (gold/yellow)
+        sph(0.18, 0xf0d030, { ws: 6, hs: 4, x: -0.35, y: 0.12, z: 0.3 }),
+        sph(0.18, 0xf0d030, { ws: 6, hs: 4, x: 0.35, y: 0.12, z: 0.3 }),
+        // pupils
+        sph(0.08, 0x1a1a1a, { ws: 4, hs: 3, x: -0.35, y: 0.14, z: 0.38 }),
+        sph(0.08, 0x1a1a1a, { ws: 4, hs: 3, x: 0.35, y: 0.14, z: 0.38 }),
+        // nose
+        sph(0.15, 0x2a2a2a, { ws: 5, hs: 3, y: -0.1, z: 0.4 }),
+        // sword in mouth (horizontal)
+        box(1.8, 0.08, 0.04, 0xc8ccd2, { y: -0.35, z: 0.3 }), // blade
+        box(0.15, 0.2, 0.08, 0xd8a040, { y: -0.35, z: 0.32 }), // hilt
+        // keyring loop at top
+        torus(0.15, 0.04, 5, 6, 0xc8ccd2, { y: 0.55, z: 0.0 }),
       ];
-      // crimp teeth around the skirt (low-count ring of tiny boxes)
-      const teeth = 12;
-      for (let i = 0; i < teeth; i++) {
-        const a = (i / teeth) * PI * 2;
-        parts.push(box(0.14, 0.42, 0.1, 0xe8eaee, { x: Math.cos(a) * 1.04, z: Math.sin(a) * 1.04, ry: -a, y: 0.2 }));
-      }
       return finish(parts);
     },
   },
@@ -179,32 +195,32 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [5] ngiauimia_card 尪仔標 — round printed paper play-card           */
+  /* [5] shrimp_cracker 蝦餅 — Anping dried shrimp cracker              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'ngiauimia_card',
-    displayName: '尪仔標',
+    id: 'shrimp_cracker',
+    displayName: '蝦餅',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.02,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf4e3c0, 0xf6d68a, 0xeac98e, 0xf0dcae],
-    yOffset: -0.95, // flat paper disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xe8c8a0, 0xf0d8b0, 0xd8b890, 0xc8a878],
+    yOffset: -0.9,
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // round fried shrimp cracker (蝦餅) - Anping's famous snack
       return finish([
-        cyl(1.0, 1.0, 0.07, 16, 0xffffff, { y: 0.04 }), // thin card stock (tinted cream)
-        cyl(0.86, 0.86, 0.075, 16, 0xc23a2e, { y: 0.045 }), // printed red outer ring
-        cyl(0.66, 0.66, 0.08, 16, 0xf4e3c0, { y: 0.05 }), // cream field
-        cyl(0.44, 0.44, 0.085, 14, 0x2f6fb0, { y: 0.052 }), // blue inner ring (printed hero medallion)
-        cyl(0.24, 0.24, 0.09, 12, 0xf0b429, { y: 0.055 }), // gold center figure dot
-        // four print marks around the field
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: 0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.0, z: -0.72, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: 0.72, z: 0.0, y: 0.05 }),
-        box(0.12, 0.09, 0.12, 0x2a2a2e, { x: -0.72, z: 0.0, y: 0.05 }),
+        // thin round cracker (slightly wavy with overlapping discs)
+        cyl(1.0, 1.0, 0.08, 12, 0xffffff, { y: 0.04 }), // base layer (tinted golden)
+        cyl(0.9, 0.9, 0.06, 12, 0xe8c8a0, { y: 0.1, x: 0.05 }),
+        cyl(0.85, 0.85, 0.05, 12, 0xd8b890, { y: 0.14, x: -0.05, z: 0.05 }),
+        // visible tiny shrimp specks
+        sph(0.08, 0xf08060, { ws: 4, hs: 3, x: 0.2, y: 0.16, z: 0.1 }),
+        sph(0.06, 0xf08060, { ws: 4, hs: 3, x: -0.25, y: 0.15, z: -0.1 }),
+        sph(0.07, 0xf08060, { ws: 4, hs: 3, x: 0.1, y: 0.17, z: -0.2 }),
+        sph(0.05, 0xf08060, { ws: 4, hs: 3, x: -0.1, y: 0.16, z: 0.25 }),
       ]);
     },
   },
