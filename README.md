@@ -29,16 +29,16 @@
 - **每城一套在地內容**:7 層尺度場景、約 70 個該城街頭可滾物、8+ 手作地標(終點是城市招牌建築)、13 格稀有收藏冊(各城在地名物,最多 3 個全台通用物)、在地河流/旁白/吉祥物 —— 全裝在獨立 StagePack 裡。
 - **台灣黑熊「月牙」** 旁白,全繁體中文,夜市霓虹風 UI。
 - 結尾拉遠成**福爾摩沙島**,玩過的城市發亮 —— 指向縣市/世界巡迴。
-- **可安裝的 PWA**:標題頁有「安裝 App」鈕(或瀏覽器選單),裝起來像原生 App;service worker 把素材快取到本機 → **下載過後沒網路也能玩**,重複開啟也更快。
+- **可安裝、離線可玩的 PWA**:標題頁有「安裝 App」鈕;service worker 安裝時把整包素材(JS chunk、自架字型、各城天際線/吉祥物)預載到本機 → **下載過後完全離線也能玩**(含物件圖鑑)。啟動採「標題優先」:首屏標題頁立即顯示,three.js 引擎與 3D 場景在背景延後載入,通常按「開始」前就已就緒。
 
 ## 操作
 
-WASD / 方向鍵移動;Space 衝刺;Shift 加速。手機可觸控(拖曳移動 + Dash 鍵)。開發傳送點:網址加 `?at=shop|night-market|scooter-sea|wanhua|xinyi|goal`。
+WASD / 方向鍵移動;Space 衝刺;Shift 加速。手機可觸控(拖曳移動 + Dash 鍵)。
 
 ### 選城市
 
 - **縣市選單**:第一次造訪(網址沒有 `?city=`、瀏覽器也沒記錄)會先跳出**縣市選單**,從**全台 20 城**任選一座。選過之後會記在 `localStorage`,下次直接進上次玩的城市。標題頁與結算頁右下角有「換城市」鈕可隨時叫回選單。
-- **網址直接指定**:`?city=taipei` 或 `?city=kaohsiung` 會直接進該城市並跳過選單(網址參數優先於記錄)。換城市 = 用新的 `?city=` 重新載入(引擎在載入時就把該城市的 StagePack 烘進去,不做執行期熱抽換)。
+- **網址直接指定**:`?city=<城市 id>`(全台 20 城任一,如 `taipei`、`kaohsiung`、`tainan`、`hualien`…;id 見 `src/packs/manifest.js`)會直接進該城市並跳過選單(網址參數優先於記錄)。換城市 = 用新的 `?city=` 重新載入(引擎在載入時就把該城市的 StagePack 烘進去,不做執行期熱抽換)。
 
 ## 開發
 
@@ -55,9 +55,10 @@ npm test         # vitest
 - **在地化檢查**:`node scripts/check-city.mjs <id>` —— 報該城 70 街頭物還與台北相同的數量(現行各城已壓到 ≤25;沿用台北太多會 FAIL,`localization.test.js` 也會把關)。
 - **幾何 tri cap**:`node scripts/check-hero-tris.mjs <id>` —— 地標/收藏超 tri cap(DEV boot assert)會列出來。
 - **無頭驗證**:`node scripts/headless-check.mjs <url> out.png`(自帶 headless chrome,輸出截圖)。
+- **開發傳送點**:網址加 `?at=<出生點名稱>` 直接把球丟到該城某個命名出生點(各城 `cityMap.js` 的 `DEV_STARTS`,名稱**各城不同**,如台北 `shop`/`night-market`/`arcade`),可再加 `?r=<公尺>` 覆寫起始半徑。純 dev 測試用。
 - **自動化(加城 / 加深)**:`scripts/autopilot.sh`(單條)/`scripts/autopilot-drain.sh`(整批)讀 `NEXT.md` backlog,讓 headless agent 自動加新城或加深既有城街頭物,過 `npm test` gate 後開 PR(人工 merge)。
 - **天際線素材**:`public/assets/title/skyline-<id>.webp`(20 城各一張霓虹剪影,標題頁用;缺檔會 fallback 台北)。
-- **自架字型(離線用)**:UI 字型(Bungee + Noto Sans TC)自架在 `public/assets/fonts/`,只 subset repo 內出現過的字 → 離線可用、啟動不連外網。加了新城/新旁白等**新字**後跑 `scripts/gen-fonts.sh` 重新 subset(否則新字退回系統字)。
+- **自架字型(離線 + 快啟)**:Bungee + Noto Sans TC 自架在 `public/assets/fonts/`(不走 Google CDN —— 跨域 SW 不能快取、離線會壞)。Noto 再切兩份、同 family 用 `unicode-range` 分:`notosanstc-ui.woff2`(只含標題/選單/結算的字,首屏 preload)+ `notosanstc.woff2`(遊戲內全字,進遊戲才載)。`index.html` 與 `preview.html` 都用自架字型。加新城/新旁白等**新字**後跑 `scripts/gen-fonts.sh` 重新 subset(會一併把 UI 的 `unicode-range` 注入 index.html;否則新字退回系統字)。
 - **OG 分享卡(可重現)**:`og-card.html` 是 1200×630 的 HTML 排版卡(多城天際線底圖 `public/assets/og-skyline.webp` + 真字型標題/副標/月牙);用 headless chrome 截圖 → `public/assets/og.jpg`。要改 OG 就改 HTML 重截,不必動 AI 圖。
 
 ## 部署
