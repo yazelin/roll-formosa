@@ -78,8 +78,8 @@ Autopilot 每次挑「最上面未打勾」的一條做掉,開 PR 後**停手**(
 > 玻璃帷幕等)改該城風格、童玩類(彈珠/尪仔標等)換在地小物;真街道通用物(機車/超商/
 > 紅綠燈/公車/加油站/路樹/瓦斯桶等)保留。worst-first。
 
-- [ ] 加深 kaohsiung 街頭物 round3:33→≤25;通用建築改高雄港都風、童玩換在地小物
-- [x] 加深 taichung 街頭物 round3:33→≤25 (done: 24/70)
+- [x] 加深 kaohsiung 街頭物 round3:33→≤25;通用建築改高雄港都風、童玩換在地小物
+- [x] 加深 taichung 街頭物 round3:33→≤25
 - [ ] 加深 keelung 街頭物 round3:33→≤25
 - [ ] 加深 newtaipei 街頭物 round3:33→≤25
 - [ ] 加深 taoyuan 街頭物 round3:33→≤25
