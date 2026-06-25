@@ -34,38 +34,39 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 林業商辦 forestry_office (wood-city style office) ---- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'forestry_office',
+    displayName: '林業商辦',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
+    palette: [0xe8d8c0, 0xd0c0a0, 0x8a7050, 0x5a4028, 0xf0e8d8],
     yOffset: -0.06,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
+      // Chiayi wood-city style office: warm tones with wood-inspired facade
+      const wood = 0x5a4028;
       return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
+        towerBanded(2.6, 7.2, 2.0, 14, 0xfaf0e0, 0x5a4030, 0xffd890, rng, { y: 3.6 }),
+        // vertical wood trim fins (wood-city motif)
+        box(0.12, 7.2, 0.1, wood, { x: -0.8, y: 3.6, z: 1.02 }),
+        box(0.12, 7.2, 0.1, wood, { x: 0.0, y: 3.6, z: 1.02 }),
+        box(0.12, 7.2, 0.1, wood, { x: 0.8, y: 3.6, z: 1.02 }),
+        box(0.12, 7.2, 0.1, wood, { x: -0.8, y: 3.6, z: -1.02 }),
+        box(0.12, 7.2, 0.1, wood, { x: 0.8, y: 3.6, z: -1.02 }),
+        // ground-floor lobby (wood-framed entry)
+        box(2.8, 0.9, 2.2, wood, { y: 0.45 }),
+        box(1.0, 0.7, 0.06, 0xc8e0e8, { y: 0.4, z: 1.12 }), // lobby glass
+        // Japanese-style roof cap
+        box(2.4, 0.2, 1.9, wood, { y: 7.3 }),
+        box(2.0, 0.4, 1.6, 0x8a6a48, { y: 7.6 }), // pitched roof
+        // rooftop with wood-city motif
+        box(1.0, 0.4, 0.8, 0x6a5040, { y: 7.95 }),
+        cyl(0.05, 0.05, 1.0, 6, 0x808080, { y: 8.65 }),
       ]);
     },
   },
@@ -204,82 +205,83 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 木造停車場 wood_parking (Hinoki Village style) ----- */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'wood_parking',
+    displayName: '木造停車場',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
+    palette: [0xd8c8a8, 0xc8b898, 0xe8d8c0, 0x6a5038, 0xf0e0c8],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
+      // Chiayi wood-city style parking: warm wood tones with colonial influence
+      const wood = 0x6a5038;
       const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
+        box(2.0, 7.0, 2.4, 0xfaf0e0, { y: 3.6 }), // shaft (cream tint)
+        // dark wood corner columns (Japanese colonial style)
+        box(0.24, 7.0, 0.24, wood, { x: -0.95, y: 3.6, z: 1.15 }),
+        box(0.24, 7.0, 0.24, wood, { x: 0.95, y: 3.6, z: 1.15 }),
+        box(0.24, 7.0, 0.24, wood, { x: -0.95, y: 3.6, z: -1.15 }),
+        box(0.24, 7.0, 0.24, wood, { x: 0.95, y: 3.6, z: -1.15 }),
+        // Japanese-era pitched roof cap
+        box(2.2, 0.15, 2.6, wood, { y: 7.2 }),
+        box(1.8, 0.4, 2.2, 0x8a6a48, { y: 7.5 }), // pitched roof
+        box(1.0, 0.7, 0.1, wood, { y: 0.5, z: 1.22 }), // wood-framed entry
       ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
+      // deck floors with wood trim
       const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
       for (let f = 0; f < 6; f++) {
         const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
+        parts.push(box(1.7, 0.1, 0.08, wood, { y: y + 0.35, z: 1.18 })); // wood trim
+        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 }));
       }
       return finish(parts);
     },
   },
 
-  /* ---- slot 5: 巨型看板 giant_billboard --------------------------- */
+  /* ---- slot 5: 阿里山森鐵看板 alishan_billboard (Alishan railway ad) - */
   {
-    id: 'giant_billboard',
-    displayName: '巨型看板',
+    id: 'alishan_billboard',
+    displayName: '阿里山森鐵看板',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 20,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46, 0xf2f2ee],
+    palette: [0x58a848, 0x78c868, 0x8a6038, 0xf0e8d8, 0x486838],
     yOffset: -0.21,
     upright: true,
     collisionScale: 0.5,
     buildGeometry(rng) {
-      // A rooftop / roadside billboard: big bright panel on a lattice gantry.
+      // Alishan Forest Railway billboard: green + wood tones, scenic imagery
+      const wood = 0x6a5038;
       const parts = [
-        // gantry legs (wide A-stance)
-        box(0.22, 4.6, 0.22, 0x44484f, { x: -1.7, y: 2.3, rz: 0.06 }),
-        box(0.22, 4.6, 0.22, 0x44484f, { x: 1.7, y: 2.3, rz: -0.06 }),
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 1.4 }), // cross brace
-        box(3.6, 0.2, 0.2, 0x44484f, { y: 3.0, rz: 0 }), // cross brace
-        // diagonal brace
-        box(4.0, 0.14, 0.14, 0x5a6068, { y: 2.2, rz: 0.78 }),
-        // billboard frame + bright face
-        box(5.2, 2.4, 0.18, 0x2e3138, { y: 5.4 }), // frame
-        box(5.0, 2.2, 0.06, 0xffffff, { y: 5.4, z: 0.13 }), // ad face (tinted bright)
-        box(5.2, 0.2, 0.3, 0x222428, { y: 6.7 }), // top spotlight bar
+        // wood-style gantry legs
+        box(0.24, 4.6, 0.24, wood, { x: -1.7, y: 2.3, rz: 0.06 }),
+        box(0.24, 4.6, 0.24, wood, { x: 1.7, y: 2.3, rz: -0.06 }),
+        box(3.6, 0.22, 0.22, wood, { y: 1.4 }),
+        box(3.6, 0.22, 0.22, wood, { y: 3.0 }),
+        box(4.0, 0.16, 0.16, 0x5a4030, { y: 2.2, rz: 0.78 }),
+        // billboard frame (wood-style) + scenic face
+        box(5.2, 2.4, 0.18, wood, { y: 5.4 }),
+        box(5.0, 2.2, 0.06, 0xf0e8d8, { y: 5.4, z: 0.13 }), // cream ad face
+        box(5.2, 0.22, 0.3, wood, { y: 6.7 }),
       ];
-      // color blocks on the ad face (deterministic mock graphic)
-      const adHex = [0xe04f3a, 0x3f6cc4, 0xffd84d, 0x2e7a46];
-      for (let i = 0; i < 4; i++) {
-        const w = 0.9 + (i % 2) * 0.4;
-        parts.push(box(w, 1.6 - (i % 2) * 0.6, 0.04, adHex[i], {
-          x: -1.7 + i * 1.15, y: 5.4, z: 0.17,
-        }));
-      }
-      // spotlights
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: -1.6, y: 6.6, rx: 0.6 }));
-      parts.push(cyl(0.12, 0.18, 0.2, 6, 0xfff0c0, { x: 1.6, y: 6.6, rx: 0.6 }));
+      // Alishan scenic imagery (green mountains, train, sunset)
+      parts.push(box(2.0, 1.2, 0.04, 0x58a848, { x: -1.2, y: 5.2, z: 0.17 })); // green mountain
+      parts.push(box(1.5, 0.6, 0.04, 0x78c868, { x: -1.0, y: 5.8, z: 0.17 })); // lighter hill
+      parts.push(box(1.0, 0.4, 0.04, 0xc04030, { x: 0.8, y: 4.8, z: 0.17 })); // red train
+      parts.push(box(0.8, 0.6, 0.04, 0xffd080, { x: 1.5, y: 5.8, z: 0.17 })); // sunset
+      // "阿里山" text area
+      parts.push(box(1.5, 0.4, 0.05, 0x486838, { x: 1.2, y: 5.0, z: 0.18 }));
+      // warm lantern-style spotlights
+      parts.push(cyl(0.14, 0.1, 0.22, 6, 0xffd080, { x: -1.6, y: 6.5, rx: 0.6 }));
+      parts.push(cyl(0.14, 0.1, 0.22, 6, 0xffd080, { x: 1.6, y: 6.5, rx: 0.6 }));
       return finish(parts);
     },
   },
@@ -319,41 +321,45 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 嘉義銀行 chiayi_bank (colonial-era style) ---------- */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'chiayi_bank',
+    displayName: '嘉義銀行',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
+    palette: [0xf0e8d8, 0xe0d0c0, 0x8a7060, 0x5a4030, 0xc8a84a],
     yOffset: -0.4,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
+      // Japanese colonial-era bank: warm cream + dark wood trim
+      const wood = 0x5a4030;
+      const cream = 0xfaf0e0;
       const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
+        box(4.0, 3.4, 3.0, cream, { y: 1.9 }), // main hall
+        box(4.2, 0.2, 3.2, wood, { y: 3.7 }), // dark wood cornice
+        // portico with wood columns (colonial style)
+        box(3.6, 0.35, 0.5, cream, { y: 3.0, z: 1.6 }),
+        box(3.6, 0.5, 0.4, cream, { y: 3.45, z: 1.55 }),
+        // Japanese-era pitched roof cap
+        box(3.8, 0.15, 0.6, wood, { y: 3.75, z: 1.55 }),
+        box(2.0, 0.18, 1.0, 0x8a7060, { y: 0.18, z: 1.7 }), // steps
       ];
+      // square wood columns (Japanese colonial style)
       for (let i = 0; i < 4; i++) {
         const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
+        parts.push(box(0.2, 2.5, 0.2, cream, { x, y: 1.55, z: 1.7 })); // square column
+        parts.push(box(0.3, 0.12, 0.3, wood, { x, y: 0.34, z: 1.7 })); // wood base
+        parts.push(box(0.3, 0.12, 0.3, wood, { x, y: 2.78, z: 1.7 })); // wood capital
       }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
+      // gold name plaque (with bank name)
+      parts.push(box(2.0, 0.3, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
+      // wood-framed entrance
+      parts.push(box(1.0, 1.6, 0.08, wood, { y: 1.0, z: 1.76 }));
+      parts.push(box(0.8, 1.4, 0.06, 0xc8e0e8, { y: 1.0, z: 1.78 })); // glass
       return finish(parts);
     },
   },

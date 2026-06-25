@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 檜木香包, 圖釘, 瓶蓋, 方塊酥, 尪仔標, 檜木尺, 鈕扣
-      'marble', 'hinoki_sachet', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'ngiauimia_card', 'hinoki_ruler', 'button',
+      // 阿里山茶包, 檜木香包, 圖釘, 瓶蓋, 方塊酥, 火雞肉飯代幣, 檜木尺, 檜木杯墊
+      'alishan_tea_bag', 'hinoki_sachet', 'pushpin', 'bottle_cap', 'fangkuaisu_stack', 'turkey_rice_token', 'hinoki_ruler', 'hinoki_coaster',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 超商, 嘉義BRT, 垃圾車, 加油站, 檜意騎樓
-      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'chiayi_brt', 'garbage_truck', 'gas_station', 'hinoki_arcade',
+      // 木造街屋, 鐵皮屋, 日治公寓, 超商, 嘉義BRT, 垃圾車, 加油站, 檜意騎樓
+      'woodcity_townhouse', 'tin_roof_house', 'colonial_apartment', 'convenience_store', 'chiayi_brt', 'garbage_truck', 'gas_station', 'hinoki_arcade',
       // chunk landmarks: 木都街屋, 大廟
       'woodcity_streethouse_mass', 'temple_mass',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 耐斯百貨, 嘉義車站, 車站跨站天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'nice_plaza', 'chiayi_station_plaza', 'station_overpass', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 林業商辦, 耐斯百貨, 嘉義車站, 車站跨站天橋, 木造停車場, 阿里山森鐵看板, 玻璃帷幕街屋, 嘉義銀行
+      'forestry_office', 'nice_plaza', 'chiayi_station_plaza', 'station_overpass', 'wood_parking', 'alishan_billboard', 'glass_curtain_house', 'chiayi_bank',
       // chunk landmarks: 車站商辦塔, 百貨大樓
       'station_office_tower', 'department_mass',
     ],
