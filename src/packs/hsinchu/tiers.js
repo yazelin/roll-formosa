@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 玻璃珠工藝, 貢丸籤, 竹蜻蜓, 米粉糖, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'glass_bead_craft', 'meatball_pick', 'bamboo_copter', 'rice_candy', 'ngiauimia_card', 'pencil', 'button',
+      // 新竹玻璃珠, 玻璃珠工藝, 貢丸籤, 竹蜻蜓, 米粉糖, 米粉餅乾, 竹筷, 玻璃飾品
+      'hsinchu_glass_marble', 'glass_bead_craft', 'meatball_pick', 'bamboo_copter', 'rice_candy', 'mifun_chip', 'bamboo_chopstick', 'glass_ornament',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -170,8 +170,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 商辦大樓, 廠辦, 科技園區高架, 天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'office_tower', 'fab_building', 'tech_viaduct', 'pedestrian_bridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 竹科辦公樓, 廠辦, 科技園區高架, 天橋, 竹科停車場, 巨型看板, 玻璃帷幕街屋, 新竹銀行
+      'hsip_office', 'fab_building', 'tech_viaduct', 'pedestrian_bridge', 'hsip_parking', 'giant_billboard', 'glass_curtain_house', 'hsinchu_bank',
       // chunk landmarks: 園區辦公塔, 晶圓廠
       'park_office_tower', 'wafer_fab_mass',
     ],
@@ -194,10 +194,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 玻璃帷幕高樓, 風力發電機, 竹科研發大樓, 竹科公司門牌, 科技塔, 空橋, 屋頂機房, 清交大樓
-      'glass_highrise', 'wind_turbine', 'hsip_rd_building', 'tech_campus_sign', 'tech_tower', 'sky_bridge', 'rooftop_plant_room', 'campus_block',
-      // chunk landmarks: 跨街空橋, 屋頂機房塔
-      'crossstreet_skybridge', 'rooftop_mech_tower',
+      // 竹科大樓, 風力發電機, 竹科研發大樓, 竹科公司門牌, 科技塔, 空橋, 屋頂機房, 清交大樓
+      'hsip_highrise', 'wind_turbine', 'hsip_rd_building', 'tech_campus_sign', 'tech_tower', 'sky_bridge', 'rooftop_plant_room', 'campus_block',
+      // chunk landmarks: 跨街空橋, 竹科機房塔
+      'crossstreet_skybridge', 'hsip_mech_tower',
     ],
     fogColor: 0x18183e, // 風城天際線夜空 深藍紫 (the finale band)
     skyTop: 0x121238,
