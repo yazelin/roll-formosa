@@ -17,35 +17,43 @@
  * Size band: 60-300 m radiusNominal (Cross-Sea Bridge scale).
  */
 
-import { box, cyl, sph, towerBanded, finish } from '../geomHelpers.js';
+import { box, cyl, sph, towerBanded, finish, PI, HALF_PI } from '../geomHelpers.js';
 
 /** @typedef {import('../../../types.js').Archetype} Archetype */
 
 /** @type {Archetype[]} */
 export const T6_ARCHETYPES = [
-  /* ---- slot 0: 玻璃帷幕高樓 glass curtain-wall highrise (shorter for island) */
+  /* ---- slot 0: 跨海橋塔 — Cross-Sea Bridge tower/pylon (island scale) ---- */
   {
-    id: 'glass_highrise',
-    displayName: '玻璃帷幕高樓',
+    id: 'bridge_tower',
+    displayName: '跨海橋塔',
     tier: 6,
     naturalBand: 6,
-    radiusNominal: 120, // shorter for island scale
+    radiusNominal: 120,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3a5a7a, 0x4a7aa0, 0x6aa8c8, 0x9fd0e4, 0xffe08a],
+    palette: [0xb8b0a4, 0xc8c0b4, 0xe05a4a, 0xd8d4cc, 0xffd25a],
     yOffset: -0.04,
     upright: true,
     collisionScale: 0.8,
     buildGeometry(rng) {
-      // Shorter glass slab suitable for island township — fewer floors, same style.
-      return finish([
-        towerBanded(0.95, 2.4, 0.95, 8, 0x2a4868, 0x6aa8c8, 0xffe08a, rng, { y: 1.2 }), // glass shaft
-        towerBanded(0.78, 0.7, 0.78, 3, 0x32567a, 0x7ab8d4, 0xffe6a0, rng, { y: 2.75 }), // setback crown
-        box(0.05, 2.4, 0.05, 0xbfe2f0, { x: 0.5, y: 1.2, z: 0.5 }), // corner mullion glint
-        box(0.05, 2.4, 0.05, 0xbfe2f0, { x: -0.5, y: 1.2, z: 0.5 }), // corner mullion glint
-        cyl(0.05, 0.05, 0.5, 6, 0xd0d6dc, { y: 3.35 }), // rooftop mast
-        box(0.4, 0.12, 0.4, 0x556270, { y: 3.12 }), // mast base plinth
-      ]);
+      // Bridge support tower / pylon — Cross-Sea Bridge iconic structure
+      const parts = [
+        // main tower pier rising from water
+        box(1.2, 2.8, 0.9, 0xb0a89c, { y: 1.4, hex2: 0xc4bcb0 }),
+        box(1.4, 0.25, 1.1, 0xa09888, { y: 0.12 }), // foundation cap
+        box(1.3, 0.12, 1.0, 0xc8c0b4, { y: 2.85 }), // deck level cap
+        // navigation light beacon on top
+        cyl(0.15, 0.15, 0.6, 6, 0xe05a4a, { y: 3.3 }),
+        sph(0.12, 0xffd25a, { ws: 5, hs: 4, y: 3.7 }), // warning light
+        // decorative wave-break at base
+        box(1.5, 0.15, 1.2, 0x6a8a9a, { y: 0.08, hex2: 0x8aacbc }),
+      ];
+      // cable attachment points
+      for (let i = 0; i < 3; i++) {
+        parts.push(box(0.1, 0.08, 0.08, 0x8a8a88, { x: -0.5 + i * 0.5, y: 2.9, z: 0.5 }));
+      }
+      return finish(parts);
     },
   },
 
@@ -115,34 +123,39 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 3: 巨型廣告牆 giant ad wall ----------------------------------- */
+  /* ---- slot 3: 風力發電機 — Wind turbine (Penghu renewable energy icon) ---- */
   {
-    id: 'giant_ad_wall',
-    displayName: '巨型廣告牆',
+    id: 'wind_turbine',
+    displayName: '風力發電機',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 110,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x2c3140, 0xff3d6e, 0x37c8e0, 0xffd23d, 0xf0f2f6],
+    palette: [0xf0f0f0, 0xe8e8e8, 0xd8d8d8, 0x2a6a8a, 0xc8c8c8],
     yOffset: -0.239,
     upright: true,
     collisionScale: 0.7,
     buildGeometry(rng) {
-      // A building face turned into a giant LED billboard wall: bright color panels.
-      const panel = [0xff3d6e, 0x37c8e0, 0xffd23d, 0x6ae060, 0xff8a3d];
+      // Wind turbine — Penghu is famous for wind power (台電風力發電場)
       const parts = [
-        box(2.4, 3.2, 0.9, 0x23272f, { y: 1.7, hex2: 0x2c3140 }), // host building (dark)
-        box(2.55, 2.6, 0.12, 0x10131a, { y: 2.0, z: 0.5 }), // billboard backing frame
+        // tower base (concrete)
+        box(1.0, 0.5, 1.0, 0xc8c0b8, { y: 0.25 }),
+        // tapered tower shaft (white)
+        cyl(0.4, 0.55, 3.5, 8, 0xffffff, { y: 2.0 }),
+        // nacelle (generator housing)
+        box(1.0, 0.45, 0.5, 0xf0f0f0, { y: 3.95, z: 0.15 }),
+        // hub (nose cone)
+        sph(0.25, 0xf0f0f0, { ws: 6, hs: 4, y: 3.95, z: 0.55 }),
+        // three blades (simplified as boxes at angles)
+        box(0.15, 2.4, 0.08, 0xffffff, { y: 5.2, z: 0.55 }), // blade up
+        box(0.15, 2.4, 0.08, 0xffffff, { rz: 2.1, x: 1.1, y: 3.0, z: 0.55 }), // blade right-down
+        box(0.15, 2.4, 0.08, 0xffffff, { rz: -2.1, x: -1.1, y: 3.0, z: 0.55 }), // blade left-down
+        // red warning stripe on tower
+        cyl(0.42, 0.42, 0.15, 8, 0xc83838, { y: 3.0, open: true }),
+        // aviation warning light
+        sph(0.06, 0xff2020, { ws: 4, hs: 3, y: 4.2, z: 0.45 }),
       ];
-      // 3 x 4 grid of glowing LED panels on the front face
-      for (let gx = 0; gx < 3; gx++) {
-        for (let gy = 0; gy < 4; gy++) {
-          const c = panel[(gx * 4 + gy + (rng() < 0.4 ? 1 : 0)) % panel.length];
-          parts.push(box(0.66, 0.5, 0.06, c, { x: -0.72 + gx * 0.72, y: 1.15 + gy * 0.6, z: 0.58 })); // LED panel
-        }
-      }
-      parts.push(box(2.6, 0.1, 0.16, 0x55606e, { y: 0.5, z: 0.5 })); // ground catwalk
       return finish(parts);
     },
   },
@@ -286,36 +299,45 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8 (chunk landmark): 跨街空橋 cross-street skybridge ----------- */
+  /* ---- slot 8 (chunk landmark): 漁港聯外橋 fishing harbor connector ------------- */
   {
-    id: 'crossstreet_skybridge',
-    displayName: '跨街空橋',
+    id: 'fishing_harbor_connector',
+    displayName: '漁港聯外橋',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 240,
     radiusJitter: 0.16,
     spawnWeight: 0.3,
-    palette: [0x3c5876, 0x5a86a8, 0x9fd0e4, 0xc8d0d8, 0xffe0a0],
+    palette: [0xb8b0a4, 0xc8c0b4, 0xe05a4a, 0x2a6a8a, 0xffd25a],
     yOffset: -0.485,
     upright: true,
     collisionScale: 0.75,
     buildGeometry(rng) {
-      // Skybridge between two bay area buildings — Penghu style, more modest scale.
+      // Penghu fishing harbor bridge — connecting islands, boat traffic below
       const parts = [
-        towerBanded(1.1, 2.2, 1.1, 7, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: -1.7, y: 1.1 }), // block A
-        towerBanded(1.1, 2.4, 1.1, 7, 0x33526e, 0x5a86a8, 0xffe0a0, rng, { x: 1.7, y: 1.2 }), // block B
-        box(2.4, 0.5, 0.75, 0x9fd0e4, { y: 1.4, hex2: 0xc8e8f4 }), // lower glazed span
-        box(2.4, 0.45, 0.7, 0x9fd0e4, { y: 2.0, hex2: 0xc8e8f4 }), // upper glazed span
-        box(2.4, 0.05, 0.78, 0x88a0b4, { y: 1.16 }), // lower span floor
-        box(2.4, 0.05, 0.78, 0x88a0b4, { y: 2.26 }), // upper span roof
+        // long bridge deck
+        box(5.0, 0.2, 1.0, 0xc4bcb0, { y: 1.4 }),
+        // deck railings
+        box(5.0, 0.15, 0.05, 0x9a9288, { y: 1.58, z: 0.48 }),
+        box(5.0, 0.15, 0.05, 0x9a9288, { y: 1.58, z: -0.48 }),
+        // support piers (two main piers)
+        box(0.8, 1.4, 0.7, 0xb0a89c, { x: -1.5, y: 0.7, hex2: 0xc4bcb0 }),
+        box(0.8, 1.4, 0.7, 0xb0a89c, { x: 1.5, y: 0.7, hex2: 0xc4bcb0 }),
+        // pier foundations
+        box(1.0, 0.2, 0.9, 0xa09888, { x: -1.5, y: 0.1 }),
+        box(1.0, 0.2, 0.9, 0xa09888, { x: 1.5, y: 0.1 }),
+        // arch decorations on piers
+        cyl(0.4, 0.4, 0.72, 6, 0xb8b0a4, { theta0: PI, rx: HALF_PI, sy: 0.7, x: -1.5, y: 1.3 }),
+        cyl(0.4, 0.4, 0.72, 6, 0xb8b0a4, { theta0: PI, rx: HALF_PI, sy: 0.7, x: 1.5, y: 1.3 }),
+        // navigation lights on piers
+        sph(0.08, 0xffd25a, { ws: 4, hs: 3, x: -1.5, y: 1.7 }),
+        sph(0.08, 0xffd25a, { ws: 4, hs: 3, x: 1.5, y: 1.7 }),
+        // street lamps on bridge
+        cyl(0.04, 0.04, 0.5, 4, 0x6a6a68, { x: -2.2, y: 1.85, z: 0.35 }),
+        cyl(0.04, 0.04, 0.5, 4, 0x6a6a68, { x: 2.2, y: 1.85, z: 0.35 }),
+        sph(0.08, 0xffeaa0, { ws: 4, hs: 3, x: -2.2, y: 2.15, z: 0.35 }),
+        sph(0.08, 0xffeaa0, { ws: 4, hs: 3, x: 2.2, y: 2.15, z: 0.35 }),
       ];
-      // diagonal truss struts under the lower span
-      for (let i = 0; i < 3; i++) {
-        const sx = -0.9 + i * 0.6;
-        parts.push(box(0.04, 0.7, 0.04, 0xb8c0c8, { rz: (i % 2 ? 1 : -1) * 0.5, x: sx, y: 1.1 })); // truss strut
-      }
-      parts.push(box(0.6, 0.22, 0.6, 0x7a8492, { x: -1.7, y: 2.35 })); // block A roof unit
-      parts.push(box(0.6, 0.22, 0.6, 0x7a8492, { x: 1.7, y: 2.55 })); // block B roof unit
       return finish(parts);
     },
   },

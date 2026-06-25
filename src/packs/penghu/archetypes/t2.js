@@ -85,35 +85,29 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2 ---- 電鍋 — the 大同 TATUNG rice cooker, drum body + domed lid + knob */
+  /* ---- slot 2 ---- 漁網浮球 — Penghu fishing float buoy (orange/white ball) */
   {
-    id: 'rice_cooker',
-    displayName: '電鍋',
+    id: 'fishing_float',
+    displayName: '漁網浮球',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 0.3,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xe7d9bf, 0x2e6a48, 0xc4281f, 0xead8b0, 0xb0392c],
-    yOffset: -0.253,
-    upright: true,
+    palette: [0xf26a1f, 0xff7a28, 0xe05a18, 0xf0f0e8, 0xd85518],
+    yOffset: -0.12,
+    upright: false,
     collisionScale: 0.9,
     buildGeometry(rng) {
-      const body = 0xffffff; // tinted enamel
       return finish([
-        // base ring / foot
-        cyl(0.78, 0.82, 0.16, 10, 0xc8b89a, { y: 0.08 }),
-        // main drum body
-        cyl(0.74, 0.78, 0.9, 10, body, { y: 0.6, hex2: 0xeee0c4 }),
-        // shoulder taper
-        cyl(0.6, 0.74, 0.2, 10, body, { y: 1.15 }),
-        // domed lid
-        sph(0.62, body, { ws: 10, hs: 5, thetaLen: HALF_PI * 0.9, y: 1.22 }),
-        // lid knob
-        cyl(0.1, 0.13, 0.12, 8, 0x303338, { y: 1.66 }),
-        // two side handles (small bars)
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: -0.82, y: 0.7 }),
-        box(0.16, 0.1, 0.1, 0x9a8a78, { x: 0.82, y: 0.7 }),
+        // main buoy sphere (orange)
+        sph(1.0, 0xffffff, { ws: 10, hs: 8 }),
+        // white horizontal band
+        cyl(1.02, 1.02, 0.3, 10, 0xf0f0e8, { y: 0.0, open: true }),
+        // rope attachment ring at top
+        torus(0.25, 0.06, 4, 6, 0x5a5248, { y: 0.9 }),
+        // rope stub hanging
+        cyl(0.05, 0.05, 0.3, 4, 0xc8a878, { y: 1.1 }),
       ]);
     },
   },
@@ -338,45 +332,40 @@ export const T2_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 9 (CHUNK LANDMARK) ---- 廟前香爐(鼎) — the bronze temple incense burner / ding */
+  /* ---- slot 9 (CHUNK LANDMARK) ---- 石敢當碑 — the Penghu stone tablet ward with windlion */
   {
-    id: 'temple_incense_burner',
-    displayName: '廟前香爐(鼎)',
+    id: 'shigandang_stele',
+    displayName: '石敢當碑',
     tier: 2,
     naturalBand: 2,
     radiusNominal: 1.5,
     radiusJitter: 0.12,
     spawnWeight: 0.3,
-    palette: [0x9a7b3a, 0xb89048, 0x7a5e2a, 0xc8a050, 0x6a4e22],
+    palette: [0xa89880, 0xb8a890, 0xc8b8a0, 0x988870, 0x887860],
     yOffset: -0.215,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      const bronze = 0xffffff; // tinted aged-bronze
+      const stone = 0xffffff; // tinted coral stone
       return finish([
-        // round cauldron belly
-        sph(1.0, bronze, { ws: 8, hs: 4, y: 1.0, hex2: 0xead8b0 }),
-        // rim band of the bowl
-        cyl(1.02, 1.02, 0.2, 8, 0x8a6a30, { y: 1.6, open: true }),
-        // ash fill (sand) inside the rim (top disc only, low-tri)
-        cyl(0.92, 0.92, 0.1, 8, 0xc8b89a, { y: 1.62, open: true }),
-        // three short legs (tripod ding)
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, z: 0.7 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: -0.6, z: -0.4 }),
-        cyl(0.12, 0.16, 0.7, 5, bronze, { y: 0.35, x: 0.6, z: -0.4 }),
-        // two upright loop handles at the rim
-        torus(0.28, 0.07, 4, 5, bronze, { x: -1.0, y: 1.7 }),
-        torus(0.28, 0.07, 4, 5, bronze, { x: 1.0, y: 1.7 }),
-        // dragon-pillar uprights flanking the bowl
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: -1.05, y: 1.0 }),
-        cyl(0.1, 0.12, 1.6, 5, bronze, { x: 1.05, y: 1.0 }),
-        // small pagoda-roof finial on top
-        cone(0.5, 0.5, 6, 0xc83020, { y: 2.0 }),
-        cyl(0.06, 0.06, 0.3, 5, 0xf0c020, { y: 2.35 }),
-        // a few incense sticks poking out of the ash
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.2, z: 0.1 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: -0.18, z: 0.2 }),
-        cyl(0.018, 0.018, 0.8, 4, 0xc4281f, { y: 2.0, x: 0.0, z: -0.2 }),
+        // main stone tablet body (rectangular upright)
+        box(1.2, 2.2, 0.5, stone, { y: 1.1 }),
+        // top cap (peaked/rounded)
+        box(1.3, 0.3, 0.55, stone, { y: 2.3 }),
+        sph(0.45, stone, { ws: 6, hs: 4, thetaLen: HALF_PI, y: 2.5 }),
+        // carved characters "石敢當" (represented by relief lines)
+        box(0.8, 0.15, 0.05, 0x5a4a3a, { y: 1.6, z: 0.28 }),
+        box(0.8, 0.15, 0.05, 0x5a4a3a, { y: 1.3, z: 0.28 }),
+        box(0.8, 0.15, 0.05, 0x5a4a3a, { y: 1.0, z: 0.28 }),
+        // mini windlion relief at top
+        sph(0.2, 0xc8b898, { ws: 5, hs: 3, y: 1.9, z: 0.3 }),
+        // base platform (coral stone foundation)
+        box(1.6, 0.25, 0.8, 0x9a8a78, { y: 0.12 }),
+        // side decorative columns
+        cyl(0.12, 0.14, 1.8, 5, stone, { x: -0.7, y: 1.0 }),
+        cyl(0.12, 0.14, 1.8, 5, stone, { x: 0.7, y: 1.0 }),
+        // small offering shelf
+        box(0.8, 0.08, 0.3, 0xb8a890, { y: 0.6, z: 0.45 }),
       ]);
     },
   },

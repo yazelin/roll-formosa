@@ -63,72 +63,76 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* 1 ── 鐵皮屋 tin-roof house (corrugated metal add-on structure) ────── */
+  /* 1 ── 西螺豆腐厝 Xiluo tofu house (traditional shophouse) ────────────── */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'xiluo_tofu_house',
+    displayName: '西螺豆腐厝',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4,
-    radiusJitter: 0.18,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6a9aba, 0x8ab4ca, 0xa0c0ce, 0xc4d4dc, 0x5a7a98],
-    yOffset: -0.22,
+    palette: [0xd8c8a8, 0xc8b898, 0xe8d8b8, 0xb8a888, 0x8a5a30],
+    yOffset: -0.20,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const metal = 0xffffff;
+      // Traditional narrow Xiluo old street shophouse (西螺老街窄樓)
       const parts = [];
-      // corrugated box (mono-pitch roof)
-      parts.push(box(2.0, 1.5, 1.4, metal, { y: 0.75, hex2: 0xb8d0e0 }));
-      // pitched roof panel (front-high)
-      parts.push(box(2.1, 0.08, 1.5, 0x7a9aaa, { y: 1.65, z: 0.1, rx: -0.22 }));
-      // ribs on roof (corrugation texture)
-      for (let r = 0; r < 5; r++) {
-        parts.push(box(0.04, 0.1, 1.5, 0x5a7a98, {
-          x: -0.8 + r * 0.4, y: 1.65, z: 0.1, rx: -0.22,
-        }));
-      }
-      // roll shutter front
-      parts.push(box(1.4, 1.1, 0.06, 0x8a9ca8, { y: 0.6, z: 0.72 }));
-      // vent openings
-      parts.push(box(0.5, 0.25, 0.04, 0x2a3840, { y: 1.35, z: 0.74 }));
-      // AC unit bracket
-      parts.push(box(0.4, 0.3, 0.25, 0xeaeef2, { x: 0.7, y: 0.9, z: 0.78 }));
+      // main building body (cream/tan plaster)
+      parts.push(box(1.4, 2.8, 1.8, 0xffffff, { y: 1.4, hex2: 0xe8d8c0 }));
+      // arcade at ground level
+      parts.push(box(1.3, 0.6, 0.15, 0x3a3a38, { y: 0.3, z: 0.85 }));
+      // colonial-era decorative facade
+      parts.push(box(1.45, 0.18, 0.08, 0xb84428, { y: 2.7, z: 0.92 })); // cornice
+      parts.push(box(1.45, 0.08, 0.06, 0xf0c040, { y: 2.5, z: 0.93 })); // gold trim
+      // upper floor windows with colonial frames
+      parts.push(box(0.4, 0.5, 0.06, 0x5a788c, { x: -0.35, y: 1.8, z: 0.92 }));
+      parts.push(box(0.4, 0.5, 0.06, 0x5a788c, { x: 0.35, y: 1.8, z: 0.92 }));
+      // window shutters (green)
+      parts.push(box(0.08, 0.5, 0.08, 0x2a6a4a, { x: -0.6, y: 1.8, z: 0.88 }));
+      parts.push(box(0.08, 0.5, 0.08, 0x2a6a4a, { x: 0.6, y: 1.8, z: 0.88 }));
+      // shop signboard
+      parts.push(box(0.9, 0.35, 0.05, 0x8a3020, { y: 1.1, z: 0.94 }));
+      // roof with traditional tiles
+      parts.push(box(1.55, 0.12, 1.9, 0x6a4020, { y: 2.88 }));
       return finish(parts);
     },
   },
 
-  /* 2 ── 老公寓 old apartment (5-story RC walk-up) ──────────────────────── */
+  /* 2 ── 穀倉 rice granary / grain silo (農村風景) ───────────────────────── */
   {
-    id: 'old_apartment',
-    displayName: '老公寓',
+    id: 'grain_silo',
+    displayName: '穀倉',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 8,
-    radiusJitter: 0.14,
+    radiusNominal: 6,
+    radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xc8c0b0, 0xb0a898, 0xd8d0c0, 0x9a9284, 0x6a8090],
-    yOffset: -0.06,
+    palette: [0xc8a060, 0xb89050, 0xd8b070, 0xa88040, 0x6a5030],
+    yOffset: -0.10,
     upright: true,
-    collisionScale: 0.85,
+    collisionScale: 0.88,
     buildGeometry(rng) {
+      // Traditional Yunlin rice granary - cylindrical concrete silos with conical roofs
       const parts = [];
-      // main block
-      parts.push(towerBanded(2.2, 4.6, 1.6, 9, 0xffffff, 0x5a6878, 0xfff0c0, rng, { y: 2.3 }));
-      // stairwell tower
-      parts.push(box(0.5, 4.8, 0.7, 0xb0a898, { x: -1.1, y: 2.4 }));
-      // ground floor arcade recess
-      parts.push(box(2.0, 0.6, 0.3, 0x3a3e48, { y: 0.3, z: 0.7 }));
-      // rooftop water tanks
-      parts.push(cyl(0.35, 0.35, 0.6, 7, 0x6a8090, { x: 0.5, y: 4.9 }));
-      parts.push(cyl(0.25, 0.25, 0.5, 7, 0x6a8090, { x: 0.9, y: 4.8 }));
-      // parapet
-      parts.push(box(2.3, 0.18, 1.7, 0x9a9284, { y: 4.7 }));
-      // AC cages on facade
-      for (let f = 0; f < 3; f++) {
-        parts.push(box(0.35, 0.28, 0.3, 0xeaeef2, { x: 1.0, y: 1.5 + f * 1.2, z: 0.85 }));
-      }
+      // main cylindrical silo body
+      parts.push(cyl(0.9, 0.9, 3.2, 10, 0xffffff, { y: 1.6, hex2: 0xe8d8c0 }));
+      // conical roof cap
+      parts.push(cone(1.0, 0.8, 10, 0x8a6040, { y: 3.6 }));
+      // ventilation cap on top
+      parts.push(cyl(0.15, 0.1, 0.25, 6, 0x6a5030, { y: 4.1 }));
+      // secondary smaller silo
+      parts.push(cyl(0.6, 0.6, 2.4, 8, 0xffffff, { x: 1.2, y: 1.2, hex2: 0xe0d0b8 }));
+      parts.push(cone(0.7, 0.6, 8, 0x8a6040, { x: 1.2, y: 2.7 }));
+      // grain chute/conveyor
+      parts.push(box(0.2, 0.15, 1.5, 0x7a6848, { x: 0.6, y: 2.0, rz: -0.4 }));
+      // loading platform at base
+      parts.push(box(1.8, 0.15, 1.0, 0x8a8078, { x: 0.3, y: 0.08 }));
+      // hopper door on main silo
+      parts.push(box(0.5, 0.6, 0.1, 0x5a4828, { y: 0.5, z: 0.92 }));
+      // ladder on side
+      parts.push(box(0.06, 2.5, 0.08, 0x6a6058, { y: 1.5, z: -0.88 }));
       return finish(parts);
     },
   },

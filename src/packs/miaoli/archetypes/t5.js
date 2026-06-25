@@ -38,39 +38,53 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 舊山線商號 old_mountain_shophouse -------------------- */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'old_mountain_shophouse',
+    displayName: '舊山線商號',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 22,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
-    yOffset: -0.06,
+    palette: [0xc8b890, 0x8a6a4a, 0xf0e8d8, 0x5a3a1a, 0xe8d8c0],
+    yOffset: -0.08,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
-      return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
-      ]);
+      // Heritage shophouse along the Old Mountain Railway (舊山線商號) —
+      // 2-3 storey Japanese-colonial era commercial building with arcade.
+      const parts = [
+        // main building body (cream/earth tone)
+        box(2.6, 6.0, 2.0, 0xffffff, { y: 3.0, hex2: 0xf0e8d8 }),
+        // dark wood horizontal trim bands (Japanese style)
+        box(2.7, 0.14, 0.12, 0x5a3a1a, { y: 0.5, z: 1.02 }),
+        box(2.7, 0.14, 0.12, 0x5a3a1a, { y: 2.2, z: 1.02 }),
+        box(2.7, 0.14, 0.12, 0x5a3a1a, { y: 4.0, z: 1.02 }),
+        box(2.7, 0.14, 0.12, 0x5a3a1a, { y: 5.8, z: 1.02 }),
+        // vertical wood posts
+        box(0.16, 6.0, 0.16, 0x6a4a2a, { x: -1.2, y: 3.0, z: 0.94 }),
+        box(0.16, 6.0, 0.16, 0x6a4a2a, { x: 1.2, y: 3.0, z: 0.94 }),
+        box(0.16, 6.0, 0.16, 0x6a4a2a, { x: 0, y: 3.0, z: 0.94 }),
+        // hip tile roof
+        cyl(1.6, 1.6, 3.0, 4, 0x7a5a40, { theta0: PI, rx: HALF_PI, sy: 0.45, y: 6.3 }),
+        box(3.0, 0.12, 0.18, 0x6a4a32, { y: 6.58 }), // ridge
+        // ground arcade (騎樓)
+        box(2.8, 0.18, 0.3, 0x9a8a78, { y: 2.0, z: 1.15 }),
+        // arcade columns
+        cyl(0.12, 0.14, 2.0, 6, 0xe8e0d0, { x: -1.0, y: 1.0, z: 1.3 }),
+        cyl(0.12, 0.14, 2.0, 6, 0xe8e0d0, { x: 1.0, y: 1.0, z: 1.3 }),
+        // shop signboard
+        box(1.8, 0.5, 0.08, 0x5a3a1a, { y: 2.4, z: 1.1 }),
+        box(1.6, 0.35, 0.04, 0xf0e8d8, { y: 2.4, z: 1.15 }),
+      ];
+      // windows (traditional style)
+      const winY = [3.2, 4.6];
+      for (const wy of winY) {
+        parts.push(box(0.6, 0.7, 0.08, 0xe8e0d0, { x: -0.7, y: wy, z: 1.02 }));
+        parts.push(box(0.6, 0.7, 0.08, 0xe8e0d0, { x: 0.7, y: wy, z: 1.02 }));
+      }
+      return finish(parts);
     },
   },
 

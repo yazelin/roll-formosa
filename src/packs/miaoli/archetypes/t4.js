@@ -22,75 +22,91 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 客家老屋 (traditional Hakka old house, 2-storey) -------- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'hakka_old_house',
+    displayName: '客家老屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe6dcc6, 0xd6c6ae, 0xcdd4ce, 0xdcd0bc, 0xccc0b0],
-    yOffset: -0.09,
+    palette: [0xc8b8a0, 0xe6d4b8, 0x8a7a5a, 0x6a4a32, 0xf0e8d8],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Traditional 2-storey Hakka old house (客家老屋) — earth-tone walls,
+      // dark wood trim, traditional tile roof. Common in 南庄/三義 old streets.
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc6baa6, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // main house body (earth-tone plaster)
+        box(2.0, 1.8, 1.5, 0xffffff, { y: 0.9, hex2: 0xf0e8d8 }),
+        // dark wood beam trim
+        box(2.1, 0.1, 0.1, 0x5a3a2a, { y: 0.2, z: 0.76 }),
+        box(2.1, 0.1, 0.1, 0x5a3a2a, { y: 1.0, z: 0.76 }),
+        box(2.1, 0.1, 0.1, 0x5a3a2a, { y: 1.75, z: 0.76 }),
+        // vertical wood posts
+        box(0.12, 1.8, 0.12, 0x6a4a32, { x: -0.9, y: 0.9, z: 0.72 }),
+        box(0.12, 1.8, 0.12, 0x6a4a32, { x: 0.9, y: 0.9, z: 0.72 }),
+        box(0.12, 1.8, 0.12, 0x6a4a32, { x: 0, y: 0.9, z: 0.72 }),
+        // hip tile roof
+        cyl(1.2, 1.2, 2.3, 4, 0x7a5a40, { theta0: PI, rx: HALF_PI, sy: 0.4, y: 2.1 }),
+        box(2.3, 0.12, 0.15, 0x6a4a32, { y: 2.38 }), // ridge
+        // traditional windows (lattice style)
+        box(0.55, 0.5, 0.08, 0xe8e0d0, { x: -0.5, y: 1.3, z: 0.78 }),
+        box(0.55, 0.5, 0.08, 0xe8e0d0, { x: 0.5, y: 1.3, z: 0.78 }),
+        // dark wood lattice bars on windows
+        box(0.06, 0.5, 0.04, 0x5a3a2a, { x: -0.5, y: 1.3, z: 0.82 }),
+        box(0.06, 0.5, 0.04, 0x5a3a2a, { x: 0.5, y: 1.3, z: 0.82 }),
+        // entrance door
+        box(0.6, 1.0, 0.08, 0x5a3a2a, { y: 0.5, z: 0.78 }),
+        // 客家花布 awning
+        box(2.1, 0.06, 0.4, 0x4a6a9a, { y: 1.85, z: 0.92 }),
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
-      }
       return finish(parts);
     },
   },
 
-  /* ---- slot 1: 鐵皮屋 (low corrugated-tin shed) ------------------------ */
+  /* ---- slot 1: 茶廠寮 (tea processing shed — Miaoli tea industry) ------ */
   {
-    id: 'tin_roof_house',
-    displayName: '鐵皮屋',
+    id: 'tea_processing_shed',
+    displayName: '茶廠寮',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.0,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xc05a3a, 0xb0563a, 0x9aa0aa, 0x8a4a8a, 0x6a8a6a],
-    yOffset: -0.43,
+    palette: [0x8a6a4a, 0x6a4a2a, 0x4a7a3a, 0x9aa0aa, 0xc8b890],
+    yOffset: -0.40,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Tea processing shed (茶廠寮) — traditional open-sided structure for
+      // drying and processing tea leaves, common in Miaoli's tea-growing areas.
       const parts = [
-        box(2.4, 1.0, 1.7, 0xd8d4cc, { y: 0.5 }), // breeze-block / plaster lower walls
-        box(2.42, 0.5, 1.72, 0xffffff, { y: 1.2, hex2: 0xe0d8d0 }), // upper tin walls (tinted)
-        // single-slope corrugated tin roof (rusty red) — leaning lid
-        box(2.7, 0.1, 1.9, 0xffffff, { rz: 0.16, y: 1.62 }),
-        // corrugation ridges suggested by thin batten boxes along the slope
+        // wood frame structure (open sided)
+        box(2.5, 0.15, 1.6, 0x9a7a4a, { y: 0.08 }), // floor platform
+        // corner posts
+        cyl(0.1, 0.12, 1.8, 6, 0x6a4a2a, { x: -1.1, y: 0.9, z: 0.7 }),
+        cyl(0.1, 0.12, 1.8, 6, 0x6a4a2a, { x: 1.1, y: 0.9, z: 0.7 }),
+        cyl(0.1, 0.12, 1.8, 6, 0x6a4a2a, { x: -1.1, y: 0.9, z: -0.7 }),
+        cyl(0.1, 0.12, 1.8, 6, 0x6a4a2a, { x: 1.1, y: 0.9, z: -0.7 }),
+        // beam structure
+        box(2.4, 0.1, 0.1, 0x5a3a1a, { y: 1.8, z: 0.7 }),
+        box(2.4, 0.1, 0.1, 0x5a3a1a, { y: 1.8, z: -0.7 }),
+        box(0.1, 0.1, 1.5, 0x5a3a1a, { x: -1.1, y: 1.8 }),
+        box(0.1, 0.1, 1.5, 0x5a3a1a, { x: 1.1, y: 1.8 }),
+        // sloped roof (thatched/tin style)
+        box(2.8, 0.12, 1.9, 0xc8b890, { y: 2.1, rx: -0.15, hex2: 0xb8a880 }),
+        // tea drying racks inside
+        box(2.0, 0.08, 1.2, 0xc8a870, { y: 0.4 }),
+        box(2.0, 0.08, 1.2, 0xc8a870, { y: 0.8 }),
+        // tea leaves on racks (green)
+        box(1.8, 0.05, 1.0, 0x4a7a3a, { y: 0.45 }),
+        // woven baskets with tea
+        cyl(0.3, 0.25, 0.25, 6, 0x9a7a4a, { x: -0.8, y: 0.28, z: 0.0 }),
+        cyl(0.3, 0.25, 0.25, 6, 0x9a7a4a, { x: 0.8, y: 0.28, z: 0.0 }),
       ];
-      for (let i = 0; i < 4; i++) {
-        const x = -0.95 + i * 0.64;
-        parts.push(box(0.06, 0.04, 1.9, 0xa84a30, { rz: 0.16, x, y: 1.69 + x * 0.16 })); // tin rib
-      }
-      parts.push(box(2.74, 0.06, 0.12, 0x6a4a32, { rz: 0.16, y: 1.7, z: 0.92 })); // eave gutter front
-      parts.push(box(0.7, 0.7, 0.05, 0x44484f, { x: 0.6, y: 0.5, z: 0.86 })); // dark roll door
-      parts.push(box(0.4, 0.45, 0.06, 0x9fc4d8, { x: -0.7, y: 0.55, z: 0.86 })); // small window
-      // water-tank + vent on roof (typical 違建 detail)
-      parts.push(cyl(0.28, 0.28, 0.4, 8, 0x3a6ea0, { x: -0.7, y: 1.95 })); // blue water tank
-      parts.push(cyl(0.08, 0.08, 0.3, 6, 0x9aa0aa, { x: 0.7, y: 1.9 })); // vent pipe
       return finish(parts);
     },
   },
