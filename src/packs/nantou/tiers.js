@@ -50,8 +50,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 橡皮擦, 圖釘, 紹興酒蓋, 茶包, 尪仔標, 鉛筆, 鈕扣
-      'marble', 'eraser', 'pushpin', 'shaoxing_cap', 'tea_bag', 'ngiauimia_card', 'pencil', 'button',
+      // 梅子糖, 凍頂烏龍茶球, 筍尖, 紹興酒蓋, 茶包, 太陽餅, 線香, 鹿茸片
+      'plum_candy', 'oolong_tea_ball', 'bamboo_shoot_tip', 'shaoxing_cap', 'tea_bag', 'sun_cake', 'incense_stick', 'deer_antler_slice',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_stick_tube',
     ],
@@ -98,8 +98,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 安全帽, 大同電鍋, 瓦斯桶, 三角錐, 消防栓, 竹編籃, 竹筒
-      'red_plastic_chair', 'helmet', 'rice_cooker', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'bamboo_basket', 'bamboo_tube',
+      // 紅塑膠椅, 安全帽, 製茶揉捻桶, 瓦斯桶, 三角錐, 消防栓, 竹編籃, 竹筒
+      'red_plastic_chair', 'helmet', 'tea_rolling_barrel', 'gas_cylinder', 'traffic_cone', 'fire_hydrant', 'bamboo_basket', 'bamboo_tube',
       // chunk landmarks: 竹藝推車, 廟前香爐
       'bamboo_craft_cart', 'temple_incense_burner',
     ],
@@ -146,8 +146,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 透天厝, 鐵皮屋, 老公寓, 超商, 公車, 垃圾車, 加油站, 騎樓柱
-      'townhouse', 'tin_roof_house', 'old_apartment', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'arcade_pillar',
+      // 茶行街屋, 製茶工寮, 埔里民宿, 超商, 公車, 垃圾車, 加油站, 竹山老街騎樓
+      'tea_shop_house', 'tea_processing_shed', 'puli_minsu', 'convenience_store', 'city_bus', 'garbage_truck', 'gas_station', 'zhushan_arcade',
       // chunk landmarks: 埔里街屋, 大廟
       'puli_streethouse_mass', 'temple_mass',
     ],
@@ -194,10 +194,10 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 湖畔飯店, 遊艇碼頭, 纜車塔, 環湖觀景台, 商辦塔, 空橋, 屋頂機房, 湖畔大樓
-      'lakeside_hotel', 'yacht_marina', 'cable_car_tower', 'lakeview_deck', 'biz_tower', 'sky_bridge', 'rooftop_plant_room', 'lakefront_block',
-      // chunk landmarks: 跨街空橋, 屋頂機房塔
-      'crossstreet_skybridge', 'rooftop_mech_tower',
+      // 湖畔飯店, 遊艇碼頭, 纜車塔, 環湖觀景台, 日月潭遊客中心, 木棧觀景橋, 清境觀山亭, 湖畔大樓
+      'lakeside_hotel', 'yacht_marina', 'cable_car_tower', 'lakeview_deck', 'visitor_center', 'wooden_bridge', 'mountain_pavilion', 'lakefront_block',
+      // chunk landmarks: 日月潭環湖步道, 清境觀星台
+      'lake_trail', 'stargazing_tower',
     ],
     fogColor: 0x18183e, // 日月潭夜空 深藍紫 (the finale band)
     skyTop: 0x121238,
