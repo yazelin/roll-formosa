@@ -57,31 +57,32 @@ export const T1_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [1] 寶特瓶 — clear PET water bottle: ribbed body, blue screw cap */
+  /* [1] 黑豆乾罐 — Daxi black bean dried tofu jar                      */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pet_bottle',
-    displayName: '寶特瓶',
+    id: 'tofu_jar',
+    displayName: '黑豆乾罐',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.07,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xcfe6e2, 0xbfdfe8, 0x2f6fb0, 0xeaf4f2, 0x9cc6d2],
-    yOffset: -0.1095,
+    palette: [0x5a3824, 0x6a4430, 0x4e3020, 0x3a2818, 0x724a38],
+    yOffset: -0.18,
     upright: true,
-    collisionScale: 0.78,
+    collisionScale: 0.82,
     buildGeometry(rng) {
+      // Daxi (大溪) is famous for its dried tofu - shown in traditional glass jar
       return finish([
-        cyl(0.5, 0.46, 0.28, 9, 0xcfe6e2, { y: 0.16 }), // foot
-        cyl(0.5, 0.5, 0.9, 9, 0xcfe6e2, { y: 0.74, hex2: 0xeaf4f2 }), // body
-        // grip rings
-        cyl(0.53, 0.53, 0.05, 9, 0xbfdfe8, { y: 0.55 }),
-        cyl(0.53, 0.53, 0.05, 9, 0xbfdfe8, { y: 0.78 }),
-        cyl(0.53, 0.53, 0.05, 9, 0xbfdfe8, { y: 1.01 }),
-        cyl(0.32, 0.5, 0.34, 9, 0xcfe6e2, { y: 1.36 }), // shoulder
-        cyl(0.22, 0.22, 0.22, 9, 0xeaf4f2, { y: 1.62 }), // neck
-        cyl(0.27, 0.27, 0.2, 9, 0x2f6fb0, { y: 1.78 }), // blue cap
+        // clear glass jar body
+        cyl(0.65, 0.5, 1.3, 9, 0xd8e0e4, { y: 0.65, hex2: 0xe8f0f4 }),
+        // visible dried tofu blocks inside (dark brown)
+        box(0.4, 0.3, 0.4, 0x5a3824, { y: 0.45 }),
+        box(0.35, 0.28, 0.38, 0x4e3020, { y: 0.78, x: 0.08, z: 0.05 }),
+        box(0.32, 0.25, 0.35, 0x6a4430, { y: 1.05, x: -0.05 }),
+        // jar rim and red plastic lid
+        cyl(0.68, 0.68, 0.1, 9, 0xc8d0d4, { y: 1.32 }),
+        cyl(0.58, 0.58, 0.25, 9, 0xc83030, { y: 1.48 }),
       ]);
     },
   },
@@ -120,56 +121,69 @@ export const T1_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [3] 香 — single thin incense stick: red shaft, glowing ember tip */
+  /* [3] 客家米篩目 — Hakka rice noodle (米篩目) in a bowl                */
   /* ---------------------------------------------------------------- */
   {
-    id: 'incense_stick',
-    displayName: '香',
+    id: 'hakka_misaimu',
+    displayName: '客家米篩目',
     tier: 1,
     naturalBand: 1,
-    radiusNominal: 0.06,
-    radiusJitter: 0.18,
+    radiusNominal: 0.08,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xb8302a, 0x8a4a2a, 0xd8a23a, 0xe6c060, 0x6a3a1e],
-    yOffset: -0.0008,
+    palette: [0xf0e8d8, 0xe8dcc8, 0xf4eee0, 0xdcd0c0, 0xfcf4e8],
+    yOffset: -0.30,
     upright: true,
-    collisionScale: 0.55,
+    collisionScale: 0.82,
     buildGeometry(rng) {
+      // Hakka rice noodle soup - traditional Longtan/Taoyuan Hakka dish
       return finish([
-        cyl(0.05, 0.05, 2.7, 6, 0xb8302a, { y: 0.0 }), // red bamboo stick
-        cyl(0.07, 0.06, 0.9, 6, 0x8a4a2a, { y: -1.0 }), // incense-paste lower coat
-        cyl(0.085, 0.085, 0.12, 6, 0x6a3a1e, { y: 1.32 }), // burnt char band
-        sph(0.1, 0xe6c060, { ws: 6, hs: 4, y: 1.46 }), // glowing ember tip
+        // ceramic bowl
+        cyl(0.9, 0.6, 0.7, 9, 0xf4f0e8, { y: 0.35 }),
+        cyl(0.94, 0.88, 0.1, 9, 0xe8e2d8, { y: 0.72 }),
+        // clear soup broth
+        cyl(0.8, 0.8, 0.06, 9, 0xd8c8a0, { y: 0.68 }),
+        // white rice noodles (short, thick strands)
+        cyl(0.08, 0.08, 0.4, 5, 0xf0e8d8, { rx: 0.2, x: 0.2, y: 0.72, z: 0.1 }),
+        cyl(0.08, 0.08, 0.35, 5, 0xfcf4e8, { rx: -0.15, x: -0.15, y: 0.74, z: -0.15 }),
+        cyl(0.08, 0.08, 0.38, 5, 0xe8dcc8, { rx: 0.1, x: 0.05, y: 0.73, z: 0.2, rz: 0.3 }),
+        // fried shallots garnish
+        sph(0.06, 0xb89060, { ws: 4, hs: 3, x: 0.25, y: 0.78, z: -0.2 }),
+        sph(0.05, 0xc89858, { ws: 4, hs: 3, x: -0.3, y: 0.76, z: 0.15 }),
       ]);
     },
   },
 
   /* ---------------------------------------------------------------- */
-  /* [4] 金紙 — stack of joss paper: cream sheets, central gold-foil square */
+  /* [4] 茶葉罐 — Longtan tea tin canister                              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'joss_paper',
-    displayName: '金紙',
+    id: 'tea_canister',
+    displayName: '茶葉罐',
     tier: 1,
     naturalBand: 1,
     radiusNominal: 0.08,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8c468, 0xf0deb0, 0xd8a83a, 0xc89a2e, 0xf4e8c8],
-    yOffset: -0.5589,
+    palette: [0x2a4030, 0x385040, 0x1e3028, 0xd8c878, 0x304838],
+    yOffset: -0.30,
     upright: true,
-    collisionScale: 0.82,
+    collisionScale: 0.85,
     buildGeometry(rng) {
-      const parts = [];
-      // stacked cream sheets, faint layering via alternating tints
-      for (let i = 0; i < 7; i++) {
-        const tint = i % 2 === 0 ? 0xf0deb0 : 0xe8d8a8;
-        parts.push(box(1.5, 0.12, 1.1, tint, { y: 0.06 + i * 0.12 }));
-      }
-      // central gold-foil square on the top sheet
-      parts.push(box(0.62, 0.04, 0.62, 0xe8c468, { y: 0.9, hex2: 0xd8a83a }));
-      // red ledger stripe along one edge
-      parts.push(box(0.16, 0.86, 1.12, 0xc24028, { x: -0.67, y: 0.43 }));
+      // Longtan (龍潭) tea region - traditional tea storage tin
+      const parts = [
+        // cylindrical tin body
+        cyl(0.6, 0.6, 1.2, 10, 0xffffff, { y: 0.6 }), // body (tinted green)
+        // decorative bands
+        cyl(0.62, 0.62, 0.08, 10, 0xd8c878, { y: 0.2, open: true }),
+        cyl(0.62, 0.62, 0.08, 10, 0xd8c878, { y: 1.0, open: true }),
+        // lid
+        cyl(0.58, 0.58, 0.2, 10, 0x2a4030, { y: 1.25 }),
+        cyl(0.25, 0.25, 0.1, 8, 0xd8c878, { y: 1.38 }), // lid knob
+        // tea leaf label motif (simplified as colored box)
+        box(0.5, 0.4, 0.06, 0xf0e8d0, { y: 0.6, z: 0.56 }),
+        box(0.35, 0.25, 0.07, 0x3a5040, { y: 0.6, z: 0.58 }),
+      ];
       return finish(parts);
     },
   },

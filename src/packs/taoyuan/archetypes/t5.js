@@ -198,39 +198,45 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 4: 停車塔 parking_tower ------------------------------- */
+  /* ---- slot 4: 茶葉批發行 tea_wholesale (龍潭/平鎮茶業特色) --------- */
   {
-    id: 'parking_tower',
-    displayName: '停車塔',
+    id: 'tea_wholesale',
+    displayName: '茶葉批發行',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 18,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0x9aa0a6, 0x7a8088, 0xc0c4ca, 0x5a6068, 0xe0a838],
-    yOffset: -0.09,
+    palette: [0x2a4030, 0x385040, 0xd8c8a0, 0x1e3028, 0xc8a050],
+    yOffset: -0.35,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Mechanical car-stacker: a tall narrow concrete shaft with open deck
-      // slots (dark gaps) and parked-car chips peeking out.
-      const parts = [
-        box(2.0, 7.0, 2.4, 0xffffff, { y: 3.6 }), // shaft (tinted concrete)
-        // corner columns to emphasize the open-frame look
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: 1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: -0.95, y: 3.6, z: -1.15 }),
-        box(0.22, 7.0, 0.22, 0x5a6068, { x: 0.95, y: 3.6, z: -1.15 }),
-        box(2.0, 0.4, 2.4, 0x7a8088, { y: 7.3 }), // roof slab
-        box(1.0, 0.7, 0.1, 0xe0a838, { y: 0.5, z: 1.22 }), // entry gate (yellow)
-      ];
-      // 6 deck floors: each a dark slot + a colored car chip on the front
-      const carHex = [0xc94f46, 0x3f6cc4, 0xe0e0e0, 0x49a05f, 0xe0a838, 0x9a9a9a];
-      for (let f = 0; f < 6; f++) {
-        const y = 1.4 + f * 0.95;
-        parts.push(box(1.7, 0.62, 0.08, 0x20262e, { y, z: 1.18 })); // open deck shadow
-        parts.push(box(0.7, 0.3, 0.5, carHex[f], { x: -0.3, y: y - 0.06, z: 1.0 })); // car chip
+      // Taoyuan tea wholesale warehouse (龍潭/平鎮茶葉批發行)
+      // Part of Taoyuan's historic tea industry
+      const parts = [];
+      const concrete = 0xd8d0c0;
+      const tea_green = 0x2a4030;
+      // main warehouse building
+      parts.push(box(4.0, 2.8, 3.0, concrete, { y: 1.4 }));
+      // traditional-style sloped roof
+      parts.push(box(4.2, 0.15, 3.2, 0x4a4a48, { y: 2.9 }));
+      parts.push(box(4.4, 0.4, 3.4, 0x3a3a38, { y: 3.1, rx: 0.1 })); // roof slope
+      // large roll-up door for truck loading
+      parts.push(box(2.0, 2.0, 0.1, 0x5a6068, { x: 0, y: 1.0, z: 1.52 }));
+      // tea company signage (green with gold text - typical style)
+      parts.push(box(3.0, 0.6, 0.12, tea_green, { y: 2.5, z: 1.56 }));
+      parts.push(box(2.6, 0.4, 0.08, 0xc8a050, { y: 2.5, z: 1.62 })); // gold text
+      // stacked tea crates outside
+      for (let i = 0; i < 3; i++) {
+        parts.push(box(0.8, 0.5, 0.6, 0xc8b890, { x: 1.8, y: 0.25 + i * 0.5, z: 1.2 }));
       }
+      parts.push(box(0.8, 0.5, 0.6, 0xc8b890, { x: 1.8, y: 0.25, z: 0.5 }));
+      // forklift / pallet area
+      parts.push(box(2.5, 0.08, 2.0, 0x9a9890, { y: 0.04, z: 2.2 }));
+      // office section with tea display
+      parts.push(box(1.2, 2.0, 1.5, 0xe8e0d0, { x: -2.2, y: 1.0, z: 0.5 }));
+      parts.push(box(1.0, 0.5, 0.06, 0x9fc4d8, { x: -2.2, y: 1.4, z: 1.28 })); // window
       return finish(parts);
     },
   },
@@ -313,41 +319,48 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 銀行 bank ------------------------------------------ */
+  /* ---- slot 7: 客家文化館 hakka_cultural_center (桃園客家特色) ---- */
   {
-    id: 'bank',
-    displayName: '銀行',
+    id: 'hakka_cultural_center',
+    displayName: '客家文化館',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 24,
     radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xd8d0bc, 0xeae4d2, 0x9a8e72, 0x3a4a6a, 0xc8a84a],
-    yOffset: -0.4,
+    palette: [0xc83040, 0x2060a0, 0xd8c8a0, 0x308848, 0xf0d050],
+    yOffset: -0.40,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // Classical-front bank: stone block with a portico of fat columns + pediment.
-      const parts = [
-        box(4.0, 3.4, 3.0, 0xffffff, { y: 1.9 }), // main hall (tinted stone)
-        box(4.2, 0.3, 3.2, 0x9a8e72, { y: 3.7 }), // cornice
-        // portico: entablature beam + triangular pediment up front
-        box(3.6, 0.4, 0.5, 0xeae4d2, { y: 3.0, z: 1.6 }), // architrave
-        // pediment (a wide flat triangle via a thin scaled box rotated? use cone-ish prism)
-        box(3.6, 0.6, 0.4, 0xeae4d2, { y: 3.5, z: 1.55, sx: 1, sy: 1, sz: 1 }),
-        cone(1.9, 0.7, 4, 0xe2dcca, { y: 3.95, z: 1.55, ry: PI / 4, sz: 0.25 }), // pediment apex
-        // 4 fat columns
-        box(2.0, 0.2, 1.0, 0x8a7e64, { y: 0.18, z: 1.7 }), // stylobate / steps
-      ];
-      for (let i = 0; i < 4; i++) {
-        const x = -1.35 + i * 0.9;
-        parts.push(cyl(0.26, 0.28, 2.5, 6, 0xf0ead8, { x, y: 1.55, z: 1.7 })); // shaft
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 0.34, z: 1.7 })); // base
-        parts.push(box(0.66, 0.16, 0.66, 0xd8d0bc, { x, y: 2.78, z: 1.7 })); // capital
-      }
-      // gold name plaque + door
-      parts.push(box(2.0, 0.34, 0.08, 0xc8a84a, { y: 3.0, z: 1.84 }));
-      parts.push(box(0.9, 1.6, 0.08, 0x2a3a58, { y: 1.0, z: 1.76 })); // dark glass door
+      // Taoyuan Hakka Cultural Center (客家文化館) - celebrating Hakka heritage
+      // Inspired by 桃園市客家文化館 / 平鎮客家文化園區
+      const parts = [];
+      const hakka_red = 0xc83040; // Hakka signature red
+      const earth = 0xd8c8a0;
+      // main building body (modern cultural center with traditional elements)
+      parts.push(box(4.5, 2.8, 3.5, earth, { y: 1.4 }));
+      // traditional-style curved roof (客家圓樓風格)
+      parts.push(cyl(2.0, 2.0, 4.6, 10, 0x4a4a48, { rx: PI / 2, y: 3.2, thetaLen: PI }));
+      // roof ridge ornament
+      parts.push(box(4.4, 0.15, 0.2, hakka_red, { y: 3.3 }));
+      // Hakka floral pattern facade elements
+      parts.push(box(3.8, 1.0, 0.15, 0xffffff, { y: 2.0, z: 1.78 }));
+      // flower pattern circles (客家花布元素)
+      parts.push(cyl(0.3, 0.3, 0.08, 8, hakka_red, { x: -1.2, y: 2.2, z: 1.86, rx: HALF_PI }));
+      parts.push(cyl(0.25, 0.25, 0.08, 8, 0x2060a0, { x: 0, y: 2.0, z: 1.86, rx: HALF_PI }));
+      parts.push(cyl(0.28, 0.28, 0.08, 8, 0x308848, { x: 1.2, y: 2.2, z: 1.86, rx: HALF_PI }));
+      // entrance with traditional door frame
+      parts.push(box(1.5, 2.0, 0.2, 0x6a4a32, { y: 1.0, z: 1.7 }));
+      parts.push(box(1.3, 1.8, 0.08, 0x9fc4d8, { y: 1.0, z: 1.82 })); // glass door
+      // signage (客家文化館)
+      parts.push(box(2.5, 0.5, 0.12, hakka_red, { y: 2.8, z: 1.86 }));
+      parts.push(box(2.2, 0.35, 0.08, 0xf0d050, { y: 2.8, z: 1.92 })); // gold text
+      // courtyard with Hakka cultural elements
+      parts.push(box(3.5, 0.08, 1.5, 0x9a9890, { y: 0.04, z: 2.5 })); // courtyard
+      // oil-paper umbrella display (客家油紙傘)
+      parts.push(cyl(0.8, 0.0, 0.3, 8, hakka_red, { x: -1.5, y: 1.5, z: 2.5, rx: 0.3 }));
+      parts.push(cyl(0.04, 0.04, 0.8, 6, 0x6a4a32, { x: -1.5, y: 1.0, z: 2.5 })); // handle
       return finish(parts);
     },
   },

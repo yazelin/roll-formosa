@@ -49,8 +49,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 彈珠, 大溪陀螺, 圖釘, 花生糖, 大溪豆乾, 尪仔標, 客家花布小方巾, 鈕扣
-      'marble', 'daxi_top_street', 'pushpin', 'peanut_candy', 'daxi_tofu', 'ngiauimia_card', 'hakka_floral_cloth', 'button',
+      // 龍眼乾, 大溪陀螺, 茶球, 花生糖, 大溪豆乾, 尪仔標, 客家花布小方巾, 水蜜桃糖
+      'longan', 'daxi_top_street', 'tea_ball', 'peanut_candy', 'daxi_tofu', 'ngiauimia_card', 'hakka_floral_cloth', 'taoyuan_peach',
       // chunk landmarks: 戳戳樂板, 籤筒
       'scratch_card_board', 'fortune_sticks',
     ],
@@ -73,8 +73,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 客家擂茶杯, 寶特瓶, 落花生, 香, 金紙, 牛肉麵碗, 紅白塑膠袋, 蔥油餅
-      'hakka_leicha_cup', 'pet_bottle', 'ground_nut', 'incense_stick', 'joss_paper', 'beef_noodle_bowl', 'redwhite_bag', 'scallion_pancake',
+      // 客家擂茶杯, 黑豆乾罐, 落花生, 客家米篩目, 茶葉罐, 牛肉麵碗, 紅白塑膠袋, 蔥油餅
+      'hakka_leicha_cup', 'tofu_jar', 'ground_nut', 'hakka_misaimu', 'tea_canister', 'beef_noodle_bowl', 'redwhite_bag', 'scallion_pancake',
       // chunk landmarks: 攤車燈籠, 彈珠台
       'stall_lantern', 'pinball_machine',
     ],
@@ -97,8 +97,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 紅塑膠椅, 客家花布燈籠, 大同電鍋, 瓦斯桶, 埤塘水位標, 消防栓, 木器行木雕, 埤塘水桶
-      'red_plastic_chair', 'hakka_lantern', 'rice_cooker', 'gas_cylinder', 'irrigation_marker', 'fire_hydrant', 'daxi_woodcarving', 'pond_bucket',
+      // 紅塑膠椅, 客家花布燈籠, 大溪豆乾蒸籠, 花生油桶, 埤塘水位標, 消防栓, 木器行木雕, 埤塘水桶
+      'red_plastic_chair', 'hakka_lantern', 'daxi_steamer', 'peanut_oil_tin', 'irrigation_marker', 'fire_hydrant', 'daxi_woodcarving', 'pond_bucket',
       // chunk landmarks: 豆乾推車, 廟前香爐
       'tofu_cart', 'temple_incense_burner',
     ],
@@ -121,8 +121,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 機車, 農用搬運車, 變電箱, 花生糖攤, 鐵捲門, 落羽松, 埤塘閘門, 石獅
-      'scooter', 'farm_transport', 'transformer_box', 'peanut_candy_stall', 'roll_shutter', 'bald_cypress', 'pond_sluice_gate', 'stone_lion',
+      // 機車, 農用搬運車, 擂茶磨盤, 花生糖攤, 鐵捲門, 落羽松, 埤塘閘門, 大溪老街神桌
+      'scooter', 'farm_transport', 'leicha_grinder', 'peanut_candy_stall', 'roll_shutter', 'bald_cypress', 'pond_sluice_gate', 'daxi_altar_table',
       // chunk landmarks: 夜市拱門, 埤塘涼亭
       'night_market_arch', 'pond_pavilion',
     ],
@@ -169,8 +169,8 @@ export const TIERS = [
     loadRadiusSim: 96,
     objectsPerChunk: 72,
     archetypeIds: [
-      // 桃園捷運高架站, 科技園區大門, 捷運高架, 機捷連通天橋, 停車塔, 巨型看板, 玻璃帷幕街屋, 銀行
-      'metro_station_taoyuan', 'tech_park_gate', 'metro_viaduct', 'airport_mrt_skybridge', 'parking_tower', 'giant_billboard', 'glass_curtain_house', 'bank',
+      // 桃園捷運高架站, 科技園區大門, 捷運高架, 機捷連通天橋, 茶葉批發行, 巨型看板, 玻璃帷幕街屋, 客家文化館
+      'metro_station_taoyuan', 'tech_park_gate', 'metro_viaduct', 'airport_mrt_skybridge', 'tea_wholesale', 'giant_billboard', 'glass_curtain_house', 'hakka_cultural_center',
       // chunk landmarks: 工業廠房, 物流倉庫
       'factory_mass', 'warehouse_mass',
     ],

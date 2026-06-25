@@ -28,26 +28,29 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] longan 龍眼乾 — Taoyuan Longtan area dried longan fruit          */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'longan',
+    displayName: '龍眼乾',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0x5a3820, 0x6a4428, 0x4e3018, 0x624030],
+    yOffset: 0, // round fruit sitting on the ground = centered
     upright: false,
     collisionScale: 0.82,
     buildGeometry(rng) {
+      // Dried longan (龍眼乾) - Longtan (龍潭) area specialty
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        sph(1.0, 0xffffff, { ws: 8, hs: 6 }), // wrinkled dried shell (tinted brown)
+        // textured surface wrinkles
+        torus(0.8, 0.08, 5, 6, 0x4a3018, { ry: 0.3, y: 0.2 }),
+        torus(0.75, 0.06, 5, 6, 0x5a3820, { rx: 0.5, y: -0.1 }),
+        // stem attachment point
+        cyl(0.12, 0.15, 0.2, 5, 0x3a2814, { y: 0.95 }),
       ]);
     },
   },
@@ -87,26 +90,29 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] tea_ball 茶球 — Longtan rolled tea ball (龍潭球形茶)              */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'tea_ball',
+    displayName: '茶球',
     tier: 0,
     naturalBand: 0,
-    radiusNominal: 0.01,
-    radiusJitter: 0.18,
+    radiusNominal: 0.012,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0x2a4030, 0x385040, 0x1e3028, 0x304838],
+    yOffset: 0, // sphere sitting on the ground = centered
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.82,
     buildGeometry(rng) {
+      // Longtan (龍潭) tea region - rolled oolong tea balls
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // compressed tea ball (tinted dark green)
+        // surface texture - rolled leaf ridges
+        torus(0.7, 0.1, 6, 8, 0x1a3020, { rx: 0.4, y: 0.3 }),
+        torus(0.65, 0.08, 6, 8, 0x2a4030, { ry: 0.6, y: -0.2 }),
+        // tiny stem fragment
+        cyl(0.08, 0.06, 0.15, 4, 0x4a3828, { y: 0.9, rz: 0.2 }),
       ]);
     },
   },
@@ -241,34 +247,33 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [7] button 鈕扣 — flat sew-through button with 4 thread holes       */
+  /* [7] taoyuan_peach 水蜜桃糖 — Lala Mountain peach candy                */
   /* ---------------------------------------------------------------- */
   {
-    id: 'button',
-    displayName: '鈕扣',
+    id: 'taoyuan_peach',
+    displayName: '水蜜桃糖',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.011,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xf3f3f5, 0x3f6fb0, 0xd84d6a, 0x6fae5e, 0x2a2d33],
-    yOffset: -0.80, // disc lying flat (= -1 - minY of normalized geo)
+    palette: [0xff9090, 0xffb0a0, 0xff8888, 0xffa898],
+    yOffset: -0.50, // peach-shaped candy sitting flat
     upright: false,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Lala Mountain (拉拉山) peach-shaped candy - Taoyuan's famous fruit
       const parts = [
-        cyl(1.0, 1.0, 0.28, 16, 0xffffff, { y: 0.16 }), // button body (tinted)
-        cyl(0.58, 0.58, 0.18, 14, 0xffffff, { y: 0.3 }), // raised inner well rim (tinted lighter)
-        cyl(0.46, 0.46, 0.1, 12, 0xd6d8de, { y: 0.36 }), // recessed thread well floor
+        // peach body - slightly flattened sphere with crease
+        sph(0.9, 0xffffff, { ws: 10, hs: 7, sx: 1.0, sy: 0.85, sz: 0.9 }), // main body (tinted pink)
+        // peach crease line
+        box(0.06, 0.9, 0.3, 0xff6060, { x: 0, y: 0, z: 0.6, ry: 0.1 }),
+        // green leaf at stem
+        box(0.25, 0.06, 0.12, 0x5a9040, { y: 0.75, z: -0.05, rz: -0.3 }),
+        box(0.22, 0.05, 0.1, 0x508838, { y: 0.78, z: 0.08, rz: 0.25 }),
+        // small stem
+        cyl(0.06, 0.05, 0.15, 4, 0x6a4830, { y: 0.88 }),
       ];
-      // four thread holes (dark recessed dots in a square)
-      const d = 0.2;
-      const holes = [
-        [d, d], [-d, d], [d, -d], [-d, -d],
-      ];
-      for (const [hx, hz] of holes) {
-        parts.push(cyl(0.07, 0.07, 0.18, 8, 0x1d1f24, { x: hx, z: hz, y: 0.34 }));
-      }
       return finish(parts);
     },
   },
