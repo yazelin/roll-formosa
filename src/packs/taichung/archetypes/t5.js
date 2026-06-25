@@ -39,39 +39,43 @@ const TIER = 5;
 
 /** @type {Archetype[]} */
 export const T5_ARCHETYPES = [
-  /* ---- slot 0: 商辦大樓 office_tower ------------------------------- */
+  /* ---- slot 0: 七期商辦 qiqi_office (TAICHUNG SWAP: 7th Redevelopment Zone office) */
   {
-    id: 'office_tower',
-    displayName: '商辦大樓',
+    id: 'qiqi_office',
+    displayName: '七期商辦',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 22,
+    radiusNominal: 24,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x4a5a72, 0xc8d4e2, 0x8a98aa, 0x2e3744, 0xe2e8f0],
-    yOffset: -0.06,
+    palette: [0x3a4a5a, 0x8fd0e8, 0x5a6a7a, 0x2e3844, 0xd0e8f0],
+    yOffset: -0.08,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Slab high-rise: banded glass shaft + setback crown + rooftop plant box.
-      return finish([
-        towerBanded(2.6, 7.2, 2.0, 14, 0xffffff, 0x2e3a4a, 0xfff0c0, rng, { y: 3.6 }),
-        // vertical mullion fins (front + back) to read as a curtain wall
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.0, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: 1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: -0.8, y: 3.6, z: -1.02 }),
-        box(0.1, 7.2, 0.1, 0x33404f, { x: 0.8, y: 3.6, z: -1.02 }),
-        // ground-floor lobby (darker, recessed)
-        box(2.8, 0.9, 2.2, 0x222a34, { y: 0.45 }),
-        box(1.0, 0.7, 0.06, 0x9fb4cc, { y: 0.4, z: 1.12 }), // lit lobby glass
-        // setback crown + parapet
-        box(2.2, 0.7, 1.7, 0xd6dee8, { y: 7.55 }),
-        box(2.2, 0.12, 1.7, 0x8a98aa, { y: 7.96 }),
-        // rooftop plant box + mast
-        box(1.0, 0.5, 0.8, 0x5a6472, { y: 8.15 }),
-        cyl(0.05, 0.05, 1.2, 6, 0xb04030, { y: 9.0 }),
-      ]);
+      // 七期商辦 — a typical Taichung 7th Redevelopment Zone glass office building
+      // with the signature blue-tinted curtain wall and curved entrance canopy
+      const parts = [
+        // main banded glass shaft (七期風格 — 藍色玻璃帷幕)
+        towerBanded(2.8, 7.4, 2.2, 14, 0xffffff, 0x2a4058, 0xd0f0ff, rng, { y: 3.8 }),
+        // vertical mullion fins (七期玻璃建築特色)
+        box(0.1, 7.4, 0.1, 0x2a4050, { x: -0.9, y: 3.8, z: 1.12 }),
+        box(0.1, 7.4, 0.1, 0x2a4050, { x: 0.0, y: 3.8, z: 1.12 }),
+        box(0.1, 7.4, 0.1, 0x2a4050, { x: 0.9, y: 3.8, z: 1.12 }),
+        // curved entrance canopy (七期商辦特色 — 弧形入口雨遮)
+        cyl(1.4, 1.4, 2.8, 8, 0xc0d8e8, { y: 1.0, z: 1.3, theta0: -HALF_PI, thetaLen: PI, rx: HALF_PI, sy: 0.25 }),
+        // glass lobby base
+        box(2.6, 1.1, 2.0, 0x1a2a38, { y: 0.55 }),
+        box(1.2, 0.85, 0.06, 0x8fd0e8, { y: 0.5, z: 1.04 }), // bright lobby glass
+        // setback crown with 台中七期風格
+        box(2.4, 0.5, 1.9, 0xc0d8e8, { y: 7.75 }),
+        box(2.4, 0.12, 1.9, 0x6a8090, { y: 8.05 }),
+        // rooftop helipad marking (七期高樓特色)
+        cyl(0.6, 0.6, 0.05, 8, 0xe8e8e8, { y: 8.15 }),
+        box(0.8, 0.04, 0.1, 0xf0f0f0, { y: 8.16 }),
+        box(0.1, 0.04, 0.8, 0xf0f0f0, { y: 8.16 }),
+      ];
+      return finish(parts);
     },
   },
 
@@ -286,37 +290,42 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 玻璃帷幕街屋 glass_curtain_house ------------------- */
+  /* ---- slot 6: 精明一街店舖 jingming_shop (TAICHUNG SWAP: Jingming Street shop) */
   {
-    id: 'glass_curtain_house',
-    displayName: '玻璃帷幕街屋',
+    id: 'jingming_shop',
+    displayName: '精明一街店舖',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 14,
     radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0x6fbfd0, 0xbfeaf0, 0x3a6a78, 0x2e3744, 0xe8f4f6],
-    yOffset: -0.1,
+    palette: [0xf0e8d8, 0xc8b8a0, 0x8a7a5a, 0xe0d0b8, 0xd8c8b0],
+    yOffset: -0.12,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // Narrow mid-rise street shophouse with a full glass curtain wall front.
+      // 精明一街店舖 — a European-style cafe/boutique building on Jingming Street
+      // (台中精明一街 — 歐式露天咖啡街)
       const parts = [
-        box(2.2, 5.2, 2.0, 0xffffff, { y: 2.8 }), // body (tinted concrete sides)
-        // glass curtain wall on the front (proud, gridded)
-        box(2.0, 4.6, 0.14, 0x2e3744, { y: 2.9, z: 1.02 }), // mullion grid (dark)
-        box(1.8, 4.4, 0.06, 0x8fd6e2, { y: 2.9, z: 1.1 }), // glass (tinted blue-green)
-        // ground-floor shop entrance
-        box(2.0, 0.9, 0.1, 0x20262c, { y: 0.5, z: 1.06 }),
-        box(1.2, 0.7, 0.06, 0xbfeaf0, { y: 0.5, z: 1.12 }), // bright entry glass
-        // parapet + a small rooftop water tank
-        box(2.3, 0.24, 2.1, 0x4a8090, { y: 5.5 }),
-        cyl(0.4, 0.4, 0.6, 7, 0x9aa0a8, { x: 0.5, y: 5.9 }),
+        // main cream/stone body (精明一街歐風建築)
+        box(2.4, 4.8, 2.2, 0xf0e8d8, { y: 2.6 }),
+        // decorative cornice moldings (歐式線腳)
+        box(2.5, 0.16, 2.3, 0xe0d0b8, { y: 5.1 }),
+        box(2.5, 0.12, 2.3, 0xc8b8a0, { y: 4.95 }),
+        // arched windows per floor (歐風拱窗)
+        cyl(0.4, 0.4, 0.06, 8, 0x3a4a5a, { y: 3.8, z: 1.12, theta0: 0, thetaLen: PI }),
+        box(0.8, 0.7, 0.06, 0x3a4a5a, { y: 3.4, z: 1.12 }),
+        cyl(0.4, 0.4, 0.06, 8, 0x3a4a5a, { y: 2.2, z: 1.12, theta0: 0, thetaLen: PI }),
+        box(0.8, 0.7, 0.06, 0x3a4a5a, { y: 1.8, z: 1.12 }),
+        // ground-floor cafe/shop with awning (露天咖啡座)
+        box(2.2, 0.9, 0.1, 0x3a3a40, { y: 0.5, z: 1.1 }),
+        box(1.6, 0.7, 0.06, 0xf0d8a0, { y: 0.55, z: 1.14 }), // warm cafe glow
+        // striped canvas awning (咖啡街招牌遮陽棚)
+        box(2.4, 0.08, 0.8, 0xc83828, { y: 1.05, z: 1.4, rz: -0.15 }),
+        box(2.4, 0.06, 0.1, 0xf0e8d8, { y: 1.02, z: 1.3 }),
+        // decorative balustrade on top (歐式欄杆)
+        box(2.3, 0.3, 0.1, 0xd8c8b0, { y: 5.25, z: 1.05 }),
       ];
-      // horizontal floor-line mullions across the glass (5 floors)
-      for (let f = 1; f < 5; f++) {
-        parts.push(box(1.85, 0.07, 0.04, 0x223038, { y: 0.6 + f * 0.95, z: 1.14 }));
-      }
       return finish(parts);
     },
   },
@@ -364,88 +373,87 @@ export const T5_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 8: 商辦塔樓 commercial_tower (CHUNK LANDMARK) --------- */
+  /* ---- slot 8: 新光三越塔 shinkong_tower (CHUNK LANDMARK: TAICHUNG SWAP) */
   {
-    id: 'commercial_tower',
-    displayName: '商辦塔樓',
+    id: 'shinkong_tower',
+    displayName: '新光三越塔',
     tier: TIER,
     naturalBand: TIER,
     radiusNominal: 55,
     radiusJitter: 0.14,
     spawnWeight: 0.5,
-    palette: [0x3e4e66, 0xaecae0, 0x7a8aa0, 0x232c38, 0xe6eef6],
-    yOffset: -0.04,
+    palette: [0xc8b8a0, 0xf0e8d8, 0x8a7a60, 0xb84040, 0xe8dcc8],
+    yOffset: -0.06,
     upright: true,
     collisionScale: 0.82,
     buildGeometry(rng) {
-      // Big setback skyscraper — the district's repeatable landmark mass:
-      // wide podium → tapered banded shaft → crown + antenna.
-      return finish([
-        // multi-floor podium
-        box(4.2, 1.8, 3.4, 0xffffff, { y: 0.9 }),
-        box(4.3, 0.2, 3.5, 0x6a7888, { y: 1.85 }),
-        // main banded shaft (tall)
-        towerBanded(3.0, 9.0, 2.4, 13, 0xffffff, 0x28323e, 0xfff0c0, rng, { y: 6.5 }),
-        // mullion fins front
-        box(0.12, 9.0, 0.12, 0x2a3340, { x: -0.95, y: 6.5, z: 1.22 }),
-        box(0.12, 9.0, 0.12, 0x2a3340, { x: 0.0, y: 6.5, z: 1.22 }),
-        box(0.12, 9.0, 0.12, 0x2a3340, { x: 0.95, y: 6.5, z: 1.22 }),
-        // first setback
-        box(2.4, 0.4, 1.9, 0x7a8aa0, { y: 11.2 }),
-        // tapered upper shaft
-        towerBanded(1.9, 3.4, 1.6, 7, 0xe6eef6, 0x33404f, 0xfff0c0, rng, { y: 13.1 }),
-        // crown
-        box(1.5, 0.6, 1.2, 0xaecae0, { y: 15.1 }),
-        cone(0.9, 1.2, 6, 0x55657a, { y: 16.0 }),
-        // antenna mast
-        cyl(0.06, 0.08, 2.4, 6, 0xb0b6be, { y: 17.6 }),
-        sph(0.14, 0xff5040, { ws: 6, hs: 4, y: 18.9 }), // beacon
-      ]);
+      // 新光三越塔 — Shinkong Mitsukoshi department store tower (台中新光三越)
+      // with distinctive stone facade and red brand signage
+      const parts = [
+        // wide retail podium (百貨裙樓)
+        box(4.4, 2.2, 3.6, 0xf0e8d8, { y: 1.1 }),
+        box(4.5, 0.2, 3.7, 0xc8b8a0, { y: 2.3 }),
+        // main tower shaft (石材外牆)
+        towerBanded(3.2, 8.6, 2.6, 12, 0xf0e8d8, 0x3a4a58, 0xfff0c8, rng, { y: 6.65 }),
+        // signature red brand band (新光紅色招牌)
+        box(3.3, 0.6, 0.12, 0xb84040, { y: 10.6, z: 1.32 }),
+        box(3.0, 0.45, 0.06, 0xf8f0e0, { y: 10.6, z: 1.38 }),
+        // setback crown
+        box(2.6, 0.5, 2.1, 0xe8dcc8, { y: 11.2 }),
+        // rooftop signage pylon (樓頂招牌)
+        box(0.8, 1.6, 0.3, 0xb84040, { y: 12.3 }),
+        box(0.6, 1.4, 0.1, 0xf8f0e0, { y: 12.3, z: 0.16 }),
+        // antenna
+        cyl(0.06, 0.06, 1.8, 6, 0xa0a8b0, { y: 13.8 }),
+        sph(0.12, 0xff4040, { ws: 6, hs: 4, y: 14.8 }),
+      ];
+      return finish(parts);
     },
   },
 
-  /* ---- slot 9: 百貨大樓 department_mass (CHUNK LANDMARK) ---------- */
+  /* ---- slot 9: 大遠百 dayuanbai (CHUNK LANDMARK: TAICHUNG SWAP) --- */
   {
-    id: 'department_mass',
-    displayName: '百貨大樓',
+    id: 'dayuanbai',
+    displayName: '大遠百',
     tier: TIER,
     naturalBand: TIER,
-    radiusNominal: 50,
+    radiusNominal: 52,
     radiusJitter: 0.14,
     spawnWeight: 0.5,
-    palette: [0xcabfa8, 0xe8dcc4, 0x8a7c60, 0xb8443a, 0xf2ead6],
-    yOffset: -0.3,
+    palette: [0xd8d0c4, 0xf0e8dc, 0x7a7060, 0x2860a8, 0xe8e0d4],
+    yOffset: -0.28,
     upright: true,
     collisionScale: 0.84,
     buildGeometry(rng) {
-      // A whole department-store block: a broad multi-wing mall mass with a
-      // curved glass atrium, escalator-glass front, brand crown.
+      // 大遠百 — Far Eastern Department Store Taichung (台中大遠百)
+      // with distinctive blue branding and curved glass atrium
       const parts = [
-        // two stacked retail volumes (wide low + narrower upper)
-        box(5.6, 3.6, 4.2, 0xffffff, { y: 2.0 }), // lower mass (tinted)
-        box(4.2, 2.6, 3.4, 0xffffff, { y: 5.1 }), // upper mass
-        box(5.7, 0.3, 4.3, 0x9a8c70, { y: 3.85 }), // mid cornice
-        box(4.3, 0.3, 3.5, 0x9a8c70, { y: 6.45 }), // upper cornice
-        // curved glass atrium bay on the front (half-cylinder)
-        cyl(1.5, 1.5, 4.6, 9, 0x9fc4d8, { y: 2.3, z: 2.1, rx: HALF_PI,
-          theta0: -HALF_PI, thetaLen: PI }),
-        box(2.6, 4.4, 0.12, 0x2c3a44, { y: 2.3, z: 2.0 }), // atrium dark frame behind glass
-        // entrance canopy + brand band
-        box(3.2, 0.22, 1.2, 0xb8443a, { y: 1.5, z: 2.7 }),
-        box(4.2, 0.7, 0.16, 0xb8443a, { y: 6.9, z: 1.74 }), // upper brand band
-        box(4.0, 0.5, 0.06, 0xf2ead6, { y: 6.9, z: 1.82 }), // band face
-        // rooftop services + sign pylon
-        box(1.4, 0.7, 1.0, 0x6a6050, { x: 1.0, y: 6.9 }),
-        box(0.5, 1.8, 0.5, 0xb8443a, { x: -1.4, y: 7.3 }), // sign pylon
+        // broad retail base with curved glass front
+        box(5.4, 3.4, 4.0, 0xf0e8dc, { y: 1.9 }),
+        box(4.0, 2.4, 3.2, 0xf0e8dc, { y: 4.9 }),
+        box(5.5, 0.28, 4.1, 0xc8c0b0, { y: 3.7 }),
+        box(4.1, 0.28, 3.3, 0xc8c0b0, { y: 6.15 }),
+        // curved glass atrium bay (大遠百玻璃中庭)
+        cyl(1.4, 1.4, 4.4, 9, 0x80c0e8, { y: 2.2, z: 2.0, rx: HALF_PI, theta0: -HALF_PI, thetaLen: PI }),
+        box(2.4, 4.2, 0.12, 0x2a3844, { y: 2.2, z: 1.9 }),
+        // signature blue FE brand band (遠東藍)
+        box(3.0, 0.5, 0.12, 0x2860a8, { y: 6.5, z: 1.64 }),
+        box(2.7, 0.35, 0.06, 0xf8f8f0, { y: 6.5, z: 1.7 }),
+        // entrance canopy
+        box(3.0, 0.2, 1.0, 0x2860a8, { y: 1.4, z: 2.5 }),
+        // rooftop equipment + pylon
+        box(1.3, 0.6, 0.9, 0x6a6058, { x: 0.9, y: 6.6 }),
+        box(0.5, 1.6, 0.4, 0x2860a8, { x: -1.3, y: 7.1 }),
+        box(0.35, 1.4, 0.1, 0xf8f8f0, { x: -1.3, y: 7.1, z: 0.2 }),
       ];
-      // clerestory window rows on both volumes
-      for (let i = 0; i < 7; i++) {
-        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5f6670;
-        parts.push(box(0.5, 0.6, 0.05, lit, { x: -2.4 + i * 0.8, y: 3.1, z: 2.12 }));
+      // lit window rows
+      for (let i = 0; i < 6; i++) {
+        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5a6470;
+        parts.push(box(0.5, 0.55, 0.05, lit, { x: -2.2 + i * 0.85, y: 3.0, z: 2.02 }));
       }
-      for (let i = 0; i < 5; i++) {
-        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5f6670;
-        parts.push(box(0.5, 0.5, 0.05, lit, { x: -1.6 + i * 0.8, y: 5.5, z: 1.72 }));
+      for (let i = 0; i < 4; i++) {
+        const lit = rng() < 0.45 ? 0xfff0c8 : 0x5a6470;
+        parts.push(box(0.5, 0.45, 0.05, lit, { x: -1.3 + i * 0.85, y: 5.3, z: 1.62 }));
       }
       return finish(parts);
     },

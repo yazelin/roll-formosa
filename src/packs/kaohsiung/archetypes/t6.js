@@ -218,34 +218,42 @@ export const T6_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 6: 屋頂機房 rooftop plant room ---------------------------- */
+  /* ---- slot 6: 港邊客運站 harbor ferry terminal ------------------------ */
   {
-    id: 'rooftop_plant_room',
-    displayName: '屋頂機房',
+    id: 'harbor_ferry_terminal',
+    displayName: '港邊客運站',
     tier: 6,
     naturalBand: 6,
     radiusNominal: 68,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0x6a7280, 0x848c9a, 0xa6aeba, 0xc8ccd2, 0xe0c860],
+    palette: [0x3a5a7a, 0x5a7a9a, 0x7a9ab8, 0x9abcd8, 0xffd884],
     yOffset: -0.38,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
-      // A capped building top: the plant-room penthouse with cooling towers, ducts and rails.
+      // Harbor ferry/cruise terminal building — 高雄港客運中心 style.
       const parts = [
-        box(2.6, 1.6, 2.0, 0x5a6470, { y: 0.8, hex2: 0x6a7280 }), // truncated building top
-        box(2.66, 0.16, 2.06, 0x4a525e, { y: 1.6 }), // roof slab cornice
-        box(1.5, 0.9, 1.2, 0xa6aeba, { x: -0.3, y: 2.05, hex2: 0xc8ccd2 }), // plant-room penthouse
-        box(0.6, 0.18, 0.4, 0x444a54, { x: -0.3, y: 2.5 }), // penthouse roof hatch
+        // main terminal building body
+        box(2.8, 1.2, 1.8, 0xffffff, { y: 0.7, hex2: 0xe8f0f8 }),
+        // sweeping curved canopy roof (港口客運站特色)
+        cyl(1.8, 1.8, 3.0, 6, 0x7a9ab8, { theta0: Math.PI, rx: Math.PI / 2, sy: 0.35, y: 1.5 }),
+        // glass curtain wall front
+        box(2.6, 0.9, 0.08, 0x5a8ab0, { y: 0.6, z: 0.92 }),
       ];
-      // Cooling-tower fans + ducting scattered on the roof.
-      parts.push(cyl(0.34, 0.34, 0.5, 8, 0x9aa2ae, { x: 0.85, y: 1.93 })); // cooling tower
-      parts.push(cyl(0.34, 0.0, 0.16, 8, 0x7a828e, { x: 0.85, y: 2.26 })); // cooling tower cowl
-      parts.push(cyl(0.28, 0.28, 0.46, 8, 0x9aa2ae, { x: 0.85, y: 1.91, z: -0.7 })); // cooling tower 2
-      parts.push(box(1.2, 0.18, 0.18, 0x88909c, { x: 0.2, y: 1.78, z: 0.7 })); // duct run
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: 0.95 })); // roof guard rail
-      parts.push(box(2.5, 0.06, 0.06, 0xb0b6c0, { y: 1.72, z: -0.95 })); // roof guard rail
+      // vertical mullion strips on glass front
+      for (let i = 0; i < 5; i++) {
+        parts.push(box(0.04, 0.85, 0.06, 0x4a6a88, { x: -1.0 + i * 0.5, y: 0.55, z: 0.94 }));
+      }
+      // entrance canopy extension
+      parts.push(box(1.8, 0.1, 0.6, 0x9abcd8, { y: 0.9, z: 1.25 }));
+      // columns under canopy
+      parts.push(cyl(0.06, 0.06, 0.8, 6, 0x8a9aa8, { x: -0.7, y: 0.5, z: 1.2 }));
+      parts.push(cyl(0.06, 0.06, 0.8, 6, 0x8a9aa8, { x: 0.7, y: 0.5, z: 1.2 }));
+      // dock/pier platform
+      parts.push(box(3.2, 0.15, 1.2, 0x6a7a88, { y: 0.08, z: -0.5 }));
+      // ferry gangway
+      parts.push(box(0.4, 0.08, 0.8, 0x8a9098, { x: 0.8, y: 0.2, z: -1.0 }));
       return finish(parts);
     },
   },
