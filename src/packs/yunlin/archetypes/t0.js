@@ -28,26 +28,30 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 /** @type {Archetype[]} */
 export const T0_ARCHETYPES = [
   /* ---------------------------------------------------------------- */
-  /* [0] marble 彈珠 — glass sphere with a colored swirl core           */
+  /* [0] peanut_shell_bit 土豆殼碎 — broken peanut shell fragment        */
   /* ---------------------------------------------------------------- */
   {
-    id: 'marble',
-    displayName: '彈珠',
+    id: 'peanut_shell_bit',
+    displayName: '土豆殼碎',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.012,
-    radiusJitter: 0.18,
+    radiusJitter: 0.20,
     spawnWeight: 1.0,
-    palette: [0x3f8cff, 0x49c45f, 0xff5340, 0xffd84d, 0xa86adf],
-    yOffset: 0, // sphere sitting on the ground = centered
+    palette: [0xc8a060, 0xd8b070, 0xb89050, 0xe8c080, 0xa88040],
+    yOffset: -0.45, // shell fragment lying flat
     upright: false,
-    collisionScale: 0.82,
+    collisionScale: 0.80,
     buildGeometry(rng) {
+      // Yunlin peanut shell fragment - broken piece from shelling
       return finish([
-        sph(1.0, 0xffffff, { ws: 10, hs: 8 }), // clear/tinted glass body (takes palette tint)
-        // internal swirl ribbon: two thin crossed bands of saturated color
-        box(0.18, 1.7, 0.5, 0xff8a3d, { rz: 0.5, hex2: 0xffd84d }), // warm swirl
-        box(0.18, 1.7, 0.5, 0x3f8cff, { rz: -0.5, ry: HALF_PI, hex2: 0x49c45f }), // cool swirl
+        // curved shell fragment (half of a peanut lobe)
+        sph(0.7, 0xffffff, { ws: 7, hs: 5, sy: 0.45, thetaLen: PI * 0.7 }),
+        // rough edge where shell broke
+        box(0.8, 0.08, 0.5, 0xa88040, { y: -0.1, rz: 0.2 }),
+        // shell texture ridges
+        box(0.6, 0.04, 0.08, 0xb89050, { y: 0.15, z: 0.2 }),
+        box(0.5, 0.04, 0.08, 0xb89050, { y: 0.12, z: -0.15 }),
       ]);
     },
   },
@@ -86,26 +90,31 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [2] pushpin 圖釘 — dome head + tapered steel spike                 */
+  /* [2] incense_stub 香腳 — burnt incense stick base (北港香)           */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pushpin',
-    displayName: '圖釘',
+    id: 'incense_stub',
+    displayName: '香腳',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.01,
     radiusJitter: 0.18,
     spawnWeight: 1.0,
-    palette: [0xff5340, 0x3f8cff, 0x49c45f, 0xffd84d, 0xff8a3d],
-    yOffset: -0.03, // spike-down, head up (= -1 - minY of normalized geo)
+    palette: [0xc83820, 0xd84828, 0xb82810, 0xe85838, 0xa82008],
+    yOffset: -0.85, // stub lying on its side
     upright: false,
-    collisionScale: 0.7,
+    collisionScale: 0.75,
     buildGeometry(rng) {
+      // Burnt incense stick base - from Beigang Mazu temple visits
       return finish([
-        sph(0.9, 0xffffff, { ws: 10, hs: 6, theta0: 0, thetaLen: HALF_PI, y: 0.7 }), // colored plastic dome (tinted)
-        cyl(0.92, 0.92, 0.28, 10, 0xffffff, { y: 0.62 }), // dome skirt/rim (tinted)
-        cyl(0.34, 0.34, 0.5, 8, 0xc8ccd4, { y: 0.2 }), // steel shoulder
-        cone(0.32, 1.2, 8, 0xdfe3ea, { rx: PI, y: -0.55 }), // steel spike pointing down (cone apex down)
+        // bamboo stick core (natural tan)
+        cyl(0.08, 0.08, 2.4, 5, 0xd8b878, { rz: HALF_PI }),
+        // remaining red coating on the dipped end
+        cyl(0.1, 0.1, 0.6, 5, 0xffffff, { rz: HALF_PI, x: -0.9 }),
+        // charred burnt tip
+        cone(0.08, 0.2, 5, 0x2a2018, { rz: HALF_PI, x: 1.3 }),
+        // ash residue ring
+        cyl(0.12, 0.1, 0.15, 5, 0x8a8078, { rz: HALF_PI, x: 1.1 }),
       ]);
     },
   },
@@ -207,29 +216,36 @@ export const T0_ARCHETYPES = [
   },
 
   /* ---------------------------------------------------------------- */
-  /* [6] pencil 鉛筆 — hex shaft + sharpened tip + ferrule + eraser      */
+  /* [6] fortune_slip 籤紙 — red fortune paper slip from temple         */
   /* ---------------------------------------------------------------- */
   {
-    id: 'pencil',
-    displayName: '鉛筆',
+    id: 'fortune_slip',
+    displayName: '籤紙',
     tier: 0,
     naturalBand: 0,
     radiusNominal: 0.045,
-    radiusJitter: 0.12,
+    radiusJitter: 0.14,
     spawnWeight: 1.0,
-    palette: [0xf2c200, 0xe84d3a, 0x2f8f4e, 0x3f7fd0, 0xf08a2a],
-    yOffset: -0.85, // pencil lying on its side (= -1 - minY of normalized geo)
+    palette: [0xf0d8a0, 0xf8e0b0, 0xe8c890, 0xf4d898, 0xf0c880],
+    yOffset: -0.92, // paper lying flat
     upright: false,
-    collisionScale: 0.8,
+    collisionScale: 0.85,
     buildGeometry(rng) {
+      // Temple fortune slip paper (籤詩) - common at Beigang Mazu
       return finish([
-        cyl(0.26, 0.26, 2.7, 6, 0xffffff, { rz: HALF_PI, x: -0.1 }), // painted hex barrel (tinted, 6-side = hex)
-        // sharpened wood cone + graphite tip at +x end
-        cone(0.26, 0.45, 6, 0xe7c9a0, { rz: -HALF_PI, x: 1.45 }), // bare wood cone
-        cone(0.1, 0.18, 6, 0x33363c, { rz: -HALF_PI, x: 1.72 }), // graphite point
-        // metal ferrule + eraser at -x end
-        cyl(0.29, 0.29, 0.35, 8, 0xb8bcc4, { rz: HALF_PI, x: -1.62 }), // aluminium ferrule
-        cyl(0.27, 0.27, 0.35, 8, 0xf09bb0, { rz: HALF_PI, x: -1.95 }), // pink eraser
+        // thin paper slip body (yellowish traditional paper)
+        box(2.2, 0.04, 0.9, 0xffffff, { y: 0.02 }),
+        // red border trim
+        box(2.22, 0.05, 0.06, 0xc83020, { y: 0.03, z: 0.42 }),
+        box(2.22, 0.05, 0.06, 0xc83020, { y: 0.03, z: -0.42 }),
+        box(0.06, 0.05, 0.9, 0xc83020, { y: 0.03, x: 1.08 }),
+        box(0.06, 0.05, 0.9, 0xc83020, { y: 0.03, x: -1.08 }),
+        // printed text lines (black ink)
+        box(1.6, 0.03, 0.08, 0x2a2018, { y: 0.04, z: 0.2 }),
+        box(1.4, 0.03, 0.08, 0x2a2018, { y: 0.04, z: 0.0 }),
+        box(1.5, 0.03, 0.08, 0x2a2018, { y: 0.04, z: -0.2 }),
+        // fortune number stamp (red seal)
+        cyl(0.15, 0.15, 0.02, 6, 0xc83020, { y: 0.05, x: 0.8, z: 0.3 }),
       ]);
     },
   },
