@@ -28,40 +28,43 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 犁頭店街屋 (TAICHUNG SWAP: Nantun old-town street house) -- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'litoudian_streethouse',
+    displayName: '犁頭店街屋',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 6.0,
-    radiusJitter: 0.15,
+    radiusNominal: 5.5,
+    radiusJitter: 0.16,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
-    yOffset: -0.09,
+    palette: [0xa84e34, 0xb86a44, 0xd8c8a8, 0x8a3a2a, 0xc8bca8],
+    yOffset: -0.32,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // 犁頭店街屋 — traditional Nantun old-street brick shophouse (閩南式紅磚街屋)
+      // with the characteristic 亭仔腳 arcade and terra-cotta roof
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // squat red-brick body with plaster parapet (商號匾)
+        box(2.2, 1.3, 1.6, 0xa84e34, { y: 0.65, hex2: 0xb86a44 }),
+        box(2.24, 0.24, 1.64, 0xe6dcc6, { y: 1.35 }), // white plaster parapet
+        box(1.4, 0.16, 0.05, 0xc83828, { y: 1.32, z: 0.84 }), // red 老字號 sign
+        // low pitched red-tile gable roof (紅瓦雙坡)
+        box(1.4, 0.08, 1.78, 0x8a3a2a, { rz: 0.18, x: -0.5, y: 1.65 }),
+        box(1.4, 0.08, 1.78, 0x8a3a2a, { rz: -0.18, x: 0.5, y: 1.65 }),
+        box(0.12, 0.12, 1.8, 0x6a4a32, { y: 1.8 }), // ridge beam
+        // 亭仔腳 arcade — covered walk in front on brick posts
+        box(2.2, 0.14, 0.7, 0xd8c8a8, { y: 1.15, z: 1.0 }),
+        box(0.2, 1.1, 0.2, 0xa84e34, { x: -0.9, y: 0.55, z: 1.28 }),
+        box(0.2, 1.1, 0.2, 0xa84e34, { x: 0.9, y: 0.55, z: 1.28 }),
+        // shopfront — dark wood door + warm interior glow
+        box(0.9, 0.8, 0.05, 0x6a4a30, { x: -0.35, y: 0.5, z: 0.82 }),
+        box(0.5, 0.9, 0.06, 0x4a3422, { x: 0.55, y: 0.55, z: 0.82 }),
+        box(0.4, 0.38, 0.05, 0xf0d8a0, { x: -0.35, y: 0.6, z: 0.84 }),
+        // hanging lanterns under arcade (老街攤鋪氛圍)
+        cyl(0.11, 0.11, 0.2, 7, 0xc83828, { x: -0.5, y: 0.95, z: 1.0 }),
+        cyl(0.11, 0.11, 0.2, 7, 0xc83828, { x: 0.5, y: 0.95, z: 1.0 }),
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
-      }
       return finish(parts);
     },
   },
@@ -105,38 +108,47 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 東海藝術街樓 (TAICHUNG SWAP: Donghai Art Street building) - */
   {
-    id: 'apartment',
-    displayName: '公寓',
+    id: 'donghai_artstreet_bldg',
+    displayName: '東海藝術街樓',
     tier: 4,
     naturalBand: 4,
-    radiusNominal: 8.0,
+    radiusNominal: 7.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
-    yOffset: -0.28,
+    palette: [0xf0e8d8, 0xe0d0c0, 0xc8b8a0, 0x6a8a5a, 0xd8c8b0],
+    yOffset: -0.3,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // 東海藝術街樓 — a 3-storey cream-walled creative arts building on Donghai
+      // Art Street (東海國際藝術街), with wooden-slatted balconies and green plants
       const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
-        box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
+        // main cream-colored body (藝術街的米白色風格)
+        box(2.2, 2.4, 1.6, 0xf0e8d8, { y: 1.3 }),
+        box(2.24, 0.12, 1.64, 0xc8b8a0, { y: 2.56 }), // roof slab
+        box(2.18, 0.18, 1.58, 0xe0d0c0, { y: 0.14 }), // ground plinth
+        // wooden-slat balcony facade (藝術街特色 — 木質格柵陽台)
+        box(2.0, 0.1, 0.08, 0x8a6a4a, { y: 0.9, z: 0.82 }),
+        box(2.0, 0.1, 0.08, 0x8a6a4a, { y: 1.5, z: 0.82 }),
+        box(2.0, 0.1, 0.08, 0x8a6a4a, { y: 2.1, z: 0.82 }),
+        // vertical wood slats per floor
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: -0.7, y: 1.2, z: 0.84 }),
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: 0, y: 1.2, z: 0.84 }),
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: 0.7, y: 1.2, z: 0.84 }),
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: -0.7, y: 1.8, z: 0.84 }),
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: 0, y: 1.8, z: 0.84 }),
+        box(0.06, 0.5, 0.06, 0x8a6a4a, { x: 0.7, y: 1.8, z: 0.84 }),
+        // green planter boxes on each balcony level (藝術街綠意)
+        box(0.6, 0.18, 0.15, 0x4a7a4a, { x: -0.5, y: 1.0, z: 0.9 }),
+        box(0.6, 0.18, 0.15, 0x4a7a4a, { x: 0.5, y: 1.6, z: 0.9 }),
+        // ground-floor gallery entrance (藝廊入口)
+        box(0.8, 0.7, 0.06, 0x3a3a3a, { x: 0.4, y: 0.45, z: 0.82 }), // dark glass door
+        box(0.7, 0.55, 0.04, 0xf0d8a0, { x: 0.4, y: 0.48, z: 0.86 }), // warm interior glow
+        // hanging art sign
+        box(0.6, 0.25, 0.04, 0xf0e0c0, { x: -0.5, y: 0.75, z: 0.85 }),
       ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
-      }
       return finish(parts);
     },
   },
