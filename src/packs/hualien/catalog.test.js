@@ -95,8 +95,8 @@ describe('hualien catalog surface', () => {
 
   it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Tokyo names left)', () => {
     expect(DISPLAY_NAME_BY_CODE.length).toBe(99);
-    // code 0 = T0 slot 0 = marble = 彈珠
-    expect(DISPLAY_NAME_BY_CODE[0]).toBe('彈珠');
+    // code 0 = T0 slot 0 = qixingtan_pebble = 七星潭鵝卵石
+    expect(DISPLAY_NAME_BY_CODE[0]).toBe('七星潭鵝卵石');
     // EVERY code (0..98) is non-empty AND contains no Japanese kana (zero Tokyo).
     const kana = /[぀-ゟ゠-ヿ]/;
     for (let c = 0; c < 99; c++) {

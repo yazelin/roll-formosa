@@ -22,39 +22,42 @@ import { paint, xf, box, cyl, cone, sph, ico, torus, towerBanded, finish, PI, HA
 
 /** @type {Archetype[]} */
 export const T4_ARCHETYPES = [
-  /* ---- slot 0: 透天厝 (narrow 3–4 storey townhouse) -------------------- */
+  /* ---- slot 0: 花蓮石屋 (Hualien marble-facade shophouse) --------------- */
   {
-    id: 'townhouse',
-    displayName: '透天厝',
+    id: 'hualien_stonehouse',
+    displayName: '花蓮石屋',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 6.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe8ddc8, 0xd9c8b0, 0xcfd6d0, 0xe0d2c0, 0xd0c4b4],
+    palette: [0xe8e0d8, 0xd8d0c8, 0xc8c0b8, 0xd0c8c0, 0xe0d8d0],
     yOffset: -0.09,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hualien-style shophouse with marble/stone facade — characteristic of the stone craft city
       const parts = [
-        // tall narrow banded body (深長街屋), tinted plaster + warm windows
-        towerBanded(1.0, 2.6, 1.5, 8, 0xffffff, 0x40506a, 0xffd98a, rng, { y: 1.4 }),
-        box(1.1, 0.12, 1.6, 0x8a8f9a, { y: 2.76 }), // flat roof slab
-        box(1.12, 0.22, 1.62, 0xc8bca8, { y: 0.22 }), // ground-floor plinth
-        // rooftop 加蓋 (illegal-extension tin penthouse — very Taiwan)
-        box(0.8, 0.5, 1.1, 0xb0563a, { y: 3.06, hex2: 0xc8704a }),
-        cyl(0.95, 0.95, 1.2, 4, 0x9a4a32, { theta0: PI, rx: HALF_PI, sy: 0.4, x: 0.0, y: 3.5, z: 0.0 }), // gable tin cap
-        cyl(0.16, 0.16, 0.5, 6, 0xc8ccd2, { x: 0.45, y: 3.55 }), // rooftop water tank pipe
-        box(0.36, 0.32, 0.36, 0x5a6e8a, { x: -0.25, y: 3.4 }), // rooftop blue water tank
-        // street-level shutter + tenant sign strip
-        box(0.92, 0.6, 0.06, 0x7a8088, { y: 0.5, z: 0.78 }), // roll shutter
-        box(0.78, 0.18, 0.05, 0xc83828, { y: 0.94, z: 0.8 }), // shop sign band
+        // Main body with marble-like finish
+        towerBanded(1.0, 2.4, 1.5, 6, 0xffffff, 0x44506a, 0xffd98a, rng, { y: 1.3, hex2: 0xe8e0d8 }),
+        box(1.1, 0.14, 1.6, 0xa8a098, { y: 2.56 }), // flat roof with stone trim
+        box(1.12, 0.22, 1.62, 0xd0c8c0, { y: 0.22 }), // marble-look plinth
+        // Stone facade details
+        box(1.02, 0.08, 0.06, 0xb8b0a8, { y: 0.5, z: 0.78 }), // stone lintel
+        box(1.02, 0.08, 0.06, 0xb8b0a8, { y: 1.2, z: 0.78 }), // upper lintel
+        // Stone craft shop display window
+        box(0.8, 0.5, 0.06, 0x9fc4d8, { y: 0.65, z: 0.78 }), // glass display
+        // Marble display piece at entrance
+        sph(0.15, 0xe0d8d0, { ws: 6, hs: 4, x: -0.35, y: 0.4, z: 0.82 }),
+        // Shop sign with stone-carved look
+        box(0.7, 0.2, 0.08, 0x8a7a68, { y: 1.05, z: 0.8 }),
+        // Water tank (still ubiquitous)
+        cyl(0.2, 0.2, 0.35, 6, 0x3a6ea0, { x: 0.35, y: 2.85 }),
       ];
-      // stacked balconies with rail + AC unit per floor (公寓陽台 rhythm)
-      for (let i = 0; i < 3; i++) {
-        const y = 0.95 + i * 0.62;
-        parts.push(box(1.06, 0.1, 0.12, 0xd8d4cc, { y, z: 0.78 })); // balcony rail
-        if (i < 2) parts.push(box(0.26, 0.22, 0.18, 0xe2e2dc, { x: 0.36, y: y + 0.16, z: 0.74 })); // window AC
+      // Balconies with simpler stone-look rails
+      for (let i = 0; i < 2; i++) {
+        const y = 1.35 + i * 0.55;
+        parts.push(box(0.95, 0.08, 0.1, 0xc8c0b8, { y, z: 0.78 })); // stone balcony rail
       }
       return finish(parts);
     },
@@ -97,37 +100,40 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 2: 公寓 (5-storey 老公寓 walk-up) -------------------------- */
+  /* ---- slot 2: 原民公寓 (aboriginal-decorated apartment) --------------- */
   {
-    id: 'apartment',
-    displayName: '公寓',
+    id: 'tribal_apartment',
+    displayName: '原民公寓',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 8.0,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xe2d8c8, 0xd0d8e0, 0xe0d0c4, 0xd6ddd0, 0xc8bca8],
+    palette: [0xe8e0d0, 0xd8d0c0, 0xc8c0b0, 0xd0c8b8, 0xe0d8c8],
     yOffset: -0.28,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Hualien apartment with aboriginal art/pattern accents
       const parts = [
-        // wide squat 5-floor banded slab (公寓比透天矮胖)
-        towerBanded(2.0, 2.4, 1.3, 10, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.25 }),
-        box(2.08, 0.12, 1.38, 0x8a8f9a, { y: 2.5 }), // roof slab
+        // Main body — simpler form with tribal color accents
+        towerBanded(2.0, 2.2, 1.3, 8, 0xffffff, 0x44506a, 0xffe0a0, rng, { y: 1.15, hex2: 0xe8e0d0 }),
+        box(2.08, 0.12, 1.38, 0x8a8a80, { y: 2.28 }), // roof slab
         box(2.04, 0.22, 1.34, 0xc8bca8, { y: 0.16 }), // ground plinth
-        // rooftop clutter: water tanks + 鐵皮加蓋
-        box(1.0, 0.5, 0.9, 0xb0563a, { x: -0.4, y: 2.8, hex2: 0xc8704a }), // tin penthouse
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.6, y: 2.78 }), // blue tank
-        cyl(0.26, 0.26, 0.42, 8, 0x3a6ea0, { x: 0.95, y: 2.78 }), // blue tank
-        box(0.5, 0.5, 0.05, 0x6a7078, { y: 0.55, z: 0.7 }), // entrance gate
-        box(2.06, 0.12, 0.06, 0xc83828, { y: 2.18, z: 0.66 }), // top trim band
+        // Tribal pattern band on facade — red/black geometric
+        box(2.0, 0.2, 0.06, 0xc83020, { y: 1.0, z: 0.68 }), // red tribal band
+        box(0.3, 0.18, 0.07, 0x1a1a1a, { x: -0.6, y: 1.0, z: 0.69 }), // black pattern blocks
+        box(0.3, 0.18, 0.07, 0x1a1a1a, { x: 0.0, y: 1.0, z: 0.69 }),
+        box(0.3, 0.18, 0.07, 0x1a1a1a, { x: 0.6, y: 1.0, z: 0.69 }),
+        // Water tanks
+        cyl(0.24, 0.24, 0.38, 6, 0x3a6ea0, { x: 0.7, y: 2.52 }),
+        // Entrance with tribal mural area
+        box(0.6, 0.5, 0.05, 0xe8a030, { y: 0.45, z: 0.7 }), // mural panel (yellow tribal)
       ];
-      // characteristic 鐵窗 (security-grille) cages on each floor face
-      for (let f = 0; f < 4; f++) {
-        const y = 0.9 + f * 0.5;
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: -0.55, y, z: 0.66 })); // grille cage L
-        parts.push(box(0.5, 0.34, 0.16, 0xd8d4cc, { x: 0.55, y, z: 0.66 })); // grille cage R
+      // Simpler balcony rails
+      for (let f = 0; f < 3; f++) {
+        const y = 1.2 + f * 0.4;
+        parts.push(box(1.8, 0.08, 0.1, 0xd8d4cc, { y, z: 0.68 }));
       }
       return finish(parts);
     },
@@ -295,41 +301,38 @@ export const T4_ARCHETYPES = [
     },
   },
 
-  /* ---- slot 7: 騎樓柱列 (arcade pillar colonnade) --------------------- */
+  /* ---- slot 7: 石藝廊道 (marble art corridor/colonnade) ---------------- */
   {
-    id: 'arcade_pillar',
-    displayName: '騎樓柱列',
+    id: 'marble_arcade',
+    displayName: '石藝廊道',
     tier: 4,
     naturalBand: 4,
     radiusNominal: 4.5,
     radiusJitter: 0.15,
     spawnWeight: 1.0,
-    palette: [0xd8cdb8, 0xc8bca8, 0xe0d2c0, 0xcfd6d0, 0xb8ac98],
+    palette: [0xe8e0d8, 0xd8d0c8, 0xc8c0b8, 0xd0c8c0, 0xb8b0a8],
     yOffset: -0.48,
     upright: true,
     collisionScale: 0.85,
     buildGeometry(rng) {
+      // Stone-craft arcade/colonnade — Hualien marble art district style
       const parts = [
-        // the slab beam the storefront sits under (騎樓 ceiling)
-        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe6dcc8 }),
-        box(3.24, 0.12, 1.24, 0xb8ac98, { y: 2.2 }), // upper edge band (street-house above)
-        box(2.0, 0.5, 1.0, 0xcfd6d0, { z: -0.4, y: 1.4 }), // rear shop wall recess
+        // Stone beam/ceiling
+        box(3.2, 0.3, 1.2, 0xffffff, { y: 2.0, hex2: 0xe8e0d8 }),
+        box(3.24, 0.12, 1.24, 0xc8c0b8, { y: 2.2 }), // stone trim band
+        box(2.0, 0.5, 1.0, 0xd0c8c0, { z: -0.4, y: 1.4 }), // rear shop wall
       ];
-      // 4 square arcade columns with capital + base
+      // Square stone columns (marble-style, fewer segments)
       const cx = [-1.35, -0.45, 0.45, 1.35];
       for (let i = 0; i < cx.length; i++) {
-        parts.push(box(0.34, 1.7, 0.34, 0xffffff, { x: cx[i], y: 0.95 })); // column shaft (tinted)
-        parts.push(box(0.46, 0.16, 0.46, 0xc8bca8, { x: cx[i], y: 1.82 })); // capital
-        parts.push(box(0.46, 0.18, 0.46, 0xb8ac98, { x: cx[i], y: 0.16 })); // base
-        // small shop signboard between alternating columns
-        if (i < cx.length - 1 && i % 2 === 0) {
-          parts.push(box(0.74, 0.3, 0.06, 0xc83828, { x: cx[i] + 0.45, y: 1.62, z: 0.5 })); // sign
-          parts.push(box(0.6, 0.18, 0.05, 0xfff2c0, { x: cx[i] + 0.45, y: 1.62, z: 0.54 })); // lit sign face
-        }
+        parts.push(box(0.32, 1.7, 0.32, 0xffffff, { x: cx[i], y: 0.95 })); // square marble column (tinted)
+        parts.push(box(0.4, 0.12, 0.4, 0xd8d0c8, { x: cx[i], y: 1.82 })); // capital
+        parts.push(box(0.4, 0.15, 0.4, 0xc8c0b8, { x: cx[i], y: 0.16 })); // base
       }
-      // hanging shop lanterns/lamps under the beam
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: -0.9, y: 1.78 }));
-      parts.push(cyl(0.12, 0.12, 0.2, 7, 0xe0a83a, { x: 0.9, y: 1.78 }));
+      // marble display piece
+      parts.push(sph(0.14, 0xe0d8d0, { ws: 5, hs: 3, x: 0.0, y: 0.4, z: 0.5 }));
+      // Stone shop sign
+      parts.push(box(0.8, 0.25, 0.06, 0x8a7a68, { x: 0.0, y: 1.68, z: 0.5 }));
       return finish(parts);
     },
   },
