@@ -41,7 +41,7 @@ assert,vitest <id> 抓不到、超標會害 'npm run dev' 主遊戲開不了(pre
 **若這條任務開頭是『加深』(deepen 既有城市街頭物,不是加新城)**:① 跑 'node scripts/check-city.mjs <city>' 看哪幾階(t0-t6)『同台北』最多;\
 ② 打開 src/packs/<city>/archetypes/tN.js,把『還照抄台北』的街頭小物換成這座城市真實會出現的在地版本(例:台中→宮原冰淇淋杯/太陽餅/麻芛冰;宜蘭→鴨賞/三星蔥/羅東夜市攤),\
 保留『真．全台通用』物(機車/紅綠燈/便利商店/路樹/變電箱/紅白塑膠椅這類)即可;\
-③ 目標把 check-city 的『同台北』壓到 ≤33/70(越低越好,金門級 ~20);第二輪要找出『上一輪還沒換的台北 chunk』再換掉,且每階(每 10 個)至少換掉幾個;\
+③ 目標壓到 backlog 那行寫的數字(目前 ≤25/70,金門級 ~20);找出『上輪還沒換的台北 chunk』再換 —— 這輪主攻「通用建築」(透天厝/公寓/商辦/銀行/玻璃帷幕/百貨/停車塔→換成該城風格的街屋/大樓)+「童玩類」(彈珠/尪仔標/圖釘/戳戳樂/鉛筆/鈕扣→該城在地小物);但「真街道通用物」(機車/紅綠燈三角錐/超商/公車/垃圾車/加油站/路樹/瓦斯桶/消防栓/安全帽/紅白塑膠椅)要保留別硬換,且每階(每 10 個)至少換掉幾個;\
 ④ 換的幾何照 geomHelpers、跑 'node scripts/check-hero-tris.mjs <city>' 修到 0 over;\
 ⑤ **不要動 landmarks/collectibles(已在地化好了)、不要改 active.js/manifest/ext codes**;只動 archetypes/tN.js(必要時 narration/tiers 文字);\
 ⑥ npm test(含 localization/city-content 守衛)要綠。做完把 NEXT.md 該行改 [x]。\
