@@ -92,7 +92,7 @@ describe('yunlin catalog surface', () => {
     // Yunlin-specific collectibles
     expect(CATALOG['soy_sauce']).toBeDefined();
     expect(CATALOG['peanut']).toBeDefined();
-    expect(CATALOG['puppet']).toBeDefined();
+    expect(CATALOG['mullet_roe']).toBeDefined();
   });
 
   it('DISPLAY_NAME_BY_CODE has zh-TW names at every code (de-Tokyo: no Tokyo names left)', () => {
