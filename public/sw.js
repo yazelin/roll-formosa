@@ -6,7 +6,7 @@
  * - HTML navigations are network-first (fresh on deploy, cached as offline fallback).
  * Bump CACHE to force-refresh everything on a new release.
  */
-const CACHE = 'rollformosa-v4';
+const CACHE = 'rollformosa-v5';
 const SHELL = [
   './', 'index.html', 'preview.html', 'manifest.webmanifest',
   'assets/icon-192.png', 'assets/icon-512.png', 'assets/icon-512-maskable.png', 'assets/apple-touch-icon.png',
