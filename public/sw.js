@@ -29,7 +29,10 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    // 只清自己的 rollformosa-*:CacheStorage 是 per-origin,yazelin.github.io 所有專案共用
+    // 同一份(scope 只管 fetch,管不到快取)。無差別刪會把 gewu 的 33MB、neko 等別站的
+    // 離線包整包清掉,而且功能完全正常、毫無徵兆。
+    await Promise.all(keys.filter((k) => k.startsWith('rollformosa-') && k !== CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
   })());
 });
