@@ -3,6 +3,7 @@
   "short_name": "Roll Formosa",
   "description": "台灣風味的 Katamari 滾物成球遊戲,全台 20 城。下載後可離線遊玩。",
   "lang": "zh-Hant",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -13,5 +14,9 @@
     { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "assets/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "assets/screenshots/wide.webp", "sizes": "1280x800", "type": "image/webp", "form_factor": "wide", "label": "選城市畫面:全台 20 城任你捲" },
+    { "src": "assets/screenshots/narrow.webp", "sizes": "390x844", "type": "image/webp", "form_factor": "narrow", "label": "手機直式:從圖釘滾成大球" }
   ]
 }
